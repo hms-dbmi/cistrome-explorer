@@ -1,18 +1,25 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef } from 'react';
 
 import { HiGlassComponent } from 'higlass';
 import register from 'higlass-register';
 import StackedBarTrack from 'higlass-multivec/es/StackedBarTrack.js';
 
-import CistromeGroupings from './CistromeGroupings.js';
+import CistromeGroupLabelsTrack from './CistromeGroupLabelsTrack.js';
 
 import 'higlass/dist/hglib.css';
 import './CistromeHGW.css';
+
 
 register({
     name: 'StackedBarTrack',
     track: StackedBarTrack,
     config: StackedBarTrack.config,
+});
+
+register({
+    name: 'CistromeGroupLabelsTrack',
+    track: CistromeGroupLabelsTrack,
+    config: CistromeGroupLabelsTrack.config,
 });
 
 const demoViewConfig = {
@@ -224,6 +231,17 @@ const demoViewConfig = {
                 2000,
                 1000
               ]
+            },
+            {
+                "type": "cistrome-group-labels",
+                "uid": "cistrome-group-labels-track",
+                "tilesetUid": "UvVPeLHuRDiYA3qwFlm7xQ",
+                "server": "https://resgen.io/api/v1",
+                "options": {
+                  "labelPosition": "outerRight",
+                },
+                "width": 1607,
+                "height": 382,
             }
           ],
           "bottom": [],
@@ -272,12 +290,6 @@ export default function CistromeHGW(props) {
 
     const hgRef = useRef();
 
-    const [hgApi, setHgApi] = useState(null);
-
-    useEffect(() => {
-        setHgApi(hgRef.current.api);
-    }, [hgRef])
-
     return (
         <div className="cistrome-hgw">
             <HiGlassComponent
@@ -285,9 +297,6 @@ export default function CistromeHGW(props) {
                 options={hgOptions}
                 zoomFixed={false}
                 ref={hgRef}
-            />
-            <CistromeGroupings
-                hgApi={hgApi}
             />
         </div>
     );
