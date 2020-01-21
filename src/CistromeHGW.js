@@ -1,8 +1,18 @@
 import React from 'react';
 import { HiGlassComponent } from 'higlass';
+import register from 'higlass-register';
+
+import StackedBarTrack from 'higlass-multivec/es/StackedBarTrack.js';
 
 import 'higlass/dist/hglib.css';
+import './CistromeHGW.css';
 
+
+register({
+    name: 'StackedBarTrack',
+    track: StackedBarTrack,
+    config: StackedBarTrack.config,
+});
 
 const demoViewConfig = {
     "editable": true,
@@ -252,11 +262,11 @@ const options = {
     viewPaddingBottom: 0,
     viewPaddingLeft: 0,
     viewPaddingRight: 0,
-    pixelPreciseMarginPadding: true,
     bounded: true,
     horizontalMargin: 0,
-    verticalMargin: 0
-}
+    verticalMargin: 0,
+    /*pixelPreciseMarginPadding: true,*/
+};
 
 
 /**
@@ -264,11 +274,11 @@ const options = {
  */
 export default function CistromeHGW(props) {
     return (
-        <div>
+        <div className="cistrome-hgw">
             <HiGlassComponent 
                 viewConfig={demoViewConfig} 
                 options={options} 
-                zoomFixed={true}
+                zoomFixed={false}
             />
         </div>
     );

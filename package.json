@@ -31,6 +31,8 @@
     "file-loader": "4.3.0",
     "fs-extra": "^8.1.0",
     "higlass": "^1.8.0",
+    "higlass-multivec": "github:higlass/higlass-multivec#es-modules-es",
+    "higlass-register": "^0.1.0",
     "html-webpack-plugin": "4.0.0-beta.5",
     "identity-obj-proxy": "3.0.0",
     "jest": "24.9.0",
