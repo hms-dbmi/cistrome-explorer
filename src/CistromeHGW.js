@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
+
 import { HiGlassComponent } from 'higlass';
 import register from 'higlass-register';
-
 import StackedBarTrack from 'higlass-multivec/es/StackedBarTrack.js';
+
+import CistromeGroupings from './CistromeGroupings.js';
 
 import 'higlass/dist/hglib.css';
 import './CistromeHGW.css';
-
 
 register({
     name: 'StackedBarTrack',
@@ -185,7 +186,7 @@ const demoViewConfig = {
           "center": [
             {
               "type": "horizontal-multivec",
-              "uid": "YafcbvKDQvWoWRT1WrygPA",
+              "uid": "cistrome-track",
               "tilesetUid": "UvVPeLHuRDiYA3qwFlm7xQ",
               "server": "https://resgen.io/api/v1",
               "options": {
@@ -255,17 +256,12 @@ const demoViewConfig = {
     }
 };
 
-const options = {
+const hgOptions = {
+    bounded: true,
+    pixelPreciseMarginPadding: true,
     containerPaddingX: 0,
     containerPaddingY: 0,
-    viewPaddingTop: 0,
-    viewPaddingBottom: 0,
-    viewPaddingLeft: 0,
-    viewPaddingRight: 0,
-    bounded: true,
-    horizontalMargin: 0,
-    verticalMargin: 0,
-    /*pixelPreciseMarginPadding: true,*/
+    sizeMode: 'default'
 };
 
 
@@ -273,12 +269,25 @@ const options = {
  * @component Cistrome HiGlass Wrapper 
  */
 export default function CistromeHGW(props) {
+
+    const hgRef = useRef();
+
+    const [hgApi, setHgApi] = useState(null);
+
+    useEffect(() => {
+        setHgApi(hgRef.current.api);
+    }, [hgRef])
+
     return (
         <div className="cistrome-hgw">
-            <HiGlassComponent 
-                viewConfig={demoViewConfig} 
-                options={options} 
+            <HiGlassComponent
+                viewConfig={demoViewConfig}
+                options={hgOptions}
                 zoomFixed={false}
+                ref={hgRef}
+            />
+            <CistromeGroupings
+                hgApi={hgApi}
             />
         </div>
     );
