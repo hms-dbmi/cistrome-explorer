@@ -194,7 +194,7 @@ const demoViewConfig = {
                 "minHeight": 100
               },
               "width": 1607,
-              "height": 382,
+              "height": 482,
               "resolutions": [
                 16384000,
                 8192000,
@@ -220,8 +220,8 @@ const demoViewConfig = {
           "gallery": []
         },
         "layout": {
-          "w": 10,
-          "h": 2,
+          "w": 12,
+          "h": 10,
           "x": 0,
           "y": 0,
           "moved": false,
@@ -246,12 +246,12 @@ const demoViewConfig = {
 
 function App() {
     return (
-        <div className="App">
-            <header>
+        <div className="app">
+            <div className="header">
                 <p>Cistrome HiGlass Wrapper</p>
-            </header>
+            </div>
 
-            <div>
+            <div className="container">
                 <CistromeHGW 
                     viewConfig={demoViewConfig} 
                 />

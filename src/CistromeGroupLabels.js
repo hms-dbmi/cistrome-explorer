@@ -45,8 +45,12 @@ export default function CistromeGroupLabels() {
         });
     });
 
-    const categoryScaleA = scaleBand().domain(Array.from(new Set(rowNames.map(d => d[columnIndexA])))).range([0, 1]);
-    const categoryScaleB = scaleBand().domain(Array.from(new Set(rowNames.map(d => d[columnIndexB])))).range([0, 1]);
+    const categoryScaleA = scaleBand()
+        .domain(Array.from(new Set(rowNames.map(d => d[columnIndexA]))))
+        .range([0, 1]);
+    const categoryScaleB = scaleBand()
+        .domain(Array.from(new Set(rowNames.map(d => d[columnIndexB]))))
+        .range([0, 1]);
     
     const colorScale = interpolateViridis;
 

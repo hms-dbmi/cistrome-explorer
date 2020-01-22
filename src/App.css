@@ -1,3 +1,12 @@
-.App {
+.app {
     text-align: center;
+}
+
+
+.container {
+    border: 0px solid gray;
+    width: 70%;
+    position: relative;
+    margin-left: 15%;
+    box-sizing: border-box;
 }

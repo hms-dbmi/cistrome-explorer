@@ -1,7 +1,8 @@
 .cistrome-hgw {
     position: relative;
-    width: 1000px;
-    height: 1000px;
+    display: block;
+    width: auto;
+    height: auto;
     text-align: left;
 }
 
