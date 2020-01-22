@@ -1,10 +1,14 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
+import PubSub from 'pubsub-js';
 
 import { HiGlassComponent } from 'higlass';
 import register from 'higlass-register';
 import StackedBarTrack from 'higlass-multivec/es/StackedBarTrack.js';
 
-import CistromeGroupLabelsTrack from './CistromeGroupLabelsTrack.js';
+/*import CistromeGroupLabelsTrack from './CistromeGroupLabelsTrack.js';*/
+import CistromeGroupLabels from './CistromeGroupLabels.js';
+
+import { GLOBAL_X_RANGE, GLOBAL_Y_RANGE, TRACK_ROW_INFO, TRACK_POSITION, TRACK_DIMENSIONS } from './constants.js';
 
 import 'higlass/dist/hglib.css';
 import './CistromeHGW.css';
@@ -16,11 +20,13 @@ register({
     config: StackedBarTrack.config,
 });
 
+/*
 register({
     name: 'CistromeGroupLabelsTrack',
     track: CistromeGroupLabelsTrack,
     config: CistromeGroupLabelsTrack.config,
 });
+*/
 
 const demoViewConfig = {
     "editable": true,
@@ -232,7 +238,7 @@ const demoViewConfig = {
                 1000
               ]
             },
-            {
+            /*{
                 "type": "cistrome-group-labels",
                 "uid": "cistrome-group-labels-track",
                 "tilesetUid": "UvVPeLHuRDiYA3qwFlm7xQ",
@@ -242,7 +248,7 @@ const demoViewConfig = {
                 },
                 "width": 1607,
                 "height": 382,
-            }
+            }*/
           ],
           "bottom": [],
           "right": [],
@@ -289,6 +295,27 @@ const hgOptions = {
 export default function CistromeHGW(props) {
 
     const hgRef = useRef();
+    
+    useEffect(() => {
+        hgRef.current.api.on('location', (d) => {
+            PubSub.publish(GLOBAL_X_RANGE, d.xRange);
+            PubSub.publish(GLOBAL_Y_RANGE, d.yRange);
+        });
+
+        hgRef.current.api.on('viewConfig', (vc) => {
+            //console.log(JSON.parse(vc));
+            try {
+                const trackObj = hgRef.current.api.getTrackObject("UiHlCoxRQ-aITBDi5j8b_w", "cistrome-track");
+                PubSub.publish(TRACK_ROW_INFO, trackObj.tilesetInfo.row_infos);
+                PubSub.publish(TRACK_POSITION, trackObj.position);
+                PubSub.publish(TRACK_DIMENSIONS, trackObj.dimensions);
+            } catch(e) {
+    
+            }
+        });
+    });
+
+    console.log("CistromeHGW.render");
 
     return (
         <div className="cistrome-hgw">
@@ -298,6 +325,7 @@ export default function CistromeHGW(props) {
                 zoomFixed={false}
                 ref={hgRef}
             />
+            <CistromeGroupLabels />
         </div>
     );
 }

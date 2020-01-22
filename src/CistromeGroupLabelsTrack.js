@@ -5,16 +5,25 @@ class CistromeGroupLabelsTrack {
             constructor(context, options) {
                 super(context, options);
                 
-                console.log(context);
+                //console.log(context);
+                //console.log(this);
+
             }
 
             draw() {
+                console.log("CistromeGroupLabelsTrackClass.draw()");
+
                 try {
-                    console.log(this.tilesetInfo.row_infos);
-                    console.log(this.dimensions);
+                    //console.log(this.tilesetInfo.row_infos);
+                    //console.log(this.dimensions);
+                    //console.log(this.position);
                 } catch(e) {
 
                 }
+            }
+
+            drawTile() {
+                console.log("CistromeGroupLabelsTrackClass.drawTile()")
             }
     
         }
