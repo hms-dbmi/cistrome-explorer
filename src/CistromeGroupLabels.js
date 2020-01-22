@@ -4,13 +4,9 @@ import PubSub from 'pubsub-js';
 import { scaleBand } from 'd3-scale';
 import { interpolateViridis } from "d3-scale-chromatic";
 
-import { GLOBAL_X_RANGE, GLOBAL_Y_RANGE, TRACK_ROW_INFO, TRACK_POSITION, TRACK_DIMENSIONS } from './constants.js';
+import { GLOBAL_X_RANGE, TRACK_ROW_INFO, TRACK_POSITION, TRACK_DIMENSIONS } from './constants.js';
 
 import './CistromeGroupLabels.css';
-
-function consoleSubscriber(msg, data) {
-    console.log(data);
-}
 
 export default function CistromeGroupLabels() {
 
