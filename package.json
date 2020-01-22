@@ -1,5 +1,6 @@
 {
   "name": "cistrome-higlass-wrapper",
+  "homepage" : "https://keller-mark.github.io/cistrome-higlass-wrapper/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
