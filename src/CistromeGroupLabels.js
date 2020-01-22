@@ -19,8 +19,9 @@ export default function CistromeGroupLabels() {
     const [y, setY] = useState(0);
     const [height, setHeight] = useState(30);
 
-    const [rowNames, setRowNames] = useState(null);
-    const columnIndex = 6;
+    const [rowNames, setRowNames] = useState([]);
+    const columnIndexA = 5;
+    const columnIndexB = 6;
 
     useEffect(() => {
         const tokenGlobalXRange = PubSub.subscribe(GLOBAL_X_RANGE, (msg, data) => {
@@ -37,7 +38,7 @@ export default function CistromeGroupLabels() {
         });
 
         const tokenRowInfo = PubSub.subscribe(TRACK_ROW_INFO, (msg, data) => {
-            setRowNames(data.map(d => d.split("\t")).map(d => d[columnIndex]));
+            setRowNames(data.map(d => d.split("\t")));
         });
 
         return (() => {
@@ -48,31 +49,51 @@ export default function CistromeGroupLabels() {
         });
     });
 
-    const categoryScale = scaleBand().domain(Array.from(new Set(rowNames))).range([0, 1]);
+    const categoryScaleA = scaleBand().domain(Array.from(new Set(rowNames.map(d => d[columnIndexA])))).range([0, 1]);
+    const categoryScaleB = scaleBand().domain(Array.from(new Set(rowNames.map(d => d[columnIndexB])))).range([0, 1]);
+    
     const colorScale = interpolateViridis;
 
-
     return (
-        <div style={{
-            position: 'absolute',
-            top: `${y}px`,
-            left: `${x0 + x1}px`, 
-            backgroundColor: 'silver', 
-            width: '90px',
-            height: `${height}px`,
-        }}>
-            {rowNames ? rowNames.map((name, i) => (
-                <span 
-                    key={i}
-                    className="row-name"
-                    style={{
-                        height:`${height/rowNames.length}px`,
-                        backgroundColor: colorScale(categoryScale(name))
-                    }}
-                    title={name}
-                >
-                </span>
-            )): (null)}
+        <div>
+            <div style={{
+                position: 'absolute',
+                top: `${y}px`,
+                left: `${x0 + x1 + 15}px`, 
+                width: '20px',
+                height: `${height}px`,
+            }}>
+                {rowNames.map((name, i) => (
+                    <span 
+                        key={i}
+                        className="row-name"
+                        style={{
+                            height:`${height/rowNames.length}px`,
+                            backgroundColor: colorScale(categoryScaleA(name[columnIndexA]))
+                        }}
+                        title={name[columnIndexA]}
+                    />
+                ))}
+            </div>
+            <div style={{
+                position: 'absolute',
+                top: `${y}px`,
+                left: `${x0 + x1 + 50}px`, 
+                width: '20px',
+                height: `${height}px`,
+            }}>
+                {rowNames.map((name, i) => (
+                    <span 
+                        key={i}
+                        className="row-name"
+                        style={{
+                            height:`${height/rowNames.length}px`,
+                            backgroundColor: colorScale(categoryScaleB(name[columnIndexB]))
+                        }}
+                        title={name[columnIndexB]}
+                    />
+                ))}
+            </div>
         </div>
     );
 }
