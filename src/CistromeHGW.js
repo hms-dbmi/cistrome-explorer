@@ -5,7 +5,6 @@ import { HiGlassComponent } from 'higlass';
 import register from 'higlass-register';
 import StackedBarTrack from 'higlass-multivec/es/StackedBarTrack.js';
 
-/*import CistromeGroupLabelsTrack from './CistromeGroupLabelsTrack.js';*/
 import CistromeGroupLabels from './CistromeGroupLabels.js';
 
 import { GLOBAL_X_RANGE, GLOBAL_Y_RANGE, TRACK_ROW_INFO, TRACK_POSITION, TRACK_DIMENSIONS } from './constants.js';
@@ -19,14 +18,6 @@ register({
     track: StackedBarTrack,
     config: StackedBarTrack.config,
 });
-
-/*
-register({
-    name: 'CistromeGroupLabelsTrack',
-    track: CistromeGroupLabelsTrack,
-    config: CistromeGroupLabelsTrack.config,
-});
-*/
 
 const demoViewConfig = {
     "editable": true,
@@ -237,18 +228,7 @@ const demoViewConfig = {
                 2000,
                 1000
               ]
-            },
-            /*{
-                "type": "cistrome-group-labels",
-                "uid": "cistrome-group-labels-track",
-                "tilesetUid": "UvVPeLHuRDiYA3qwFlm7xQ",
-                "server": "https://resgen.io/api/v1",
-                "options": {
-                  "labelPosition": "outerRight",
-                },
-                "width": 1607,
-                "height": 382,
-            }*/
+            }
           ],
           "bottom": [],
           "right": [],
