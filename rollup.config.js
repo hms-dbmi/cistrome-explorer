@@ -4,13 +4,25 @@ import merge from 'lodash/merge';
 import resolve from '@rollup/plugin-node-resolve';
 import json from '@rollup/plugin-json';
 import commonjs from '@rollup/plugin-commonjs';
+import html from '@rollup/plugin-html';
 import babel from 'rollup-plugin-babel';
 import scss from 'rollup-plugin-scss';
 import visualizer from 'rollup-plugin-visualizer';
 import { terser } from 'rollup-plugin-terser';
 
-const BUILD_DIR = 'dist';
+import { htmlFromTemplate, join } from './rollup.utils.js';
 
+// Constants for output files:
+const SRC_DIR = 'src';
+const BUILD_DIR = 'build';
+const OUTPUT_JS = {
+    'production': 'index.min.js',
+    'development': 'index.js',
+};
+const OUTPUT_CSS = 'index.css';
+const OUTPUT_HTML = 'index.html';
+
+// Only import dev server if necessary:
 let serve = (() => {});
 let livereload = (() => {});
 if(process.env.NODE_ENV === 'development') {
@@ -18,84 +30,78 @@ if(process.env.NODE_ENV === 'development') {
     livereload = require('rollup-plugin-livereload');
 }
 
-const defaultOutputConfig = {
-    sourcemap: 'inline',
-    globals: {
-        higlass: 'hglib'
-    }
-};
-
-const defaultConfig = {
-    input: 'src/index.js',
-    output: [],
+// The base rollup configuration. To be merged with dev or prod object.
+const baseConfig = {
+    input: join(SRC_DIR, 'index.js'),
+    output: {
+        file: join(BUILD_DIR, OUTPUT_JS[process.env.NODE_ENV]),
+        sourcemap: 'inline',
+        globals: {
+            higlass: 'hglib'
+        }
+    },
     plugins: [
         resolve({
             browser: true,
         }),
         scss({
-            output: `${BUILD_DIR}/index.css`,
+            output: join(BUILD_DIR, OUTPUT_CSS),
         }),
         json(),
         commonjs({
             include: [
               'node_modules/**',
-            ],
-            namedExports: {
-              'node_modules/react/index.js': ['useState', 'useEffect', 'useRef', 'cloneElement'],
-              'node_modules/higlass/dist/hglib.js': ['HiGlassComponent']
-            },
+            ]
         }),
         babel({
             runtimeHelpers: true,
             exclude: 'node_modules/**' // only transpile our source code
         }),
+        html({
+            title: pkg.name,
+            publicPath: `/${pkg.homepage.split('/')[3]}/`, // for gh-pages URL
+            fileName: OUTPUT_HTML,
+            template: ({ publicPath, title }) => {
+                return htmlFromTemplate({
+                    publicPath: (process.env.NODE_ENV === 'production' ? publicPath : './'),
+                    title: title,
+                    nodeEnv: process.env.NODE_ENV,
+                    cssFile: OUTPUT_CSS,
+                    jsFile: OUTPUT_JS[process.env.NODE_ENV],
+                });
+            }
+        })
     ],
     external: Object.keys(pkg.peerDependencies)
 };
 
 const devConfig = {
-    output: [
-        {
-            ...defaultOutputConfig,
-            file: `${BUILD_DIR}/index.js`,
-            format: 'umd',
-        },
-        {
-            ...defaultOutputConfig,
-            file: `${BUILD_DIR}/index.esm.js`,
-            format: 'es',
-        }
-    ],
+    output: {
+        format: 'umd',
+    },
     plugins: [
-        ...defaultConfig.plugins.map(() => {}),
-        ...[
-            visualizer({
-                filename: `${BUILD_DIR}/stats.html`
-            }),
-            serve({
-                port: 8000,
-                contentBase: BUILD_DIR
-            }),
-            livereload(BUILD_DIR)
-        ]
+        ...baseConfig.plugins.map(() => {}),
+        visualizer({
+            filename: join(BUILD_DIR, 'stats.html')
+        }),
+        serve({
+            port: 8000,
+            contentBase: BUILD_DIR
+        }),
+        livereload(BUILD_DIR)
     ]
 };
 
 const prodConfig = {
-    output: [
-        {
-            ...defaultOutputConfig,
-            file: `${BUILD_DIR}/index.min.js`,
-            format: 'iife',
-            plugins: [
-                terser()
-            ],
-        }
-    ],
-    plugins: []
+    output: {
+        format: 'iife',
+        plugins: [
+            terser()
+        ],
+    }
 };
 
 export default merge(
     (process.env.NODE_ENV === 'development' ? devConfig : prodConfig), 
-    defaultConfig
+    baseConfig
 );
