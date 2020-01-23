@@ -15,8 +15,7 @@
     "d3": "^5.15.0",
     "higlass-multivec": "github:higlass/higlass-multivec#es-modules-es",
     "higlass-register": "^0.1.0",
-    "lodash": "^4.17.15",
-    "pubsub-js": "^1.8.0"
+    "lodash": "^4.17.15"
   },
   "peerDependencies": {
     "higlass": "^1.8.0",

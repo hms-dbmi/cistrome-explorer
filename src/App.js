@@ -1,7 +1,8 @@
 import React from 'react';
-import './App.scss';
 
 import CistromeHGW from './CistromeHGW.js';
+
+import './App.scss';
 
 const demoViewConfig = {
     "editable": true,

@@ -1,13 +1,10 @@
-import React, { useRef, useEffect } from 'react';
-import PubSub from 'pubsub-js';
+import React, { useRef, useEffect, useState, useMemo } from 'react';
 
 import { HiGlassComponent } from 'higlass';
 import register from 'higlass-register';
 import StackedBarTrack from 'higlass-multivec/es/StackedBarTrack.js';
 
 import CistromeGroupLabels from './CistromeGroupLabels.js';
-
-import { GLOBAL_X_RANGE, GLOBAL_Y_RANGE, TRACK_ROW_INFO, TRACK_POSITION, TRACK_DIMENSIONS } from './constants.js';
 
 import 'higlass/dist/hglib.css';
 import './CistromeHGW.scss';
@@ -63,36 +60,62 @@ export default function CistromeHGW(props) {
     const { viewConfig } = props;
 
     const hgRef = useRef();
+
+    const [x1, setX1] = useState(0);
+    const [x0, setX0] = useState(0);
+    const [y, setY] = useState(0);
+    const [height, setHeight] = useState(30);
+
+    const [rowNames, setRowNames] = useState([]);
     
     useEffect(() => {
         hgRef.current.api.on('location', (d) => {
-            PubSub.publish(GLOBAL_X_RANGE, d.xRange);
-            PubSub.publish(GLOBAL_Y_RANGE, d.yRange);
+            setX1(d.xRange[1]);
         });
-
         hgRef.current.api.on('viewConfig', (newViewConfigString) => {
-            const newViewConfig = JSON.parse(newViewConfigString);
-            const [viewId, trackId] = getHorizontalMultivecViewId(newViewConfig);
             try {
+                const newViewConfig = JSON.parse(newViewConfigString);
+                const [viewId, trackId] = getHorizontalMultivecViewId(newViewConfig);
                 const trackObj = hgRef.current.api.getTrackObject(viewId, trackId);
-                PubSub.publish(TRACK_ROW_INFO, trackObj.tilesetInfo.row_infos);
-                PubSub.publish(TRACK_POSITION, trackObj.position);
-                PubSub.publish(TRACK_DIMENSIONS, trackObj.dimensions);
+
+                setX0(trackObj.position[0]);
+                setY(trackObj.position[1]);
+                setHeight(trackObj.dimensions[1]);
+                setRowNames(trackObj.tilesetInfo.row_infos.map(d => d.split("\t")));
+
             } catch(e) {
-    
+                console.log(e);
             }
         });
-    });
+
+        return () => {
+            hgRef.current.api.off('location');
+            hgRef.current.api.off('viewConfig');
+        };
+    }, [hgRef, setX0, setX1, setY, setHeight, setRowNames]);
+
+    const hgComponent = useMemo(() => {
+        console.log("HiGlassComponent.render");
+        return (
+        <HiGlassComponent
+            viewConfig={viewConfig}
+            options={hgOptions}
+            zoomFixed={false}
+            ref={hgRef}
+        />
+    )}, [viewConfig, hgOptions]);
+
+    console.log("CistromeHGW.render");
 
     return (
         <div className="cistrome-hgw">
-            <HiGlassComponent
-                viewConfig={viewConfig}
-                options={hgOptions}
-                zoomFixed={false}
-                ref={hgRef}
+            {hgComponent}
+            <CistromeGroupLabels 
+                rowNames={rowNames}
+                x={x0 + x1}
+                y={y}
+                height={height}
             />
-            <CistromeGroupLabels />
         </div>
     );
 }

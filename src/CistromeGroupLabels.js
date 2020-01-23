@@ -1,49 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import PubSub from 'pubsub-js';
-
+import React from 'react';
 import { scaleBand } from 'd3-scale';
 import { interpolateViridis } from "d3-scale-chromatic";
 
-import { GLOBAL_X_RANGE, TRACK_ROW_INFO, TRACK_POSITION, TRACK_DIMENSIONS } from './constants.js';
-
 import './CistromeGroupLabels.scss';
 
-export default function CistromeGroupLabels() {
+export default function CistromeGroupLabels(props) {
 
-    const [x1, setX1] = useState(0);
-    const [x0, setX0] = useState(0);
-    const [y, setY] = useState(0);
-    const [height, setHeight] = useState(30);
+    const {
+        x, y, height, rowNames
+    } = props;
 
-    const [rowNames, setRowNames] = useState([]);
     const columnIndexA = 5;
     const columnIndexB = 6;
-
-    useEffect(() => {
-        const tokenGlobalXRange = PubSub.subscribe(GLOBAL_X_RANGE, (msg, data) => {
-            setX1(data[1]);
-        });
-
-        const tokenTrackPosition = PubSub.subscribe(TRACK_POSITION, (msg, data) => {
-            setX0(data[0]);
-            setY(data[1]);
-        });
-
-        const tokenTrackDimensions = PubSub.subscribe(TRACK_DIMENSIONS, (msg, data) => {
-            setHeight(data[1]);
-        });
-
-        const tokenRowInfo = PubSub.subscribe(TRACK_ROW_INFO, (msg, data) => {
-            setRowNames(data.map(d => d.split("\t")));
-        });
-
-        return (() => {
-            PubSub.unsubscribe(tokenGlobalXRange);
-            PubSub.unsubscribe(tokenTrackPosition);
-            PubSub.unsubscribe(tokenTrackDimensions);
-            PubSub.unsubscribe(tokenRowInfo);
-        });
-    });
 
     const categoryScaleA = scaleBand()
         .domain(Array.from(new Set(rowNames.map(d => d[columnIndexA]))))
@@ -59,7 +27,7 @@ export default function CistromeGroupLabels() {
             <div style={{
                 position: 'absolute',
                 top: `${y}px`,
-                left: `${x0 + x1 + 15}px`, 
+                left: `${x + 15}px`, 
                 width: '20px',
                 height: `${height}px`,
             }}>
@@ -78,7 +46,7 @@ export default function CistromeGroupLabels() {
             <div style={{
                 position: 'absolute',
                 top: `${y}px`,
-                left: `${x0 + x1 + 50}px`, 
+                left: `${x + 50}px`, 
                 width: '20px',
                 height: `${height}px`,
             }}>
