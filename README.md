@@ -2,6 +2,8 @@
 
 _wrapper component for HiGlass, with features for viewing cistrome data_
 
+- [Demo](https://hms-dbmi.github.io/cistrome-higlass-wrapper/)
+
 ### Development
 
 Install dependencies:
