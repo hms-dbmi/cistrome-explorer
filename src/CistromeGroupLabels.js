@@ -6,7 +6,7 @@ import { interpolateViridis } from "d3-scale-chromatic";
 
 import { GLOBAL_X_RANGE, TRACK_ROW_INFO, TRACK_POSITION, TRACK_DIMENSIONS } from './constants.js';
 
-import './CistromeGroupLabels.css';
+import './CistromeGroupLabels.scss';
 
 export default function CistromeGroupLabels() {
 

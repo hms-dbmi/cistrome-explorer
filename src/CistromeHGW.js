@@ -10,7 +10,7 @@ import CistromeGroupLabels from './CistromeGroupLabels.js';
 import { GLOBAL_X_RANGE, GLOBAL_Y_RANGE, TRACK_ROW_INFO, TRACK_POSITION, TRACK_DIMENSIONS } from './constants.js';
 
 import 'higlass/dist/hglib.css';
-import './CistromeHGW.css';
+import './CistromeHGW.scss';
 
 register({
     name: 'StackedBarTrack',
