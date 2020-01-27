@@ -1,8 +1,9 @@
 import merge from 'lodash/merge';
 import cloneDeep from 'lodash/cloneDeep';
+import omit from 'lodash/omit';
 import Ajv from 'ajv';
 
-const DEFAULT_KEY = "__default__";
+export const DEFAULT_OPTIONS_KEY = "default";
 
 const baseSchema = {
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -11,9 +12,8 @@ const baseSchema = {
             "type": "object",
             "additionalProperties": false,
             "properties": {
-                "uid": {
-                    "type": "string"
-                },
+                "viewId": { "type": "string" },
+                "trackId": { "type": "string" },
                 "rowInfoPosition": {
                     "type": "string",
                     "enum": ["hidden", "right", "left"]
@@ -32,7 +32,7 @@ const optionsArraySchema = merge(cloneDeep(baseSchema), {
     },
     "definitions": {
         "trackOptions": {
-            "required": ["uid"]
+            "required": ["viewId", "trackId"]
         }
     }
 });
@@ -44,8 +44,11 @@ const optionsObjectSchema = merge(cloneDeep(baseSchema), {
     "definitions": {
         "trackOptions": {
             "properties": {
-                "uid": {
-                    "default": DEFAULT_KEY
+                "viewId": {
+                    "default": DEFAULT_OPTIONS_KEY
+                },
+                "trackId": {
+                    "default": DEFAULT_OPTIONS_KEY
                 }
             }
         }
@@ -76,8 +79,8 @@ export function validateWrapperOptions(optionsRaw) {
 
 export function processWrapperOptions(optionsRaw) {
     // Set up the default options:
-    const optionsProcessed = {
-        default: {
+    const options = {
+        [DEFAULT_OPTIONS_KEY]: {
             rowInfoPosition: "right",
         }
     };
@@ -85,23 +88,49 @@ export function processWrapperOptions(optionsRaw) {
     // Validate the raw options:
     const valid = validateWrapperOptions(optionsRaw);
     if(!valid) {
-        return optionsProcessed;
+        return options;
     }
 
     // Process the raw options by merging into the processed options object:
     if(Array.isArray(optionsRaw)) {
-        const optionsDefault = optionsRaw.find(o => (o.uid === DEFAULT_KEY));
-        if(optionsDefault) {
-            merge(optionsProcessed.default, optionsDefault);
+        // Check for global options.
+        const globalDefaults = optionsRaw.find(o => (o.viewId === DEFAULT_OPTIONS_KEY && o.trackId === DEFAULT_OPTIONS_KEY));
+        if(globalDefaults) {
+            options[DEFAULT_OPTIONS_KEY] = merge(
+                cloneDeep(options[DEFAULT_OPTIONS_KEY]), 
+                omit(globalDefaults, ['viewId', 'trackId'])
+            );
         }
+
+        // Check for view-specific, track-global options.
         optionsRaw.forEach((trackOptions) => {
-            if(trackOptions.uid !== DEFAULT_KEY) {
-                optionsProcessed[trackOptions.uid] = merge(cloneDeep(trackOptions), optionsProcessed.default);
+            if(trackOptions.viewId !== DEFAULT_OPTIONS_KEY && trackOptions.trackId === DEFAULT_OPTIONS_KEY) {
+                options[trackOptions.viewId] = {
+                    [DEFAULT_OPTIONS_KEY]: merge(
+                        cloneDeep(options[DEFAULT_OPTIONS_KEY]), 
+                        omit(trackOptions, ['viewId', 'trackId'])
+                    )
+                };
+            }
+        });
+
+        // Check for view-specific and track-specific options.
+        optionsRaw.forEach((trackOptions) => {
+            if(trackOptions.viewId !== DEFAULT_OPTIONS_KEY && trackOptions.trackId !== DEFAULT_OPTIONS_KEY) {
+                if(!options[trackOptions.viewId]) {
+                    options[trackOptions.viewId] = {
+                        [DEFAULT_OPTIONS_KEY]: cloneDeep(options[DEFAULT_OPTIONS_KEY])
+                    };
+                }
+                options[trackOptions.viewId][trackOptions.trackId] = merge(
+                    cloneDeep(options[trackOptions.viewId][DEFAULT_OPTIONS_KEY]), 
+                    omit(trackOptions, ['viewId', 'trackId'])
+                );
             }
         });
     } else if(typeof optionsRaw === "object") {
-        merge(optionsProcessed.default, optionsRaw);
+        options[DEFAULT_OPTIONS_KEY] = merge(cloneDeep(options[DEFAULT_OPTIONS_KEY]), optionsRaw);
     }
 
-    return optionsProcessed;
+    return options;
 }

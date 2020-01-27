@@ -255,6 +255,9 @@ function App() {
             <div className="container">
                 <CistromeHGW 
                     viewConfig={demoViewConfig}
+                    options={{
+                        rowInfoPosition: "right"
+                    }}
                 />
             </div>
         </div>
