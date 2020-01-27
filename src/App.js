@@ -256,7 +256,7 @@ function App() {
                 <CistromeHGW 
                     viewConfig={demoViewConfig}
                     options={{
-                        rowInfoPosition: "right"
+                        rowInfoPosition: "left"
                     }}
                 />
             </div>

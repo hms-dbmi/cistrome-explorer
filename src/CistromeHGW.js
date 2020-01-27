@@ -37,6 +37,7 @@ export default function CistromeHGW(props) {
     const hgRef = useRef();
 
     const [x0, setX0] = useState(0);
+    const [y0, setY0] = useState(0);
     const [options, setOptions] = useState({});
     const [trackIds, setTrackIds] = useState([]);
 
@@ -71,6 +72,7 @@ export default function CistromeHGW(props) {
     useEffect(() => {
         hgRef.current.api.on('location', (d) => {
             setX0(d.xRange[1]);
+            setY0(d.yRange[1]);
         });
         hgRef.current.api.on('viewConfig', (newViewConfigString) => {
             const newViewConfig = JSON.parse(newViewConfigString);
