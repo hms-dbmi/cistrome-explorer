@@ -1,4 +1,4 @@
 module.exports = {
-    "verbose": true,
-    "moduleFileExtensions": [ "js" ]
+    verbose: true,
+    moduleFileExtensions: [ "js" ]
 };

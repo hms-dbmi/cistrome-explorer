@@ -54,16 +54,12 @@ function getHorizontalMultivecViewId(viewConf) {
 }
 
 
-
 /**
  * @component Cistrome HiGlass Wrapper 
  */
 export default function CistromeHGW(props) {
 
-    const { viewConfig, wOptions } = props;
-
-    const wOptionsProcessed = processWrapperOptions(wOptions);
-    console.log(wOptionsProcessed);
+    const { viewConfig, options: optionsRaw } = props;
 
     const hgRef = useRef();
 
@@ -73,6 +69,8 @@ export default function CistromeHGW(props) {
     const [height, setHeight] = useState(0);
 
     const [rowNames, setRowNames] = useState([]);
+
+    const [options, setOptions] = useState({});
 
     function onViewConfig(newViewConfig) {
         try {
@@ -87,6 +85,10 @@ export default function CistromeHGW(props) {
             console.log(e);
         }
     }
+
+    useEffect(() => {
+        setOptions(processWrapperOptions(optionsRaw));
+    }, [optionsRaw]);
     
     useEffect(() => {
         hgRef.current.api.on('location', (d) => {

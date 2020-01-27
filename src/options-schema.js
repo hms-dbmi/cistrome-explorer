@@ -2,6 +2,8 @@ import merge from 'lodash/merge';
 import cloneDeep from 'lodash/cloneDeep';
 import Ajv from 'ajv';
 
+const DEFAULT_KEY = "__default__";
+
 const baseSchema = {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "definitions": {
@@ -21,7 +23,7 @@ const baseSchema = {
     }
 };
 
-export const wOptionsArraySchema = merge(cloneDeep(baseSchema), {
+const optionsArraySchema = merge(cloneDeep(baseSchema), {
     "title": "CistromeHGW wOptions (array)",
     "type": "array",
     "items": {
@@ -35,7 +37,7 @@ export const wOptionsArraySchema = merge(cloneDeep(baseSchema), {
     }
 });
 
-export const wOptionsObjectSchema = merge(cloneDeep(baseSchema), {
+const optionsObjectSchema = merge(cloneDeep(baseSchema), {
     "title": "CistromeHGW wOptions (object)",
     "type": "object",
     "$ref": "#/definitions/trackOptions",
@@ -43,7 +45,7 @@ export const wOptionsObjectSchema = merge(cloneDeep(baseSchema), {
         "trackOptions": {
             "properties": {
                 "uid": {
-                    "default": "default"
+                    "default": DEFAULT_KEY
                 }
             }
         }
@@ -51,19 +53,19 @@ export const wOptionsObjectSchema = merge(cloneDeep(baseSchema), {
 });
 
 /**
- * @param {any} wOptions The raw value of the wOptions prop.
+ * @param {any} optionsRaw The raw value of the options prop.
  * @returns {object} The processed wOptions object, mapping track IDs to options objects.
  */
-export function validateWrapperOptions(wOptions) {
+export function validateWrapperOptions(optionsRaw) {
     let validate;
-    if(Array.isArray(wOptions)) {
-        validate = new Ajv({ extendRefs: true }).compile(wOptionsArraySchema);
-    } else if(typeof wOptions === "object") {
-        validate = new Ajv({ extendRefs: true }).compile(wOptionsObjectSchema);
-    } else if(!wOptions) {
+    if(Array.isArray(optionsRaw)) {
+        validate = new Ajv({ extendRefs: true }).compile(optionsArraySchema);
+    } else if(typeof optionsRaw === "object") {
+        validate = new Ajv({ extendRefs: true }).compile(optionsObjectSchema);
+    } else if(!optionsRaw) {
         return true;
     }
-    const valid = validate(wOptions);
+    const valid = validate(optionsRaw);
 
     if (validate.errors) {
         console.warn(JSON.stringify(validate.errors, null, 2));
@@ -72,28 +74,34 @@ export function validateWrapperOptions(wOptions) {
     return valid;
 }
 
-export function processWrapperOptions(wOptions) {
-
-    validateWrapperOptions(wOptions);
-
-    const processedOptions = {
+export function processWrapperOptions(optionsRaw) {
+    // Set up the default options:
+    const optionsProcessed = {
         default: {
             rowInfoPosition: "right",
         }
     };
 
-   if(Array.isArray(wOptions)) {
-        wOptions.forEach((trackOptions) => {
-            if(trackOptions.uid === "default") {
-                merge(processedOptions.default, trackOptions);
-            } else {
-                processedOptions[trackOptions.uid] = trackOptions;
-            }
-        });
-    } else if(typeof wOptions === "object") {
-        merge(processedOptions.default, wOptions);
+    // Validate the raw options:
+    const valid = validateWrapperOptions(optionsRaw);
+    if(!valid) {
+        return optionsProcessed;
     }
 
-    return processedOptions;
+    // Process the raw options by merging into the processed options object:
+    if(Array.isArray(optionsRaw)) {
+        const optionsDefault = optionsRaw.find(o => (o.uid === DEFAULT_KEY));
+        if(optionsDefault) {
+            merge(optionsProcessed.default, optionsDefault);
+        }
+        optionsRaw.forEach((trackOptions) => {
+            if(trackOptions.uid !== DEFAULT_KEY) {
+                optionsProcessed[trackOptions.uid] = merge(cloneDeep(trackOptions), optionsProcessed.default);
+            }
+        });
+    } else if(typeof optionsRaw === "object") {
+        merge(optionsProcessed.default, optionsRaw);
+    }
 
+    return optionsProcessed;
 }
