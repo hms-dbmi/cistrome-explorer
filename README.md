@@ -22,11 +22,7 @@ Run tests:
 
 ```sh
 yarn test
-```
-
-Run tests and watch:
-
-```sh
+# or
 yarn test --watch
 ```
 
