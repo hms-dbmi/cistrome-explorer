@@ -6,6 +6,8 @@ import StackedBarTrack from 'higlass-multivec/es/StackedBarTrack.js';
 
 import CistromeGroupLabels from './CistromeGroupLabels.js';
 
+import { processWrapperOptions } from './options-schema.js';
+
 import 'higlass/dist/hglib.css';
 import './CistromeHGW.scss';
 
@@ -15,7 +17,7 @@ register({
     config: StackedBarTrack.config,
 });
 
-const hgOptions = {
+const hgOptionsBase = {
     bounded: true,
     pixelPreciseMarginPadding: true,
     containerPaddingX: 0,
@@ -52,40 +54,47 @@ function getHorizontalMultivecViewId(viewConf) {
 }
 
 
+
 /**
  * @component Cistrome HiGlass Wrapper 
  */
 export default function CistromeHGW(props) {
 
-    const { viewConfig } = props;
+    const { viewConfig, wOptions } = props;
+
+    const wOptionsProcessed = processWrapperOptions(wOptions);
+    console.log(wOptionsProcessed);
 
     const hgRef = useRef();
 
-    const [x1, setX1] = useState(0);
     const [x0, setX0] = useState(0);
+    const [x1, setX1] = useState(0);
     const [y, setY] = useState(0);
-    const [height, setHeight] = useState(30);
+    const [height, setHeight] = useState(0);
 
     const [rowNames, setRowNames] = useState([]);
+
+    function onViewConfig(newViewConfig) {
+        try {
+            const [viewId, trackId] = getHorizontalMultivecViewId(newViewConfig);
+            const trackObj = hgRef.current.api.getTrackObject(viewId, trackId);
+
+            setX0(trackObj.position[0]);
+            setY(trackObj.position[1]);
+            setHeight(trackObj.dimensions[1]);
+            setRowNames(trackObj.tilesetInfo.row_infos.map(d => d.split("\t")));
+        } catch(e) {
+            console.log(e);
+        }
+    }
     
     useEffect(() => {
         hgRef.current.api.on('location', (d) => {
             setX1(d.xRange[1]);
         });
         hgRef.current.api.on('viewConfig', (newViewConfigString) => {
-            try {
-                const newViewConfig = JSON.parse(newViewConfigString);
-                const [viewId, trackId] = getHorizontalMultivecViewId(newViewConfig);
-                const trackObj = hgRef.current.api.getTrackObject(viewId, trackId);
-
-                setX0(trackObj.position[0]);
-                setY(trackObj.position[1]);
-                setHeight(trackObj.dimensions[1]);
-                setRowNames(trackObj.tilesetInfo.row_infos.map(d => d.split("\t")));
-
-            } catch(e) {
-                console.log(e);
-            }
+            const newViewConfig = JSON.parse(newViewConfigString);
+            onViewConfig(newViewConfig);
         });
 
         return () => {
@@ -95,6 +104,13 @@ export default function CistromeHGW(props) {
     }, [hgRef, setX0, setX1, setY, setHeight, setRowNames]);
 
     const hgComponent = useMemo(() => {
+        const hgOptions = {
+            ...hgOptionsBase,
+            onViewConfLoaded: () => {
+                onViewConfig(viewConfig);
+            }
+        };
+
         console.log("HiGlassComponent.render");
         return (
         <HiGlassComponent
@@ -103,10 +119,9 @@ export default function CistromeHGW(props) {
             zoomFixed={false}
             ref={hgRef}
         />
-    )}, [viewConfig, hgOptions]);
+    )}, [viewConfig]);
 
     console.log("CistromeHGW.render");
-
     return (
         <div className="cistrome-hgw">
             {hgComponent}

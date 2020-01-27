@@ -18,6 +18,18 @@ Run development server:
 yarn start
 ```
 
+Run tests:
+
+```sh
+yarn test
+```
+
+Run tests and watch:
+
+```sh
+yarn test --watch
+```
+
 ### Production
 
 Build for production:

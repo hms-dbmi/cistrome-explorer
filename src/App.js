@@ -254,7 +254,7 @@ function App() {
 
             <div className="container">
                 <CistromeHGW 
-                    viewConfig={demoViewConfig} 
+                    viewConfig={demoViewConfig}
                 />
             </div>
         </div>
