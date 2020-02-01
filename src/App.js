@@ -176,8 +176,8 @@ const demoViewConfig = {
             {
               "type": "horizontal-multivec",
               "uid": "cistrome-track",
-              "tilesetUid": "UvVPeLHuRDiYA3qwFlm7xQ",
-              "server": "https://resgen.io/api/v1",
+              "tilesetUid": "cistrome-demo",
+              "server": "http://localhost:9000/api/v1",
               "options": {
                 "labelPosition": "hidden",
                 "labelColor": "black",
@@ -186,7 +186,7 @@ const demoViewConfig = {
                 "trackBorderWidth": 0,
                 "trackBorderColor": "black",
                 "heatmapValueScaling": "log",
-                "name": "my_file_genome_wide.multires.mv5",
+                "name": "chr1_127epigenomes_15observedStates.multires.mv5",
                 "labelLeftMargin": 0,
                 "labelRightMargin": 0,
                 "labelTopMargin": 0,
@@ -256,7 +256,7 @@ function App() {
                 <CistromeHGW 
                     viewConfig={demoViewConfig}
                     options={{
-                        rowInfoPosition: "left"
+                        rowInfoPosition: "right"
                     }}
                 />
             </div>

@@ -9,7 +9,13 @@ export default function TrackWrapper(props) {
     const x1 = track.position[0];
     const y1 = track.position[1];
     const height = track.dimensions[1];
-    const rowInfo = track.tilesetInfo.row_infos.map(d => d.split("\t"));
+    let rowInfo = [];
+    try {
+        rowInfo = track.tilesetInfo.row_infos.map(JSON.parse);
+    } catch(e) {
+        // Tileset info probably has not yet loaded:
+        console.log(e);
+    }
 
     console.log("TrackWrapper.render");
     return (
@@ -21,8 +27,8 @@ export default function TrackWrapper(props) {
                     x1={x1}
                     y1={y1}
                     height={height}
-                    infoAttrPrimary={4}
-                    infoAttrSecondary={6}
+                    infoAttrPrimary={"r1"}
+                    infoAttrSecondary={"r2"}
                     rowInfoPosition={options.rowInfoPosition}
                 />) : null}
         </div>

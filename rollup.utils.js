@@ -22,6 +22,7 @@ export function htmlFromTemplate({ title, publicPath, nodeEnv, cssFile, jsFile }
         <title>${title}</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://unpkg.com/higlass@1.8.0/dist/hglib.css">
         <link rel="stylesheet" href="${publicPath}${cssFile}"/>
     </head>
     <body>

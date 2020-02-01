@@ -5,11 +5,11 @@ import register from 'higlass-register';
 import StackedBarTrack from 'higlass-multivec/es/StackedBarTrack.js';
 
 import TrackWrapper from './TrackWrapper.js';
+import Tooltip from './Tooltip.js';
 
 import { processWrapperOptions, DEFAULT_OPTIONS_KEY } from './utils-options.js';
 import { getHorizontalMultivecTracksFromViewConfig } from './utils-viewconf.js';
 
-import 'higlass/dist/hglib.css';
 import './CistromeHGW.scss';
 
 register({
@@ -116,6 +116,7 @@ export default function CistromeHGW(props) {
                     x0={x0}
                 />
             ))}
+            <Tooltip />
         </div>
     );
 }
