@@ -42,7 +42,8 @@ export default function CistromeHGW(props) {
     const [trackIds, setTrackIds] = useState([]);
 
     function onViewConfig(newViewConfig) {
-        setTrackIds(getHorizontalMultivecTracksFromViewConfig(newViewConfig));
+        const newTrackIds = getHorizontalMultivecTracksFromViewConfig(newViewConfig);
+        setTrackIds(newTrackIds);
     }
 
     function getTrackObject(viewId, trackId) {
@@ -83,7 +84,7 @@ export default function CistromeHGW(props) {
             hgRef.current.api.off('location');
             hgRef.current.api.off('viewConfig');
         };
-    }, [hgRef, setX0]);
+    }, [hgRef, setX0, setY0]);
 
     const hgComponent = useMemo(() => {
         const hgOptions = {
@@ -103,6 +104,7 @@ export default function CistromeHGW(props) {
             />
         );
     }, [viewConfig]);
+    
 
     console.log("CistromeHGW.render");
     return (

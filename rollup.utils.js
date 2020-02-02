@@ -1,17 +1,17 @@
 const peerScripts = {
     'development': `
-        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
-        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
-        <script crossorigin src="https://unpkg.com/pixi.js@5/dist/pixi.js"></script>
-        <script crossorigin src="https://unpkg.com/react-bootstrap@0.32.1/dist/react-bootstrap.js"></script>
-        <script crossorigin src="https://unpkg.com/higlass@1.8.0/dist/hglib.js"></script>
+        <script crossorigin type="text/javascript" src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin type="text/javascript" src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin type="text/javascript" src="https://unpkg.com/pixi.js@5/dist/pixi.js"></script>
+        <script crossorigin type="text/javascript" src="https://unpkg.com/react-bootstrap@0.32.1/dist/react-bootstrap.js"></script>
+        <script crossorigin type="text/javascript" src="https://unpkg.com/higlass@1.8.0/dist/hglib.js"></script>
     `,
     'production': `
-        <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
-        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
-        <script crossorigin src="https://unpkg.com/pixi.js@5/dist/pixi.min.js"></script>
-        <script crossorigin src="https://unpkg.com/react-bootstrap@0.32.1/dist/react-bootstrap.min.js"></script>
-        <script crossorigin src="https://unpkg.com/higlass@1.8.0/dist/hglib.min.js"></script>
+        <script crossorigin type="text/javascript" src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+        <script crossorigin type="text/javascript" src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+        <script crossorigin type="text/javascript" src="https://unpkg.com/pixi.js@5/dist/pixi.min.js"></script>
+        <script crossorigin type="text/javascript" src="https://unpkg.com/react-bootstrap@0.32.1/dist/react-bootstrap.min.js"></script>
+        <script crossorigin type="text/javascript" src="https://unpkg.com/higlass@1.8.0/dist/hglib.min.js"></script>
     `
 };
 
@@ -32,7 +32,7 @@ export function htmlFromTemplate({ title, publicPath, nodeEnv, cssFile, jsFile }
         
         ${peerScripts[nodeEnv]}
         
-        <script src="${publicPath}${jsFile}"></script>
+        <script type="text/javascript" src="${publicPath}${jsFile}"></script>
     </body>
 </html>`;
 };

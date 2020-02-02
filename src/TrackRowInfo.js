@@ -33,6 +33,7 @@ export default function TrackRowInfo(props) {
         primaryLeft = 0;
         secondaryLeft = colWidth + xMargin;
     }
+    
 
     // Scales
     const yScale = vega_scale('band')()

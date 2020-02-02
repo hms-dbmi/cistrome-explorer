@@ -9,3 +9,15 @@
     margin-left: 15%;
     box-sizing: border-box;
 }
+
+.viewconf-options {
+    form {
+        span {
+            display: block;
+            label {
+                margin-left: 10px;
+                cursor: pointer;
+            }
+        }
+    }
+}

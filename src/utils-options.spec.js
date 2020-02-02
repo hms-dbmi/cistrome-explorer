@@ -41,20 +41,15 @@ describe('Utilities for processing wrapper component options', () => {
         expect(valid).toBe(true);
     });
 
-
     it('Should process options object', () => {
         const processedOptions = processWrapperOptions(
             {
                 rowInfoPosition: "left"
             }
         );
-        expect(processedOptions).toEqual(
-            {
-                default: {
-                    rowInfoPosition: "left"
-                }
-            }
-        );
+
+        expect(Object.keys(processedOptions)).toEqual(['default']);
+        expect(processedOptions.default.rowInfoPosition).toEqual("left");
     });
 
     it('Should process options array with global default', () => {
@@ -65,11 +60,9 @@ describe('Utilities for processing wrapper component options', () => {
                 rowInfoPosition: "left"
             }
         ]);
-        expect(processedOptions).toEqual({
-            default: {
-                rowInfoPosition: "left",
-            }
-        });
+
+        expect(Object.keys(processedOptions)).toEqual(['default']);
+        expect(processedOptions.default.rowInfoPosition).toEqual("left");
     });
 
     it('Should process options array with view default', () => {
@@ -85,16 +78,10 @@ describe('Utilities for processing wrapper component options', () => {
                 rowInfoPosition: "right"
             }
         ]);
-        expect(processedOptions).toEqual({
-            default: {
-                rowInfoPosition: "left",
-            },
-            viewA: {
-                default: {
-                    rowInfoPosition: "right",
-                }
-            }
-        });
+
+        expect(Object.keys(processedOptions)).toEqual(['default', 'viewA']);
+        expect(processedOptions.default.rowInfoPosition).toEqual("left");
+        expect(processedOptions.viewA.default.rowInfoPosition).toEqual("right");
     });
 
     it('Should process options array with view and track defaults', () => {
@@ -125,26 +112,12 @@ describe('Utilities for processing wrapper component options', () => {
                 rowInfoPosition: "hidden"
             },
         ]);
-        expect(processedOptions).toEqual({
-            default: {
-                rowInfoPosition: "left",
-            },
-            viewA: {
-                default: {
-                    rowInfoPosition: "right",
-                },
-                trackA: {
-                    rowInfoPosition: "hidden",
-                },
-                trackB: {
-                    rowInfoPosition: "left",
-                }
-            },
-            viewB: {
-                default: {
-                    rowInfoPosition: "hidden",
-                }
-            }
-        });
+
+        expect(Object.keys(processedOptions)).toEqual(['default', 'viewA', 'viewB']);
+        expect(processedOptions.default.rowInfoPosition).toEqual("left");
+        expect(processedOptions.viewA.default.rowInfoPosition).toEqual("right");
+        expect(processedOptions.viewA.trackA.rowInfoPosition).toEqual("hidden");
+        expect(processedOptions.viewA.trackB.rowInfoPosition).toEqual("left");
+        expect(processedOptions.viewB.default.rowInfoPosition).toEqual("hidden");
     });
 });
