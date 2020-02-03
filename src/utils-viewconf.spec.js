@@ -2,8 +2,8 @@
 
 import { getTracksIdsFromViewConfig } from './utils-viewconf.js';
 
-import hgDemoViewConfig1 from './configs/horizontal-multivec.json';
-import hgDemoViewConfig2 from './configs/horizontal-multivec-local.json';
+import hgDemoViewConfig1 from './viewconfigs/horizontal-multivec.json';
+import hgDemoViewConfig2 from './viewconfigs/horizontal-multivec-local.json';
 
 describe('Utilities for processing higlass view config objects', () => {
     it('Should find all horizontal-multivec track IDs', () => {
