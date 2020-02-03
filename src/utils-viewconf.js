@@ -3,7 +3,7 @@
  * @param {object} viewConf A valid HiGlass viewConfig object.
  * @returns {array} Array containing [viewId, trackId] for each horizontal-multivec track.
  */
-export function getHorizontalMultivecTracksFromViewConfig(viewConf) {
+export function getTracksIdsFromViewConfig(viewConf) {
     const mvTracks = [];
     if(viewConf && viewConf.views && Array.isArray(viewConf.views)) {
         for(let view of viewConf.views) {

@@ -49,8 +49,8 @@
     "sass": "^1.25.0"
   },
   "scripts": {
-    "start-demo": "rollup -c rollup.demo.config.js --environment NODE_ENV:development --watch",
-    "build-demo": "rollup -c rollup.demo.config.js --environment NODE_ENV:production",
+    "start": "rollup -c rollup.demo.config.js --environment NODE_ENV:development --watch",
+    "build": "rollup -c rollup.demo.config.js --environment NODE_ENV:production",
     "build-pkg": "rollup -c rollup.pkg.config.js --environment NODE_ENV:production",
     "test": "jest -c jest.config.js",
     "docs": "documentation build src/** -f html -o docs --config .documentation.yml"

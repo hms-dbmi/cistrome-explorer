@@ -8,7 +8,7 @@ import TrackWrapper from './TrackWrapper.js';
 import Tooltip from './Tooltip.js';
 
 import { processWrapperOptions, DEFAULT_OPTIONS_KEY } from './utils-options.js';
-import { getHorizontalMultivecTracksFromViewConfig } from './utils-viewconf.js';
+import { getTracksIdsFromViewConfig } from './utils-viewconf.js';
 
 import './CistromeHGW.scss';
 
@@ -52,8 +52,7 @@ export default function CistromeHGW(props) {
     const [trackIds, setTrackIds] = useState([]);
 
     function onViewConfig(newViewConfig) {
-        const newTrackIds = getHorizontalMultivecTracksFromViewConfig(newViewConfig);
-        setTrackIds(newTrackIds);
+        setTrackIds(getTracksIdsFromViewConfig(newViewConfig));
     }
 
     function getTrackObject(viewId, trackId) {

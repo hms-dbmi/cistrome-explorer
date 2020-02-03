@@ -7,7 +7,7 @@ cache:
     - node_modules
 script:
   - yarn test
-  - yarn build-demo
+  - yarn build
 before_deploy:
   - yarn docs
   - mv ./docs ./build-demo/docs
