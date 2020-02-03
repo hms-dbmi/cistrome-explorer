@@ -170,7 +170,7 @@
             {
               "type": "horizontal-multivec",
               "uid": "cistrome-track-local",
-              "tilesetUid": "cistrome-demo",
+              "tilesetUid": "cistrome-demo-small",
               "server": "http://localhost:9000/api/v1",
               "options": {
                 "labelPosition": "hidden",
@@ -180,7 +180,7 @@
                 "trackBorderWidth": 0,
                 "trackBorderColor": "black",
                 "heatmapValueScaling": "log",
-                "name": "chr1_127epigenomes_15observedStates.multires.mv5",
+                "name": "chr1_127epigenomes_15observedStates.12.multires.mv5",
                 "labelLeftMargin": 0,
                 "labelRightMargin": 0,
                 "labelTopMargin": 0,

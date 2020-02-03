@@ -25,20 +25,22 @@ export default function TrackRowLink(props) {
 
     // Dimensions
     const top = y1;
-    const width = 120;
-    const xMarginInitial = 5;
-    const fontSize = 9;
+    const width = 140;
+    const xMarginInitial = 0;
+    const fontSize = 10;
 
-    let left;
+    let left, textAlign;
     if(rowLinkPosition === "left") {
         left = x1 - xMarginInitial - width;
+        textAlign = "right";
     } else if(rowLinkPosition === "right") {
         left = x0 + x1 + xMarginInitial;
+        textAlign = "left";
     }
 
     // Scales
     const yScale = vega_scaleBand()
-        .domain(range(rowInfo.length - 1))
+        .domain(range(rowInfo.length))
         .range([0, height]);
 
     const rowHeight = yScale.bandwidth();
@@ -57,7 +59,32 @@ export default function TrackRowLink(props) {
                 height: `${height}px`,
             }}
         >
-            <p>TODO</p>
+            {rowInfo.map((info, i) => (
+                <div
+                    key={i}
+                    className="row-link"
+                    style={{
+                        height: `${rowHeight}px`,
+                        width: `${width}px`
+                    }}
+                >
+                    {info[rowLinkAttribute] ? (
+                        <a 
+                            href={info[rowLinkAttribute]}
+                            title={info[rowLinkAttribute]}
+                            target="_blank"
+                            style={{
+                                fontSize: `${fontSize}px`,
+                                lineHeight: `${rowHeight}px`,
+                                textAlign: textAlign,
+                                [textAlign]: 0
+                            }}
+                        >
+                            {info[rowLinkAttribute]}
+                        </a>
+                    ) : null}
+                </div>
+            ))}
         </div>
     );
 }
