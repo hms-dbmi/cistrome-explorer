@@ -7,10 +7,13 @@ cache:
     - node_modules
 script:
   - yarn test
-  - yarn build
+  - yarn build-demo
+before_deploy:
+  - yarn docs
+  - mv ./docs ./build-demo/docs
 deploy:
   - provider: pages
     skip-cleanup: true
     github-token: $github_token
-    local-dir: build
+    local-dir: build-demo
 keep-history: true

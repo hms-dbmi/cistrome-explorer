@@ -60,8 +60,9 @@ const optionsObjectSchema = merge(cloneDeep(baseSchema), {
 });
 
 /**
+ * Validate the CistromeHGW `options` prop.
  * @param {any} optionsRaw The raw value of the options prop.
- * @returns {object} The processed wOptions object, mapping track IDs to options objects.
+ * @returns {Boolean} True if the options prop value was valid.
  */
 export function validateWrapperOptions(optionsRaw) {
     let validate;
@@ -81,6 +82,11 @@ export function validateWrapperOptions(optionsRaw) {
     return valid;
 }
 
+/**
+ * Process the CistromeHGW `options` prop by mapping track IDs to objects containing values for all possible option attributes.
+ * @param {(Object|Object[]|null)} optionsRaw The raw value of the options prop.
+ * @returns {Object} A processed options object, mapping track IDs to options objects, and merging with defaults.
+ */
 export function processWrapperOptions(optionsRaw) {
     // Set up the default options:
     const options = {
