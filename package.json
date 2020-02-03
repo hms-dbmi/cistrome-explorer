@@ -1,16 +1,13 @@
 {
   "name": "cistrome-higlass-wrapper",
-  "homepage": "https://hms-dbmi.github.io/cistrome-higlass-wrapper/",
   "version": "0.1.0",
   "author": "Gehlenborg Lab (http://gehlenborglab.org/)",
-  "main": "dist/index.js",
-  "unpkg": "dist/index.min.js",
-  "module": "dist/index.esm.js",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/hms-dbmi/cistrome-higlass-wrapper"
   },
+  "homepage": "https://hms-dbmi.github.io/cistrome-higlass-wrapper/",
   "dependencies": {
     "ajv": "^6.11.0",
     "d3": "^5.15.0",
@@ -54,5 +51,8 @@
     "build-pkg": "rollup -c rollup.pkg.config.js --environment NODE_ENV:production",
     "test": "jest -c jest.config.js",
     "docs": "documentation build src/** -f html -o docs --config .documentation.yml"
-  }
+  },
+  "main": "build-pkg/index.umd.js",
+  "unpkg": "build-pkg/index.min.js",
+  "module": "build-pkg/index.esm.js"
 }
