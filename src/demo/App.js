@@ -14,7 +14,7 @@ const hgViewConfigs = {
 
 export default function App() {
 
-    const [selectedKey, setSelectedKey] = useState(Object.keys(hgViewConfigs)[1]);
+    const [selectedKey, setSelectedKey] = useState(Object.keys(hgViewConfigs)[0]);
 
     return (
         <div className="app">
