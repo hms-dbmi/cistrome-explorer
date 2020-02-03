@@ -21,6 +21,9 @@ const baseSchema = {
                 "rowLinkPosition": {
                     "type": "string",
                     "enum": ["hidden", "right", "left"]
+                },
+                "rowLinkAttribute": {
+                    "type": "string"
                 }
             }
         }
@@ -92,7 +95,8 @@ export function processWrapperOptions(optionsRaw) {
     const options = {
         [DEFAULT_OPTIONS_KEY]: {
             rowInfoPosition: "right",
-            rowLinkPosition: "left"
+            rowLinkPosition: "left",
+            rowLinkAttribute: "url"
         }
     };
 

@@ -36,7 +36,7 @@ const baseConfig = {
     input: join(SRC_DIR, 'demo', 'index.js'),
     output: {
         file: join(BUILD_DIR, OUTPUT_JS[process.env.NODE_ENV]),
-        sourcemap: 'inline',
+        sourcemap: true,
         globals: {
             higlass: 'hglib'
         }

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import TrackRowInfo from './TrackRowInfo.js';
+import TrackRowLink from './TrackRowLink.js';
 
 /**
  * Wrapper component associated with a particular HiGlass track.
@@ -44,6 +45,16 @@ export default function TrackWrapper(props) {
                     infoAttrPrimary={5}
                     infoAttrSecondary={6}
                     rowInfoPosition={options.rowInfoPosition}
+                />) : null}
+            {options.rowLinkPosition !== "hidden" ? 
+                (<TrackRowLink
+                    rowInfo={rowInfo}
+                    x0={x0}
+                    x1={x1}
+                    y1={y1}
+                    height={height}
+                    rowLinkAttribute={options.rowLinkAttribute}
+                    rowLinkPosition={options.rowLinkPosition}
                 />) : null}
         </div>
     );

@@ -16,7 +16,7 @@ const OUTPUT_CSS = 'index.css';
 
 const outputDefaults = {
     name: 'CistromeHGW',
-    sourcemap: 'inline',
+    sourcemap: true,
     globals: {
         higlass: 'hglib'
     }

@@ -1,12 +1,21 @@
 import React, { useEffect, useRef } from 'react';
-import { scale as vega_scale } from 'vega-scale';
 import { interpolateViridis as d3_interpolateViridis } from "d3-scale-chromatic";
 import range from 'lodash/range';
-import { mouse as d3_mouse, event as d3_event } from 'd3';
+import { mouse as d3_mouse, event as d3_event } from 'd3-selection';
+import { scaleThreshold as d3_scaleThreshold } from 'd3-scale';
 
+import { vega_scaleBand } from './utils-scales.js';
 import { setupCanvas, teardownCanvas } from './utils-canvas.js';
 
 import './TrackRowInfo.scss';
+
+function destroyTooltip() {
+    PubSub.publish("tooltip", {
+        x: null,
+        y: null,
+        content: null
+    });
+}
 
 /**
  * Component for visualization of two row info attribute values.
@@ -28,11 +37,28 @@ export default function TrackRowInfo(props) {
         rowInfoPosition
     } = props;
 
+    // Dimensions
     const top = y1;
     const width = 120;
     const colWidth = 15;
     const xMargin = 60;
     const xMarginInitial = 5;
+
+    // Scales
+    const xScale = d3_scaleThreshold();
+    const yScale = vega_scaleBand()
+        .domain(range(rowInfo.length - 1))
+        .range([0, height]);
+
+    const valueScalePrimary = vega_scaleBand()
+        .domain(Array.from(new Set(rowInfo.map(d => d[infoAttrPrimary]))))
+        .range([0, 1]);
+    
+    const valueScaleSecondary = vega_scaleBand()
+        .domain(Array.from(new Set(rowInfo.map(d => d[infoAttrSecondary]))))
+        .range([0, 1]);
+
+    const colorScale = d3_interpolateViridis;
 
     // Left offsets condition on left vs. right positioning:
     let left, primaryLeft, secondaryLeft;
@@ -40,27 +66,19 @@ export default function TrackRowInfo(props) {
         left = x1 - xMarginInitial - width;
         primaryLeft = width - colWidth;
         secondaryLeft = width - colWidth - xMargin - colWidth;
+
+        xScale
+            .domain([secondaryLeft, secondaryLeft+colWidth, primaryLeft, primaryLeft+colWidth, width])
+            .range(["m-0", "secondary", "m-1", "primary", "m-2"]);
     } else if(rowInfoPosition === "right") {
         left = x0 + x1 + xMarginInitial;
         primaryLeft = 0;
         secondaryLeft = colWidth + xMargin;
+
+        xScale
+            .domain([primaryLeft, primaryLeft+colWidth, secondaryLeft, secondaryLeft+colWidth, width])
+            .range(["m-0", "primary", "m-1", "secondary", "m-2"]);
     }
-    
-
-    // Scales
-    const yScale = vega_scale('band')()
-        .domain(range(rowInfo.length - 1))
-        .range([0, height]);
-
-    const valueScalePrimary = vega_scale('band')()
-        .domain(Array.from(new Set(rowInfo.map(d => d[infoAttrPrimary]))))
-        .range([0, 1]);
-    
-    const valueScaleSecondary = vega_scale('band')()
-        .domain(Array.from(new Set(rowInfo.map(d => d[infoAttrSecondary]))))
-        .range([0, 1]);
-
-    const colorScale = d3_interpolateViridis;
     
     // Canvas
     const canvasRef = useRef();
@@ -86,6 +104,17 @@ export default function TrackRowInfo(props) {
             const mouseY = mouse[1];
 
             const y = yScale.invert(mouseY);
+            const x = xScale(mouseX);
+            
+            let xVal;
+            if(x === "primary") {
+                xVal = rowInfo[y][infoAttrPrimary];
+            } else if(x === "secondary") {
+                xVal = rowInfo[y][infoAttrSecondary];
+            } else {
+                destroyTooltip();
+                return;
+            }
 
             const mouseViewportX = d3_event.clientX;
             const mouseViewportY = d3_event.clientY;
@@ -93,22 +122,15 @@ export default function TrackRowInfo(props) {
             PubSub.publish("tooltip", {
                 x: mouseViewportX,
                 y: mouseViewportY,
-                content: "Test " + y
+                content: `Value: ${xVal}`
             });
         });
 
-        canvasSelection.on("mouseout", () => {
-            PubSub.publish("tooltip", {
-                x: null,
-                y: null,
-                content: null
-            });
-        })
+        canvasSelection.on("mouseout", destroyTooltip)
 
         return (() => teardownCanvas(canvasRef));
     });
 
-    console.log("TrackRowInfo.render");
     return (
         <div>
             <canvas
