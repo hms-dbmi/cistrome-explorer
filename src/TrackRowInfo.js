@@ -8,6 +8,18 @@ import { setupCanvas, teardownCanvas } from './utils-canvas.js';
 
 import './TrackRowInfo.scss';
 
+/**
+ * Component for visualization of two row info attribute values.
+ * @prop {number} x0
+ * @prop {number} x1
+ * @prop {number} y0
+ * @prop {number} y1
+ * @prop {number} height The track height.
+ * @prop {Array} rowInfo Array of JSON objects, one object for each row.
+ * @prop {string} infoAttrPrimary
+ * @prop {string} infoAttrSecondary
+ * @prop {string} rowInfoPosition The value of the `rowInfoPosition` option.
+ */
 export default function TrackRowInfo(props) {
 
     const {

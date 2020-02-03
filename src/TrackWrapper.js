@@ -2,7 +2,13 @@ import React from 'react';
 
 import TrackRowInfo from './TrackRowInfo.js';
 
-
+/**
+ * Wrapper component associated with a particular HiGlass track.
+ * @prop {number} x0 Horizontal offset.
+ * @prop {number} y0 Vertical offset.
+ * @prop {Object} options Options associated with the track. Contains values for all possible options.
+ * @prop {Object} track A track object returned by `hgc.api.getTrackObject()`.
+ */
 export default function TrackWrapper(props) {
     const { x0, y0, options, track } = props;
 

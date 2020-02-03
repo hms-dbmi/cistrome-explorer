@@ -3,7 +3,12 @@ import PubSub from 'pubsub-js';
 
 import './Tooltip.scss';
 
-export default function Tooltip(props) {
+/**
+ * Tooltip component. Subscribes to 'tooltip' event via `PubSub`.
+ * @example
+ * <Tooltip />
+ */
+export default function Tooltip() {
 
     const [left, setLeft] = useState(null);
     const [top, setTop] = useState(null);
