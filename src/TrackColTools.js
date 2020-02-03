@@ -15,13 +15,20 @@ export default function TrackColTools(props) {
     const {
         trackX, trackY, 
         trackWidth, trackHeight,
-        colToolsPosition
+        colToolsPosition,
+        onSelectGenomicInterval
     } = props;
 
     const left = trackX;
-    const top = trackY + trackHeight;
     const width = trackWidth;
-    const height = 100;
+    const height = 30;
+
+    let top;
+    if(colToolsPosition === "top") {
+        top = trackY - height;
+    } else if(colToolsPosition === "bottom") {
+        top = trackY + trackHeight;
+    }
 
     return (
         <div
@@ -34,7 +41,7 @@ export default function TrackColTools(props) {
             }}
         >
             <div className="col-tools">
-                TODO: implement genome interval selection tools
+                <button onClick={onSelectGenomicInterval}>Select genomic interval</button>
             </div>
         </div>
     );

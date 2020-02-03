@@ -12,6 +12,7 @@ export function getTracksIdsFromViewConfig(viewConf) {
                 for(let [tracksPos, tracks] of Object.entries(view.tracks)) {
                     if(Array.isArray(tracks)) {
                         for(let track of tracks) {
+                            // TODO: what to do when `track.type === "combined"`, with a horizontal-multivec track within its `contents` array?
                             if(track.type === "horizontal-multivec" && track.uid) {
                                 const trackId = track.uid;
                                 mvTracks.push([viewId, trackId]);

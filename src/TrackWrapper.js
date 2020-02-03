@@ -10,7 +10,11 @@ import TrackRowLink from './TrackRowLink.js';
  * @prop {object} track A track object returned by `hgc.api.getTrackObject()`.
  */
 export default function TrackWrapper(props) {
-    const { options, track } = props;
+    const { 
+        options, 
+        track,
+        onSelectGenomicInterval
+    } = props;
 
     if(!track || !track.tilesetInfo) {
         // The track or track tileset info has not yet loaded.
@@ -42,8 +46,8 @@ export default function TrackWrapper(props) {
                     trackY={trackY}
                     trackHeight={trackHeight}
                     trackWidth={trackWidth}
-                    infoAttrPrimary={5}
-                    infoAttrSecondary={6}
+                    infoAttrPrimary={4}
+                    infoAttrSecondary={1}
                     rowInfoPosition={options.rowInfoPosition}
                 />) : null}
             {options.rowLinkPosition !== "hidden" ? 
@@ -63,6 +67,7 @@ export default function TrackWrapper(props) {
                     trackHeight={trackHeight}
                     trackWidth={trackWidth}
                     colToolsPosition={options.colToolsPosition}
+                    onSelectGenomicInterval={onSelectGenomicInterval}
                 />) : null}
         </div>
     );

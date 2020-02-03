@@ -9,6 +9,7 @@ import Tooltip from './Tooltip.js';
 
 import { processWrapperOptions, DEFAULT_OPTIONS_KEY } from './utils-options.js';
 import { getTracksIdsFromViewConfig } from './utils-viewconf.js';
+import { onSelectGenomicInterval } from './utils-interval-select.js';
 
 import './CistromeHGW.scss';
 
@@ -114,10 +115,11 @@ export default function CistromeHGW(props) {
         <div className="cistrome-hgw">
             {hgComponent}
             {trackIds.map(([viewId, trackId], i) => (
-                <TrackWrapper 
+                <TrackWrapper
                     key={i}
                     options={getTrackWrapperOptions(viewId, trackId)}
                     track={getTrackObject(viewId, trackId)}
+                    onSelectGenomicInterval={() => onSelectGenomicInterval(viewId, trackId, hgRef.current.api)}
                 />
             ))}
             <Tooltip />
