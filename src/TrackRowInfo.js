@@ -47,7 +47,7 @@ export default function TrackRowInfo(props) {
     // Scales
     const xScale = d3_scaleThreshold();
     const yScale = vega_scaleBand()
-        .domain(range(rowInfo.length - 1))
+        .domain(range(rowInfo.length))
         .range([0, height]);
 
     const valueScalePrimary = vega_scaleBand()

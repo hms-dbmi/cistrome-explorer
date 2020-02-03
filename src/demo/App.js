@@ -14,7 +14,7 @@ const hgViewConfigs = {
 
 export default function App() {
 
-    const [selectedKey, setSelectedKey] = useState(Object.keys(hgViewConfigs)[0]);
+    const [selectedKey, setSelectedKey] = useState(Object.keys(hgViewConfigs)[1]);
 
     return (
         <div className="app">
@@ -43,8 +43,8 @@ export default function App() {
                 <CistromeHGW 
                     viewConfig={hgViewConfigs[selectedKey]}
                     options={{
-                        rowInfoPosition: "right",
-                        rowLinkPosition: "left"
+                        rowInfoPosition: "left",
+                        rowLinkPosition: "right"
                     }}
                 />
             </div>
