@@ -29,8 +29,8 @@ const hgOptionsBase = {
 
 /**
  * Cistrome HiGlass Wrapper, a React component that wraps around HiGlass to provide visualization features for cistrome data.
- * @prop {Object} viewConfig A HiGlass viewConfig object.
- * @prop {(Object|Object[])} options Options for the wrapper component, for positioning child components.
+ * @prop {object} viewConfig A HiGlass viewConfig object.
+ * @prop {(object|object[])} options Options for the wrapper component, for positioning child components.
  * @example
  * <CistromeHGW
  *  viewConfig={higlassViewConfig}

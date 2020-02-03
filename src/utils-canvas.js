@@ -2,8 +2,8 @@ import { select as d3_select } from 'd3-selection';
 
 /**
  * Get the retina ratio to be able to scale up a canvas context.
- * @param {Object} context The canvas context.
- * @returns {float} The ratio.
+ * @param {object} context The canvas context.
+ * @returns {number} The ratio.
  */
 export function getRetinaRatio(context) {
     let devicePixelRatio = window.devicePixelRatio || 1;
@@ -21,8 +21,8 @@ export function getRetinaRatio(context) {
 
 /**
  * Initialize an HTML canvas element, scaling it for retina screens.
- * @param {ref} canvasRef A React ref corresponding to a `<canvas/>` element.
- * @returns {Object} An object containing the canvas, d3_select(canvas), the context, width, and height.
+ * @param {object} canvasRef A React ref corresponding to a `<canvas/>` element.
+ * @returns {object} An object containing the canvas, d3_select(canvas), the context, width, and height.
  */
 export function setupCanvas(canvasRef) {
     const canvas = canvasRef.current;
@@ -46,7 +46,7 @@ export function setupCanvas(canvasRef) {
 
 /**
  * Clean up an HTML canvas element by removing its event listeners.
- * @param {ref} canvasRef A React ref corresponding to a `<canvas/>` element.
+ * @param {object} canvasRef A React ref corresponding to a `<canvas/>` element.
  */
 export function teardownCanvas(canvasRef) {
     const canvas = canvasRef.current;

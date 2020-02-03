@@ -15,7 +15,7 @@ import './TrackRowInfo.scss';
  * @prop {number} y0
  * @prop {number} y1
  * @prop {number} height The track height.
- * @prop {Array} rowInfo Array of JSON objects, one object for each row.
+ * @prop {array} rowInfo Array of JSON objects, one object for each row.
  * @prop {string} infoAttrPrimary
  * @prop {string} infoAttrSecondary
  * @prop {string} rowInfoPosition The value of the `rowInfoPosition` option.
