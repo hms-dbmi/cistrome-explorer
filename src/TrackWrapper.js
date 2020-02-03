@@ -1,26 +1,26 @@
 import React from 'react';
 
+import TrackColTools from './TrackColTools.js';
 import TrackRowInfo from './TrackRowInfo.js';
 import TrackRowLink from './TrackRowLink.js';
 
 /**
  * Wrapper component associated with a particular HiGlass track.
- * @prop {number} x0 Horizontal offset.
- * @prop {number} y0 Vertical offset.
  * @prop {object} options Options associated with the track. Contains values for all possible options.
  * @prop {object} track A track object returned by `hgc.api.getTrackObject()`.
  */
 export default function TrackWrapper(props) {
-    const { x0, y0, options, track } = props;
+    const { options, track } = props;
 
     if(!track || !track.tilesetInfo) {
         // The track or track tileset info has not yet loaded.
         return null;
     }
 
-    const x1 = track.position[0];
-    const y1 = track.position[1];
-    const height = track.dimensions[1];
+    const trackX = track.position[0];
+    const trackY = track.position[1];
+    const trackWidth = track.dimensions[0];
+    const trackHeight = track.dimensions[1];
     let rowInfo = [];
     try {
         rowInfo = track.tilesetInfo.row_infos.map(JSON.parse);
@@ -38,10 +38,10 @@ export default function TrackWrapper(props) {
             {options.rowInfoPosition !== "hidden" ? 
                 (<TrackRowInfo 
                     rowInfo={rowInfo}
-                    x0={x0}
-                    x1={x1}
-                    y1={y1}
-                    height={height}
+                    trackX={trackX}
+                    trackY={trackY}
+                    trackHeight={trackHeight}
+                    trackWidth={trackWidth}
                     infoAttrPrimary={5}
                     infoAttrSecondary={6}
                     rowInfoPosition={options.rowInfoPosition}
@@ -49,12 +49,20 @@ export default function TrackWrapper(props) {
             {options.rowLinkPosition !== "hidden" ? 
                 (<TrackRowLink
                     rowInfo={rowInfo}
-                    x0={x0}
-                    x1={x1}
-                    y1={y1}
-                    height={height}
+                    trackX={trackX}
+                    trackY={trackY}
+                    trackHeight={trackHeight}
+                    trackWidth={trackWidth}
                     rowLinkAttribute={options.rowLinkAttribute}
                     rowLinkPosition={options.rowLinkPosition}
+                />) : null}
+            {options.colToolsPosition !== "hidden" ? 
+                (<TrackColTools
+                    trackX={trackX}
+                    trackY={trackY}
+                    trackHeight={trackHeight}
+                    trackWidth={trackWidth}
+                    colToolsPosition={options.colToolsPosition}
                 />) : null}
         </div>
     );

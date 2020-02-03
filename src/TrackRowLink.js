@@ -7,11 +7,10 @@ import './TrackRowLink.scss';
 
 /**
  * Component for rendering links to row info metadata webpages.
- * @prop {number} x0
- * @prop {number} x1
- * @prop {number} y0
- * @prop {number} y1
- * @prop {number} height The track height.
+ * @prop {number} trackX The track horizontal offset.
+ * @prop {number} trackY The track vertical offset.
+ * @prop {number} trackWidth The track width.
+ * @prop {number} trackHeight The track height.
  * @prop {array} rowInfo Array of JSON objects, one object for each row.
  * @prop {string} rowLinkAttribute The attribute used to obtain a URL from a row info JSON object.
  * @prop {string} rowLinkPosition The value of the `rowLinkPosition` option.
@@ -19,22 +18,24 @@ import './TrackRowLink.scss';
 export default function TrackRowLink(props) {
 
     const {
-        x0, x1, y1, height, rowInfo, 
+        trackX, trackY, 
+        trackWidth, trackHeight, 
+        rowInfo, 
         rowLinkPosition, rowLinkAttribute
     } = props;
 
     // Dimensions
-    const top = y1;
+    const top = trackY;
     const width = 140;
-    const xMarginInitial = 0;
+    const height = trackHeight;
     const fontSize = 10;
 
     let left, textAlign;
     if(rowLinkPosition === "left") {
-        left = x1 - xMarginInitial - width;
+        left = trackX - width;
         textAlign = "right";
     } else if(rowLinkPosition === "right") {
-        left = x0 + x1 + xMarginInitial;
+        left = trackWidth + trackX;
         textAlign = "left";
     }
 

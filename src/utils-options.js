@@ -16,14 +16,18 @@ const baseSchema = {
                 "trackId": { "type": "string" },
                 "rowInfoPosition": {
                     "type": "string",
-                    "enum": ["hidden", "right", "left"]
+                    "enum": ["hidden", "left", "right"]
                 },
                 "rowLinkPosition": {
                     "type": "string",
-                    "enum": ["hidden", "right", "left"]
+                    "enum": ["hidden", "left", "right"]
                 },
                 "rowLinkAttribute": {
                     "type": "string"
+                },
+                "colToolsPosition": {
+                    "type": "string",
+                    "enum": ["hidden", "bottom", "top"]
                 }
             }
         }
@@ -96,7 +100,8 @@ export function processWrapperOptions(optionsRaw) {
         [DEFAULT_OPTIONS_KEY]: {
             rowInfoPosition: "right",
             rowLinkPosition: "left",
-            rowLinkAttribute: "url"
+            rowLinkAttribute: "url",
+            colToolsPosition: "bottom"
         }
     };
 

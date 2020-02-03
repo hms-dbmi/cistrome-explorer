@@ -46,8 +46,6 @@ export default function CistromeHGW(props) {
 
     const hgRef = useRef();
 
-    const [x0, setX0] = useState(0);
-    const [y0, setY0] = useState(0);
     const [options, setOptions] = useState({});
     const [trackIds, setTrackIds] = useState([]);
 
@@ -80,20 +78,16 @@ export default function CistromeHGW(props) {
     }, [optionsRaw]);
     
     useEffect(() => {
-        hgRef.current.api.on('location', (d) => {
-            setX0(d.xRange[1]);
-            setY0(d.yRange[1]);
-        });
+        
         hgRef.current.api.on('viewConfig', (newViewConfigString) => {
             const newViewConfig = JSON.parse(newViewConfigString);
             onViewConfig(newViewConfig);
         });
 
         return () => {
-            hgRef.current.api.off('location');
             hgRef.current.api.off('viewConfig');
         };
-    }, [hgRef, setX0, setY0]);
+    }, [hgRef]);
 
     const hgComponent = useMemo(() => {
         const hgOptions = {
@@ -124,7 +118,6 @@ export default function CistromeHGW(props) {
                     key={i}
                     options={getTrackWrapperOptions(viewId, trackId)}
                     track={getTrackObject(viewId, trackId)}
-                    x0={x0}
                 />
             ))}
             <Tooltip />

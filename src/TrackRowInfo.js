@@ -19,11 +19,10 @@ function destroyTooltip() {
 
 /**
  * Component for visualization of two row info attribute values.
- * @prop {number} x0
- * @prop {number} x1
- * @prop {number} y0
- * @prop {number} y1
- * @prop {number} height The track height.
+ * @prop {number} trackX The track horizontal offset.
+ * @prop {number} trackY The track vertical offset.
+ * @prop {number} trackWidth The track width.
+ * @prop {number} trackHeight The track height.
  * @prop {array} rowInfo Array of JSON objects, one object for each row.
  * @prop {string} infoAttrPrimary
  * @prop {string} infoAttrSecondary
@@ -32,17 +31,20 @@ function destroyTooltip() {
 export default function TrackRowInfo(props) {
 
     const {
-        x0, x1, y1, height, rowInfo, 
+        trackX, trackY,
+        trackWidth, trackHeight, 
+        rowInfo, 
         infoAttrPrimary, infoAttrSecondary,
         rowInfoPosition
     } = props;
 
     // Dimensions
-    const top = y1;
+    const top = trackY;
     const width = 120;
     const colWidth = 15;
     const xMargin = 60;
     const xMarginInitial = 5;
+    const height = trackHeight;
 
     // Scales
     const xScale = d3_scaleThreshold();
@@ -63,7 +65,7 @@ export default function TrackRowInfo(props) {
     // Left offsets condition on left vs. right positioning:
     let left, primaryLeft, secondaryLeft;
     if(rowInfoPosition === "left") {
-        left = x1 - xMarginInitial - width;
+        left = trackX - xMarginInitial - width;
         primaryLeft = width - colWidth;
         secondaryLeft = width - colWidth - xMargin - colWidth;
 
@@ -71,7 +73,7 @@ export default function TrackRowInfo(props) {
             .domain([secondaryLeft, secondaryLeft+colWidth, primaryLeft, primaryLeft+colWidth, width])
             .range(["m-0", "secondary", "m-1", "primary", "m-2"]);
     } else if(rowInfoPosition === "right") {
-        left = x0 + x1 + xMarginInitial;
+        left = trackWidth + trackX + xMarginInitial;
         primaryLeft = 0;
         secondaryLeft = colWidth + xMargin;
 
