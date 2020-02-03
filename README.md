@@ -3,6 +3,7 @@
 _wrapper component for HiGlass, with features for viewing cistrome data_
 
 - [Demo](https://hms-dbmi.github.io/cistrome-higlass-wrapper/)
+- [Documentation](https://hms-dbmi.github.io/cistrome-higlass-wrapper/docs/)
 
 ### Development
 
@@ -12,7 +13,7 @@ Install dependencies:
 yarn
 ```
 
-Run development server:
+Run development server for demo app:
 
 ```sh
 yarn start
@@ -28,8 +29,14 @@ yarn test --watch
 
 ### Production
 
-Build for production:
+Build demo app for production:
 
 ```sh
 yarn build
+```
+
+Build for NPM package:
+
+```sh
+yarn build-pkg
 ```

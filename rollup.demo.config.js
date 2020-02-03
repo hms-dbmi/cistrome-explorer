@@ -10,11 +10,12 @@ import scss from 'rollup-plugin-scss';
 import visualizer from 'rollup-plugin-visualizer';
 import { terser } from 'rollup-plugin-terser';
 
-import { htmlFromTemplate, join } from './rollup.utils.js';
+import { join } from './rollup.utils.js';
+import { htmlFromTemplate } from './rollup.demo.utils.js';
 
 // Constants for output files:
 const SRC_DIR = 'src';
-const BUILD_DIR = 'build';
+const BUILD_DIR = 'build-demo';
 const OUTPUT_JS = {
     'production': 'index.min.js',
     'development': 'index.js',
@@ -32,7 +33,7 @@ if(process.env.NODE_ENV === 'development') {
 
 // The base rollup configuration. To be merged with dev or prod object.
 const baseConfig = {
-    input: join(SRC_DIR, 'index.js'),
+    input: join(SRC_DIR, 'demo.js'),
     output: {
         file: join(BUILD_DIR, OUTPUT_JS[process.env.NODE_ENV]),
         sourcemap: 'inline',

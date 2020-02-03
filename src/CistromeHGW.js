@@ -5,11 +5,11 @@ import register from 'higlass-register';
 import StackedBarTrack from 'higlass-multivec/es/StackedBarTrack.js';
 
 import TrackWrapper from './TrackWrapper.js';
+import Tooltip from './Tooltip.js';
 
 import { processWrapperOptions, DEFAULT_OPTIONS_KEY } from './utils-options.js';
-import { getHorizontalMultivecTracksFromViewConfig } from './utils-viewconf.js';
+import { getTracksIdsFromViewConfig } from './utils-viewconf.js';
 
-import 'higlass/dist/hglib.css';
 import './CistromeHGW.scss';
 
 register({
@@ -28,7 +28,17 @@ const hgOptionsBase = {
 
 
 /**
- * @component Cistrome HiGlass Wrapper 
+ * Cistrome HiGlass Wrapper, a React component that wraps around HiGlass to provide visualization features for cistrome data.
+ * @prop {Object} viewConfig A HiGlass viewConfig object.
+ * @prop {(Object|Object[])} options Options for the wrapper component, for positioning child components.
+ * @example
+ * <CistromeHGW
+ *  viewConfig={higlassViewConfig}
+ *  options={{
+ *      rowInfoPosition: "right",
+ *      rowLinkPosition: "left"
+ *  }}
+ * />
  */
 export default function CistromeHGW(props) {
 
@@ -42,7 +52,7 @@ export default function CistromeHGW(props) {
     const [trackIds, setTrackIds] = useState([]);
 
     function onViewConfig(newViewConfig) {
-        setTrackIds(getHorizontalMultivecTracksFromViewConfig(newViewConfig));
+        setTrackIds(getTracksIdsFromViewConfig(newViewConfig));
     }
 
     function getTrackObject(viewId, trackId) {
@@ -83,7 +93,7 @@ export default function CistromeHGW(props) {
             hgRef.current.api.off('location');
             hgRef.current.api.off('viewConfig');
         };
-    }, [hgRef, setX0]);
+    }, [hgRef, setX0, setY0]);
 
     const hgComponent = useMemo(() => {
         const hgOptions = {
@@ -103,6 +113,7 @@ export default function CistromeHGW(props) {
             />
         );
     }, [viewConfig]);
+    
 
     console.log("CistromeHGW.render");
     return (
@@ -116,6 +127,7 @@ export default function CistromeHGW(props) {
                     x0={x0}
                 />
             ))}
+            <Tooltip />
         </div>
     );
 }

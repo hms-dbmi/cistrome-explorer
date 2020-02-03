@@ -1,0 +1,17 @@
+toc:
+  - name: React Components
+  - CistromeHGW
+  - name: React Components (internal)
+    children:
+    - TrackWrapper
+    - TrackRowInfo
+    - TrackRowLink
+    - Tooltip
+  - name: functions (internal)
+    children:
+    - validateWrapperOptions
+    - processWrapperOptions
+    - getRetinaRatio
+    - setupCanvas
+    - teardownCanvas
+    - getHorizontalMultivecTracksFromViewConfig
