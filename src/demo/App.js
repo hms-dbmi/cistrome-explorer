@@ -43,8 +43,8 @@ export default function App() {
                 <CistromeHGW 
                     viewConfig={hgViewConfigs[selectedKey]}
                     options={{
-                        rowInfoPosition: "left",
-                        rowLinkPosition: "right"
+                        rowInfoPosition: "right",
+                        rowLinkPosition: "left"
                     }}
                 />
             </div>
