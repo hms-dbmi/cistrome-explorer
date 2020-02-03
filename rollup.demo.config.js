@@ -33,7 +33,7 @@ if(process.env.NODE_ENV === 'development') {
 
 // The base rollup configuration. To be merged with dev or prod object.
 const baseConfig = {
-    input: join(SRC_DIR, 'demo.js'),
+    input: join(SRC_DIR, 'demo', 'index.js'),
     output: {
         file: join(BUILD_DIR, OUTPUT_JS[process.env.NODE_ENV]),
         sourcemap: 'inline',

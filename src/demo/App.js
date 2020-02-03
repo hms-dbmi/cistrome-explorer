@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 
-import CistromeHGW from './CistromeHGW.js';
+import { CistromeHGW } from '../index.js';
 
-import hgDemoViewConfig1 from './configs/horizontal-multivec.json';
-import hgDemoViewConfig2 from './configs/horizontal-multivec-local.json';
+import hgDemoViewConfig1 from '../configs/horizontal-multivec.json';
+import hgDemoViewConfig2 from '../configs/horizontal-multivec-local.json';
 
 import './App.scss';
 
 const hgViewConfigs = {
-    "Old demo (with TSV metadata)": hgDemoViewConfig1,
-    "New demo (with JSON metadata, local server)": hgDemoViewConfig2
+    "Demo 1 (TSV metadata)": hgDemoViewConfig1,
+    "Demo 2 (JSON metadata, requires local server)": hgDemoViewConfig2
 };
 
 export default function App() {
