@@ -186,7 +186,8 @@
                 "labelTopMargin": 0,
                 "labelBottomMargin": 0,
                 "labelShowResolution": true,
-                "minHeight": 100
+                "minHeight": 100,
+                "colorbarPosition": "bottomLeft"
               },
               "width": 1607,
               "height": 482,
