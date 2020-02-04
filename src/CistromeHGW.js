@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useMemo } from 'react';
+import React, { useRef, useEffect, useState, useMemo, useCallback } from 'react';
 
 import { HiGlassComponent } from 'higlass';
 import register from 'higlass-register';
@@ -49,19 +49,19 @@ export default function CistromeHGW(props) {
     const [options, setOptions] = useState({});
     const [trackIds, setTrackIds] = useState([]);
 
-    function onViewConfig(newViewConfig) {
+    const onViewConfig = useCallback((newViewConfig) => {
         setTrackIds(getTracksIdsFromViewConfig(newViewConfig));
-    }
+    }, []);
 
-    function getTrackObject(viewId, trackId) {
+    const getTrackObject = useCallback((viewId, trackId) => {
         try {
             return hgRef.current.api.getTrackObject(viewId, trackId);
         } catch(e) {
             return null;
         }
-    }
+    }, []);
 
-    function getTrackWrapperOptions(viewId, trackId) {
+    const getTrackWrapperOptions = useCallback((viewId, trackId) => {
         if(options[viewId]) {
             if(options[viewId][trackId]) {
                 return options[viewId][trackId];
@@ -71,7 +71,7 @@ export default function CistromeHGW(props) {
         } else {
             return options[DEFAULT_OPTIONS_KEY];
         }
-    }
+    }, [options]);
 
     useEffect(() => {
         setOptions(processWrapperOptions(optionsRaw));
