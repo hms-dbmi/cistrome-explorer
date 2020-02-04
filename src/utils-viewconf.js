@@ -6,7 +6,7 @@ import { TRACK_TYPE } from './constants.js';
 /**
  * This function finds the horizontal-multivec tracks in the view config.
  * @param {object} viewConf A valid HiGlass viewConfig object.
- * @returns {array} Array containing `[viewId, trackId, null]` or `[viewId, trackId, combinedId]` for each horizontal-multivec track.
+ * @returns {array} Array containing `[viewId, trackId, null]` or `[viewId, trackId, combinedTrackId]` for each horizontal-multivec track.
  */
 export function getTracksIdsFromViewConfig(viewConf) {
     const mvTracks = [];
@@ -39,7 +39,7 @@ export function getTracksIdsFromViewConfig(viewConf) {
 
 /**
  * This function updates the view config when the user would like to create a genomic interval selection.
- * @param {object} currViewConfig The current value of the HiGlass view config.
+ * @param {object} currViewConfig The current HiGlass view config.
  * @param {string} viewId The uid of view containing the `horizontal-multivec` track that was the target of the action.
  * @param {string} trackId The uid of the `horizontal-multivec` track that was the target of the action.
  * @param {boolean} [addView=false] Whether or not to add the projection as a new view. If true, also updates view widths and x-offsets.
