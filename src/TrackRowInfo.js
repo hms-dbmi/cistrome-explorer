@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
-import { interpolateViridis as d3_interpolateViridis } from "d3-scale-chromatic";
+import { schemeCategory10 as d3_schemeCategory10 } from "d3-scale-chromatic";
 import range from 'lodash/range';
 import { mouse as d3_mouse, event as d3_event } from 'd3-selection';
-import { scaleThreshold as d3_scaleThreshold } from 'd3-scale';
+import { scaleOrdinal as d3_scaleOrdinal, scaleThreshold as d3_scaleThreshold } from 'd3-scale';
 
 import { vega_scaleBand } from './utils-scales.js';
 import { setupCanvas, teardownCanvas } from './utils-canvas.js';
@@ -52,15 +52,15 @@ export default function TrackRowInfo(props) {
         .domain(range(rowInfo.length))
         .range([0, height]);
 
-    const valueScalePrimary = vega_scaleBand()
+    const valueScalePrimary = d3_scaleOrdinal()
         .domain(Array.from(new Set(rowInfo.map(d => d[infoAttrPrimary]))))
-        .range([0, 1]);
+        .range(d3_schemeCategory10);
     
-    const valueScaleSecondary = vega_scaleBand()
+    const valueScaleSecondary = d3_scaleOrdinal()
         .domain(Array.from(new Set(rowInfo.map(d => d[infoAttrSecondary]))))
-        .range([0, 1]);
+        .range(d3_schemeCategory10);
 
-    const colorScale = d3_interpolateViridis;
+    // const colorScale = d3_interpolateViridis;
 
     // Left offsets condition on left vs. right positioning:
     let left, primaryLeft, secondaryLeft;
@@ -90,13 +90,13 @@ export default function TrackRowInfo(props) {
 
         // Draw primary metadata value colors.
         rowInfo.forEach((d, i) => {
-            context.fillStyle = colorScale(valueScalePrimary(d[infoAttrPrimary]));
+            context.fillStyle = valueScalePrimary(d[infoAttrPrimary]);
             context.fillRect(primaryLeft, yScale(i), colWidth, yScale.bandwidth())
         });
 
         // Draw secondary metadata value colors.
         rowInfo.forEach((d, i) => {
-            context.fillStyle = colorScale(valueScaleSecondary(d[infoAttrSecondary]));
+            context.fillStyle = valueScaleSecondary(d[infoAttrSecondary]);
             context.fillRect(secondaryLeft, yScale(i), colWidth, yScale.bandwidth())
         });
 

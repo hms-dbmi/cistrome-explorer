@@ -28,6 +28,12 @@ const baseSchema = {
                 "colToolsPosition": {
                     "type": "string",
                     "enum": ["hidden", "bottom", "top"]
+                },
+                "infoAttrPrimary": {
+                    "type": "number"
+                },
+                "infoAttrSecondary": {
+                    "type": "number"
                 }
             }
         }

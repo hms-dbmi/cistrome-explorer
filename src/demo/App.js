@@ -45,7 +45,9 @@ export default function App() {
                     options={{
                         rowInfoPosition: "right",
                         rowLinkPosition: "left",
-                        colToolsPosition: "bottom"
+                        colToolsPosition: "bottom",
+                        infoAttrPrimary: 5,
+                        infoAttrSecondary: 6
                     }}
                 />
             </div>
