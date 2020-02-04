@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import PubSub from 'pubsub-js';
 
+import { EVENT } from './constants.js';
+
 import './Tooltip.scss';
 
 /**
@@ -15,7 +17,7 @@ export default function Tooltip() {
     const [content, setContent] = useState("");
 
     useEffect(() => {
-        const tooltipToken = PubSub.subscribe('tooltip', (msg, data) => {
+        const tooltipToken = PubSub.subscribe(EVENT.TOOLTIP, (msg, data) => {
             setLeft(data.x);
             setTop(data.y);
             setContent(data.content);

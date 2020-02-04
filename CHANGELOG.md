@@ -9,6 +9,7 @@
 - Added rollup configuration for packaging the component for NPM.
 - Display metadata values in tooltip upon mouse hover interactions for `TrackRowInfo` component.
 - Added `TrackRowLink` component, and implemented dynamic dimensions based on the `rowLinkPosition` option and dynamic show/hide based on row height. URLs are obtained based on the `rowLinkAttribute` option which defaults to `"url"`.
+- Added `TrackColTools` component, shows a button for creating a genome interval selection, and can be positioned above or below `horizontal-multivec` tracks using the `colToolsPosition` option.
 
 ### Changed
 - Moved to rendering the row info categorical metadata on a single `<canvas/>` element, rather than colored HTML elements for each row.

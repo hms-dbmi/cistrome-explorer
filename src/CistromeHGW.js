@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useMemo } from 'react';
+import React, { useRef, useEffect, useState, useMemo, useCallback } from 'react';
 
 import { HiGlassComponent } from 'higlass';
 import register from 'higlass-register';
@@ -8,7 +8,7 @@ import TrackWrapper from './TrackWrapper.js';
 import Tooltip from './Tooltip.js';
 
 import { processWrapperOptions, DEFAULT_OPTIONS_KEY } from './utils-options.js';
-import { getTracksIdsFromViewConfig } from './utils-viewconf.js';
+import { getTracksIdsFromViewConfig, updateViewConfigOnSelectGenomicInterval } from './utils-viewconf.js';
 
 import './CistromeHGW.scss';
 
@@ -46,24 +46,22 @@ export default function CistromeHGW(props) {
 
     const hgRef = useRef();
 
-    const [x0, setX0] = useState(0);
-    const [y0, setY0] = useState(0);
     const [options, setOptions] = useState({});
     const [trackIds, setTrackIds] = useState([]);
 
-    function onViewConfig(newViewConfig) {
+    const onViewConfig = useCallback((newViewConfig) => {
         setTrackIds(getTracksIdsFromViewConfig(newViewConfig));
-    }
+    }, []);
 
-    function getTrackObject(viewId, trackId) {
+    const getTrackObject = useCallback((viewId, trackId) => {
         try {
             return hgRef.current.api.getTrackObject(viewId, trackId);
         } catch(e) {
             return null;
         }
-    }
+    }, []);
 
-    function getTrackWrapperOptions(viewId, trackId) {
+    const getTrackWrapperOptions = useCallback((viewId, trackId) => {
         if(options[viewId]) {
             if(options[viewId][trackId]) {
                 return options[viewId][trackId];
@@ -73,27 +71,22 @@ export default function CistromeHGW(props) {
         } else {
             return options[DEFAULT_OPTIONS_KEY];
         }
-    }
+    }, [options]);
 
     useEffect(() => {
         setOptions(processWrapperOptions(optionsRaw));
     }, [optionsRaw]);
     
     useEffect(() => {
-        hgRef.current.api.on('location', (d) => {
-            setX0(d.xRange[1]);
-            setY0(d.yRange[1]);
-        });
         hgRef.current.api.on('viewConfig', (newViewConfigString) => {
             const newViewConfig = JSON.parse(newViewConfigString);
             onViewConfig(newViewConfig);
         });
 
         return () => {
-            hgRef.current.api.off('location');
             hgRef.current.api.off('viewConfig');
         };
-    }, [hgRef, setX0, setY0]);
+    }, [hgRef]);
 
     const hgComponent = useMemo(() => {
         const hgOptions = {
@@ -119,12 +112,17 @@ export default function CistromeHGW(props) {
     return (
         <div className="cistrome-hgw">
             {hgComponent}
-            {trackIds.map(([viewId, trackId], i) => (
-                <TrackWrapper 
+            {trackIds.map(([viewId, trackId, combinedTrackId], i) => (
+                <TrackWrapper
                     key={i}
                     options={getTrackWrapperOptions(viewId, trackId)}
-                    track={getTrackObject(viewId, trackId)}
-                    x0={x0}
+                    multivecTrack={getTrackObject(viewId, trackId)}
+                    combinedTrack={(combinedTrackId ? getTrackObject(viewId, combinedTrackId) : null)}
+                    onSelectGenomicInterval={() => {
+                        const currViewConfig = hgRef.current.api.getViewConfig();
+                        const newViewConfig = updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, trackId);
+                        hgRef.current.api.setViewConfig(newViewConfig);
+                    }}
                 />
             ))}
             <Tooltip />
