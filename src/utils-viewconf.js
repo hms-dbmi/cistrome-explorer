@@ -1,7 +1,7 @@
 /**
  * This function finds the horizontal-multivec tracks in the viewConfig.
  * @param {object} viewConf A valid HiGlass viewConfig object.
- * @returns {array} Array containing `[viewId, trackId]` for each horizontal-multivec track.
+ * @returns {array} Array containing `[viewId, trackId, inCombined]` for each horizontal-multivec track.
  */
 export function getTracksIdsFromViewConfig(viewConf) {
     const mvTracks = [];
@@ -12,10 +12,15 @@ export function getTracksIdsFromViewConfig(viewConf) {
                 for(let [tracksPos, tracks] of Object.entries(view.tracks)) {
                     if(Array.isArray(tracks)) {
                         for(let track of tracks) {
-                            // TODO: what to do when `track.type === "combined"`, with a horizontal-multivec track within its `contents` array?
+                            // The horizontal-multivec track could be standalone, or within a "combined" track.
                             if(track.type === "horizontal-multivec" && track.uid) {
-                                const trackId = track.uid;
-                                mvTracks.push([viewId, trackId]);
+                                mvTracks.push([viewId, track.uid, false]);
+                            } else if(track.type === "combined" && track.uid) {
+                                for(let innerTrack of track.contents) {
+                                    if(innerTrack.type === "horizontal-multivec" && innerTrack.uid) {
+                                        mvTracks.push([viewId, innerTrack.uid, true]);
+                                    }
+                                }
                             }
                         }
                     }

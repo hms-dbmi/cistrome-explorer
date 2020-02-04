@@ -15,6 +15,7 @@
     "higlass-register": "^0.1.0",
     "lodash": "^4.17.15",
     "pubsub-js": "^1.8.0",
+    "uuid": "^3.4.0",
     "vega-scale": "^6.0.0"
   },
   "peerDependencies": {

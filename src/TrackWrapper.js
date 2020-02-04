@@ -13,6 +13,7 @@ export default function TrackWrapper(props) {
     const { 
         options, 
         track,
+        inCombined,
         onSelectGenomicInterval
     } = props;
 
@@ -60,7 +61,7 @@ export default function TrackWrapper(props) {
                     rowLinkAttribute={options.rowLinkAttribute}
                     rowLinkPosition={options.rowLinkPosition}
                 />) : null}
-            {options.colToolsPosition !== "hidden" ? 
+            {(!inCombined && options.colToolsPosition !== "hidden") ? 
                 (<TrackColTools
                     trackX={trackX}
                     trackY={trackY}

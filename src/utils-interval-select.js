@@ -1,10 +1,13 @@
 import cloneDeep from 'lodash/cloneDeep';
+import uuidv4 from 'uuid/v4';
 
 export function onSelectGenomicInterval(viewId, trackId, hgApi) {
     const newViewConfig = hgApi.getViewConfig();
 
     // Find the view associated with this viewId.
     const foundView = newViewConfig.views.find(v => v.uid === viewId);
+
+    foundView.layout.w = Math.max(1, (foundView.layout.w / 2) - 1);
     
     // Find the track object.
     let foundTrack;
@@ -15,7 +18,8 @@ export function onSelectGenomicInterval(viewId, trackId, hgApi) {
                     foundTrack = track;
 
                     const newView = cloneDeep(foundView);
-                    newView.uid = newView.uid + "-copy";
+                    newView.uid = newView.uid + "-copy-" + uuidv4();
+                    newView.layout.x = foundView.layout.w + 1;
                     const newTrackInner = cloneDeep(foundTrack);
 
                     newView.tracks[tracksPos][i] = {

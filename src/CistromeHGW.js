@@ -114,11 +114,12 @@ export default function CistromeHGW(props) {
     return (
         <div className="cistrome-hgw">
             {hgComponent}
-            {trackIds.map(([viewId, trackId], i) => (
+            {trackIds.map(([viewId, trackId, inCombined], i) => (
                 <TrackWrapper
                     key={i}
                     options={getTrackWrapperOptions(viewId, trackId)}
                     track={getTrackObject(viewId, trackId)}
+                    inCombined={inCombined}
                     onSelectGenomicInterval={() => onSelectGenomicInterval(viewId, trackId, hgRef.current.api)}
                 />
             ))}
