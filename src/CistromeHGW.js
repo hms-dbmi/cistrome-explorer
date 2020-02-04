@@ -78,7 +78,6 @@ export default function CistromeHGW(props) {
     }, [optionsRaw]);
     
     useEffect(() => {
-        
         hgRef.current.api.on('viewConfig', (newViewConfigString) => {
             const newViewConfig = JSON.parse(newViewConfigString);
             onViewConfig(newViewConfig);
