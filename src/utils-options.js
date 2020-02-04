@@ -24,6 +24,12 @@ const baseSchema = {
                 },
                 "rowLinkAttribute": {
                     "type": "string"
+                },
+                "infoAttrPrimary": {
+                    "type": "number"
+                },
+                "infoAttrSecondary": {
+                    "type": "number"
                 }
             }
         }
