@@ -4,13 +4,14 @@ import range from 'lodash/range';
 import { mouse as d3_mouse, event as d3_event } from 'd3-selection';
 import { scaleOrdinal as d3_scaleOrdinal, scaleThreshold as d3_scaleThreshold } from 'd3-scale';
 
+import { EVENT } from './constants.js';
 import { vega_scaleBand } from './utils-scales.js';
 import { setupCanvas, teardownCanvas } from './utils-canvas.js';
 
 import './TrackRowInfo.scss';
 
 function destroyTooltip() {
-    PubSub.publish("tooltip", {
+    PubSub.publish(EVENT.TOOLTIP, {
         x: null,
         y: null,
         content: null
@@ -121,7 +122,7 @@ export default function TrackRowInfo(props) {
             const mouseViewportX = d3_event.clientX;
             const mouseViewportY = d3_event.clientY;
             
-            PubSub.publish("tooltip", {
+            PubSub.publish(EVENT.TOOLTIP, {
                 x: mouseViewportX,
                 y: mouseViewportY,
                 content: `Value: ${xVal}`
