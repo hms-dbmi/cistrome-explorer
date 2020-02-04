@@ -44,7 +44,9 @@ export default function App() {
                     viewConfig={hgViewConfigs[selectedKey]}
                     options={{
                         rowInfoPosition: "right",
-                        rowLinkPosition: "left"
+                        rowLinkPosition: "left",
+                        infoAttrPrimary: 5,
+                        infoAttrSecondary: 6
                     }}
                 />
             </div>
