@@ -8,8 +8,7 @@ import TrackWrapper from './TrackWrapper.js';
 import Tooltip from './Tooltip.js';
 
 import { processWrapperOptions, DEFAULT_OPTIONS_KEY } from './utils-options.js';
-import { getTracksIdsFromViewConfig } from './utils-viewconf.js';
-import { onSelectGenomicInterval } from './utils-interval-select.js';
+import { getTracksIdsFromViewConfig, updateViewConfigOnSelectGenomicInterval } from './utils-viewconf.js';
 
 import './CistromeHGW.scss';
 
@@ -114,13 +113,17 @@ export default function CistromeHGW(props) {
     return (
         <div className="cistrome-hgw">
             {hgComponent}
-            {trackIds.map(([viewId, trackId, inCombined], i) => (
+            {trackIds.map(([viewId, trackId, combinedTrackId], i) => (
                 <TrackWrapper
                     key={i}
                     options={getTrackWrapperOptions(viewId, trackId)}
-                    track={getTrackObject(viewId, trackId)}
-                    inCombined={inCombined}
-                    onSelectGenomicInterval={() => onSelectGenomicInterval(viewId, trackId, hgRef.current.api)}
+                    multivecTrack={getTrackObject(viewId, trackId)}
+                    combinedTrack={(combinedTrackId ? getTrackObject(viewId, combinedTrackId) : null)}
+                    onSelectGenomicInterval={() => {
+                        const currViewConfig = hgRef.current.api.getViewConfig();
+                        const newViewConfig = updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, trackId);
+                        hgRef.current.api.setViewConfig(newViewConfig);
+                    }}
                 />
             ))}
             <Tooltip />
