@@ -1,5 +1,5 @@
 /*
- * TODO: Remove this folder of fake data. 
+ * TODO: Remove this folder of fake track metadata.
  * See [#26](https://github.com/hms-dbmi/cistrome-higlass-wrapper/issues/26) for more info.
  */
 import rowInfo1 from './cistrome-track-1/rowInfo.json';
