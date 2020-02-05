@@ -29,11 +29,8 @@ const baseSchema = {
                     "type": "string",
                     "enum": ["hidden", "bottom", "top"]
                 },
-                "infoAttrPrimary": {
-                    "type": "string"
-                },
-                "infoAttrSecondary": {
-                    "type": "string"
+                "infoAttributes": {
+                    "type": "array"
                 }
             }
         }

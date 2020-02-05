@@ -58,8 +58,7 @@ export default function TrackWrapper(props) {
                     trackY={trackY}
                     trackHeight={trackHeight}
                     trackWidth={trackWidth}
-                    infoAttrPrimary={options.infoAttrPrimary}
-                    infoAttrSecondary={options.infoAttrSecondary}
+                    infoAttributes={options.infoAttributes}
                     rowInfoPosition={options.rowInfoPosition}
                 />) : null}
             {options.rowLinkPosition !== "hidden" ? 
