@@ -25,8 +25,7 @@ function destroyTooltip() {
  * @prop {number} trackWidth The track width.
  * @prop {number} trackHeight The track height.
  * @prop {array} rowInfo Array of JSON objects, one object for each row.
- * @prop {string} infoAttrPrimary
- * @prop {string} infoAttrSecondary
+ * @prop {array} infoAttributes Array of attribute names.
  * @prop {string} rowInfoPosition The value of the `rowInfoPosition` option.
  */
 export default function TrackRowInfo(props) {
@@ -35,16 +34,16 @@ export default function TrackRowInfo(props) {
         trackX, trackY,
         trackWidth, trackHeight, 
         rowInfo, 
-        infoAttrPrimary, infoAttrSecondary,
+        infoAttributes,
         rowInfoPosition
     } = props;
 
     // Dimensions
     const top = trackY;
-    const width = 120;
     const colWidth = 15;
     const xMargin = 60;
     const xMarginInitial = 5;
+    const width = (colWidth + xMargin) * infoAttributes.length;
     const height = trackHeight;
 
     // Scales
@@ -52,36 +51,59 @@ export default function TrackRowInfo(props) {
     const yScale = vega_scaleBand()
         .domain(range(rowInfo.length))
         .range([0, height]);
-
-    const valueScalePrimary = d3_scaleOrdinal()
-        .domain(Array.from(new Set(rowInfo.map(d => d[infoAttrPrimary]))))
-        .range(d3_schemeCategory10);
     
-    const valueScaleSecondary = d3_scaleOrdinal()
-        .domain(Array.from(new Set(rowInfo.map(d => d[infoAttrSecondary]))))
-        .range(d3_schemeCategory10);
+    // Stores valueScale, left position, attribute name for each attribute
+    let vizRecipes = [];
 
-    // const colorScale = d3_interpolateViridis;
-
-    // Left offsets condition on left vs. right positioning:
-    let left, primaryLeft, secondaryLeft;
+    // Viz recipes condition on left vs. right positioning:
+    let left, xScaleDomain = [], xScaleRange = [];
     if(rowInfoPosition === "left") {
         left = trackX - xMarginInitial - width;
-        primaryLeft = width - colWidth;
-        secondaryLeft = width - colWidth - xMargin - colWidth;
 
-        xScale
-            .domain([secondaryLeft, secondaryLeft+colWidth, primaryLeft, primaryLeft+colWidth, width])
-            .range(["m-0", "secondary", "m-1", "primary", "m-2"]);
+        xScaleRange.push(`margin-${infoAttributes.length}`);
+        for(let i = infoAttributes.length - 1; i >= 0; i--){    // First attribute is shown on the 'right-most' side
+            const attribute = infoAttributes[i];
+
+            const dimLeft = xMargin + (colWidth + xMargin) * (infoAttributes.length - 1 - i);
+            const colorScale = d3_scaleOrdinal()
+                .domain(Array.from(new Set(rowInfo.map(d => d[attribute]))))
+                .range(d3_schemeCategory10);
+            
+            vizRecipes.push({left: dimLeft, colorScale, attribute});
+
+            // [secondaryLeft, secondaryLeft+colWidth, primaryLeft, primaryLeft+colWidth, ... width]
+            xScaleDomain.push(dimLeft, dimLeft + colWidth);
+            // ["m-n", ... "d-1", "m-1", "d-0", "m-0"]
+            xScaleRange.push(`dimension-${i}`, `margin-${i}`);
+        }
+        xScaleDomain.push(width);
+
     } else if(rowInfoPosition === "right") {
         left = trackWidth + trackX + xMarginInitial;
-        primaryLeft = 0;
-        secondaryLeft = colWidth + xMargin;
 
-        xScale
-            .domain([primaryLeft, primaryLeft+colWidth, secondaryLeft, secondaryLeft+colWidth, width])
-            .range(["m-0", "primary", "m-1", "secondary", "m-2"]);
+        for(let i = 0; i < infoAttributes.length; i++){
+            const attribute = infoAttributes[i];
+
+            const dimLeft = (colWidth + xMargin) * i;
+            const colorScale = d3_scaleOrdinal()
+                .domain(Array.from(new Set(rowInfo.map(d => d[attribute]))))
+                .range(d3_schemeCategory10);
+
+            vizRecipes.push({left: dimLeft, colorScale, attribute});
+
+            // [primaryLeft, primaryLeft+colWidth, secondaryLeft, secondaryLeft+colWidth, ... width]
+            xScaleDomain.push(dimLeft, dimLeft + colWidth);
+            // ["m-0", "d-0", "m-1", "d-1", ..., "m-n"]
+            xScaleRange.push(`margin-${i}`, `dimension-${i}`);
+        }
+        xScaleDomain.push(width);
+        xScaleRange.push(`margin-${infoAttributes.length}`);
     }
+    
+    // X-axis scale for mouse events
+    xScale
+        .domain(xScaleDomain)
+        .range(xScaleRange);
     
     // Canvas
     const canvasRef = useRef();
@@ -89,16 +111,13 @@ export default function TrackRowInfo(props) {
         const { canvas, context, canvasSelection } = setupCanvas(canvasRef);
         context.clearRect(0, 0, width, height);
 
-        // Draw primary metadata value colors.
-        rowInfo.forEach((d, i) => {
-            context.fillStyle = valueScalePrimary(d[infoAttrPrimary]);
-            context.fillRect(primaryLeft, yScale(i), colWidth, yScale.bandwidth())
-        });
-
-        // Draw secondary metadata value colors.
-        rowInfo.forEach((d, i) => {
-            context.fillStyle = valueScaleSecondary(d[infoAttrSecondary]);
-            context.fillRect(secondaryLeft, yScale(i), colWidth, yScale.bandwidth())
+        // Draw metadata value colors.
+        vizRecipes.forEach(recipe => {
+            const {left, colorScale, attribute} = recipe;
+            rowInfo.forEach((d, i) => {
+                context.fillStyle = colorScale(d[attribute]);
+                context.fillRect(left, yScale(i), colWidth, yScale.bandwidth());
+            });
         });
 
         canvasSelection.on("mousemove", () => {
@@ -108,12 +127,11 @@ export default function TrackRowInfo(props) {
 
             const y = yScale.invert(mouseY);
             const x = xScale(mouseX);
-            
+
             let xVal;
-            if(x === "primary") {
-                xVal = rowInfo[y][infoAttrPrimary];
-            } else if(x === "secondary") {
-                xVal = rowInfo[y][infoAttrSecondary];
+            if(x.includes("dimension")){
+                const dimIndex = parseInt(x.split("-")[1], 10);
+                xVal = rowInfo[y][infoAttributes[dimIndex]];
             } else {
                 destroyTooltip();
                 return;
