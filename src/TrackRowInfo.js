@@ -40,11 +40,14 @@ export default function TrackRowInfo(props) {
 
     // Dimensions
     const top = trackY;
-    const colWidth = 15;
-    const xMargin = 60;
+    const colWidth = 15;    // width of stacked bars
+    const xMargin = 60;     // width of text area
     const xMarginInitial = 5;
+    const xGap = 5; // gap between bars and text
     const width = (colWidth + xMargin) * infoAttributes.length;
     const height = trackHeight;
+    const titleFontSize = 18;
+    const fontSize = 10;
 
     // Scales
     const xScale = d3_scaleThreshold();
@@ -52,7 +55,7 @@ export default function TrackRowInfo(props) {
         .domain(range(rowInfo.length))
         .range([0, height]);
     
-    // Stores valueScale, left position, attribute name for each attribute
+    // Stores recipes to visualize each attribute using texts and color bars
     let vizRecipes = [];
 
     // Viz recipes condition on left vs. right positioning:
@@ -61,7 +64,7 @@ export default function TrackRowInfo(props) {
         left = trackX - xMarginInitial - width;
 
         xScaleRange.push(`margin-${infoAttributes.length}`);
-        for(let i = infoAttributes.length - 1; i >= 0; i--){    // First attribute is shown on the 'right-most' side
+        for(let i = infoAttributes.length - 1; i >= 0; i--) {    // First attribute is shown on the 'right-most' side
             const attribute = infoAttributes[i];
 
             const dimLeft = xMargin + (colWidth + xMargin) * (infoAttributes.length - 1 - i);
@@ -69,7 +72,15 @@ export default function TrackRowInfo(props) {
                 .domain(Array.from(new Set(rowInfo.map(d => d[attribute]))))
                 .range(d3_schemeCategory10);
             
-            vizRecipes.push({left: dimLeft, colorScale, attribute});
+            vizRecipes.push({
+                titleLeft: dimLeft - xMargin + xGap,
+                titleTextAlign: "start", textBaseline: "bottom",
+                barLeft: dimLeft, 
+                labelLeft: dimLeft - xGap, 
+                textAlign: "end", 
+                colorScale, 
+                attribute
+            });
 
             // [secondaryLeft, secondaryLeft+colWidth, primaryLeft, primaryLeft+colWidth, ... width]
             xScaleDomain.push(dimLeft, dimLeft + colWidth);
@@ -81,7 +92,7 @@ export default function TrackRowInfo(props) {
     } else if(rowInfoPosition === "right") {
         left = trackWidth + trackX + xMarginInitial;
 
-        for(let i = 0; i < infoAttributes.length; i++){
+        for(let i = 0; i < infoAttributes.length; i++) {
             const attribute = infoAttributes[i];
 
             const dimLeft = (colWidth + xMargin) * i;
@@ -89,7 +100,15 @@ export default function TrackRowInfo(props) {
                 .domain(Array.from(new Set(rowInfo.map(d => d[attribute]))))
                 .range(d3_schemeCategory10);
 
-            vizRecipes.push({left: dimLeft, colorScale, attribute});
+            vizRecipes.push({
+                titleLeft: dimLeft + colWidth + xMargin - xGap,
+                titleTextAlign: "start", textBaseline: "top",
+                barLeft: dimLeft, 
+                labelLeft: dimLeft + colWidth + xGap,
+                textAlign: "start", 
+                colorScale, 
+                attribute
+            });
 
             // [primaryLeft, primaryLeft+colWidth, secondaryLeft, secondaryLeft+colWidth, ... width]
             xScaleDomain.push(dimLeft, dimLeft + colWidth);
@@ -104,6 +123,8 @@ export default function TrackRowInfo(props) {
     xScale
         .domain(xScaleDomain)
         .range(xScaleRange);
+
+    const rowHeight = yScale.bandwidth();
     
     // Canvas
     const canvasRef = useRef();
@@ -111,12 +132,38 @@ export default function TrackRowInfo(props) {
         const { canvas, context, canvasSelection } = setupCanvas(canvasRef);
         context.clearRect(0, 0, width, height);
 
-        // Draw metadata value colors.
+        // Draw bars and labels for metadata values
         vizRecipes.forEach(recipe => {
-            const {left, colorScale, attribute} = recipe;
+            const {
+                titleLeft, titleTextAlign, textBaseline,
+                barLeft, labelLeft, textAlign, colorScale, 
+                attribute
+            } = recipe;
+
+            // Draw a title of each dimension
+            context.fillStyle = "#9A9A9A";
+            context.fontSize = titleFontSize;
+            context.textAlign = titleTextAlign;
+            context.textBaseline = textBaseline;
+            context.translate(titleLeft, 0);
+            context.rotate(Math.PI/2);
+            context.fillText(`attribute: ${attribute}`, 0, 0);
+
+            context.rotate(-Math.PI/2);
+            context.translate(-titleLeft, 0);
+            ///    
+
             rowInfo.forEach((d, i) => {
                 context.fillStyle = colorScale(d[attribute]);
-                context.fillRect(left, yScale(i), colWidth, yScale.bandwidth());
+                context.fillRect(barLeft, yScale(i), colWidth, rowHeight);
+
+                if(rowHeight >= fontSize){
+                    context.fillStyle = colorScale(d[attribute]);
+                    context.fontSize = fontSize;
+                    context.textAlign = textAlign;
+                    context.textBaseline = "middle";
+                    context.fillText(d[attribute], labelLeft, yScale(i) + rowHeight / 2.0);
+                }
             });
         });
 
