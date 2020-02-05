@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 
 import { CistromeHGW } from '../index.js';
 
-import hgDemoViewConfig1 from '../viewconfigs/horizontal-multivec.json';
-import hgDemoViewConfig2 from '../viewconfigs/horizontal-multivec-local.json';
+import hgDemoViewConfig1 from '../viewconfigs/horizontal-multivec-1.json';
+import hgDemoViewConfig2 from '../viewconfigs/horizontal-multivec-2.json';
 
 import './App.scss';
 

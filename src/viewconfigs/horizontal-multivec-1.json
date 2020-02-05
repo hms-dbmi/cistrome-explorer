@@ -169,7 +169,7 @@
           "center": [
             {
               "type": "horizontal-multivec",
-              "uid": "cistrome-track",
+              "uid": "cistrome-track-1",
               "tilesetUid": "UvVPeLHuRDiYA3qwFlm7xQ",
               "server": "https://resgen.io/api/v1",
               "options": {
@@ -223,7 +223,7 @@
           "moved": false,
           "static": false
         },
-        "uid": "cistrome-view"
+        "uid": "cistrome-view-1"
       }
     ],
     "zoomLocks": {

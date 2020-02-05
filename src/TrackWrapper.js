@@ -4,7 +4,7 @@ import TrackColTools from './TrackColTools.js';
 import TrackRowInfo from './TrackRowInfo.js';
 import TrackRowLink from './TrackRowLink.js';
 
-import fakedata from './demo/fakedata.js';
+import fakedata from './demo/fakedata/index.js';
 
 /**
  * Wrapper component associated with a particular HiGlass track.
@@ -34,8 +34,12 @@ export default function TrackWrapper(props) {
     const trackHeight = multivecTrack.dimensions[1];
     let rowInfo = [];
     try {
+        // TODO: uncomment the below line to use the real metadata coming from the HiGlass Server.
         // rowInfo = multivecTrack.tilesetInfo.row_infos.map(JSON.parse);
-        rowInfo = fakedata[multivecTrack.id]
+        
+        // TODO: remove the below lines, see https://github.com/hms-dbmi/cistrome-higlass-wrapper/issues/26
+        const numRows = multivecTrack.tilesetInfo.shape[1];
+        rowInfo = fakedata[multivecTrack.id].tilesetInfo.rowInfo.slice(0, numRows);
     } catch(e) {
         console.log(e)
     }
