@@ -14,7 +14,7 @@ const demos = {
             rowInfoPosition: "right",
             rowLinkPosition: "left",
             colToolsPosition: "bottom",
-            infoAttributes: ["attr_5", "attr_6"]
+            infoAttributes: ["attr_5", "attr_6", "attr_7"]
         }
     },
     "Demo 2": {
