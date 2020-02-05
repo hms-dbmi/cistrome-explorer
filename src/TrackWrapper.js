@@ -4,6 +4,8 @@ import TrackColTools from './TrackColTools.js';
 import TrackRowInfo from './TrackRowInfo.js';
 import TrackRowLink from './TrackRowLink.js';
 
+import fakedata from './demo/fakedata.js';
+
 /**
  * Wrapper component associated with a particular HiGlass track.
  * @prop {object} options Options associated with the track. Contains values for all possible options.
@@ -32,14 +34,11 @@ export default function TrackWrapper(props) {
     const trackHeight = multivecTrack.dimensions[1];
     let rowInfo = [];
     try {
-        rowInfo = multivecTrack.tilesetInfo.row_infos.map(JSON.parse);
+        // rowInfo = multivecTrack.tilesetInfo.row_infos.map(JSON.parse);
+        rowInfo = fakedata[multivecTrack.id]
     } catch(e) {
-        // TODO: Remove this catch block. This is only being used for the resgen.io cistrome demo data, 
-        //       since its metadata is stored in tab-separated strings rather than JSON objects.
-        rowInfo = multivecTrack.tilesetInfo.row_infos.map(d => d.split("\t"));
+        console.log(e)
     }
-
-    // TODO: Obtain infoAttr keys from `options`.
 
     console.log("TrackWrapper.render");
     return (

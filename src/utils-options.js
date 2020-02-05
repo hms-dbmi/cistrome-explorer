@@ -30,10 +30,10 @@ const baseSchema = {
                     "enum": ["hidden", "bottom", "top"]
                 },
                 "infoAttrPrimary": {
-                    "type": "number"
+                    "type": "string"
                 },
                 "infoAttrSecondary": {
-                    "type": "number"
+                    "type": "string"
                 }
             }
         }
