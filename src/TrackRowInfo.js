@@ -43,7 +43,7 @@ export default function TrackRowInfo(props) {
     const colWidth = 15;
     const xMargin = 60;
     const xMarginInitial = 5;
-    const width = xMargin * infoAttributes.length;
+    const width = (colWidth + xMargin) * infoAttributes.length;
     const height = trackHeight;
 
     // Scales
@@ -64,7 +64,7 @@ export default function TrackRowInfo(props) {
         for(let i = infoAttributes.length - 1; i >= 0; i--){    // First attribute is shown on the 'right-most' side
             const attribute = infoAttributes[i];
 
-            const dimLeft = (colWidth + xMargin) * (infoAttributes.length - 1 - i);
+            const dimLeft = xMargin + (colWidth + xMargin) * (infoAttributes.length - 1 - i);
             const colorScale = d3_scaleOrdinal()
                 .domain(Array.from(new Set(rowInfo.map(d => d[attribute]))))
                 .range(d3_schemeCategory10);
