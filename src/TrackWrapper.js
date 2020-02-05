@@ -22,6 +22,7 @@ export default function TrackWrapper(props) {
         options, 
         multivecTrack,
         combinedTrack,
+        siblingTracks,
         onSelectGenomicInterval
     } = props;
 
@@ -72,12 +73,14 @@ export default function TrackWrapper(props) {
                     rowLinkAttribute={options.rowLinkAttribute}
                     rowLinkPosition={options.rowLinkPosition}
                 />) : null}
-            {(!combinedTrack && options.colToolsPosition !== "hidden") ? 
+            {options.colToolsPosition !== "hidden" ? 
                 (<TrackColTools
                     trackX={trackX}
                     trackY={trackY}
                     trackHeight={trackHeight}
                     trackWidth={trackWidth}
+                    combinedTrack={combinedTrack}
+                    siblingTracks={siblingTracks}
                     colToolsPosition={options.colToolsPosition}
                     onSelectGenomicInterval={onSelectGenomicInterval}
                 />) : null}

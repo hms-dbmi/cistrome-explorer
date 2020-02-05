@@ -8,7 +8,11 @@ import TrackWrapper from './TrackWrapper.js';
 import Tooltip from './Tooltip.js';
 
 import { processWrapperOptions, DEFAULT_OPTIONS_KEY } from './utils-options.js';
-import { getTracksIdsFromViewConfig, updateViewConfigOnSelectGenomicInterval } from './utils-viewconf.js';
+import { 
+    getHMTrackIdsFromViewConfig, 
+    getSiblingProjectionTracksFromViewConfig,
+    updateViewConfigOnSelectGenomicInterval
+} from './utils-viewconf.js';
 
 import './CistromeHGW.scss';
 
@@ -48,9 +52,18 @@ export default function CistromeHGW(props) {
 
     const [options, setOptions] = useState({});
     const [trackIds, setTrackIds] = useState([]);
+    const [siblingTrackIds, setSiblingTrackIds] = useState({});
 
     const onViewConfig = useCallback((newViewConfig) => {
-        setTrackIds(getTracksIdsFromViewConfig(newViewConfig));
+        const newTrackIds = getHMTrackIdsFromViewConfig(newViewConfig);
+        
+        const newSiblingTrackIds = {};
+        for(let trackId of newTrackIds) {
+            newSiblingTrackIds[trackId[1]] = getSiblingProjectionTracksFromViewConfig(newViewConfig, trackId[1]);
+        }
+        setTrackIds(newTrackIds);
+        setSiblingTrackIds(newSiblingTrackIds);
+        
     }, []);
 
     const getTrackObject = useCallback((viewId, trackId) => {
@@ -81,7 +94,7 @@ export default function CistromeHGW(props) {
         hgRef.current.api.on('viewConfig', (newViewConfigString) => {
             const newViewConfig = JSON.parse(newViewConfigString);
             onViewConfig(newViewConfig);
-        });
+        });         
 
         return () => {
             hgRef.current.api.off('viewConfig');
@@ -106,6 +119,8 @@ export default function CistromeHGW(props) {
             />
         );
     }, [viewConfig]);
+
+    
     
 
     console.log("CistromeHGW.render");
@@ -118,6 +133,7 @@ export default function CistromeHGW(props) {
                     options={getTrackWrapperOptions(viewId, trackId)}
                     multivecTrack={getTrackObject(viewId, trackId)}
                     combinedTrack={(combinedTrackId ? getTrackObject(viewId, combinedTrackId) : null)}
+                    siblingTracks={siblingTrackIds[trackId] ? siblingTrackIds[trackId].map(d => getTrackObject(viewId, d[1])) : []}
                     onSelectGenomicInterval={() => {
                         const currViewConfig = hgRef.current.api.getViewConfig();
                         const newViewConfig = updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, trackId);

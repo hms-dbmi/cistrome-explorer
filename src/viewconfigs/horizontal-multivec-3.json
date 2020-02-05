@@ -8,19 +8,19 @@
     "views": [
       {
         "initialXDomain": [
-          226426442.00375226,
-          226667818.0304663
+          223802565.63927206,
+          230164009.71560466
         ],
         "initialYDomain": [
-          2671196920.8697634,
-          2671320441.9350777
+          2669832509.996859,
+          2672092117.9606247
         ],
         "genomePositionSearchBox": {
-            "autocompleteServer": "//higlass.io/api/v1",
-            "autocompleteId": "OHJakQICQD6gTD7skx4EWA",
-            "chromInfoServer": "//higlass.io/api/v1",
-            "chromInfoId": "hg19",
-            "visible": true
+          "autocompleteServer": "//higlass.io/api/v1",
+          "autocompleteId": "OHJakQICQD6gTD7skx4EWA",
+          "chromInfoServer": "//higlass.io/api/v1",
+          "chromInfoId": "hg19",
+          "visible": true
         },
         "tracks": {
           "top": [
@@ -91,7 +91,8 @@
                 "labelTopMargin": 0,
                 "labelBottomMargin": 0,
                 "labelShowResolution": false,
-                "axisLabelFormatting": "scientific"
+                "axisLabelFormatting": "scientific",
+                "labelShowAssembly": true
               },
               "width": 568,
               "height": 42,
@@ -175,46 +176,71 @@
           "left": [],
           "center": [
             {
-              "type": "horizontal-multivec",
-              "uid": "cistrome-track-1",
-              "tilesetUid": "UvVPeLHuRDiYA3qwFlm7xQ",
-              "server": "https://resgen.io/api/v1",
-              "options": {
-                "labelPosition": "hidden",
-                "labelColor": "black",
-                "labelTextOpacity": 0.4,
-                "valueScaling": "linear",
-                "trackBorderWidth": 0,
-                "trackBorderColor": "black",
-                "heatmapValueScaling": "log",
-                "name": "my_file_genome_wide.multires.mv5",
-                "labelLeftMargin": 0,
-                "labelRightMargin": 0,
-                "labelTopMargin": 0,
-                "labelBottomMargin": 0,
-                "labelShowResolution": true,
-                "minHeight": 100,
-                "colorbarPosition": "bottomLeft"
-              },
-              "width": 1607,
+              "type": "combined",
+              "uid": "cistrome-track-1-combined",
               "height": 482,
-              "resolutions": [
-                16384000,
-                8192000,
-                4096000,
-                2048000,
-                1024000,
-                512000,
-                256000,
-                128000,
-                64000,
-                32000,
-                16000,
-                8000,
-                4000,
-                2000,
-                1000
-              ]
+              "width": 1607,
+              "contents": [
+                {
+                  "type": "horizontal-multivec",
+                  "uid": "cistrome-track-1",
+                  "tilesetUid": "UvVPeLHuRDiYA3qwFlm7xQ",
+                  "server": "https://resgen.io/api/v1",
+                  "options": {
+                    "labelPosition": "hidden",
+                    "labelColor": "black",
+                    "labelTextOpacity": 0.4,
+                    "valueScaling": "linear",
+                    "trackBorderWidth": 0,
+                    "trackBorderColor": "black",
+                    "heatmapValueScaling": "log",
+                    "name": "my_file_genome_wide.multires.mv5",
+                    "labelLeftMargin": 0,
+                    "labelRightMargin": 0,
+                    "labelTopMargin": 0,
+                    "labelBottomMargin": 0,
+                    "labelShowResolution": true,
+                    "minHeight": 100,
+                    "colorbarPosition": "bottomLeft",
+                    "labelShowAssembly": true,
+                    "colorbarBackgroundColor": "#ffffff",
+                    "scaleStartPercent": "0.00000",
+                    "scaleEndPercent": "1.00000"
+                  },
+                  "width": 1607,
+                  "height": 482,
+                  "resolutions": [
+                    16384000,
+                    8192000,
+                    4096000,
+                    2048000,
+                    1024000,
+                    512000,
+                    256000,
+                    128000,
+                    64000,
+                    32000,
+                    16000,
+                    8000,
+                    4000,
+                    2000,
+                    1000
+                  ]
+                },
+                {
+                  "uid": "cistrome-track-1-projection",
+                  "type": "viewport-projection-horizontal",
+                  "fromViewUid": "cistrome-view-1",
+                  "options": {
+                    "projectionFillColor": "#777",
+                    "projectionStrokeColor": "#777",
+                    "projectionFillOpacity": 0.3,
+                    "projectionStrokeOpacity": 0.7,
+                    "strokeWidth": 1
+                  }
+                }
+              ],
+              "options": {}
             }
           ],
           "bottom": [],
@@ -224,13 +250,13 @@
         },
         "layout": {
           "w": 12,
-          "h": 10,
+          "h": 71,
           "x": 0,
           "y": 0,
           "moved": false,
           "static": false
         },
-        "uid": "cistrome-view-1"
+        "uid": "cistrome-view-1-with-projection"
       }
     ],
     "zoomLocks": {
@@ -245,4 +271,4 @@
       "locksByViewUid": {},
       "locksDict": {}
     }
-}
+  }

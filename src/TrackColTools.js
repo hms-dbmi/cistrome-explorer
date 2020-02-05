@@ -1,5 +1,7 @@
 import React from 'react';
 
+import TrackColSelectionInfo from './TrackColSelectionInfo.js';
+
 import './TrackColTools.scss';
 
 /**
@@ -15,6 +17,8 @@ export default function TrackColTools(props) {
     const {
         trackX, trackY, 
         trackWidth, trackHeight,
+        combinedTrack,
+        siblingTracks,
         colToolsPosition,
         onSelectGenomicInterval
     } = props;
@@ -29,7 +33,7 @@ export default function TrackColTools(props) {
     } else if(colToolsPosition === "bottom") {
         top = trackY + trackHeight;
     }
-
+    
     return (
         <div
             style={{
@@ -40,9 +44,20 @@ export default function TrackColTools(props) {
                 height: `${height}px`
             }}
         >
-            <div className="col-tools">
-                <button onClick={onSelectGenomicInterval}>Select genomic interval</button>
-            </div>
+            {!combinedTrack ? (
+                <div className="col-tools">
+                    <button onClick={onSelectGenomicInterval}>Select genomic interval</button>
+                </div>
+            ) : (
+                <div className="col-tools-selection-info">
+                    {siblingTracks.map((siblingTrack, i) => (
+                        <TrackColSelectionInfo
+                            key={i}
+                            projectionTrack={siblingTrack}
+                        />
+                    ))}
+                </div>
+            )}
         </div>
     );
 };

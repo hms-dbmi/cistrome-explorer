@@ -15,5 +15,7 @@ toc:
     - getRetinaRatio
     - setupCanvas
     - teardownCanvas
-    - getTracksIdsFromViewConfig
+    - traverseViewConfig
+    - getHMTrackIdsFromViewConfig
+    - getSiblingProjectionTracks
     - updateViewConfigOnSelectGenomicInterval
