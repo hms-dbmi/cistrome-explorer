@@ -60,12 +60,11 @@ export default function TrackRowInfo(props) {
     if(rowInfoPosition === "left") {
         left = trackX - xMarginInitial - width;
 
-        let dimLeft;    // Left positon for each dimension
         xScaleRange.push(`margin-${infoAttributes.length}`);
-        for(let i = infoAttributes.length - 1; i >= 0; i--){    // First attribute is show of the 'right-most' side
+        for(let i = infoAttributes.length - 1; i >= 0; i--){    // First attribute is shown on the 'right-most' side
             const attribute = infoAttributes[i];
 
-            dimLeft = (colWidth + xMargin) * (infoAttributes.length - 1 - i);
+            const dimLeft = (colWidth + xMargin) * (infoAttributes.length - 1 - i);
             const colorScale = d3_scaleOrdinal()
                 .domain(Array.from(new Set(rowInfo.map(d => d[attribute]))))
                 .range(d3_schemeCategory10);
@@ -82,11 +81,10 @@ export default function TrackRowInfo(props) {
     } else if(rowInfoPosition === "right") {
         left = trackWidth + trackX + xMarginInitial;
 
-        let dimLeft;   // Left positon for each dimension
         for(let i = 0; i < infoAttributes.length; i++){
             const attribute = infoAttributes[i];
 
-            dimLeft = (colWidth + xMargin) * i;
+            const dimLeft = (colWidth + xMargin) * i;
             const colorScale = d3_scaleOrdinal()
                 .domain(Array.from(new Set(rowInfo.map(d => d[attribute]))))
                 .range(d3_schemeCategory10);
@@ -95,7 +93,7 @@ export default function TrackRowInfo(props) {
 
             // [primaryLeft, primaryLeft+colWidth, secondaryLeft, secondaryLeft+colWidth, ... width]
             xScaleDomain.push(dimLeft, dimLeft + colWidth);
-            // ["m-0", "d-0", "m-1", "d-1", "m-2", ...]
+            // ["m-0", "d-0", "m-1", "d-1", ..., "m-n"]
             xScaleRange.push(`margin-${i}`, `dimension-${i}`);
         }
         xScaleDomain.push(width);
