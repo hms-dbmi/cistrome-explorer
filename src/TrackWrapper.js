@@ -69,7 +69,7 @@ export default function TrackWrapper(props) {
                     trackHeight={trackHeight}
                     trackWidth={trackWidth}
                     rowLinkAttribute={options.rowLinkAttribute}
-                    rowLinkAttribute={options.rowLinkNameAttribute}
+                    rowLinkNameAttribute={options.rowLinkNameAttribute}
                     rowLinkPosition={options.rowLinkPosition}
                 />) : null}
             {(!combinedTrack && options.colToolsPosition !== "hidden") ? 
