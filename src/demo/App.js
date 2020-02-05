@@ -23,6 +23,8 @@ const demos = {
             rowInfoPosition: "left",
             rowLinkPosition: "right",
             colToolsPosition: "bottom",
+            rowLinkAttribute: "url",
+            rowLinkNameAttribute: "state",
             infoAttributes: ["r1", "r2"]
         }
     }

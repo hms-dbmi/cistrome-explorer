@@ -21,7 +21,7 @@ export default function TrackRowLink(props) {
         trackX, trackY, 
         trackWidth, trackHeight, 
         rowInfo, 
-        rowLinkPosition, rowLinkAttribute
+        rowLinkPosition, rowLinkAttribute, rowLinkNameAttribute
     } = props;
 
     // Dimensions
@@ -72,7 +72,7 @@ export default function TrackRowLink(props) {
                     {info[rowLinkAttribute] ? (
                         <a 
                             href={info[rowLinkAttribute]}
-                            title={info[rowLinkAttribute]}
+                            title={info[rowLinkNameAttribute ? rowLinkNameAttribute : rowLinkAttribute]}
                             target="_blank"
                             style={{
                                 fontSize: `${fontSize}px`,
@@ -81,7 +81,7 @@ export default function TrackRowLink(props) {
                                 [textAlign]: 0
                             }}
                         >
-                            {info[rowLinkAttribute]}
+                            {info[rowLinkNameAttribute ? rowLinkNameAttribute : rowLinkAttribute]}
                         </a>
                     ) : null}
                 </div>
