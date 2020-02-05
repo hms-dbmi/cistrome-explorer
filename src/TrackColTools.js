@@ -36,28 +36,28 @@ export default function TrackColTools(props) {
     
     return (
         <div
+            className="cistrome-hgw-child"
             style={{
-                position: 'absolute',
                 top: `${top}px`,
                 left: `${left}px`, 
                 width: `${width}px`,
                 height: `${height}px`
             }}
         >
-            {!combinedTrack ? (
-                <div className="col-tools">
+            <div className="col-tools">
+                {!combinedTrack ? (
                     <button onClick={onSelectGenomicInterval}>Select genomic interval</button>
-                </div>
-            ) : (
-                <div className="col-tools-selection-info">
-                    {siblingTracks.map((siblingTrack, i) => (
-                        <TrackColSelectionInfo
-                            key={i}
-                            projectionTrack={siblingTrack}
-                        />
-                    ))}
-                </div>
-            )}
+                ) : (
+                    <div className="col-tools-selection-info">
+                        {siblingTracks.map((siblingTrack, i) => (
+                            <TrackColSelectionInfo
+                                key={i}
+                                projectionTrack={siblingTrack}
+                            />
+                        ))}
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

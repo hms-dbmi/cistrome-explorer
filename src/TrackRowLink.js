@@ -52,8 +52,8 @@ export default function TrackRowLink(props) {
 
     return (
         <div
+            className="cistrome-hgw-child"
             style={{
-                position: 'absolute',
                 top: `${top}px`,
                 left: `${left}px`, 
                 width: `${width}px`,

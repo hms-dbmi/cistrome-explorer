@@ -13,3 +13,13 @@ export const TRACK_TYPE = Object.freeze({
 export const EVENT = Object.freeze({
     TOOLTIP: "tooltip"
 });
+
+/*
+ * Child component positions
+ */
+export const POSITION = Object.freeze({
+    BOTTOM: "bottom",
+    LEFT: "left",
+    RIGHT: "right",
+    TOP: "top"
+});
