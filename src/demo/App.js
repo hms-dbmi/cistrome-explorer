@@ -14,18 +14,16 @@ const demos = {
             rowInfoPosition: "right",
             rowLinkPosition: "left",
             colToolsPosition: "bottom",
-            infoAttrPrimary: "attr_5",
-            infoAttrSecondary: "attr_6"
+            infoAttributes: ["attr_5", "attr_6"]
         }
     },
     "Demo 2": {
         viewConfig: hgDemoViewConfig2,
         options: {
-            rowInfoPosition: "right",
-            rowLinkPosition: "left",
+            rowInfoPosition: "left",
+            rowLinkPosition: "right",
             colToolsPosition: "bottom",
-            infoAttrPrimary: "r1",
-            infoAttrSecondary: "r2"
+            infoAttributes: ["r1", "r2", "url"]
         }
     }
 };
