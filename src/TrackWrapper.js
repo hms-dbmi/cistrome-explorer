@@ -4,6 +4,10 @@ import TrackColTools from './TrackColTools.js';
 import TrackRowInfo from './TrackRowInfo.js';
 import TrackRowLink from './TrackRowLink.js';
 
+// TODO: remove the below fakedata import.
+//       see https://github.com/hms-dbmi/cistrome-higlass-wrapper/issues/26
+import fakedata from './demo/fakedata/index.js';
+
 /**
  * Wrapper component associated with a particular HiGlass track.
  * @prop {object} options Options associated with the track. Contains values for all possible options.
@@ -32,14 +36,17 @@ export default function TrackWrapper(props) {
     const trackHeight = multivecTrack.dimensions[1];
     let rowInfo = [];
     try {
-        rowInfo = multivecTrack.tilesetInfo.row_infos.map(JSON.parse);
-    } catch(e) {
-        // TODO: Remove this catch block. This is only being used for the resgen.io cistrome demo data, 
-        //       since its metadata is stored in tab-separated strings rather than JSON objects.
-        rowInfo = multivecTrack.tilesetInfo.row_infos.map(d => d.split("\t"));
-    }
+        // TODO: uncomment the below line to use the real metadata coming from the HiGlass Server.
+        //       see https://github.com/hms-dbmi/cistrome-higlass-wrapper/issues/26
+        // rowInfo = multivecTrack.tilesetInfo.row_infos.map(JSON.parse);
 
-    // TODO: Obtain infoAttr keys from `options`.
+        // TODO: remove the below lines.
+        //       see https://github.com/hms-dbmi/cistrome-higlass-wrapper/issues/26
+        const numRows = multivecTrack.tilesetInfo.shape[1];
+        rowInfo = fakedata[multivecTrack.id].tilesetInfo.rowInfo.slice(0, numRows);
+    } catch(e) {
+        console.log(e)
+    }
 
     console.log("TrackWrapper.render");
     return (

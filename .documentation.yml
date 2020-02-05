@@ -4,6 +4,7 @@ toc:
   - name: React Components (internal)
     children:
     - Tooltip
+    - TrackColTools
     - TrackRowInfo
     - TrackRowLink
     - TrackWrapper
