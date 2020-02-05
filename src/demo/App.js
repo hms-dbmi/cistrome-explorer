@@ -19,7 +19,7 @@ export default function App() {
     return (
         <div className="app">
             <div className="header">
-                <p><strong>Cistrome HiGlass Wrapper</strong></p>
+                <h4>Cistrome HiGlass Wrapper</h4>
             </div>
             <div className="viewconf-options">
                 <form>
