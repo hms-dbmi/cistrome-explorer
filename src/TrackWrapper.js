@@ -35,8 +35,12 @@ export default function TrackWrapper(props) {
     const trackY = multivecTrack.position[1];
     const trackWidth = multivecTrack.dimensions[0];
     const trackHeight = multivecTrack.dimensions[1];
+
+    // Attempt to obtain metadata values from the `tilesetInfo` field of the track.
     let rowInfo = [];
+    let trackAssembly = null;
     try {
+        trackAssembly = multivecTrack.tilesetInfo.coordSystem;
         // TODO: uncomment the below line to use the real metadata coming from the HiGlass Server.
         //       see https://github.com/hms-dbmi/cistrome-higlass-wrapper/issues/26
         // rowInfo = multivecTrack.tilesetInfo.row_infos.map(JSON.parse);
@@ -46,7 +50,7 @@ export default function TrackWrapper(props) {
         const numRows = multivecTrack.tilesetInfo.shape[1];
         rowInfo = fakedata[multivecTrack.id].tilesetInfo.rowInfo.slice(0, numRows);
     } catch(e) {
-        console.log(e)
+        console.log(e);
     }
 
     console.log("TrackWrapper.render");
@@ -78,6 +82,7 @@ export default function TrackWrapper(props) {
                     trackY={trackY}
                     trackHeight={trackHeight}
                     trackWidth={trackWidth}
+                    trackAssembly={trackAssembly}
                     combinedTrack={combinedTrack}
                     siblingTracks={siblingTracks}
                     colToolsPosition={options.colToolsPosition}

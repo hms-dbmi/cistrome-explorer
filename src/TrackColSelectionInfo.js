@@ -1,26 +1,24 @@
 import React, { useEffect, useState } from 'react';
+import { format as d3_format } from 'd3-format';
 
 import { resolveIntervalCoordinates } from './utils-genome.js';
+import { CISTROME_DBTOOLKIT_MAX_INTERVAL_SIZE } from './constants.js';
 
 import './TrackColSelectionInfo.scss';
 
-const ASSEMBLY = "hg38"; // TODO: obtain this from the tilesetInfo for the horizontal-multivec track.
-
 function makeDbToolkitURL(assembly, chrStartName, chrStartPos, chrEndName, chrEndPos) {
-    if(!assembly || !chrStartName || !chrStartPos || !chrEndName || !chrEndPos) {
-        // We need all of these values to be able to generate the URL.
-        return null;
-    }
     if(chrStartName !== chrEndName) {
         // Bail out, interval spans across more than one chromosome.
         return null;
     }
-    if(chrEndPos - chrStartPos > 2000000) {
-        // Bail out, interval spans across more than 2 Mb, the maximum for dbtoolkit's interval search.
+    if(chrEndPos - chrStartPos > CISTROME_DBTOOLKIT_MAX_INTERVAL_SIZE) {
+        // Bail out, interval is too large for dbtoolkit's interval search.
         return null;
     }
     return `http://dbtoolkit.cistrome.org/?specie=${assembly}&factor=tf&interval=${chrStartName}%3A${chrStartPos}-${chrEndPos}`;
 }
+
+const numberFormatter = d3_format(",");
 
 /**
  * Component for rendering information about a particular genomic interval selection.
@@ -33,8 +31,13 @@ function makeDbToolkitURL(assembly, chrStartName, chrStartPos, chrEndName, chrEn
 export default function TrackColSelectionInfo(props) {
 
     const {
-        projectionTrack
+        projectionTrack,
+        trackAssembly
     } = props;
+
+    if(!trackAssembly) {
+        return null;
+    }
 
     const [chrStartName, setChrStartName] = useState(null);
     const [chrStartPos, setChrStartPos] = useState(null);
@@ -44,7 +47,7 @@ export default function TrackColSelectionInfo(props) {
     useEffect(() => {
         let didUnmount = false;
         const absDomain = projectionTrack.viewportXDomain;
-        resolveIntervalCoordinates(ASSEMBLY, absDomain[0], absDomain[1])
+        resolveIntervalCoordinates(trackAssembly, absDomain[0], absDomain[1])
         .then(result => {
             if(!didUnmount) {
                 // Only update state if the component has not yet unmounted.
@@ -59,21 +62,29 @@ export default function TrackColSelectionInfo(props) {
         return (() => { didUnmount = true; });
     });
 
-    const dbToolkitURL = makeDbToolkitURL(ASSEMBLY, chrStartName, chrStartPos, chrEndName, chrEndPos);
+    if(!chrStartName || !chrStartPos || !chrEndName || !chrEndPos) {
+        return null;
+    }
+
+    const dbToolkitURL = makeDbToolkitURL(trackAssembly, chrStartName, chrStartPos, chrEndName, chrEndPos);
 
     return (
         <div>
             <div>
-                {chrStartName}:{chrStartPos} - {chrEndName}:{chrEndPos}
+                {chrStartName}:{numberFormatter(chrStartPos)} - {chrEndName}:{numberFormatter(chrEndPos)} (selected)
             </div>
             {dbToolkitURL ? (
                 <a 
                     href={dbToolkitURL}
                     target="_blank"
                 >
-                    View on DB Toolkit
+                    Search interval on Cistrome DB Toolkit
                 </a>
-            ) : null}
+            ) : (
+                <p className="col-selection-info-disabled">
+                    Search requires interval &le; 2 Mb
+                </p>
+            )}
         </div>
     );
 };

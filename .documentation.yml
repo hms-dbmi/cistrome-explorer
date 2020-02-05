@@ -4,6 +4,7 @@ toc:
   - name: React Components (internal)
     children:
     - Tooltip
+    - TrackColSelectionInfo
     - TrackColTools
     - TrackRowInfo
     - TrackRowLink
@@ -17,5 +18,5 @@ toc:
     - teardownCanvas
     - traverseViewConfig
     - getHMTrackIdsFromViewConfig
-    - getSiblingProjectionTracks
+    - getSiblingProjectionTracksFromViewConfig
     - updateViewConfigOnSelectGenomicInterval

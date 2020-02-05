@@ -23,3 +23,5 @@ export const POSITION = Object.freeze({
     RIGHT: "right",
     TOP: "top"
 });
+
+export const CISTROME_DBTOOLKIT_MAX_INTERVAL_SIZE = 2000000;

@@ -17,11 +17,17 @@ export default function TrackColTools(props) {
     const {
         trackX, trackY, 
         trackWidth, trackHeight,
+        trackAssembly,
         combinedTrack,
         siblingTracks,
         colToolsPosition,
         onSelectGenomicInterval
     } = props;
+
+    if(!trackAssembly) {
+        console.warn("trackAssembly is null");
+        return null;
+    }
 
     const left = trackX;
     const width = trackWidth;
@@ -52,6 +58,7 @@ export default function TrackColTools(props) {
                         {siblingTracks.map((siblingTrack, i) => (
                             <TrackColSelectionInfo
                                 key={i}
+                                trackAssembly={trackAssembly}
                                 projectionTrack={siblingTrack}
                             />
                         ))}
