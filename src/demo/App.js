@@ -23,7 +23,7 @@ const demos = {
             rowInfoPosition: "left",
             rowLinkPosition: "right",
             colToolsPosition: "bottom",
-            infoAttributes: ["r1", "r2", "url"]
+            infoAttributes: ["r1", "r2"]
         }
     }
 };
