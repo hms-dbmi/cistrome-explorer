@@ -13,7 +13,7 @@ import d3 from './d3.js';
  * @prop {boolean} isLeft Is this view on the left side of the track?
  * @prop {boolean} isCanvas Is this view rendered using Canvas?
  */
-export function VerticalBarTrack(props) {
+export function verticalBarTrack(props) {
     const {
         ref,
         left, top, width, height,

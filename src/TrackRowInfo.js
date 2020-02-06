@@ -4,7 +4,7 @@ import d3 from './d3.js';
 
 import { EVENT } from './constants.js';
 import { setupCanvas, teardownCanvas } from './utils-canvas.js';
-import { VerticalBarTrack } from './VerticalBarTrack.js';
+import { verticalBarTrack } from './VerticalBarTrack.js';
 
 import './TrackRowInfo.scss';
 
@@ -58,7 +58,7 @@ export default function TrackRowInfo(props) {
             const attribute = isLeft ? infoAttributes[infoAttributes.length - i - 1] : infoAttributes[i];
             let currentLeft = (barWidth + textWidth) * i;
 
-            VerticalBarTrack({
+            verticalBarTrack({
                 ref: context, 
                 left: currentLeft, top: 0, width: barWidth + textWidth, height: height,
                 rowInfo,
