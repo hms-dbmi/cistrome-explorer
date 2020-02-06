@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { format as d3_format } from 'd3-format';
+import d3 from './d3.js';
 
 import { resolveIntervalCoordinates } from './utils-genome.js';
 import { CISTROME_DBTOOLKIT_MAX_INTERVAL_SIZE } from './constants.js';
@@ -20,7 +20,7 @@ function makeDbToolkitURL(assembly, chrStartName, chrStartPos, chrEndName, chrEn
     return `http://dbtoolkit.cistrome.org/?specie=${assembly}&factor=tf&interval=${chrStartName}%3A${chrStartPos}-${chrEndPos}`;
 }
 
-const numberFormatter = d3_format(",");
+const numberFormatter = d3.format(",");
 
 /**
  * Component for rendering information about a particular genomic interval selection.
