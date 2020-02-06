@@ -6,9 +6,10 @@
 
 import { select } from "d3-selection";
 import { format } from "d3-format";
-import { schemeSet3 } from "d3-scale-chromatic";
+import { schemeSet3, interpolateViridis } from "d3-scale-chromatic";
 import { mouse, event as d3_event } from "d3-selection";
-import { scaleOrdinal, scaleThreshold } from "d3-scale";
+import { scaleLinear, scaleOrdinal, scaleThreshold } from "d3-scale";
+import { extent } from "d3-array";
 import { hsl } from "d3-color";
 
 import { scale as vega_scale } from "vega-scale";
@@ -26,10 +27,13 @@ export default {
     select,
     format,
     schemeSet3,
+    interpolateViridis,
     mouse,
     get event() { return d3_event; }, // https://stackoverflow.com/a/40048292
+    scaleLinear,
     scaleOrdinal,
     scaleThreshold,
     scaleBand,
+    extent,
     hsl
 };

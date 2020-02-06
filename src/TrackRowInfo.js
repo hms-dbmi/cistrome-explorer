@@ -5,6 +5,7 @@ import Two from './utils/two.js';
 import { teardownCanvas } from './utils/canvas.js';
 
 import { EVENT } from './constants.js';
+import { verticalBarTrack } from './VerticalBarTrack.js';
 
 import './TrackRowInfo.scss';
 
@@ -23,7 +24,7 @@ function destroyTooltip() {
  * @prop {number} trackWidth The track width.
  * @prop {number} trackHeight The track height.
  * @prop {array} rowInfo Array of JSON objects, one object for each row.
- * @prop {array} infoAttributes Array of attribute names.
+ * @prop {array} infoAttributes Array of JSON object, one object for the names and types of each attribute.
  * @prop {string} rowInfoPosition The value of the `rowInfoPosition` option.
  */
 export default function TrackRowInfo(props) {
@@ -38,97 +39,43 @@ export default function TrackRowInfo(props) {
     } = props;
 
     // Dimensions
+    const isLeft = rowInfoPosition === "left";
     const top = trackY;
-    const colWidth = 10;    // width of stacked bars
-    const xMargin = 60;     // width of text area
-    const xMarginInitial = 5;
-    const xGap = 5; // gap between bars and text
-    const width = (colWidth + xMargin) * infoAttributes.length;
+    const barWidth = 10;
+    const textWidth = 60;
+    const margin = 5;
+    const width = (barWidth + textWidth) * infoAttributes.length;
     const height = trackHeight;
-    const titleFontSize = 12;
-    const fontSize = 10;
+    const left = isLeft ? trackX - margin - width : trackX + trackWidth + margin;
 
+    // Render canvas
+    const canvasRef = useRef();
+
+    // Determin position of each dimension and render it
+    let xDomain = [], xRange = [];
+    for(let i = 0; i < infoAttributes.length; i++) {
+        const attribute = isLeft ? infoAttributes[infoAttributes.length - i - 1] : infoAttributes[i];
+        let currentLeft = (barWidth + textWidth) * i;
+
+        // Domain and range for mouse event
+        if(isLeft) {
+            xDomain.push(currentLeft + textWidth, currentLeft + textWidth + barWidth);
+            xRange.push("m", attribute.name);
+        } else {
+            xDomain.push(currentLeft, currentLeft + barWidth);
+            xRange.push("m", attribute.name);
+        }
+    }
+    xDomain.push(width);
+    xRange.push("m");
+    
     // Scales
-    const xScale = d3.scaleThreshold();
+    const xScale = d3.scaleThreshold()
+        .domain(xDomain)
+        .range(xRange);
     const yScale = d3.scaleBand()
         .domain(range(rowInfo.length))
         .range([0, height]);
-    
-    // Stores recipes to visualize each attribute using texts and color bars
-    let vizRecipes = [];
-
-    // Viz recipes depending on left or right positioning
-    let left, xScaleDomain = [], xScaleRange = [];
-    if(rowInfoPosition === "left") {
-        left = trackX - xMarginInitial - width;
-
-        xScaleRange.push(`margin-${infoAttributes.length}`);
-        for(let i = infoAttributes.length - 1; i >= 0; i--) {    // First attribute is shown on the 'right-most' side
-            const attribute = infoAttributes[i];
-
-            const dimLeft = xMargin + (colWidth + xMargin) * (infoAttributes.length - 1 - i);
-            const colorScale = d3.scaleOrdinal()
-                .domain(Array.from(new Set(rowInfo.map(d => d[attribute]))))
-                .range(d3.schemeSet3);
-            
-            vizRecipes.push({
-                titleLeft: dimLeft - xMargin + xGap, 
-                titleRotate: -Math.PI/2,
-                titleTextAlign: "right", 
-                barLeft: dimLeft, 
-                labelLeft: dimLeft - xGap, 
-                textAlign: "right", 
-                colorScale, 
-                attribute
-            });
-
-            // [secondaryLeft, secondaryLeft+colWidth, primaryLeft, primaryLeft+colWidth, ... width]
-            xScaleDomain.push(dimLeft, dimLeft + colWidth);
-            // ["m-n", ... "d-1", "m-1", "d-0", "m-0"]
-            xScaleRange.push(`dimension-${i}`, `margin-${i}`);
-        }
-        xScaleDomain.push(width);
-
-    } else if(rowInfoPosition === "right") {
-        left = trackWidth + trackX + xMarginInitial;
-
-        for(let i = 0; i < infoAttributes.length; i++) {
-            const attribute = infoAttributes[i];
-
-            const dimLeft = (colWidth + xMargin) * i;
-            const colorScale = d3.scaleOrdinal()
-                .domain(Array.from(new Set(rowInfo.map(d => d[attribute]))))
-                .range(d3.schemeSet3);
-
-            vizRecipes.push({
-                titleLeft: dimLeft + colWidth + xMargin - xGap, 
-                titleRotate: Math.PI/2,
-                titleTextAlign: "left", 
-                barLeft: dimLeft, 
-                labelLeft: dimLeft + colWidth + xGap,
-                textAlign: "left", 
-                colorScale, 
-                attribute
-            });
-
-            // [primaryLeft, primaryLeft+colWidth, secondaryLeft, secondaryLeft+colWidth, ... width]
-            xScaleDomain.push(dimLeft, dimLeft + colWidth);
-            // ["m-0", "d-0", "m-1", "d-1", ..., "m-n"]
-            xScaleRange.push(`margin-${i}`, `dimension-${i}`);
-        }
-        xScaleDomain.push(width);
-        xScaleRange.push(`margin-${infoAttributes.length}`);
-    }
-    
-    // X-axis scale for mouse events
-    xScale
-        .domain(xScaleDomain)
-        .range(xScaleRange);
-
-    const rowHeight = yScale.bandwidth();
-    
-    // Canvas
-    const canvasRef = useRef();
 
     const draw = useCallback((domElement) => {
         const two = new Two({
@@ -137,39 +84,22 @@ export default function TrackRowInfo(props) {
             domElement
         });
         
-        // Show metadata values with visual elements
-        vizRecipes.forEach(recipe => {
-            const {
-                titleLeft, titleRotate, titleTextAlign,
-                barLeft, labelLeft, textAlign, colorScale, 
-                attribute
-            } = recipe;
+      
+        for(let i = 0; i < infoAttributes.length; i++) {
+            const attribute = isLeft ? infoAttributes[infoAttributes.length - i - 1] : infoAttributes[i];
+            let currentLeft = (barWidth + textWidth) * i;
 
-            // Draw a title of each dimension
-            const title = two.makeText(titleLeft, 0, rowHeight, colWidth, `attribute: ${attribute}`);
-            title.fill = "#9A9A9A";
-            title.fontsize = titleFontSize;
-            title.align = titleTextAlign;
-            title.baseline = "top";
-            title.rotation = titleRotate;
-
-            // Draw color bars and text labels
-            rowInfo.forEach((d, i) => {
-                const rect = two.makeRect(barLeft + colWidth/2, yScale(i) + rowHeight/2, colWidth, rowHeight);
-                rect.fill = colorScale(d[attribute]);
-
-                if(rowHeight >= fontSize){
-                    const text = two.makeText(labelLeft, yScale(i) + rowHeight/2, colWidth, rowHeight, d[attribute])
-                    text.fill = d3.hsl(colorScale(d[attribute])).darker(3);
-                    text.fontsize = fontSize;
-                    text.align = textAlign;
-                    text.baseline = "middle";
-                }
+            verticalBarTrack({
+                two, 
+                left: currentLeft, top: 0, width: barWidth + textWidth, height: height,
+                rowInfo,
+                attribute,
+                isLeft
             });
-        });
+        }
 
         two.update();
-    }, [width, height, vizRecipes]);
+    }, [width, height]);
 
     register("TrackRowInfo", draw);
 
@@ -185,11 +115,9 @@ export default function TrackRowInfo(props) {
 
             const y = yScale.invert(mouseY);
             const x = xScale(mouseX);
-
             let xVal;
-            if(x.includes("dimension")){
-                const dimIndex = parseInt(x.split("-")[1], 10);
-                xVal = rowInfo[y][infoAttributes[dimIndex]];
+            if(x !== "m"){
+                xVal = rowInfo[y][x];
             } else {
                 destroyTooltip();
                 return;
@@ -201,7 +129,7 @@ export default function TrackRowInfo(props) {
             PubSub.publish(EVENT.TOOLTIP, {
                 x: mouseViewportX,
                 y: mouseViewportY,
-                content: `Value: ${xVal}`
+                content: `${x}: ${xVal}`
             });
         });
 

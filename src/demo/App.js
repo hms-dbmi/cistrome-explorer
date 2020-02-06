@@ -14,7 +14,12 @@ const demos = {
             rowInfoPosition: "right",
             rowLinkPosition: "left",
             colToolsPosition: "bottom",
-            infoAttributes: ["attr_5", "attr_6", "attr_7"]
+            infoAttributes: [
+                {name: "attr_5", type: "nominal"}, 
+                {name: "attr_6", type: "nominal"},
+                {name: "attr_7", type: "nominal"},
+                {name: "attr_7", type: "nominal"}
+            ]
         }
     },
     "Demo 2": {
@@ -25,7 +30,11 @@ const demos = {
             colToolsPosition: "bottom",
             rowLinkAttribute: "url",
             rowLinkNameAttribute: "state",
-            infoAttributes: ["r1", "r2"]
+            infoAttributes: [
+                {name: "state", type: "nominal"},
+                {name: "r1", type: "nominal"},
+                {name: "r2", type: "quantitative"}
+            ]
         }
     }
 };
