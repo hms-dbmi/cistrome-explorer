@@ -4,7 +4,7 @@ import d3 from './d3.js';
 
 import { EVENT } from './constants.js';
 import { setupCanvas, teardownCanvas } from './utils-canvas.js';
-import { VerticalBarTrack } from './TrackRowInfoDim.js';
+import { VerticalBarTrack } from './VerticalBarTrack.js';
 
 import './TrackRowInfo.scss';
 
@@ -55,7 +55,7 @@ export default function TrackRowInfo(props) {
         // Determin position of each dimension and render it
         let xDomain = [], xRange = [];
         for(let i = 0; i < infoAttributes.length; i++) {
-            const { name : attribute } = isLeft ? infoAttributes[infoAttributes.length - i - 1] : infoAttributes[i];
+            const attribute = isLeft ? infoAttributes[infoAttributes.length - i - 1] : infoAttributes[i];
             let currentLeft = (barWidth + textWidth) * i;
 
             VerticalBarTrack({
@@ -69,10 +69,10 @@ export default function TrackRowInfo(props) {
             // Domain and range for mouse event
             if(isLeft) {
                 xDomain.push(currentLeft + textWidth, currentLeft + textWidth + barWidth);
-                xRange.push("m", attribute);
+                xRange.push("m", attribute.name);
             } else {
                 xDomain.push(currentLeft, currentLeft + barWidth);
-                xRange.push("m", attribute);
+                xRange.push("m", attribute.name);
             }
         }
         xDomain.push(width);

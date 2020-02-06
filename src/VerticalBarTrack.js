@@ -9,7 +9,7 @@ import d3 from './d3.js';
  * @prop {number} width The width of this view.
  * @prop {number} height The height of this view.
  * @prop {array} rowInfo Array of JSON objects, one object for each row.
- * @prop {string} attribute The name and type of data field.
+ * @prop {object} attribute The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  * @prop {boolean} isCanvas Is this view rendered using Canvas?
  */
@@ -35,9 +35,13 @@ export function VerticalBarTrack(props) {
     const yScale = d3.scaleBand()
         .domain(range(rowInfo.length))
         .range([0, height]);
-    const colorScale = d3.scaleOrdinal()
-        .domain(Array.from(new Set(rowInfo.map(d => d[attribute]))))
-        .range(d3.schemeSet3);
+    const colorScale = attribute.type === "nominal" ? 
+        d3.scaleOrdinal()
+            .domain(Array.from(new Set(rowInfo.map(d => d[attribute.name]))))
+            .range(d3.schemeSet3) : 
+        d3.scaleLinear()
+            .domain(d3.extent(rowInfo.map(d => d[attribute.name])))
+            .range([0, 1]);
     const rowHeight = yScale.bandwidth();
 
     // Render
@@ -52,7 +56,7 @@ export function VerticalBarTrack(props) {
         ref.textBaseline = "top";
         ref.translate(titleLeft, top);
         ref.rotate(titleRotate);
-        ref.fillText(`attribute: ${attribute}`, 0, top);
+        ref.fillText(`attribute: ${attribute.name} | type: ${attribute.type}`, 0, top);
         ref.rotate(-titleRotate);
         ref.translate(-titleLeft, top);
 
@@ -62,16 +66,20 @@ export function VerticalBarTrack(props) {
         const labelAlign = isLeft ? "end" : "start";
 
         rowInfo.forEach((d, i) => {
-            ref.fillStyle = colorScale(d[attribute]);
+            const color = attribute.type === "nominal" ?
+             colorScale(d[attribute.name]) : 
+             d3.interpolateViridis(colorScale(d[attribute.name]));
+
+            ref.fillStyle = color;
             ref.fillRect(barLeft, yScale(i), colWidth, rowHeight);
 
             // Render text labels when the space is enough
             if(rowHeight >= fontSize){
-                ref.fillStyle = d3.hsl(colorScale(d[attribute])).darker(3);
+                ref.fillStyle = d3.hsl(color).darker(3);
                 ref.font = `${fontSize}px ${fontFamily}`;
                 ref.textAlign = labelAlign;
                 ref.textBaseline = "middle";
-                ref.fillText(d[attribute], labelLeft, yScale(i) + rowHeight / 2.0);
+                ref.fillText(d[attribute.name], labelLeft, yScale(i) + rowHeight / 2.0);
             }
         });
     }

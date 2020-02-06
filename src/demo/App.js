@@ -17,6 +17,7 @@ const demos = {
             infoAttributes: [
                 {name: "attr_5", type: "nominal"}, 
                 {name: "attr_6", type: "nominal"},
+                {name: "attr_7", type: "nominal"},
                 {name: "attr_7", type: "nominal"}
             ]
         }
@@ -24,14 +25,15 @@ const demos = {
     "Demo 2": {
         viewConfig: hgDemoViewConfig2,
         options: {
-            rowInfoPosition: "left",
-            rowLinkPosition: "right",
+            rowInfoPosition: "right",
+            rowLinkPosition: "left",
             colToolsPosition: "bottom",
             rowLinkAttribute: "url",
             rowLinkNameAttribute: "state",
             infoAttributes: [
+                {name: "state", type: "nominal"},
                 {name: "r1", type: "nominal"},
-                {name: "r2", type: "nominal"}
+                {name: "r2", type: "quantitative"}
             ]
         }
     }
