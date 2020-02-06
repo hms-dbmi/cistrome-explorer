@@ -61,6 +61,7 @@ export default function CistromeHGW(props) {
         const newTrackIds = getHMTrackIdsFromViewConfig(newViewConfig);
         const newSiblingTrackIds = {};
         for(let trackId of newTrackIds) {
+            // The each trackId is actually an array `[viewId, trackId]`, which is why we want trackId[1].
             newSiblingTrackIds[trackId[1]] = getSiblingProjectionTracksFromViewConfig(newViewConfig, trackId[1]);
         }
         setTrackIds(newTrackIds);
@@ -122,8 +123,6 @@ export default function CistromeHGW(props) {
     }, [viewConfig]);
 
     
-    
-
     console.log("CistromeHGW.render");
     return (
         <div className="cistrome-hgw">
