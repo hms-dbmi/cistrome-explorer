@@ -10,7 +10,11 @@ import './TrackColTools.scss';
  * @prop {number} trackY The track vertical offset.
  * @prop {number} trackWidth The track width.
  * @prop {number} trackHeight The track height.
+ * @prop {(object|null)} combinedTrack The `combined` track, parent of the `horizontal-multivec` track.
+ * @prop {object[]} siblingTracks An array of `viewport-projection-horizontal` track objects, which
+ *                                are siblings of `multivecTrack` (children of the same `combined` track).
  * @prop {string} colToolsPosition The value of the `colToolsPosition` option.
+ * @prop {function} onSelectGenomicInterval The function to call upon selection of a genomic interval.
  */
 export default function TrackColTools(props) {
 

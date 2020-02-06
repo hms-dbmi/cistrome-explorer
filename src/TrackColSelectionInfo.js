@@ -6,7 +6,9 @@ import { CISTROME_DBTOOLKIT_MAX_INTERVAL_SIZE } from './constants.js';
 
 import './TrackColSelectionInfo.scss';
 
+
 function makeDbToolkitURL(assembly, chrStartName, chrStartPos, chrEndName, chrEndPos) {
+    // Generate a URL for the cistrome DB toolkit site.
     if(chrStartName !== chrEndName) {
         // Bail out, interval spans across more than one chromosome.
         return null;
@@ -22,11 +24,8 @@ const numberFormatter = d3_format(",");
 
 /**
  * Component for rendering information about a particular genomic interval selection.
- * @prop {number} trackX The track horizontal offset.
- * @prop {number} trackY The track vertical offset.
- * @prop {number} trackWidth The track width.
- * @prop {number} trackHeight The track height.
- * @prop {string} colToolsPosition The value of the `colToolsPosition` option.
+ * @prop {object} projectionTrack A `viewport-projection-horizontal` track object.
+ * @prop {(string|null)} trackAssembly The genome assembly/coordSystem value obtained from the associated `horizontal-multivec` track.
  */
 export default function TrackColSelectionInfo(props) {
 

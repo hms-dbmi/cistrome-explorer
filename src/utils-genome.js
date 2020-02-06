@@ -10,7 +10,7 @@ const AVAILABLE_CHROM_SIZES_URL = `${CHROM_INFO_SERVER}/available-chrom-sizes/`;
  * @param {string} coordSystem The genome assembly, corresponds to the value of `coordSystem`.
  * @param {number} absStart The genome absolute position of the start of the interval.
  * @param {number} absEnd The genome absolute position of the end of the interval.
- * @returns {promise} A promise that resolves with `[[chrStartName, chrStartPos], [chrEndName, chrEndPos]]`.
+ * @returns {promise<array>} A promise that resolves with `[[chrStartName, chrStartPos], [chrEndName, chrEndPos]]`.
  */
 export function resolveIntervalCoordinates(coordSystem, absStart, absEnd) {
     return new Promise((resolve, reject) => {
