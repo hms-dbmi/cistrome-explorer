@@ -18,6 +18,7 @@ import fakedata from './demo/fakedata/index.js';
  *                                are siblings of `multivecTrack` (children of the same `combined` track).
  * @prop {function} onSelectGenomicInterval The function to call upon selection of a genomic interval. 
  *                                          Passed down to the `TrackColTools` component.
+ * @prop {function} register The function for child components to call to register their draw functions.
  */
 export default function TrackWrapper(props) {
     const { 
@@ -25,7 +26,8 @@ export default function TrackWrapper(props) {
         multivecTrack,
         combinedTrack,
         siblingTracks,
-        onSelectGenomicInterval
+        onSelectGenomicInterval,
+        register
     } = props;
 
     if(!multivecTrack || !multivecTrack.tilesetInfo) {
@@ -67,6 +69,7 @@ export default function TrackWrapper(props) {
                     trackWidth={trackWidth}
                     infoAttributes={options.infoAttributes}
                     rowInfoPosition={options.rowInfoPosition}
+                    register={register}
                 />) : null}
             {options.rowLinkPosition !== "hidden" ? 
                 (<TrackRowLink

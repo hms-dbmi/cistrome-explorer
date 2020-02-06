@@ -1,10 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import range from 'lodash/range';
-import d3 from './d3.js';
-
+import d3 from './utils/d3.js';
+import Two from './utils/two.js';
+import { teardownCanvas } from './utils/canvas.js';
 
 import { EVENT } from './constants.js';
-import { setupCanvas, teardownCanvas } from './utils-canvas.js';
 
 import './TrackRowInfo.scss';
 
@@ -33,7 +33,8 @@ export default function TrackRowInfo(props) {
         trackWidth, trackHeight, 
         rowInfo, 
         infoAttributes,
-        rowInfoPosition
+        rowInfoPosition,
+        register
     } = props;
 
     // Dimensions
@@ -73,10 +74,10 @@ export default function TrackRowInfo(props) {
             vizRecipes.push({
                 titleLeft: dimLeft - xMargin + xGap, 
                 titleRotate: -Math.PI/2,
-                titleTextAlign: "end", textBaseline: "top",
+                titleTextAlign: "right", 
                 barLeft: dimLeft, 
                 labelLeft: dimLeft - xGap, 
-                textAlign: "end", 
+                textAlign: "right", 
                 colorScale, 
                 attribute
             });
@@ -102,10 +103,10 @@ export default function TrackRowInfo(props) {
             vizRecipes.push({
                 titleLeft: dimLeft + colWidth + xMargin - xGap, 
                 titleRotate: Math.PI/2,
-                titleTextAlign: "start", textBaseline: "top",
+                titleTextAlign: "left", 
                 barLeft: dimLeft, 
                 labelLeft: dimLeft + colWidth + xGap,
-                textAlign: "start", 
+                textAlign: "left", 
                 colorScale, 
                 attribute
             });
@@ -128,47 +129,56 @@ export default function TrackRowInfo(props) {
     
     // Canvas
     const canvasRef = useRef();
-    useEffect(() => {
-        const { canvas, context, canvasSelection } = setupCanvas(canvasRef);
-        context.clearRect(0, 0, width, height);
 
+    const draw = useCallback((domElement) => {
+        const two = new Two({
+            width,
+            height,
+            domElement
+        });
+        
         // Show metadata values with visual elements
         vizRecipes.forEach(recipe => {
             const {
-                titleLeft, titleRotate, titleTextAlign, textBaseline,
+                titleLeft, titleRotate, titleTextAlign,
                 barLeft, labelLeft, textAlign, colorScale, 
                 attribute
             } = recipe;
 
             // Draw a title of each dimension
-            context.fillStyle = "#9A9A9A";
-            context.font = `${titleFontSize}px Arial`;
-            context.textAlign = titleTextAlign;
-            context.textBaseline = textBaseline;
-            context.translate(titleLeft, 0);
-            context.rotate(titleRotate);
-            context.fillText(`attribute: ${attribute}`, 0, 0);
-
-            context.rotate(-titleRotate);
-            context.translate(-titleLeft, 0);
-            ///    
+            const title = two.makeText(titleLeft, 0, rowHeight, colWidth, `attribute: ${attribute}`);
+            title.fill = "#9A9A9A";
+            title.fontsize = titleFontSize;
+            title.align = titleTextAlign;
+            title.baseline = "top";
+            title.rotation = titleRotate;
 
             // Draw color bars and text labels
             rowInfo.forEach((d, i) => {
-                context.fillStyle = colorScale(d[attribute]);
-                context.fillRect(barLeft, yScale(i), colWidth, rowHeight);
+                const rect = two.makeRect(barLeft + colWidth/2, yScale(i) + rowHeight/2, colWidth, rowHeight);
+                rect.fill = colorScale(d[attribute]);
 
                 if(rowHeight >= fontSize){
-                    context.fillStyle = d3.hsl(colorScale(d[attribute])).darker(3);
-                    context.font = `${fontSize}px Arial`;
-                    context.textAlign = textAlign;
-                    context.textBaseline = "middle";
-                    context.fillText(d[attribute], labelLeft, yScale(i) + rowHeight / 2.0);
+                    const text = two.makeText(labelLeft, yScale(i) + rowHeight/2, colWidth, rowHeight, d[attribute])
+                    text.fill = d3.hsl(colorScale(d[attribute])).darker(3);
+                    text.fontsize = fontSize;
+                    text.align = textAlign;
+                    text.baseline = "middle";
                 }
             });
         });
 
-        canvasSelection.on("mousemove", () => {
+        two.update();
+    }, [width, height, vizRecipes]);
+
+    register("TrackRowInfo", draw);
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        
+        draw(canvas);
+
+        d3.select(canvas).on("mousemove", () => {
             const mouse = d3.mouse(canvas);
             const mouseX = mouse[0];
             const mouseY = mouse[1];
@@ -195,9 +205,9 @@ export default function TrackRowInfo(props) {
             });
         });
 
-        canvasSelection.on("mouseout", destroyTooltip)
+        d3.select(canvas).on("mouseout", destroyTooltip)
 
-        return (() => teardownCanvas(canvasRef));
+        return (() => teardownCanvas(canvas));
     });
 
     return (

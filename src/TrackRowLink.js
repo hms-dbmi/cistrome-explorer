@@ -1,6 +1,6 @@
 import React from 'react';
 import range from 'lodash/range';
-import d3 from './d3.js';
+import d3 from './utils/d3.js';
 
 import './TrackRowLink.scss';
 

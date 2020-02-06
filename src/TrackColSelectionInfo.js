@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import d3 from './d3.js';
+import d3 from './utils/d3.js';
 
-import { resolveIntervalCoordinates } from './utils-genome.js';
+import { resolveIntervalCoordinates } from './utils/genome.js';
 import { CISTROME_DBTOOLKIT_MAX_INTERVAL_SIZE } from './constants.js';
 
 import './TrackColSelectionInfo.scss';
