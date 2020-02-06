@@ -4,11 +4,11 @@ import {
     getHMTrackIdsFromViewConfig,
     getSiblingProjectionTracksFromViewConfig,
     updateViewConfigOnSelectGenomicInterval
-} from './utils-viewconf.js';
+} from './viewconf.js';
 
-import hgDemoViewConfig1 from './viewconfigs/horizontal-multivec-1.json';
-import hgDemoViewConfig2 from './viewconfigs/horizontal-multivec-2.json';
-import hgDemoViewConfig3 from './viewconfigs/horizontal-multivec-3.json';
+import hgDemoViewConfig1 from '../viewconfigs/horizontal-multivec-1.json';
+import hgDemoViewConfig2 from '../viewconfigs/horizontal-multivec-2.json';
+import hgDemoViewConfig3 from '../viewconfigs/horizontal-multivec-3.json';
 
 describe('Utilities for processing higlass view config objects', () => {
     it('Should find all horizontal-multivec track IDs', () => {

@@ -7,12 +7,12 @@ import StackedBarTrack from 'higlass-multivec/es/StackedBarTrack.js';
 import TrackWrapper from './TrackWrapper.js';
 import Tooltip from './Tooltip.js';
 
-import { processWrapperOptions, DEFAULT_OPTIONS_KEY } from './utils-options.js';
+import { processWrapperOptions, DEFAULT_OPTIONS_KEY } from './utils/options.js';
 import { 
     getHMTrackIdsFromViewConfig, 
     getSiblingProjectionTracksFromViewConfig,
     updateViewConfigOnSelectGenomicInterval
-} from './utils-viewconf.js';
+} from './utils/viewconf.js';
 
 import './CistromeHGW.scss';
 
@@ -29,7 +29,6 @@ const hgOptionsBase = {
     containerPaddingY: 0,
     sizeMode: 'default'
 };
-
 
 /**
  * Cistrome HiGlass Wrapper, a React component that wraps around HiGlass to provide visualization features for cistrome data.
@@ -49,25 +48,32 @@ export default function CistromeHGW(props) {
     const { viewConfig, options: optionsRaw } = props;
 
     const hgRef = useRef();
+    const drawRef = useRef({});
 
     const [options, setOptions] = useState({});
-
-    // Array of horizontal-multivec track IDs.
     const [trackIds, setTrackIds] = useState([]);
-    // Mapping of horizontal-multivec track IDs to arrays of viewport-projection sibling track IDs.
     const [siblingTrackIds, setSiblingTrackIds] = useState({});
 
+    /*
+     * Function to call when the view config has changed.
+     * Updates the array of `horizontal-multivec` track IDs.
+     * Updates the mapping of `horizontal-multivec` track IDs 
+     * to sibling `viewport-projection-horizontal` track IDs.
+     */
     const onViewConfig = useCallback((newViewConfig) => {
         const newTrackIds = getHMTrackIdsFromViewConfig(newViewConfig);
         const newSiblingTrackIds = {};
         for(let trackId of newTrackIds) {
-            // The each trackId is actually an array `[viewId, trackId]`, which is why we want trackId[1].
+            // Each trackId is actually an array `[viewId, trackId]`, which is why we want trackId[1].
             newSiblingTrackIds[trackId[1]] = getSiblingProjectionTracksFromViewConfig(newViewConfig, trackId[1]);
         }
         setTrackIds(newTrackIds);
         setSiblingTrackIds(newSiblingTrackIds);
     }, []);
 
+    /*
+     * Function to get a track object from the higlass API.
+     */
     const getTrackObject = useCallback((viewId, trackId) => {
         try {
             return hgRef.current.api.getTrackObject(viewId, trackId);
@@ -76,6 +82,9 @@ export default function CistromeHGW(props) {
         }
     }, []);
 
+    /*
+     * Function to get an options object for a particular track.
+     */
     const getTrackWrapperOptions = useCallback((viewId, trackId) => {
         if(options[viewId]) {
             if(options[viewId][trackId]) {
@@ -87,6 +96,14 @@ export default function CistromeHGW(props) {
             return options[DEFAULT_OPTIONS_KEY];
         }
     }, [options]);
+    
+    /*
+     * Function for child components to call to "register" their draw functions.
+     * These draw functions will be called when the component is exported to SVG.
+     */
+    const register = useCallback((key, drawFunction) => {
+        drawRef.current[key] = drawFunction;
+    }, [drawRef]);
 
     useEffect(() => {
         setOptions(processWrapperOptions(optionsRaw));
@@ -102,7 +119,7 @@ export default function CistromeHGW(props) {
             hgRef.current.api.off('viewConfig');
         };
     }, [hgRef]);
-
+    
     const hgComponent = useMemo(() => {
         const hgOptions = {
             ...hgOptionsBase,
@@ -141,6 +158,7 @@ export default function CistromeHGW(props) {
                             onViewConfig(newViewConfig);
                         });
                     }}
+                    register={register}
                 />
             ))}
             <Tooltip />

@@ -12,7 +12,7 @@ import { scaleLinear, scaleOrdinal, scaleThreshold } from "d3-scale";
 import { extent } from "d3-array";
 import { hsl } from "d3-color";
 
-import { scale as vega_scale } from 'vega-scale';
+import { scale as vega_scale } from "vega-scale";
 
 /*
  * Same as `d3.scaleBand` but also supports `invert()`.
@@ -20,7 +20,7 @@ import { scale as vega_scale } from 'vega-scale';
  * - https://github.com/d3/d3-scale/pull/64#issuecomment-319516140
  * - https://github.com/vega/vega/blob/5d76c88eeead37e4589f9a4278ea1296683f5f68/packages/vega-scale/src/scales/scaleBand.js
  */
-const scaleBand = vega_scale('band');
+const scaleBand = vega_scale("band");
 
 
 export default {

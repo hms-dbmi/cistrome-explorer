@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import range from 'lodash/range';
-import d3 from './d3.js';
+import d3 from './utils/d3.js';
+import Two from './utils/two.js';
+import { teardownCanvas } from './utils/canvas.js';
 
 import { EVENT } from './constants.js';
-import { setupCanvas, teardownCanvas } from './utils-canvas.js';
 import { verticalBarTrack } from './VerticalBarTrack.js';
 
 import './TrackRowInfo.scss';
@@ -33,7 +34,8 @@ export default function TrackRowInfo(props) {
         trackWidth, trackHeight, 
         rowInfo, 
         infoAttributes,
-        rowInfoPosition
+        rowInfoPosition,
+        register
     } = props;
 
     // Dimensions
@@ -48,45 +50,65 @@ export default function TrackRowInfo(props) {
 
     // Render canvas
     const canvasRef = useRef();
-    useEffect(() => {
-        const { canvas, context, canvasSelection } = setupCanvas(canvasRef);
-        context.clearRect(0, 0, width, height);
 
-        // Determin position of each dimension and render it
-        let xDomain = [], xRange = [];
+    // Determin position of each dimension and render it
+    let xDomain = [], xRange = [];
+    for(let i = 0; i < infoAttributes.length; i++) {
+        const attribute = isLeft ? infoAttributes[infoAttributes.length - i - 1] : infoAttributes[i];
+        let currentLeft = (barWidth + textWidth) * i;
+
+        // Domain and range for mouse event
+        if(isLeft) {
+            xDomain.push(currentLeft + textWidth, currentLeft + textWidth + barWidth);
+            xRange.push("m", attribute.name);
+        } else {
+            xDomain.push(currentLeft, currentLeft + barWidth);
+            xRange.push("m", attribute.name);
+        }
+    }
+    xDomain.push(width);
+    xRange.push("m");
+    
+    // Scales
+    const xScale = d3.scaleThreshold()
+        .domain(xDomain)
+        .range(xRange);
+    const yScale = d3.scaleBand()
+        .domain(range(rowInfo.length))
+        .range([0, height]);
+
+    const draw = useCallback((domElement) => {
+        const two = new Two({
+            width,
+            height,
+            domElement
+        });
+        
+      
         for(let i = 0; i < infoAttributes.length; i++) {
             const attribute = isLeft ? infoAttributes[infoAttributes.length - i - 1] : infoAttributes[i];
             let currentLeft = (barWidth + textWidth) * i;
 
             verticalBarTrack({
-                ref: context, 
+                two, 
                 left: currentLeft, top: 0, width: barWidth + textWidth, height: height,
                 rowInfo,
                 attribute,
-                isLeft, isCanvas: true
+                isLeft
             });
-
-            // Domain and range for mouse event
-            if(isLeft) {
-                xDomain.push(currentLeft + textWidth, currentLeft + textWidth + barWidth);
-                xRange.push("m", attribute.name);
-            } else {
-                xDomain.push(currentLeft, currentLeft + barWidth);
-                xRange.push("m", attribute.name);
-            }
         }
-        xDomain.push(width);
-        xRange.push("m");
-        
-        // Scales
-        const xScale = d3.scaleThreshold()
-            .domain(xDomain)
-            .range(xRange);
-        const yScale = d3.scaleBand()
-            .domain(range(rowInfo.length))
-            .range([0, height]);
 
-        canvasSelection.on("mousemove", () => {
+        two.update();
+    }, [width, height]);
+
+    register("TrackRowInfo", draw);
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        
+        draw(canvas);
+
+        d3.select(canvas).on("mousemove", () => {
             const mouse = d3.mouse(canvas);
             const mouseX = mouse[0];
             const mouseY = mouse[1];
@@ -107,13 +129,13 @@ export default function TrackRowInfo(props) {
             PubSub.publish(EVENT.TOOLTIP, {
                 x: mouseViewportX,
                 y: mouseViewportY,
-                content: `Value: ${xVal}`
+                content: `${x}: ${xVal}`
             });
         });
 
-        canvasSelection.on("mouseout", destroyTooltip)
+        d3.select(canvas).on("mouseout", destroyTooltip)
 
-        return (() => teardownCanvas(canvasRef));
+        return (() => teardownCanvas(canvas));
     });
 
     return (

@@ -1,6 +1,6 @@
 /* eslint-env node */
 
-import { validateWrapperOptions, processWrapperOptions } from './utils-options.js';
+import { validateWrapperOptions, processWrapperOptions } from './options.js';
 
 describe('Utilities for processing wrapper component options', () => {
     it('Should validate options object when incorrect', () => {
