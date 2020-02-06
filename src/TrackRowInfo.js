@@ -204,13 +204,21 @@ export default function TrackRowInfo(props) {
     });
 
     return (
-        <div>
+        <div 
+            className="cistrome-hgw-child"
+            style={{
+                top: `${top}px`,
+                left: `${left}px`, 
+                width: `${width}px`,
+                height: `${height}px`,
+            }}
+        >
             <canvas
                 ref={canvasRef}
                 style={{
-                    position: 'absolute',
-                    top: `${top}px`,
-                    left: `${left}px`, 
+                    position: 'relative',
+                    top: 0,
+                    left: 0, 
                     width: `${width}px`,
                     height: `${height}px`,
                 }}

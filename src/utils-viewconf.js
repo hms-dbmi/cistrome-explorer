@@ -4,27 +4,42 @@ import uuidv4 from 'uuid/v4';
 import { TRACK_TYPE } from './constants.js';
 
 /**
- * This function finds the horizontal-multivec tracks in the view config.
+ * Execute a callback function for every view, track, and innerTrack in a view config object.
  * @param {object} viewConf A valid HiGlass viewConfig object.
- * @returns {array} Array containing `[viewId, trackId, null]` or `[viewId, trackId, combinedTrackId]` for each horizontal-multivec track.
+ * @param {function} callback A function that will be called with an object parameter with the attributes:
+ *                              `viewI, viewId, trackI, trackType, trackId, innerTrackI, innerTrackType, innerTrackId`.
+ *                            These object attributes will be undefined if the attribute does not apply to a particular item.
  */
-export function getTracksIdsFromViewConfig(viewConf) {
-    const mvTracks = [];
+export function traverseViewConfig(viewConf, callback) {
     if(viewConf && viewConf.views && Array.isArray(viewConf.views)) {
-        for(let view of viewConf.views) {
-            const viewId = view.uid;
-            if(view && view.tracks) {
+        for(let [viewI, view] of viewConf.views.entries()) {
+            if(view && view.uid) {
+                callback({
+                    viewI,
+                    viewId: view.uid
+                });
                 for(let [tracksPos, tracks] of Object.entries(view.tracks)) {
                     if(Array.isArray(tracks)) {
-                        for(let track of tracks) {
-                            // The horizontal-multivec track could be standalone, or within a "combined" track.
-                            if(track.type === TRACK_TYPE.HORIZONTAL_MULTIVEC && track.uid) {
-                                mvTracks.push([viewId, track.uid, null]);
-                            } else if(track.type === TRACK_TYPE.COMBINED && track.uid) {
-                                for(let innerTrack of track.contents) {
-                                    if(innerTrack.type === TRACK_TYPE.HORIZONTAL_MULTIVEC && innerTrack.uid) {
-                                        mvTracks.push([viewId, innerTrack.uid, track.uid]);
-                                    }
+                        for(let [trackI, track] of tracks.entries()) {
+                            callback({
+                                viewI,
+                                viewId: view.uid,
+                                trackI,
+                                trackType: track.type, 
+                                trackId: track.uid
+                            });
+                            if(track.type === TRACK_TYPE.COMBINED && Array.isArray(track.contents)) {
+                                for(let [innerTrackI, innerTrack] of track.contents.entries()) {
+                                    callback({ 
+                                        viewI,
+                                        viewId: view.uid,
+                                        trackI,
+                                        trackType: track.type, 
+                                        trackId: track.uid, 
+                                        innerTrackI,
+                                        innerTrackType: innerTrack.type, 
+                                        innerTrackId: innerTrack.uid
+                                    });
                                 }
                             }
                         }
@@ -33,7 +48,53 @@ export function getTracksIdsFromViewConfig(viewConf) {
             }
         }
     }
+};
+
+/**
+ * This function finds the horizontal-multivec tracks in the view config.
+ * @param {object} viewConf A valid HiGlass viewConfig object.
+ * @returns {array} Array containing `[viewId, trackId, null]` or `[viewId, trackId, combinedTrackId]` for each horizontal-multivec track.
+ */
+export function getHMTrackIdsFromViewConfig(viewConf) {
+    const mvTracks = [];
+    traverseViewConfig(viewConf, ({ viewId, trackType, trackId, innerTrackType, innerTrackId }) => {
+        // The horizontal-multivec track could be standalone, or within a "combined" track.
+        if(trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC && trackId) {
+            mvTracks.push([viewId, trackId, null]);
+        } else if(trackType === TRACK_TYPE.COMBINED && trackId && innerTrackType === TRACK_TYPE.HORIZONTAL_MULTIVEC && innerTrackId) {
+            mvTracks.push([viewId, innerTrackId, trackId]);
+        }
+    });
     return mvTracks;
+};
+
+/**
+ * This function finds the `viewport-projection-horizontal` tracks that are siblings of a particular target track.
+ * @param {object} viewConf A valid HiGlass viewConfig object.
+ * @param {string} targetTrackId The `uid` of the track to target.
+ * @returns {array} Array containing `[viewId, trackId, null]` or `[viewId, trackId, combinedTrackId]` for each sibling `viewport-projection-horizontal` track.
+ */
+export function getSiblingProjectionTracksFromViewConfig(viewConf, targetTrackId) {
+    const potentialMatches = {};
+    traverseViewConfig(viewConf, ({ viewId, trackType, trackId, innerTrackType, innerTrackId }) => {
+        if(trackType === TRACK_TYPE.COMBINED) {
+            if(!innerTrackType) {
+                potentialMatches[trackId] = {
+                    match: false,
+                    siblingIds: []
+                };
+            } else if(innerTrackType === TRACK_TYPE.VIEWPORT_PROJECTION_HORIZONTAL) {
+                potentialMatches[trackId].siblingIds.push([viewId, innerTrackId, trackId]);
+            } else if(innerTrackId === targetTrackId) {
+                potentialMatches[trackId].match = true;
+            }
+        }
+    });
+    const matchObj = Object.values(potentialMatches).find(d => d.match);
+    if(matchObj) {
+        return matchObj.siblingIds;
+    }
+    return [];
 };
 
 
