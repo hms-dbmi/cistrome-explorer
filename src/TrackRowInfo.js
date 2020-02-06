@@ -8,6 +8,7 @@ import { hsl as d3_hsl } from 'd3';
 import { EVENT } from './constants.js';
 import { vega_scaleBand } from './utils-scales.js';
 import { setupCanvas, teardownCanvas } from './utils-canvas.js';
+import { TrackRowInfoDim } from './TrackRowInfoDim.js';
 
 import './TrackRowInfo.scss';
 
@@ -142,6 +143,8 @@ export default function TrackRowInfo(props) {
                 barLeft, labelLeft, textAlign, colorScale, 
                 attribute
             } = recipe;
+
+            // TrackRowInfoDim({context, });
 
             // Draw a title of each dimension
             context.fillStyle = "#9A9A9A";

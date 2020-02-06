@@ -1,5 +1,6 @@
 /**
  * Component for rendering each attribute.
+ * @prop {number} ref The context of canvas or svg to render this view.
  * @prop {number} left The left position of this view.
  * @prop {number} top The top position of this view.
  * @prop {number} width The width of this view.
@@ -10,6 +11,7 @@
 export default function TrackRowInfoDim(props) {
 
     const {
+        ref,
         left, top, width, height,
         rowInfo, 
         attribute
