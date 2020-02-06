@@ -1,7 +1,6 @@
 import React from 'react';
 import range from 'lodash/range';
-
-import { vega_scaleBand } from './utils-scales.js';
+import d3 from './d3.js';
 
 import './TrackRowLink.scss';
 
@@ -41,7 +40,7 @@ export default function TrackRowLink(props) {
     }
 
     // Scales
-    const yScale = vega_scaleBand()
+    const yScale = d3.scaleBand()
         .domain(range(rowInfo.length))
         .range([0, height]);
 

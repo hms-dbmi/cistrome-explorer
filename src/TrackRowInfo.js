@@ -1,12 +1,9 @@
 import React, { useEffect, useRef } from 'react';
-import { schemeSet3 as d3_schemeSet3 } from "d3-scale-chromatic";
 import range from 'lodash/range';
-import { mouse as d3_mouse, event as d3_event } from 'd3-selection';
-import { scaleOrdinal as d3_scaleOrdinal, scaleThreshold as d3_scaleThreshold } from 'd3-scale';
-import { hsl as d3_hsl } from 'd3';
+import d3 from './d3.js';
+
 
 import { EVENT } from './constants.js';
-import { vega_scaleBand } from './utils-scales.js';
 import { setupCanvas, teardownCanvas } from './utils-canvas.js';
 
 import './TrackRowInfo.scss';
@@ -51,8 +48,8 @@ export default function TrackRowInfo(props) {
     const fontSize = 10;
 
     // Scales
-    const xScale = d3_scaleThreshold();
-    const yScale = vega_scaleBand()
+    const xScale = d3.scaleThreshold();
+    const yScale = d3.scaleBand()
         .domain(range(rowInfo.length))
         .range([0, height]);
     
@@ -69,9 +66,9 @@ export default function TrackRowInfo(props) {
             const attribute = infoAttributes[i];
 
             const dimLeft = xMargin + (colWidth + xMargin) * (infoAttributes.length - 1 - i);
-            const colorScale = d3_scaleOrdinal()
+            const colorScale = d3.scaleOrdinal()
                 .domain(Array.from(new Set(rowInfo.map(d => d[attribute]))))
-                .range(d3_schemeSet3);
+                .range(d3.schemeSet3);
             
             vizRecipes.push({
                 titleLeft: dimLeft - xMargin + xGap, 
@@ -98,9 +95,9 @@ export default function TrackRowInfo(props) {
             const attribute = infoAttributes[i];
 
             const dimLeft = (colWidth + xMargin) * i;
-            const colorScale = d3_scaleOrdinal()
+            const colorScale = d3.scaleOrdinal()
                 .domain(Array.from(new Set(rowInfo.map(d => d[attribute]))))
-                .range(d3_schemeSet3);
+                .range(d3.schemeSet3);
 
             vizRecipes.push({
                 titleLeft: dimLeft + colWidth + xMargin - xGap, 
@@ -162,7 +159,7 @@ export default function TrackRowInfo(props) {
                 context.fillRect(barLeft, yScale(i), colWidth, rowHeight);
 
                 if(rowHeight >= fontSize){
-                    context.fillStyle = d3_hsl(colorScale(d[attribute])).darker(3);
+                    context.fillStyle = d3.hsl(colorScale(d[attribute])).darker(3);
                     context.font = `${fontSize}px Arial`;
                     context.textAlign = textAlign;
                     context.textBaseline = "middle";
@@ -172,7 +169,7 @@ export default function TrackRowInfo(props) {
         });
 
         canvasSelection.on("mousemove", () => {
-            const mouse = d3_mouse(canvas);
+            const mouse = d3.mouse(canvas);
             const mouseX = mouse[0];
             const mouseY = mouse[1];
 
@@ -188,8 +185,8 @@ export default function TrackRowInfo(props) {
                 return;
             }
 
-            const mouseViewportX = d3_event.clientX;
-            const mouseViewportY = d3_event.clientY;
+            const mouseViewportX = d3.event.clientX;
+            const mouseViewportY = d3.event.clientY;
             
             PubSub.publish(EVENT.TOOLTIP, {
                 x: mouseViewportX,

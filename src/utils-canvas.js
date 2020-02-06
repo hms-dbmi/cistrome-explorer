@@ -1,4 +1,4 @@
-import { select as d3_select } from 'd3-selection';
+import d3 from './d3.js';
 
 /**
  * Get the retina ratio to be able to scale up a canvas context.
@@ -22,11 +22,11 @@ export function getRetinaRatio(context) {
 /**
  * Initialize an HTML canvas element, scaling it for retina screens.
  * @param {object} canvasRef A React ref corresponding to a `<canvas/>` element.
- * @returns {object} An object containing the canvas, d3_select(canvas), the context, width, and height.
+ * @returns {object} An object containing the canvas, d3.select(canvas), the context, width, and height.
  */
 export function setupCanvas(canvasRef) {
     const canvas = canvasRef.current;
-    const canvasSelection = d3_select(canvas);
+    const canvasSelection = d3.select(canvas);
     const context = canvas.getContext('2d');
     const ratio = getRetinaRatio(context);
     const scaledWidth = canvas.clientWidth * ratio;
@@ -50,7 +50,7 @@ export function setupCanvas(canvasRef) {
  */
 export function teardownCanvas(canvasRef) {
     const canvas = canvasRef.current;
-    const canvasSelection = d3_select(canvas);
+    const canvasSelection = d3.select(canvas);
     canvasSelection.on("mousemove", null);
     canvasSelection.on("mouseout", null);
     canvasSelection.on("click", null);
