@@ -25,6 +25,9 @@ const baseSchema = {
                 "rowLinkAttribute": {
                     "type": "string"
                 },
+                "rowLinkNameAttribute": {
+                    "type": "string"
+                },
                 "colToolsPosition": {
                     "type": "string",
                     "enum": ["hidden", "bottom", "top"]

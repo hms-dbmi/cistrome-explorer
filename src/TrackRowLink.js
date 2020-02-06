@@ -13,6 +13,7 @@ import './TrackRowLink.scss';
  * @prop {number} trackHeight The track height.
  * @prop {array} rowInfo Array of JSON objects, one object for each row.
  * @prop {string} rowLinkAttribute The attribute used to obtain a URL from a row info JSON object.
+ * @prop {string} rowLinkNameAttribute The attribute used to display each URL from a row info JSON object.
  * @prop {string} rowLinkPosition The value of the `rowLinkPosition` option.
  */
 export default function TrackRowLink(props) {
@@ -21,7 +22,7 @@ export default function TrackRowLink(props) {
         trackX, trackY, 
         trackWidth, trackHeight, 
         rowInfo, 
-        rowLinkPosition, rowLinkAttribute
+        rowLinkPosition, rowLinkAttribute, rowLinkNameAttribute
     } = props;
 
     // Dimensions
@@ -81,7 +82,7 @@ export default function TrackRowLink(props) {
                                 [textAlign]: 0
                             }}
                         >
-                            {info[rowLinkAttribute]}
+                            {info[rowLinkNameAttribute ? rowLinkNameAttribute : rowLinkAttribute]}
                         </a>
                     ) : null}
                 </div>

@@ -20,9 +20,11 @@ const demos = {
     "Demo 2": {
         viewConfig: hgDemoViewConfig2,
         options: {
-            rowInfoPosition: "left",
-            rowLinkPosition: "right",
+            rowInfoPosition: "right",
+            rowLinkPosition: "left",
             colToolsPosition: "bottom",
+            rowLinkAttribute: "url",
+            rowLinkNameAttribute: "state",
             infoAttributes: ["r1", "r2"]
         }
     }
@@ -30,7 +32,7 @@ const demos = {
 
 export default function App() {
 
-    const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[0]);
+    const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[1]);
 
     return (
         <div className="app">
