@@ -31,7 +31,7 @@ export default function TrackColTools(props) {
 
     const left = trackX;
     const width = trackWidth;
-    const height = 30;
+    const height = 40;
 
     let top;
     if(colToolsPosition === "top") {
