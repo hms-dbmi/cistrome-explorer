@@ -26,7 +26,7 @@ function destroyTooltip() {
  * @prop {number} trackWidth The track width.
  * @prop {number} trackHeight The track height.
  * @prop {array} rowInfo Array of JSON objects, one object for each row.
- * @prop {array} infoAttributes Array of attribute names.
+ * @prop {array} infoAttributes Array of JSON object, one object for the names and types of each attribute.
  * @prop {string} rowInfoPosition The value of the `rowInfoPosition` option.
  */
 export default function TrackRowInfo(props) {
@@ -66,7 +66,7 @@ export default function TrackRowInfo(props) {
 
         xScaleRange.push(`margin-${infoAttributes.length}`);
         for(let i = infoAttributes.length - 1; i >= 0; i--) {    // First attribute is shown on the 'right-most' side
-            const attribute = infoAttributes[i];
+            const {name: attribute} = infoAttributes[i];
 
             const dimLeft = xMargin + (colWidth + xMargin) * (infoAttributes.length - 1 - i);
             const colorScale = d3_scaleOrdinal()
@@ -95,7 +95,7 @@ export default function TrackRowInfo(props) {
         left = trackWidth + trackX + xMarginInitial;
 
         for(let i = 0; i < infoAttributes.length; i++) {
-            const attribute = infoAttributes[i];
+            const {name: attribute} = infoAttributes[i];
 
             const dimLeft = (colWidth + xMargin) * i;
             const colorScale = d3_scaleOrdinal()
@@ -182,7 +182,7 @@ export default function TrackRowInfo(props) {
             let xVal;
             if(x.includes("dimension")){
                 const dimIndex = parseInt(x.split("-")[1], 10);
-                xVal = rowInfo[y][infoAttributes[dimIndex]];
+                xVal = rowInfo[y][infoAttributes[dimIndex]].name;
             } else {
                 destroyTooltip();
                 return;

@@ -33,7 +33,23 @@ const baseSchema = {
                     "enum": ["hidden", "bottom", "top"]
                 },
                 "infoAttributes": {
-                    "type": "array"
+                    "type": "array",
+                    "items": { "$ref": "#/definitions/fieldInfo" }
+                }
+            }
+        },
+        "fieldInfo": {
+            "type": "object",
+            "required": ["name", "type"],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "The name of data field"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": ["nominal", "quantitative"],
+                    "description": "The data type of a field"
                 }
             }
         }
