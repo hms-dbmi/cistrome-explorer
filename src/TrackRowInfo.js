@@ -148,7 +148,7 @@ export default function TrackRowInfo(props) {
                 height: `${height}px`,
             }}
         >
-            <canvas
+            <svg
                 ref={canvasRef}
                 style={{
                     position: 'relative',

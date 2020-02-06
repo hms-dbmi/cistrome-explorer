@@ -53,21 +53,21 @@ export function verticalBarTrack(props) {
     const title = two.makeText(titleLeft, top, rowHeight, colWidth, titleText);
     title.fill = "#9A9A9A";
     title.fontsize = titleFontSize;
-    title.align = isLeft ? "right" : "left";
+    title.align = isLeft ? "end" : "start";
     title.baseline = "top";
     title.rotation = titleRotate;
 
     // Render visual components for each row (i.e., bars and texts)
     const barLeft = left + (isLeft ? xMargin : 0);
     const labelLeft = left + (isLeft ? xMargin - xGap : colWidth + xGap);
-    const labelAlign = isLeft ? "right" : "left";
+    const labelAlign = isLeft ? "end" : "start";
 
     rowInfo.forEach((d, i) => {
         const color = attribute.type === "nominal" ?
             colorScale(d[attribute.name]) : 
             d3.interpolateViridis(colorScale(d[attribute.name]));
 
-        const rect = two.makeRect(barLeft + colWidth/2, yScale(i) + rowHeight/2, colWidth, rowHeight);
+        const rect = two.makeRect(barLeft, yScale(i), colWidth, rowHeight);
         rect.fill = color;
 
         // Render text labels when the space is enough

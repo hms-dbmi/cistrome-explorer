@@ -1,5 +1,4 @@
 import d3 from './d3.js';
-
 import { getRetinaRatio } from './canvas.js';
 
 
@@ -9,11 +8,6 @@ class TwoRectangle {
         this.y = y;
         this.width = width;
         this.height = height;
-
-        if(this.height < 0) {
-            // To fix bug with bar plots that have bars representing negative values.
-            this.height = this.height * -1;
-        }
 
         this.stroke = null;
         this.fill = "#000";
@@ -65,20 +59,16 @@ class TwoText {
         this.y = y;
         this.width = width;
         this.height = height;
-
         this.text = text
 
         this.fill = "#000";
-
         this.fontsize = 14;
-        this.font = 'Arial,sans-serif';
-        this.align = "center";
-        this.baseline = "alphabetic";
-
+        this.font = "Arial,sans-serif";
+        this.align = "middle"; // options: "start", "middle", "end"
+        this.baseline = "alphabetic"; // options "alphabetic", "top", "middle", "bottom"
         this.linewidth = 1;
         this.opacity = 1;
         this.rotation = null;
-
     }
 }
 
@@ -134,37 +124,62 @@ export default class Two {
 
     initCanvas() {
         const context = this.domElement.getContext('2d');
-
         const ratio = getRetinaRatio(context);
         const scaledWidth = this.width * ratio;
         const scaledHeight = this.height * ratio;
-
         this.domElement.setAttribute("width", scaledWidth);
         this.domElement.setAttribute("height", scaledHeight);
-        
         context.scale(ratio, ratio);
 
         this.context = context;
     }
 
+    /**
+     * Create a new rectangle.
+     * @param {number} x The x-coordinate for the top left corner of the rect.
+     * @param {number} y The y-coordinate for the top left corner of the rect.
+     * @param {number} width The width for the rect.
+     * @param {number} height The height for the rect.
+     * @returns {object} Instance of new `TwoRectangle`.
+     */
     makeRect(x, y, width, height) {
         const rect = new TwoRectangle(x, y, width, height);
         this.elements.push(rect);
         return rect;
     }
 
+    /**
+     * Create a new circle.
+     * @param {number} x The x-coordinate for the center of the circle.
+     * @param {number} y The y-coordinate for the center of the circle.
+     * @param {number} size The diameter for the circle.
+     * @returns {object} Instance of new `TwoCircle`.
+     */
     makeCircle(x, y, size) {
         const circle = new TwoCircle(x, y, size);
         this.elements.push(circle);
         return circle;
     }
 
+    /**
+     * Create a new line.
+     * @param {number} x1 The x-coordinate for the line start point.
+     * @param {number} y1 The y-coordinate for the line start point.
+     * @param {number} x2 The x-coordinate for the line end point.
+     * @param {number} y2 The y-coordinate for the line end point.
+     * @returns {object} Instance of new `TwoLine`.
+     */
     makeLine(x1, y1, x2, y2) {
         const line = new TwoLine(x1, y1, x2, y2);
         this.elements.push(line);
         return line;
     }
 
+    /**
+     * Create a new path.
+     * @param {...number} coord Coordinates x1, y1, x2, y2, x3, y3, etc.
+     * @returns {object} Instance of new `TwoPath`.
+     */
     makePath(...args) {
         const points = [];
         for(let i = 0; i < args.length; i += 2) {
@@ -176,6 +191,14 @@ export default class Two {
         return path;
     }
 
+    /**
+     * Create a new text.
+     * @param {number} x The x-coordinate for the anchor point of the text.
+     * @param {number} y The y-coordinate for the anchor point of the text.
+     * @param {number} width The width for the text.
+     * @param {number} height The height for the text.
+     * @returns {object} Instance of new `TwoText`.
+     */
     makeText(x, y, width, height, text) {
         const obj = new TwoText(x, y, width, height, text);
         this.elements.push(obj);
@@ -188,8 +211,8 @@ export default class Two {
         this.elements.forEach((d) => {
             if(d instanceof TwoRectangle) {
                 const rect = g.append("rect")
-                    .attr("x", d.x - d.width/2)
-                    .attr("y", d.y - d.height/2)
+                    .attr("x", d.x)
+                    .attr("y", d.y)
                     .attr("width", d.width)
                     .attr("height", d.height)
                     .attr("opacity", d.opacity);
@@ -208,7 +231,7 @@ export default class Two {
                 }
                 if(d.rotation != null) {
                     rect
-                        .attr("transform", `rotate(${d.rotation * 180/Math.PI},${d.x},${d.y})`);
+                        .attr("transform", `rotate(${d.rotation * 180/Math.PI},${d.x + d.width/2},${d.y + d.height/2})`);
                 }
             } else if(d instanceof TwoCircle) {
                 const circle = g.append("circle")
@@ -267,9 +290,7 @@ export default class Two {
                 const text = g.append("text")
                     .attr("x", d.x)
                     .attr("y", d.y)
-                    .attr("text-anchor", 
-                        (d.align === 'center' ? 'middle' : (d.align === 'left' ? 'start' : 'end'))
-                    )
+                    .attr("text-anchor", d.align)
                     .attr("dominant-baseline", 
                         (d.baseline === "top" ? "text-before-edge" : (d.baseline === "bottom" ? "text-after-edge" : d.baseline))
                     )
@@ -298,17 +319,17 @@ export default class Two {
             if(d instanceof TwoRectangle) {
                 if(d.rotation !== null) {
                     context.save();
-                    context.translate(d.x, d.y);
+                    context.translate(d.x + d.width/2, d.y + d.height/2);
                     context.rotate(d.rotation);
-                    context.translate(-d.x, -d.y);
+                    context.translate(-(d.x + d.width/2), -(d.y + d.height/2));
                 }
                 if(d.fill !== null) {
                     context.fillStyle = d.fill;
-                    context.fillRect(d.x - d.width/2, d.y - d.height/2, d.width, d.height);
+                    context.fillRect(d.x, d.y, d.width, d.height);
                 }
                 if(d.stroke !== null) {
                     context.strokeStyle = d.stroke;
-                    context.strokeRect(d.x - d.width/2, d.y - d.height/2, d.width, d.height);
+                    context.strokeRect(d.x, d.y, d.width, d.height);
                 }
                 if(d.rotation !== null) {
                     context.restore();
@@ -364,7 +385,7 @@ export default class Two {
                 }
                 context.font = `${d.fontsize}px ${d.font}`;
                 context.fillStyle = d.fill;
-                context.textAlign = d.align;
+                context.textAlign = (d.align === "middle" ? "center" : d.align);
                 context.textBaseline = d.baseline;
                 context.fillText(d.text, d.x, d.y);
                 if(d.rotation !== null) {
