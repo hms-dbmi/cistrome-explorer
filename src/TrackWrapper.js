@@ -12,8 +12,10 @@ import fakedata from './demo/fakedata/index.js';
  * Wrapper component associated with a particular HiGlass track.
  * @prop {object} options Options associated with the track. Contains values for all possible options.
  * @prop {object} multivecTrack A `horizontal-multivec` track object returned by `hgc.api.getTrackObject()`.
- * @prop {object} combinedTrack A `combined` track object returned by `hgc.api.getTrackObject()`. 
+ * @prop {(object|null)} combinedTrack A `combined` track object returned by `hgc.api.getTrackObject()`. 
  *                              If not null, it is the parent track of the `multivecTrack`.
+ * @prop {object[]} siblingTracks An array of `viewport-projection-horizontal` track objects, which
+ *                                are siblings of `multivecTrack` (children of the same `combined` track).
  * @prop {function} onSelectGenomicInterval The function to call upon selection of a genomic interval. 
  *                                          Passed down to the `TrackColTools` component.
  */
@@ -22,6 +24,7 @@ export default function TrackWrapper(props) {
         options, 
         multivecTrack,
         combinedTrack,
+        siblingTracks,
         onSelectGenomicInterval
     } = props;
 
@@ -34,8 +37,12 @@ export default function TrackWrapper(props) {
     const trackY = multivecTrack.position[1];
     const trackWidth = multivecTrack.dimensions[0];
     const trackHeight = multivecTrack.dimensions[1];
+
+    // Attempt to obtain metadata values from the `tilesetInfo` field of the track.
     let rowInfo = [];
+    let trackAssembly = null;
     try {
+        trackAssembly = multivecTrack.tilesetInfo.coordSystem;
         // TODO: uncomment the below line to use the real metadata coming from the HiGlass Server.
         //       see https://github.com/hms-dbmi/cistrome-higlass-wrapper/issues/26
         // rowInfo = multivecTrack.tilesetInfo.row_infos.map(JSON.parse);
@@ -45,7 +52,7 @@ export default function TrackWrapper(props) {
         const numRows = multivecTrack.tilesetInfo.shape[1];
         rowInfo = fakedata[multivecTrack.id].tilesetInfo.rowInfo.slice(0, numRows);
     } catch(e) {
-        console.log(e)
+        console.log(e);
     }
 
     console.log("TrackWrapper.render");
@@ -72,12 +79,15 @@ export default function TrackWrapper(props) {
                     rowLinkNameAttribute={options.rowLinkNameAttribute}
                     rowLinkPosition={options.rowLinkPosition}
                 />) : null}
-            {(!combinedTrack && options.colToolsPosition !== "hidden") ? 
+            {options.colToolsPosition !== "hidden" ? 
                 (<TrackColTools
                     trackX={trackX}
                     trackY={trackY}
                     trackHeight={trackHeight}
                     trackWidth={trackWidth}
+                    trackAssembly={trackAssembly}
+                    combinedTrack={combinedTrack}
+                    siblingTracks={siblingTracks}
                     colToolsPosition={options.colToolsPosition}
                     onSelectGenomicInterval={onSelectGenomicInterval}
                 />) : null}

@@ -8,7 +8,11 @@ import TrackWrapper from './TrackWrapper.js';
 import Tooltip from './Tooltip.js';
 
 import { processWrapperOptions, DEFAULT_OPTIONS_KEY } from './utils-options.js';
-import { getTracksIdsFromViewConfig, updateViewConfigOnSelectGenomicInterval } from './utils-viewconf.js';
+import { 
+    getHMTrackIdsFromViewConfig, 
+    getSiblingProjectionTracksFromViewConfig,
+    updateViewConfigOnSelectGenomicInterval
+} from './utils-viewconf.js';
 
 import './CistromeHGW.scss';
 
@@ -47,10 +51,21 @@ export default function CistromeHGW(props) {
     const hgRef = useRef();
 
     const [options, setOptions] = useState({});
+
+    // Array of horizontal-multivec track IDs.
     const [trackIds, setTrackIds] = useState([]);
+    // Mapping of horizontal-multivec track IDs to arrays of viewport-projection sibling track IDs.
+    const [siblingTrackIds, setSiblingTrackIds] = useState({});
 
     const onViewConfig = useCallback((newViewConfig) => {
-        setTrackIds(getTracksIdsFromViewConfig(newViewConfig));
+        const newTrackIds = getHMTrackIdsFromViewConfig(newViewConfig);
+        const newSiblingTrackIds = {};
+        for(let trackId of newTrackIds) {
+            // The each trackId is actually an array `[viewId, trackId]`, which is why we want trackId[1].
+            newSiblingTrackIds[trackId[1]] = getSiblingProjectionTracksFromViewConfig(newViewConfig, trackId[1]);
+        }
+        setTrackIds(newTrackIds);
+        setSiblingTrackIds(newSiblingTrackIds);
     }, []);
 
     const getTrackObject = useCallback((viewId, trackId) => {
@@ -81,7 +96,7 @@ export default function CistromeHGW(props) {
         hgRef.current.api.on('viewConfig', (newViewConfigString) => {
             const newViewConfig = JSON.parse(newViewConfigString);
             onViewConfig(newViewConfig);
-        });
+        });         
 
         return () => {
             hgRef.current.api.off('viewConfig');
@@ -106,8 +121,8 @@ export default function CistromeHGW(props) {
             />
         );
     }, [viewConfig]);
-    
 
+    
     console.log("CistromeHGW.render");
     return (
         <div className="cistrome-hgw">
@@ -118,10 +133,13 @@ export default function CistromeHGW(props) {
                     options={getTrackWrapperOptions(viewId, trackId)}
                     multivecTrack={getTrackObject(viewId, trackId)}
                     combinedTrack={(combinedTrackId ? getTrackObject(viewId, combinedTrackId) : null)}
+                    siblingTracks={siblingTrackIds[trackId] ? siblingTrackIds[trackId].map(d => getTrackObject(viewId, d[1])) : []}
                     onSelectGenomicInterval={() => {
                         const currViewConfig = hgRef.current.api.getViewConfig();
                         const newViewConfig = updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, trackId);
-                        hgRef.current.api.setViewConfig(newViewConfig);
+                        hgRef.current.api.setViewConfig(newViewConfig).then(() => {
+                            onViewConfig(newViewConfig);
+                        });
                     }}
                 />
             ))}

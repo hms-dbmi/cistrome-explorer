@@ -1,19 +1,21 @@
 toc:
-  - name: React Components
-  - CistromeHGW
-  - name: React Components (internal)
-    children:
-    - Tooltip
-    - TrackColTools
-    - TrackRowInfo
-    - TrackRowLink
-    - TrackWrapper
-  - name: functions (internal)
-    children:
-    - validateWrapperOptions
-    - processWrapperOptions
-    - getRetinaRatio
-    - setupCanvas
-    - teardownCanvas
-    - getTracksIdsFromViewConfig
-    - updateViewConfigOnSelectGenomicInterval
+- name: React Components
+- CistromeHGW
+- name: React Components (internal)
+- Tooltip
+- TrackColSelectionInfo
+- TrackColTools
+- TrackRowInfo
+- TrackRowLink
+- TrackWrapper
+- name: functions (internal)
+- validateWrapperOptions
+- processWrapperOptions
+- getRetinaRatio
+- setupCanvas
+- teardownCanvas
+- traverseViewConfig
+- getHMTrackIdsFromViewConfig
+- getSiblingProjectionTracksFromViewConfig
+- updateViewConfigOnSelectGenomicInterval
+- resolveIntervalCoordinates
