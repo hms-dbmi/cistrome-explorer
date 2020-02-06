@@ -2,10 +2,9 @@ import React, { useEffect, useRef } from 'react';
 import range from 'lodash/range';
 import d3 from './d3.js';
 
-
 import { EVENT } from './constants.js';
 import { setupCanvas, teardownCanvas } from './utils-canvas.js';
-import { TrackRowInfoDim } from './TrackRowInfoDim.js';
+import { VerticalBarTrack } from './TrackRowInfoDim.js';
 
 import './TrackRowInfo.scss';
 
@@ -38,138 +37,54 @@ export default function TrackRowInfo(props) {
     } = props;
 
     // Dimensions
+    const isLeft = rowInfoPosition === "left";
     const top = trackY;
-    const colWidth = 10;    // width of stacked bars
-    const xMargin = 60;     // width of text area
-    const xMarginInitial = 5;
-    const xGap = 5; // gap between bars and text
-    const width = (colWidth + xMargin) * infoAttributes.length;
+    const barWidth = 10;
+    const textWidth = 60;
+    const margin = 5;
+    const width = (barWidth + textWidth) * infoAttributes.length;
     const height = trackHeight;
-    const titleFontSize = 12;
-    const fontSize = 10;
+    const left = isLeft ? trackX - margin - width : trackX + trackWidth + margin;
 
-    // Scales
-    const xScale = d3.scaleThreshold();
-    const yScale = d3.scaleBand()
-        .domain(range(rowInfo.length))
-        .range([0, height]);
-    
-    // Stores recipes to visualize each attribute using texts and color bars
-    let vizRecipes = [];
-
-    // Viz recipes depending on left or right positioning
-    let left, xScaleDomain = [], xScaleRange = [];
-    if(rowInfoPosition === "left") {
-        left = trackX - xMarginInitial - width;
-
-        xScaleRange.push(`margin-${infoAttributes.length}`);
-        for(let i = infoAttributes.length - 1; i >= 0; i--) {    // First attribute is shown on the 'right-most' side
-            const {name: attribute} = infoAttributes[i];
-
-            const dimLeft = xMargin + (colWidth + xMargin) * (infoAttributes.length - 1 - i);
-            const colorScale = d3.scaleOrdinal()
-                .domain(Array.from(new Set(rowInfo.map(d => d[attribute]))))
-                .range(d3.schemeSet3);
-            
-            vizRecipes.push({
-                titleLeft: dimLeft - xMargin + xGap, 
-                titleRotate: -Math.PI/2,
-                titleTextAlign: "end", textBaseline: "top",
-                barLeft: dimLeft, 
-                labelLeft: dimLeft - xGap, 
-                textAlign: "end", 
-                colorScale, 
-                attribute
-            });
-
-            // [secondaryLeft, secondaryLeft+colWidth, primaryLeft, primaryLeft+colWidth, ... width]
-            xScaleDomain.push(dimLeft, dimLeft + colWidth);
-            // ["m-n", ... "d-1", "m-1", "d-0", "m-0"]
-            xScaleRange.push(`dimension-${i}`, `margin-${i}`);
-        }
-        xScaleDomain.push(width);
-
-    } else if(rowInfoPosition === "right") {
-        left = trackWidth + trackX + xMarginInitial;
-
-        for(let i = 0; i < infoAttributes.length; i++) {
-            const {name: attribute} = infoAttributes[i];
-
-            const dimLeft = (colWidth + xMargin) * i;
-            const colorScale = d3.scaleOrdinal()
-                .domain(Array.from(new Set(rowInfo.map(d => d[attribute]))))
-                .range(d3.schemeSet3);
-
-            vizRecipes.push({
-                titleLeft: dimLeft + colWidth + xMargin - xGap, 
-                titleRotate: Math.PI/2,
-                titleTextAlign: "start", textBaseline: "top",
-                barLeft: dimLeft, 
-                labelLeft: dimLeft + colWidth + xGap,
-                textAlign: "start", 
-                colorScale, 
-                attribute
-            });
-
-            // [primaryLeft, primaryLeft+colWidth, secondaryLeft, secondaryLeft+colWidth, ... width]
-            xScaleDomain.push(dimLeft, dimLeft + colWidth);
-            // ["m-0", "d-0", "m-1", "d-1", ..., "m-n"]
-            xScaleRange.push(`margin-${i}`, `dimension-${i}`);
-        }
-        xScaleDomain.push(width);
-        xScaleRange.push(`margin-${infoAttributes.length}`);
-    }
-    
-    // X-axis scale for mouse events
-    xScale
-        .domain(xScaleDomain)
-        .range(xScaleRange);
-
-    const rowHeight = yScale.bandwidth();
-    
-    // Canvas
+    // Render canvas
     const canvasRef = useRef();
     useEffect(() => {
         const { canvas, context, canvasSelection } = setupCanvas(canvasRef);
         context.clearRect(0, 0, width, height);
 
-        // Show metadata values with visual elements
-        vizRecipes.forEach(recipe => {
-            const {
-                titleLeft, titleRotate, titleTextAlign, textBaseline,
-                barLeft, labelLeft, textAlign, colorScale, 
-                attribute
-            } = recipe;
+        // Determin position of each dimension and render it
+        let xDomain = [], xRange = [];
+        for(let i = 0; i < infoAttributes.length; i++) {
+            const { name : attribute } = isLeft ? infoAttributes[infoAttributes.length - i - 1] : infoAttributes[i];
+            let currentLeft = (barWidth + textWidth) * i;
 
-            // TrackRowInfoDim({context, });
-
-            // Draw a title of each dimension
-            context.fillStyle = "#9A9A9A";
-            context.font = `${titleFontSize}px Arial`;
-            context.textAlign = titleTextAlign;
-            context.textBaseline = textBaseline;
-            context.translate(titleLeft, 0);
-            context.rotate(titleRotate);
-            context.fillText(`attribute: ${attribute}`, 0, 0);
-
-            context.rotate(-titleRotate);
-            context.translate(-titleLeft, 0);
-            ///    
-
-            // Draw color bars and text labels
-            rowInfo.forEach((d, i) => {
-                context.fillStyle = colorScale(d[attribute]);
-                context.fillRect(barLeft, yScale(i), colWidth, rowHeight);
-
-                if(rowHeight >= fontSize){
-                    context.fillStyle = d3.hsl(colorScale(d[attribute])).darker(3);
-                    context.font = `${fontSize}px Arial`;
-                    context.textAlign = textAlign;
-                    context.textBaseline = "middle";
-                    context.fillText(d[attribute], labelLeft, yScale(i) + rowHeight / 2.0);
-                }
+            VerticalBarTrack({
+                ref: context, 
+                left: currentLeft, top: 0, width: barWidth + textWidth, height: height,
+                rowInfo,
+                attribute,
+                isLeft, isCanvas: true
             });
-        });
+
+            // Domain and range for mouse event
+            if(isLeft) {
+                xDomain.push(currentLeft + textWidth, currentLeft + textWidth + barWidth);
+                xRange.push("m", attribute);
+            } else {
+                xDomain.push(currentLeft, currentLeft + barWidth);
+                xRange.push("m", attribute);
+            }
+        }
+        xDomain.push(width);
+        xRange.push("m");
+        
+        // Scales
+        const xScale = d3.scaleThreshold()
+            .domain(xDomain)
+            .range(xRange);
+        const yScale = d3.scaleBand()
+            .domain(range(rowInfo.length))
+            .range([0, height]);
 
         canvasSelection.on("mousemove", () => {
             const mouse = d3.mouse(canvas);
@@ -178,11 +93,9 @@ export default function TrackRowInfo(props) {
 
             const y = yScale.invert(mouseY);
             const x = xScale(mouseX);
-
             let xVal;
-            if(x.includes("dimension")){
-                const dimIndex = parseInt(x.split("-")[1], 10);
-                xVal = rowInfo[y][infoAttributes[dimIndex]].name;
+            if(x !== "m"){
+                xVal = rowInfo[y][x];
             } else {
                 destroyTooltip();
                 return;
