@@ -43,9 +43,8 @@ export default function TrackRowInfo(props) {
     const top = trackY;
     const unitWidth = 100;
     const width = unitWidth * infoAttributes.length;
-    const margin = 5;
     const height = trackHeight;
-    const left = isLeft ? trackX - margin - width : trackX + trackWidth + margin;
+    const left = isLeft ? trackX - width : trackX + trackWidth;
 
     // Render canvas
     const canvasRef = useRef();

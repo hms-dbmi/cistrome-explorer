@@ -31,7 +31,7 @@ const demos = {
             rowLinkAttribute: "url",
             rowLinkNameAttribute: "id",
             infoAttributes: [
-                {name: "h", type: "tree"},
+                {name: "Hierarchical Clustering", type: "tree"},
                 {name: "Cell Type", type: "nominal"},
                 {name: "Tissue Type", type: "nominal"},
                 {name: "Random 2", type: "quantitative"}

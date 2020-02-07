@@ -9,7 +9,9 @@ toc:
 - TrackRowLink
 - TrackWrapper
 - name: Functions (internal)
+- visualizationTrack
 - verticalBarTrack
+- dendrogramTrack
 - validateWrapperOptions
 - processWrapperOptions
 - getRetinaRatio

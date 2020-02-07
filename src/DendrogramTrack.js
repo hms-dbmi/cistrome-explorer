@@ -23,7 +23,7 @@ export function dendrogramTrack(props) {
     } = props;
 
     // Data, layouts and styles
-    const { name: field, type: fieldType } = attribute;
+    const { name: field } = attribute;
     const hierarchyData = matrixToTree(rowInfo.map(d => d[field]));
     const root = d3.hierarchy(hierarchyData);
 
@@ -35,21 +35,25 @@ export function dendrogramTrack(props) {
     const descendants = root.descendants();
 
     let pathFunction;
-    pathFunction = (d) => {
-        return two.makePath(
-            width - (top + d.parent.y), left + d.parent.x, // M
-            width - (top + d.y), left + d.parent.x, // H d.x
-            width - (top + d.y), left + d.x, // M
-            width - (top + d.y), left + d.parent.x // V d.parent.y
-        );
+    if(isLeft){
+        pathFunction = (d) => {
+            return two.makePath(
+                left + d.parent.y, top + d.parent.x,
+                left + d.parent.y, top + d.x,
+                left + d.y, top + d.x,
+                left + d.parent.y, top + d.x
+            );
+        }
+    } else {
+        pathFunction = (d) => {
+            return two.makePath(
+                left + width -  d.parent.y, top + d.parent.x,
+                left + width - d.parent.y, top + d.x,
+                left + width - d.y, top + d.x,
+                left + width - d.parent.y, top + d.x
+            );
+        }
     }
-    
-    let nodeTransformFunction;
-    nodeTransformFunction = (d) => { 
-        return [d.x + left, d.y + top]; 
-    }
-
-    const nodePoints = [];
 
     descendants.forEach((d, i) => {
         if(i > 0) {
@@ -57,10 +61,6 @@ export function dendrogramTrack(props) {
             path.stroke = "#555";
             path.opacity = 0.6;
             path.linewidth = 1.5;
-            path.rotation = Math.PI/2;
         }
-        nodePoints.push(nodeTransformFunction(d));
     });
-
-    
 }
