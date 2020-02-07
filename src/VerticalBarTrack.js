@@ -52,25 +52,8 @@ export function verticalBarTrack(props) {
     rowInfo.forEach((d, i) => {
         const barWidth = isNominal ? barAreaWidth : xScale(d[attribute.name]);
         
-        let barLeft = left;
-        if(isLeft) {
-            if(isNominal) {
-                barLeft += width - barAreaWidth;
-            } else {
-                barLeft += width - barWidth;
-            }
-        } else { }
-
-        let textLeft = left;
-        if(isLeft) {
-            if(isNominal) {
-                textLeft += textAreaWidth - margin;
-            } else {
-                textLeft += width - barWidth - margin;
-            }
-        } else {
-            textLeft += barWidth + margin;
-        }
+        const barLeft = left + (isLeft ? width - barWidth : 0);
+        const textLeft = left + (isLeft ? width - barWidth - margin : barWidth + margin);
         const color = attribute.type === "nominal" ?
             colorScale(d[attribute.name]) : 
             d3.interpolateViridis(colorScale(d[attribute.name]));
