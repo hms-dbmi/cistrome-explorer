@@ -45,8 +45,6 @@ export default function TrackColSelectionInfo(props) {
         colToolsPosition,
         register
     } = props;
-
-    const isTop = (colToolsPosition === "top");
     
     const [chrStartName, setChrStartName] = useState(null);
     const [chrStartPos, setChrStartPos] = useState(null);
@@ -74,7 +72,7 @@ export default function TrackColSelectionInfo(props) {
 
         return (() => { didUnmount = true; });
     });
-    
+
     const canvasRef = useRef();
 
     const draw = useCallback((domElement) => {
@@ -100,6 +98,7 @@ export default function TrackColSelectionInfo(props) {
         const tickSize = 6;
         const chrFontSize = 14;
         
+        const isTop = (colToolsPosition === "top");
         const textTop = (isTop ? height - (height/6 + tickSize) : height/6 + tickSize);
         const tickTop = (isTop ? height - tickSize : 0);
         
@@ -159,7 +158,7 @@ export default function TrackColSelectionInfo(props) {
             <div
                 style={{
                     position: 'absolute',
-                    top: (isTop ? (height/3) : (height/3)),
+                    top: `${height/3}px`,
                     left: 0, 
                     width: `${width}px`,
                     height: `${height/6}px`
