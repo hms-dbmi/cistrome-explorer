@@ -15,6 +15,7 @@ import './TrackColTools.scss';
  *                                are siblings of `multivecTrack` (children of the same `combined` track).
  * @prop {string} colToolsPosition The value of the `colToolsPosition` option.
  * @prop {function} onSelectGenomicInterval The function to call upon selection of a genomic interval.
+ * @prop {function} register The function for child components to call to register their draw functions.
  */
 export default function TrackColTools(props) {
 
@@ -25,7 +26,8 @@ export default function TrackColTools(props) {
         combinedTrack,
         siblingTracks,
         colToolsPosition,
-        onSelectGenomicInterval
+        onSelectGenomicInterval,
+        register
     } = props;
 
     if(!trackAssembly) {
@@ -33,9 +35,10 @@ export default function TrackColTools(props) {
         return null;
     }
 
+    const isTop = (colToolsPosition === "top");
     const left = trackX;
     const width = trackWidth;
-    const height = 40;
+    const height = 70;
 
     let top;
     if(colToolsPosition === "top") {
@@ -56,14 +59,24 @@ export default function TrackColTools(props) {
         >
             <div className="col-tools">
                 {!combinedTrack ? (
-                    <button onClick={onSelectGenomicInterval}>Select genomic interval</button>
+                    <button 
+                        onClick={onSelectGenomicInterval}
+                        style={{
+                            position: 'absolute',
+                            top: (isTop ? (2*height/3) : 2),
+                        }}
+                    >Select genomic interval</button>
                 ) : (
                     <div className="col-tools-selection-info">
                         {siblingTracks.map((siblingTrack, i) => (
                             <TrackColSelectionInfo
                                 key={i}
+                                width={trackWidth}
+                                height={height}
+                                colToolsPosition={colToolsPosition}
                                 trackAssembly={trackAssembly}
                                 projectionTrack={siblingTrack}
+                                register={register}
                             />
                         ))}
                     </div>

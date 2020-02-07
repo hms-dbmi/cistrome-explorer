@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import d3 from './utils/d3.js';
+import Two from './utils/two.js';
 
 import { resolveIntervalCoordinates } from './utils/genome.js';
 import { CISTROME_DBTOOLKIT_MAX_INTERVAL_SIZE } from './constants.js';
@@ -8,6 +9,9 @@ import './TrackColSelectionInfo.scss';
 
 
 function makeDbToolkitURL(assembly, chrStartName, chrStartPos, chrEndName, chrEndPos) {
+    if(!chrStartName || !chrStartPos || !chrEndName || !chrEndPos) {
+        return null;
+    }
     // Generate a URL for the cistrome DB toolkit site.
     if(chrStartName !== chrEndName) {
         // Bail out, interval spans across more than one chromosome.
@@ -24,26 +28,34 @@ const numberFormatter = d3.format(",");
 
 /**
  * Component for rendering information about a particular genomic interval selection.
+ * @prop {number} width
+ * @prop {number} height
  * @prop {object} projectionTrack A `viewport-projection-horizontal` track object.
  * @prop {(string|null)} trackAssembly The genome assembly/coordSystem value obtained from the associated `horizontal-multivec` track.
+ * @prop {string} colToolsPosition The value of the colToolsPosition option.
+ * @prop {function} register The function for child components to call to register their draw functions.
  */
 export default function TrackColSelectionInfo(props) {
 
     const {
+        width,
+        height,
         projectionTrack,
-        trackAssembly
+        trackAssembly,
+        colToolsPosition,
+        register
     } = props;
-
-    if(!trackAssembly) {
-        return null;
-    }
-
+    
     const [chrStartName, setChrStartName] = useState(null);
     const [chrStartPos, setChrStartPos] = useState(null);
     const [chrEndName, setChrEndName] = useState(null);
     const [chrEndPos, setChrEndPos] = useState(null);
 
     useEffect(() => {
+        if(!trackAssembly) {
+            return null;
+        }
+
         let didUnmount = false;
         const absDomain = projectionTrack.viewportXDomain;
         resolveIntervalCoordinates(trackAssembly, absDomain[0], absDomain[1])
@@ -61,29 +73,112 @@ export default function TrackColSelectionInfo(props) {
         return (() => { didUnmount = true; });
     });
 
-    if(!chrStartName || !chrStartPos || !chrEndName || !chrEndPos) {
-        return null;
-    }
+    const canvasRef = useRef();
+
+    const draw = useCallback((domElement) => {
+        const two = new Two({
+            width,
+            height,
+            domElement
+        });
+
+        if(!chrStartName || !chrStartPos || !chrEndName || !chrEndPos) {
+            return two.teardown;
+        }
+
+        const absDomain = projectionTrack.viewportXDomain;
+        const startX = projectionTrack._xScale(absDomain[0]);
+        const endX = projectionTrack._xScale(absDomain[1]);
+
+        const EDGE_LIMIT = 80;
+        const MIDDLE_LIMIT = 130;
+
+        const alignMiddle = (endX - startX >= MIDDLE_LIMIT);
+        const textColor = "#555";
+        const tickSize = 6;
+        const chrFontSize = 14;
+        
+        const isTop = (colToolsPosition === "top");
+        const textTop = (isTop ? height - (height/6 + tickSize) : height/6 + tickSize);
+        const tickTop = (isTop ? height - tickSize : 0);
+        
+        // Draw text elements for genomic interval start and end positions.
+        const startText = two.makeText(startX, textTop, width/2, 2*height/3, `${chrStartName}:${numberFormatter(chrStartPos)}`);
+        startText.align = (alignMiddle ? (startX < EDGE_LIMIT ? "start" : "middle") : "end");
+        startText.baseline = "middle";
+        startText.fontsize = chrFontSize;
+        startText.fill = textColor;
+        
+        const endText = two.makeText(endX, textTop, width/2, 2*height/3, `${chrEndName}:${numberFormatter(chrEndPos)}`);
+        endText.align = (alignMiddle ? (width - endX < EDGE_LIMIT ? "end" : "middle") : "start");
+        endText.baseline = "middle";
+        endText.fontsize = chrFontSize;
+        endText.fill = textColor;
+
+        // Draw tick marks above the start and end positions.
+        const startTick = two.makeLine(startX, tickTop, startX, tickTop + tickSize);
+        startTick.stroke = textColor;
+        const endTick = two.makeLine(endX, tickTop, endX, tickTop + tickSize);
+        endTick.stroke = textColor;
+
+        two.update();
+        return two.teardown;
+    }, [width, height, chrStartName, chrStartPos, chrEndName, chrEndPos]);
+
+    register("TrackColSelectionInfo", draw);
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        const teardown = draw(canvas);
+        return teardown;
+    });
 
     const dbToolkitURL = makeDbToolkitURL(trackAssembly, chrStartName, chrStartPos, chrEndName, chrEndPos);
 
     return (
-        <div>
-            <div>
-                {chrStartName}:{numberFormatter(chrStartPos)} - {chrEndName}:{numberFormatter(chrEndPos)} (selected)
+        <div
+            style={{
+                position: 'relative',
+                top: 0,
+                left: 0, 
+                width: `${width}px`,
+                height: `${height}px`
+            }}
+        >
+            <canvas
+                ref={canvasRef}
+                style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0, 
+                    width: `${width}px`,
+                    height: `${height}px`
+                }}
+            />
+            <div
+                style={{
+                    position: 'absolute',
+                    top: `${height/3}px`,
+                    left: 0, 
+                    width: `${width}px`,
+                    height: `${height/6}px`
+                }}
+            >
+                {(!chrStartName || !chrStartPos || !chrEndName || !chrEndPos) ? null : (
+                    dbToolkitURL ? (
+                        <a 
+                            href={dbToolkitURL}
+                            target="_blank"
+                        >
+                            Search interval on Cistrome DB Toolkit
+                        </a>
+                    ) : (
+                        <p className="col-selection-info-disabled">
+                            Search requires interval &le; 2 Mb
+                        </p>
+                    )
+                )}
             </div>
-            {dbToolkitURL ? (
-                <a 
-                    href={dbToolkitURL}
-                    target="_blank"
-                >
-                    Search interval on Cistrome DB Toolkit
-                </a>
-            ) : (
-                <p className="col-selection-info-disabled">
-                    Search requires interval &le; 2 Mb
-                </p>
-            )}
         </div>
     );
 };

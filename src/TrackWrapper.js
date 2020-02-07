@@ -93,6 +93,7 @@ export default function TrackWrapper(props) {
                     siblingTracks={siblingTracks}
                     colToolsPosition={options.colToolsPosition}
                     onSelectGenomicInterval={onSelectGenomicInterval}
+                    register={register}
                 />) : null}
         </div>
     );
