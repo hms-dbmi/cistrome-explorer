@@ -28,8 +28,12 @@ const numberFormatter = d3.format(",");
 
 /**
  * Component for rendering information about a particular genomic interval selection.
+ * @prop {number} width
+ * @prop {number} height
  * @prop {object} projectionTrack A `viewport-projection-horizontal` track object.
  * @prop {(string|null)} trackAssembly The genome assembly/coordSystem value obtained from the associated `horizontal-multivec` track.
+ * @prop {string} colToolsPosition The value of the colToolsPosition option.
+ * @prop {function} register The function for child components to call to register their draw functions.
  */
 export default function TrackColSelectionInfo(props) {
 
@@ -70,7 +74,6 @@ export default function TrackColSelectionInfo(props) {
 
         return (() => { didUnmount = true; });
     });
-
     
     const canvasRef = useRef();
 
