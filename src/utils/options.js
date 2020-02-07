@@ -48,7 +48,7 @@ const baseSchema = {
                 },
                 "type": {
                     "type": "string",
-                    "enum": ["nominal", "quantitative"],
+                    "enum": ["nominal", "quantitative", "tree"],
                     "description": "The data type of a field"
                 }
             }

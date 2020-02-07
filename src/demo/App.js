@@ -31,6 +31,7 @@ const demos = {
             rowLinkAttribute: "url",
             rowLinkNameAttribute: "id",
             infoAttributes: [
+                {name: "h", type: "tree"},
                 {name: "Cell Type", type: "nominal"},
                 {name: "Tissue Type", type: "nominal"},
                 {name: "Random 2", type: "quantitative"}
@@ -41,7 +42,7 @@ const demos = {
 
 export default function App() {
 
-    const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[0]);
+    const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[1]);
 
     return (
         <div className="app">

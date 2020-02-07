@@ -2,7 +2,7 @@ import range from 'lodash/range';
 import d3 from './utils/d3.js';
 
 /**
- * Component for rendering each attribute.
+ * Bar chart for rendering an attribute.
  * @prop {object} two An instance of the Two class.
  * @prop {number} left The left position of this view.
  * @prop {number} top The top position of this view.
@@ -21,7 +21,7 @@ export function verticalBarTrack(props) {
         isLeft
     } = props;
 
-    // Layouts and styles
+    // Data, layouts and styles
     const { name: field, type: fieldType } = attribute;
     const isNominal = fieldType === "nominal";
     const barAreaWidth = isNominal ? 20 : width - 20;
