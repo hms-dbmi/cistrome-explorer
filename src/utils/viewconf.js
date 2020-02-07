@@ -74,7 +74,7 @@ export function getHMTrackIdsFromViewConfig(viewConf) {
  * @param {string} targetTrackId The `uid` of the track to target.
  * @returns {array} Array containing `[viewId, trackId, null]` or `[viewId, trackId, combinedTrackId]` for each sibling `viewport-projection-horizontal` track.
  */
-export function getSiblingProjectionTracksFromViewConfig(viewConf, targetTrackId) {
+export function getSiblingVPHTrackIdsFromViewConfig(viewConf, targetTrackId) {
     const potentialMatches = {};
     traverseViewConfig(viewConf, ({ viewId, trackType, trackId, innerTrackType, innerTrackId }) => {
         if(trackType === TRACK_TYPE.COMBINED) {

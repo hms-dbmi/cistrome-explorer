@@ -10,7 +10,7 @@ import Tooltip from './Tooltip.js';
 import { processWrapperOptions, DEFAULT_OPTIONS_KEY } from './utils/options.js';
 import { 
     getHMTrackIdsFromViewConfig, 
-    getSiblingProjectionTracksFromViewConfig,
+    getSiblingVPHTrackIdsFromViewConfig,
     updateViewConfigOnSelectGenomicInterval
 } from './utils/viewconf.js';
 
@@ -65,7 +65,7 @@ export default function CistromeHGW(props) {
         const newSiblingTrackIds = {};
         for(let trackId of newTrackIds) {
             // Each trackId is actually an array `[viewId, trackId]`, which is why we want trackId[1].
-            newSiblingTrackIds[trackId[1]] = getSiblingProjectionTracksFromViewConfig(newViewConfig, trackId[1]);
+            newSiblingTrackIds[trackId[1]] = getSiblingVPHTrackIdsFromViewConfig(newViewConfig, trackId[1]);
         }
         setTrackIds(newTrackIds);
         setSiblingTrackIds(newSiblingTrackIds);

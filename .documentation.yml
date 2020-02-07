@@ -8,15 +8,20 @@ toc:
 - TrackRowInfo
 - TrackRowLink
 - TrackWrapper
-- name: functions (internal)
+- name: Functions (internal)
 - verticalBarTrack
 - validateWrapperOptions
 - processWrapperOptions
 - getRetinaRatio
-- setupCanvas
-- teardownCanvas
 - traverseViewConfig
 - getHMTrackIdsFromViewConfig
-- getSiblingProjectionTracksFromViewConfig
+- getSiblingVPHTrackIdsFromViewConfig
 - updateViewConfigOnSelectGenomicInterval
 - resolveIntervalCoordinates
+- name: Classes (internal)
+- Two
+- TwoRectangle
+- TwoCircle
+- TwoLine
+- TwoPath
+- TwoText
