@@ -15,24 +15,25 @@ const demos = {
             rowLinkPosition: "left",
             colToolsPosition: "bottom",
             infoAttributes: [
-                {name: "attr_5", type: "nominal"}, 
-                {name: "attr_6", type: "nominal"},
-                {name: "attr_7", type: "nominal"}
+                {name: "Cell Type", type: "nominal"},
+                {name: "Tissue Type", type: "nominal"},
+                {name: "Histone Modification", type: "nominal"},
+                {name: "Species", type: "nominal"}
             ]
         }
     },
     "Demo 2": {
         viewConfig: hgDemoViewConfig2,
         options: {
-            rowInfoPosition: "left",
-            rowLinkPosition: "right",
+            rowInfoPosition: "right",
+            rowLinkPosition: "left",
             colToolsPosition: "bottom",
             rowLinkAttribute: "url",
-            rowLinkNameAttribute: "state",
+            rowLinkNameAttribute: "id",
             infoAttributes: [
-                {name: "state", type: "nominal"},
-                {name: "r1", type: "nominal"},
-                {name: "r2", type: "quantitative"}
+                {name: "Cell Type", type: "nominal"},
+                {name: "Tissue Type", type: "nominal"},
+                {name: "Random 2", type: "quantitative"}
             ]
         }
     }

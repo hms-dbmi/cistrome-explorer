@@ -74,11 +74,14 @@ export function verticalBarTrack(props) {
 
         // Render text labels when the space is enough.
         if(barHeight >= fontSize){
-            const text = two.makeText(textLeft, barTop + barHeight/2, barWidth, barHeight, d[field])
+            const text = two.makeText(textLeft, barTop + barHeight/2, barWidth, barHeight, d[field]);
             text.fill = d3.hsl(color).darker(3);
             text.fontsize = fontSize;
             text.align = textAlign;
             text.baseline = "middle";
+            text.overflow = "ellipsis";
+
+            console.log(textAreaWidth, d[attribute.name])
         }
 
         aggregateStartIdx = -1;
@@ -90,7 +93,7 @@ export function verticalBarTrack(props) {
     const titleRotate = isLeft ? -Math.PI/2 : Math.PI/2;
 
     // Draw a title of each dimension
-    const titleText = `attribute: ${field} | type: ${fieldType}`
+    const titleText = field;
     const title = two.makeText(titleLeft, top, rowHeight, barAreaWidth, titleText);
     title.fill = "#9A9A9A";
     title.fontsize = titleFontSize;

@@ -131,6 +131,10 @@ class TwoText {
         /** In radians. 
          * @member {number} */
         this.rotation = null;
+        /** How text that overflows the bounding box should be dealt with.
+         * Possible values: null, "clip", "ellipsis".
+         * @member {string} */
+        this.overflow = null;
     }
 }
 
@@ -357,7 +361,6 @@ export default class Two {
                 }
                 path.attr("d", pathD);
             } else if(d instanceof TwoText) {
-
                 const text = g.append("text")
                     .attr("x", d.x)
                     .attr("y", d.y)
@@ -370,6 +373,21 @@ export default class Two {
                     .attr("font-size", d.fontsize)
                     .attr("font-family", d.font)
                     .text(d.text);
+                
+                let content = d.text;
+                if(d.overflow === "clip") {
+                    while(content.length > 0 && text.node().getComputedTextLength() > d.width) {
+                        content = content.substring(0, content.length - 1);
+                        text.text("content");
+                    }
+                } else if(d.overflow === "ellipsis") {
+                    if(text.node().getComputedTextLength() > d.width) {
+                        while(content.length > 0 && text.node().getComputedTextLength() > d.width) {
+                            content = content.substring(0, content.length - 1);
+                            text.text(content + "...");
+                        }
+                    }
+                }
                 
                 if(d.rotation != null) {
                     text
@@ -458,7 +476,22 @@ export default class Two {
                 context.fillStyle = d.fill;
                 context.textAlign = (d.align === "middle" ? "center" : d.align);
                 context.textBaseline = d.baseline;
-                context.fillText(d.text, d.x, d.y);
+
+                let content = d.text;
+                if(d.overflow === "clip") {
+                    while(content.length > 0 && context.measureText(content).width > d.width) {
+                        content = content.substring(0, content.length - 1);
+                    }
+                } else if(d.overflow === "ellipsis") {
+                    if(context.measureText(content).width > d.width) {
+                        while(content.length > 0 && context.measureText(content + "...").width > d.width) {
+                            content = content.substring(0, content.length - 1);
+                        }
+                        content = content + "...";
+                    }
+                }
+
+                context.fillText(content, d.x, d.y);
                 if(d.rotation !== null) {
                     context.restore();
                 }
