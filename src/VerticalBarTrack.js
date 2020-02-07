@@ -23,20 +23,20 @@ export function verticalBarTrack(props) {
 
     // Layouts and styles
     const isNominal = attribute.type === "nominal";
-    const barWidth = isNominal ? 20 : 50;
-    const textWidth = isNominal ? 50 : 20;
+    const barAreaWidth = isNominal ? 20 : 50;
+    const textAreaWidth = isNominal ? 50 : 20;
     const margin = 5;
     const titleFontSize = 12;
     const fontSize = 10;
     
     // Scales
-    const valueExtent = [0, d3.extent(rowInfo.map(d => d[attribute.name]))[1]];   // zero baseline
+    const valueExtent = [0, d3.extent(rowInfo.map(d => d[attribute.name]))[1]];   // Zero baseline
     const yScale = d3.scaleBand()
         .domain(range(rowInfo.length))
         .range([0, height]);
     const xScale = d3.scaleLinear()
         .domain(valueExtent)
-        .range([0, barWidth])
+        .range([0, barAreaWidth])
     const colorScale = attribute.type === "nominal" ? 
         d3.scaleOrdinal()
             .domain(Array.from(new Set(rowInfo.map(d => d[attribute.name]))))
@@ -46,23 +46,41 @@ export function verticalBarTrack(props) {
             .range([0, 1]);
     const rowHeight = yScale.bandwidth();
 
-    // Render visual components for each row (i.e., bars and texts)
-    const barLeft = left + (isLeft ? textWidth : 0);
+    // Render visual components for each row (i.e., bars and texts).
     const textAlign = isLeft ? "end" : "start";
 
     rowInfo.forEach((d, i) => {
-        const barLength = isNominal ? barWidth : xScale(d[attribute.name]);
-        const textLeft = left + (isLeft ? textWidth - margin : barLength + margin);
+        const barWidth = isNominal ? barAreaWidth : xScale(d[attribute.name]);
+        
+        let barLeft = left;
+        if(isLeft) {
+            if(isNominal) {
+                barLeft += width - barAreaWidth;
+            } else {
+                barLeft += width - barWidth;
+            }
+        } else { }
+
+        let textLeft = left;
+        if(isLeft) {
+            if(isNominal) {
+                textLeft += textAreaWidth - margin;
+            } else {
+                textLeft += width - barWidth - margin;
+            }
+        } else {
+            textLeft += barWidth + margin;
+        }
         const color = attribute.type === "nominal" ?
             colorScale(d[attribute.name]) : 
             d3.interpolateViridis(colorScale(d[attribute.name]));
 
-        const rect = two.makeRect(barLeft, yScale(i), barLength, rowHeight);
+        const rect = two.makeRect(barLeft, yScale(i), barWidth, rowHeight);
         rect.fill = color;
 
-        // Render text labels when the space is enough
+        // Render text labels when the space is enough.
         if(rowHeight >= fontSize){
-            const text = two.makeText(textLeft, yScale(i) + rowHeight/2, barLength, rowHeight, d[attribute.name])
+            const text = two.makeText(textLeft, yScale(i) + rowHeight/2, barWidth, rowHeight, d[attribute.name])
             text.fill = d3.hsl(color).darker(3);
             text.fontsize = fontSize;
             text.align = textAlign;
@@ -76,7 +94,7 @@ export function verticalBarTrack(props) {
 
     // Draw a title of each dimension
     const titleText = `attribute: ${attribute.name} | type: ${attribute.type}`
-    const title = two.makeText(titleLeft, top, rowHeight, barWidth, titleText);
+    const title = two.makeText(titleLeft, top, rowHeight, barAreaWidth, titleText);
     title.fill = "#9A9A9A";
     title.fontsize = titleFontSize;
     title.align = isLeft ? "end" : "start";
