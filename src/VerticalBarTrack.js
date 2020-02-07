@@ -25,6 +25,7 @@ export function verticalBarTrack(props) {
     const { name: field, type: fieldType } = attribute;
     const isNominal = fieldType === "nominal";
     const barAreaWidth = isNominal ? 20 : width - 20;
+    const textAreaWidth = isNominal ? 50 : 20;
     const margin = 5;
     const titleFontSize = 12;
     const fontSize = 10;
@@ -74,14 +75,12 @@ export function verticalBarTrack(props) {
 
         // Render text labels when the space is enough.
         if(barHeight >= fontSize){
-            const text = two.makeText(textLeft, barTop + barHeight/2, barWidth, barHeight, d[field]);
+            const text = two.makeText(textLeft, barTop + barHeight/2, textAreaWidth, barHeight, d[field]);
             text.fill = d3.hsl(color).darker(3);
             text.fontsize = fontSize;
             text.align = textAlign;
             text.baseline = "middle";
             text.overflow = "ellipsis";
-
-            console.log(textAreaWidth, d[attribute.name])
         }
 
         aggregateStartIdx = -1;
