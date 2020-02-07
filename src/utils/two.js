@@ -1,7 +1,13 @@
 import d3 from './d3.js';
 import { getRetinaRatio } from './canvas.js';
 
-
+/**
+ * Represents a rectangle to be rendered.
+ * @param {number} x
+ * @param {number} y
+ * @param {number} width
+ * @param {number} height
+ */
 class TwoRectangle {
     constructor(x, y, width, height) {
         this.x = x;
@@ -9,27 +15,52 @@ class TwoRectangle {
         this.width = width;
         this.height = height;
 
+        /** @member {string} */
         this.stroke = null;
+        /** @member {string} */
         this.fill = "#000";
+        /** Width of the stroke line if stroke is not null. 
+         * @member {number} */
         this.linewidth = 1;
+        /** @member {number} */
         this.opacity = 1;
+        /** In radians. 
+         * @member {number} */
         this.rotation = null;
     }
 }
 
+/**
+ * Represents a circle to be rendered.
+ * @param {number} x
+ * @param {number} y
+ * @param {number} radius
+ */
 class TwoCircle {
-    constructor(x, y, size) {
+    constructor(x, y, radius) {
         this.x = x;
         this.y = y;
-        this.size = size;
+        this.radius = radius;
 
+        /** @member {string} */
         this.stroke = null;
+        /** @member {string} */
         this.fill = "#000";
+        /** Width of the stroke line if stroke is not null. 
+         * @member {number} */
         this.linewidth = 1;
+        /** @member {number} */
         this.opacity = 1;
     }
 }
 
+/**
+ * Represents a line to be rendered.
+ * @param {number} x1
+ * @param {number} y1
+ * @param {number} x2
+ * @param {number} y2
+ */
 class TwoLine {
     constructor(x1, y1, x2, y2) {
         this.x1 = x1;
@@ -37,37 +68,68 @@ class TwoLine {
         this.x2 = x2;
         this.y2 = y2;
 
+        /** @member {string} */
         this.stroke = "#000";
+        /** Width of the stroke line if stroke is not null. 
+         * @member {number} */
         this.linewidth = 1;
+        /** @member {number} */
         this.opacity = 1;
     }
 }
 
+/**
+ * Represents a path to be rendered.
+ * @param {number[]} points
+ */
 class TwoPath {
     constructor(points) {
         this.points = points;
 
+        /** @member {string} */
         this.stroke = "#000";
+        /** Width of the stroke line if stroke is not null. 
+         * @member {number} */
         this.linewidth = 1;
+        /** @member {number} */
         this.opacity = 1;
     }
 }
 
+/**
+ * Represents text to be rendered.
+ * @param {number} x
+ * @param {number} y
+ * @param {number} width
+ * @param {number} height
+ * @param {string} text
+ */
 class TwoText {
     constructor(x, y, width, height, text) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.text = text
+        this.text = text;
 
+        /** @member {string} */
         this.fill = "#000";
+        /** @member {number} */
         this.fontsize = 14;
+        /** @member {string} */
         this.font = "Arial,sans-serif";
-        this.align = "middle"; // options: "start", "middle", "end"
-        this.baseline = "alphabetic"; // options "alphabetic", "top", "middle", "bottom"
-        this.linewidth = 1;
+        /** Corresponds to canvas `context.textAlign`.
+         * Possible values: "start", "middle", "end".
+         * @member {string} */
+        this.align = "middle";
+        /** Corresponds to canvas `context.textBaseline`.
+         * Possible values: "alphabetic", "top", "middle", "bottom".
+         * @member {string} */
+        this.baseline = "alphabetic";
+        /** @member {number} */
         this.opacity = 1;
+        /** In radians. 
+         * @member {number} */
         this.rotation = null;
     }
 }
@@ -76,9 +138,9 @@ class TwoText {
  * This class is based on the two.js library: https://two.js.org/
  * It has functionality for rendering to both SVG and canvas.
  * @param {object} config
- * @param {number} config.width
- * @param {number} config.height
- * @param {object} config.domElement
+ * @param {number} config.width The width of the domElement
+ * @param {number} config.height The height of the domElement.
+ * @param {object} config.domElement The canvas or SVG element.
  */
 export default class Two {
 
@@ -97,10 +159,12 @@ export default class Two {
             case 'canvas':
                 this.init = this.initCanvas.bind(this);
                 this.update = this.updateCanvas.bind(this);
+                this.teardown = this.teardownCanvas.bind(this);
                 break;
             case 'svg':
                 this.init = this.initSvg.bind(this);
                 this.update = this.updateSvg.bind(this);
+                this.teardown = this.teardownSvg.bind(this);
                 break;
             default:
                 console.warn("Unknown DOM element type.");
@@ -140,7 +204,7 @@ export default class Two {
      * @param {number} y The y-coordinate for the top left corner of the rect.
      * @param {number} width The width for the rect.
      * @param {number} height The height for the rect.
-     * @returns {object} Instance of new `TwoRectangle`.
+     * @returns {TwoRectangle} Instance of new rectangle.
      */
     makeRect(x, y, width, height) {
         const rect = new TwoRectangle(x, y, width, height);
@@ -152,11 +216,11 @@ export default class Two {
      * Create a new circle.
      * @param {number} x The x-coordinate for the center of the circle.
      * @param {number} y The y-coordinate for the center of the circle.
-     * @param {number} size The diameter for the circle.
-     * @returns {object} Instance of new `TwoCircle`.
+     * @param {number} radius The radius for the circle.
+     * @returns {TwoCircle} Instance of new circle.
      */
-    makeCircle(x, y, size) {
-        const circle = new TwoCircle(x, y, size);
+    makeCircle(x, y, radius) {
+        const circle = new TwoCircle(x, y, radius);
         this.elements.push(circle);
         return circle;
     }
@@ -167,7 +231,7 @@ export default class Two {
      * @param {number} y1 The y-coordinate for the line start point.
      * @param {number} x2 The x-coordinate for the line end point.
      * @param {number} y2 The y-coordinate for the line end point.
-     * @returns {object} Instance of new `TwoLine`.
+     * @returns {TwoLine} Instance of new line.
      */
     makeLine(x1, y1, x2, y2) {
         const line = new TwoLine(x1, y1, x2, y2);
@@ -177,8 +241,8 @@ export default class Two {
 
     /**
      * Create a new path.
-     * @param {...number} coord Coordinates x1, y1, x2, y2, x3, y3, etc.
-     * @returns {object} Instance of new `TwoPath`.
+     * @param {...number} args Coordinates x1, y1, x2, y2, x3, y3, etc.
+     * @returns {TwoPath} Instance of new path.
      */
     makePath(...args) {
         const points = [];
@@ -197,12 +261,19 @@ export default class Two {
      * @param {number} y The y-coordinate for the anchor point of the text.
      * @param {number} width The width for the text.
      * @param {number} height The height for the text.
-     * @returns {object} Instance of new `TwoText`.
+     * @returns {TwoText} Instance of new text.
      */
     makeText(x, y, width, height, text) {
         const obj = new TwoText(x, y, width, height, text);
         this.elements.push(obj);
         return obj;
+    }
+
+    /**
+     * Render to the DOM element.
+     */
+    update() {
+
     }
 
     updateSvg() {
@@ -237,7 +308,7 @@ export default class Two {
                 const circle = g.append("circle")
                     .attr("cx", d.x)
                     .attr("cy", d.y)
-                    .attr("r", d.size)
+                    .attr("r", d.radius)
                     .attr("opacity", d.opacity);
                 
                 if(d.fill != null) {
@@ -342,7 +413,7 @@ export default class Two {
                     context.strokeStyle = d.stroke;
                 }
                 context.beginPath();
-                context.arc(d.x, d.y, d.size, 0, 2*Math.PI);
+                context.arc(d.x, d.y, d.radius, 0, 2*Math.PI);
                 if(d.fill !== null) {
                     context.fill();
                 }
@@ -393,5 +464,23 @@ export default class Two {
                 }
             }
         });
+    }
+
+    /**
+     * Clean up the DOM element (remove event listeners, etc.).
+     */
+    teardown() {
+
+    }
+
+    teardownSvg() {
+
+    }
+
+    teardownCanvas() {
+        const canvasSelection = d3.select(this.domElement);
+        canvasSelection.on("mousemove", null);
+        canvasSelection.on("mouseout", null);
+        canvasSelection.on("click", null);
     }
 }

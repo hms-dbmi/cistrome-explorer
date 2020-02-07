@@ -2,7 +2,7 @@
 
 import { 
     getHMTrackIdsFromViewConfig,
-    getSiblingProjectionTracksFromViewConfig,
+    getSiblingVPHTrackIdsFromViewConfig,
     updateViewConfigOnSelectGenomicInterval
 } from './viewconf.js';
 
@@ -42,11 +42,11 @@ describe('Utilities for processing higlass view config objects', () => {
     });
 
     it('Should find all viewport-projection-horizontal track siblings of a particular horizontal-multivec track', () => {
-        const siblingTrackIds = getSiblingProjectionTracksFromViewConfig(hgDemoViewConfig3, "cistrome-track-1");
+        const siblingTrackIds = getSiblingVPHTrackIdsFromViewConfig(hgDemoViewConfig3, "cistrome-track-1");
         expect(siblingTrackIds.length).toEqual(1);
         expect(siblingTrackIds[0]).toEqual(["cistrome-view-1-with-projection", "cistrome-track-1-projection", "cistrome-track-1-combined"]);
 
-        const siblingTrackIdsEmpty = getSiblingProjectionTracksFromViewConfig(hgDemoViewConfig3, "some-unknown-track");
+        const siblingTrackIdsEmpty = getSiblingVPHTrackIdsFromViewConfig(hgDemoViewConfig3, "some-unknown-track");
         expect(siblingTrackIdsEmpty.length).toEqual(0);
     });
 

@@ -1,4 +1,4 @@
-/**
+/*
  * Construct our own d3 object, with only the functions that we are using.
  * This should reduce the size of the final javascript bundle file.
  * See https://github.com/d3/d3/issues/3076
@@ -11,7 +11,6 @@ import { mouse, event as d3_event } from "d3-selection";
 import { scaleLinear, scaleOrdinal, scaleThreshold } from "d3-scale";
 import { extent } from "d3-array";
 import { hsl } from "d3-color";
-
 import { scale as vega_scale } from "vega-scale";
 
 /*
@@ -24,12 +23,12 @@ const scaleBand = vega_scale("band");
 
 
 export default {
+    get event() { return d3_event; }, // https://stackoverflow.com/a/40048292
     select,
     format,
     schemeSet3,
     interpolateViridis,
     mouse,
-    get event() { return d3_event; }, // https://stackoverflow.com/a/40048292
     scaleLinear,
     scaleOrdinal,
     scaleThreshold,

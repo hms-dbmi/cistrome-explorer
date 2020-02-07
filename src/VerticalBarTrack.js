@@ -18,8 +18,7 @@ export function verticalBarTrack(props) {
         left, top, width, height,
         rowInfo, 
         attribute,
-        isLeft,
-        isCanvas
+        isLeft
     } = props;
 
     // Layouts and styles
@@ -41,8 +40,6 @@ export function verticalBarTrack(props) {
             .domain(d3.extent(rowInfo.map(d => d[attribute.name])))
             .range([0, 1]);
     const rowHeight = yScale.bandwidth();
-
-    // Render
 
     // Title
     const titleLeft = left + (isLeft ? xGap : width - xGap);

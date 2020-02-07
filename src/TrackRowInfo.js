@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useCallback } from 'react';
 import range from 'lodash/range';
 import d3 from './utils/d3.js';
 import Two from './utils/two.js';
-import { teardownCanvas } from './utils/canvas.js';
 
 import { EVENT } from './constants.js';
 import { verticalBarTrack } from './VerticalBarTrack.js';
@@ -26,6 +25,7 @@ function destroyTooltip() {
  * @prop {array} rowInfo Array of JSON objects, one object for each row.
  * @prop {array} infoAttributes Array of JSON object, one object for the names and types of each attribute.
  * @prop {string} rowInfoPosition The value of the `rowInfoPosition` option.
+ * @prop {function} register The function for child components to call to register their draw functions.
  */
 export default function TrackRowInfo(props) {
 
@@ -51,7 +51,7 @@ export default function TrackRowInfo(props) {
     // Render canvas
     const canvasRef = useRef();
 
-    // Determin position of each dimension and render it
+    // Determine position of each dimension.
     let xDomain = [], xRange = [];
     for(let i = 0; i < infoAttributes.length; i++) {
         const attribute = isLeft ? infoAttributes[infoAttributes.length - i - 1] : infoAttributes[i];
@@ -83,7 +83,6 @@ export default function TrackRowInfo(props) {
             height,
             domElement
         });
-        
       
         for(let i = 0; i < infoAttributes.length; i++) {
             const attribute = isLeft ? infoAttributes[infoAttributes.length - i - 1] : infoAttributes[i];
@@ -99,14 +98,14 @@ export default function TrackRowInfo(props) {
         }
 
         two.update();
+        return two.teardown;
     }, [width, height]);
 
     register("TrackRowInfo", draw);
 
     useEffect(() => {
         const canvas = canvasRef.current;
-        
-        draw(canvas);
+        const teardown = draw(canvas);
 
         d3.select(canvas).on("mousemove", () => {
             const mouse = d3.mouse(canvas);
@@ -135,7 +134,7 @@ export default function TrackRowInfo(props) {
 
         d3.select(canvas).on("mouseout", destroyTooltip)
 
-        return (() => teardownCanvas(canvas));
+        return teardown;
     });
 
     return (
@@ -148,7 +147,7 @@ export default function TrackRowInfo(props) {
                 height: `${height}px`,
             }}
         >
-            <svg
+            <canvas
                 ref={canvasRef}
                 style={{
                     position: 'relative',
