@@ -25,8 +25,8 @@ const demos = {
     "Demo 2": {
         viewConfig: hgDemoViewConfig2,
         options: {
-            rowInfoPosition: "right",
-            rowLinkPosition: "left",
+            rowInfoPosition: "left",
+            rowLinkPosition: "right",
             colToolsPosition: "bottom",
             rowLinkAttribute: "url",
             rowLinkNameAttribute: "state",

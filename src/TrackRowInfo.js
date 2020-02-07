@@ -41,10 +41,9 @@ export default function TrackRowInfo(props) {
     // Dimensions
     const isLeft = rowInfoPosition === "left";
     const top = trackY;
-    const barWidth = 10;
-    const textWidth = 60;
+    const unitWidth = 70;
+    const width = unitWidth * infoAttributes.length;
     const margin = 5;
-    const width = (barWidth + textWidth) * infoAttributes.length;
     const height = trackHeight;
     const left = isLeft ? trackX - margin - width : trackX + trackWidth + margin;
 
@@ -55,19 +54,12 @@ export default function TrackRowInfo(props) {
     let xDomain = [], xRange = [];
     for(let i = 0; i < infoAttributes.length; i++) {
         const attribute = isLeft ? infoAttributes[infoAttributes.length - i - 1] : infoAttributes[i];
-        let currentLeft = (barWidth + textWidth) * i;
+        let currentLeft = unitWidth * i;
 
         // Domain and range for mouse event
-        if(isLeft) {
-            xDomain.push(currentLeft + textWidth, currentLeft + textWidth + barWidth);
-            xRange.push("m", attribute.name);
-        } else {
-            xDomain.push(currentLeft, currentLeft + barWidth);
-            xRange.push("m", attribute.name);
-        }
+        xDomain.push(currentLeft + unitWidth);
+        xRange.push(attribute.name);
     }
-    xDomain.push(width);
-    xRange.push("m");
     
     // Scales
     const xScale = d3.scaleThreshold()
@@ -86,11 +78,11 @@ export default function TrackRowInfo(props) {
       
         for(let i = 0; i < infoAttributes.length; i++) {
             const attribute = isLeft ? infoAttributes[infoAttributes.length - i - 1] : infoAttributes[i];
-            let currentLeft = (barWidth + textWidth) * i;
+            let currentLeft = unitWidth * i;
 
             verticalBarTrack({
                 two, 
-                left: currentLeft, top: 0, width: barWidth + textWidth, height: height,
+                left: currentLeft, top: 0, width: unitWidth, height: height,
                 rowInfo,
                 attribute,
                 isLeft
