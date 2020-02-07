@@ -17,7 +17,6 @@ const demos = {
             infoAttributes: [
                 {name: "attr_5", type: "nominal"}, 
                 {name: "attr_6", type: "nominal"},
-                {name: "attr_7", type: "nominal"},
                 {name: "attr_7", type: "nominal"}
             ]
         }
@@ -41,7 +40,7 @@ const demos = {
 
 export default function App() {
 
-    const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[1]);
+    const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[0]);
 
     return (
         <div className="app">
