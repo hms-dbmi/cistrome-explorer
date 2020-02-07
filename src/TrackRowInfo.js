@@ -41,8 +41,8 @@ export default function TrackRowInfo(props) {
     // Dimensions
     const isLeft = rowInfoPosition === "left";
     const top = trackY;
-    const barWidth = 10;
-    const textWidth = 60;
+    const barWidth = 20;
+    const textWidth = 50;
     const margin = 5;
     const width = (barWidth + textWidth) * infoAttributes.length;
     const height = trackHeight;
