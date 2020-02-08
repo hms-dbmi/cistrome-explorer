@@ -2,7 +2,7 @@ import range from 'lodash/range';
 import d3 from './utils/d3.js';
 
 /**
- * Component for rendering each attribute.
+ * Bar chart for rendering an attribute.
  * @prop {object} two An instance of the Two class.
  * @prop {number} left The left position of this view.
  * @prop {number} top The top position of this view.
@@ -21,13 +21,12 @@ export function verticalBarTrack(props) {
         isLeft
     } = props;
 
-    // Layouts and styles
+    // Data, layouts and styles
     const { name: field, type: fieldType } = attribute;
     const isNominal = fieldType === "nominal";
     const barAreaWidth = isNominal ? 20 : width - 20;
     const textAreaWidth = isNominal ? 50 : 20;
     const margin = 5;
-    const titleFontSize = 12;
     const fontSize = 10;
     
     // Scales
@@ -86,17 +85,4 @@ export function verticalBarTrack(props) {
         aggregateStartIdx = -1;
         sameCategoriesNearby = 1;
     });
-
-    // Title
-    const titleLeft = left + (isLeft ? margin : width - margin);
-    const titleRotate = isLeft ? -Math.PI/2 : Math.PI/2;
-
-    // Draw a title of each dimension
-    const titleText = field;
-    const title = two.makeText(titleLeft, top, rowHeight, barAreaWidth, titleText);
-    title.fill = "#9A9A9A";
-    title.fontsize = titleFontSize;
-    title.align = isLeft ? "end" : "start";
-    title.baseline = "top";
-    title.rotation = titleRotate;
 }

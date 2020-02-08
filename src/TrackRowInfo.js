@@ -4,9 +4,9 @@ import d3 from './utils/d3.js';
 import Two from './utils/two.js';
 
 import { EVENT } from './constants.js';
-import { verticalBarTrack } from './VerticalBarTrack.js';
 
 import './TrackRowInfo.scss';
+import { visualizationTrack } from './visualizationTrack.js';
 
 function destroyTooltip() {
     PubSub.publish(EVENT.TOOLTIP, {
@@ -17,7 +17,7 @@ function destroyTooltip() {
 }
 
 /**
- * Component for visualization of two row info attribute values.
+ * Component for visualization of row info attribute values.
  * @prop {number} trackX The track horizontal offset.
  * @prop {number} trackY The track vertical offset.
  * @prop {number} trackWidth The track width.
@@ -43,9 +43,8 @@ export default function TrackRowInfo(props) {
     const top = trackY;
     const unitWidth = 100;
     const width = unitWidth * infoAttributes.length;
-    const margin = 5;
     const height = trackHeight;
-    const left = isLeft ? trackX - margin - width : trackX + trackWidth + margin;
+    const left = isLeft ? trackX - width : trackX + trackWidth;
 
     // Render canvas
     const canvasRef = useRef();
@@ -80,7 +79,7 @@ export default function TrackRowInfo(props) {
             const attribute = isLeft ? infoAttributes[infoAttributes.length - i - 1] : infoAttributes[i];
             let currentLeft = unitWidth * i;
 
-            verticalBarTrack({
+            visualizationTrack({
                 two, 
                 left: currentLeft, top: 0, width: unitWidth, height: height,
                 rowInfo,
