@@ -1,6 +1,8 @@
 import { verticalBarTrack } from "./verticalBarTrack";
 import { dendrogramTrack } from "./dendrogramTrack";
 
+export const margin = 5;
+
 /**
  * Visualization for rendering an attribute based on its type.
  * @prop {object} two An instance of the Two class.
@@ -24,7 +26,6 @@ export function visualizationTrack(props){
     const { name: field, type: fieldType } = attribute;
     const isNominal = fieldType === "nominal";
     const barAreaWidth = isNominal ? 20 : width - 20;
-    const margin = 5;
     const titleFontSize = 12;
 
     // Render proper visualization
