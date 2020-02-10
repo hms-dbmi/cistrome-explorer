@@ -32,11 +32,11 @@ const baseSchema = {
                     "type": "string",
                     "enum": ["hidden", "bottom", "top"]
                 },
-                "infoAttributes": {
+                "rowInfoAttributes": {
                     "type": "array",
                     "items": { "$ref": "#/definitions/fieldInfo" }
                 },
-                "sortRows": {
+                "rowSort": {
                     "type": "array",
                     "items": { "$ref": "#/definitions/sortInfo" }
                 }
@@ -64,6 +64,11 @@ const baseSchema = {
                 "attribute": {
                     "type": "string",
                     "description": "The name of a data field"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": ["nominal", "quantitative"],
+                    "description": "The data type of a field"
                 },
                 "order": {
                     "type": "string",

@@ -14,11 +14,17 @@ const demos = {
             rowInfoPosition: "right",
             rowLinkPosition: "left",
             colToolsPosition: "bottom",
-            infoAttributes: [
+            rowInfoAttributes: [
                 {name: "Cell Type", type: "nominal"},
                 {name: "Tissue Type", type: "nominal"},
                 {name: "Histone Modification", type: "nominal"},
                 {name: "Species", type: "nominal"}
+            ],
+            rowSort: [
+                {attribute: "Species", type: "nominal", order: "ascending"},
+                {attribute: "Histone Modification", type: "nominal", order: "ascending"},
+                {attribute: "Tissue Type", type: "nominal", order: "ascending"},
+                {attribute: "Cell Type", type: "nominal", order: "ascending"}
             ]
         }
     },
@@ -30,14 +36,16 @@ const demos = {
             colToolsPosition: "bottom",
             rowLinkAttribute: "url",
             rowLinkNameAttribute: "id",
-            infoAttributes: [
+            rowInfoAttributes: [
                 {name: "Hierarchical Clustering", type: "tree"},
                 {name: "Cell Type", type: "nominal"},
                 {name: "Tissue Type", type: "nominal"},
                 {name: "Random 2", type: "quantitative"}
             ],
-            sortRows: [
-                {attribute: "Cell Type", order: "descending"}
+            rowSort: [
+                {attribute: "Tissue Type", type: "nominal", order: "ascending"},
+                {attribute: "Cell Type", type: "nominal", order: "ascending"},
+                {attribute: "Random 2", type: "quantitative", order: "descending"}
             ]
         }
     }

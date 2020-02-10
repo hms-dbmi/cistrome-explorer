@@ -33,7 +33,7 @@ export default function TrackRowInfo(props) {
         trackX, trackY,
         trackWidth, trackHeight, 
         rowInfo, 
-        infoAttributes,
+        rowInfoAttributes,
         rowInfoPosition,
         register
     } = props;
@@ -42,7 +42,7 @@ export default function TrackRowInfo(props) {
     const isLeft = rowInfoPosition === "left";
     const top = trackY;
     const unitWidth = 100;
-    const width = unitWidth * infoAttributes.length;
+    const width = unitWidth * rowInfoAttributes.length;
     const height = trackHeight;
     const left = isLeft ? trackX - width : trackX + trackWidth;
 
@@ -51,8 +51,8 @@ export default function TrackRowInfo(props) {
 
     // Determine position of each dimension.
     let xDomain = [], xRange = [];
-    for(let i = 0; i < infoAttributes.length; i++) {
-        const attribute = isLeft ? infoAttributes[infoAttributes.length - i - 1] : infoAttributes[i];
+    for(let i = 0; i < rowInfoAttributes.length; i++) {
+        const attribute = isLeft ? rowInfoAttributes[rowInfoAttributes.length - i - 1] : rowInfoAttributes[i];
         let currentLeft = unitWidth * i;
 
         // Domain and range for mouse event
@@ -75,8 +75,8 @@ export default function TrackRowInfo(props) {
             domElement
         });
       
-        for(let i = 0; i < infoAttributes.length; i++) {
-            const attribute = isLeft ? infoAttributes[infoAttributes.length - i - 1] : infoAttributes[i];
+        for(let i = 0; i < rowInfoAttributes.length; i++) {
+            const attribute = isLeft ? rowInfoAttributes[rowInfoAttributes.length - i - 1] : rowInfoAttributes[i];
             let currentLeft = unitWidth * i;
 
             visualizationTrack({
