@@ -35,6 +35,9 @@ const demos = {
                 {name: "Cell Type", type: "nominal"},
                 {name: "Tissue Type", type: "nominal"},
                 {name: "Random 2", type: "quantitative"}
+            ],
+            sortRows: [
+                {attribute: "Cell Type", order: "descending"}
             ]
         }
     }
