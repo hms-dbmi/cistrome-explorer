@@ -42,8 +42,6 @@ export function visualizationTrack(props){
     // Title
     const titleLeft = left + (isLeft ? margin : width - margin);
     const titleRotate = isLeft ? -Math.PI/2 : Math.PI/2;
-
-    // Draw a title of each dimension
     const titleText = field;
     const title = two.makeText(titleLeft, top, 12, barAreaWidth, titleText);
     title.fill = "#9A9A9A";

@@ -106,7 +106,7 @@ export default function TrackRowInfo(props) {
             const y = yScale.invert(mouseY);
             const x = xScale(mouseX);
             let xVal;
-            if(x !== "m"){
+            if(y !== undefined && x !== undefined){
                 xVal = rowInfo[y][x];
             } else {
                 destroyTooltip();

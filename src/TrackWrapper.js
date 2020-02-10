@@ -60,9 +60,12 @@ export default function TrackWrapper(props) {
     /*
      * Transform data based on options (e.g., sorting, filtering).
      */
+    // Filter
+    // ...
+    
+    // Sort
     let transformedRowInfo = rowInfo.slice();
     if(options.rowSort && options.rowSort.length > 0) {
-        // Sort rows with the primary attribute for the last time.
         let sortOptions = options.rowSort.slice().reverse();
         sortOptions.forEach((d, i) => {
             const { field, type, order } = d;
@@ -71,12 +74,12 @@ export default function TrackWrapper(props) {
             } else {
                 transformedRowInfo.sort(function(a, b) {
                     let compared = 0, categoryA = a[field].toUpperCase(), categoryB = b[field].toUpperCase();
-                    if(categoryA > categoryB){
-                        compared = -1;
-                    } else {
+                    if(categoryA > categoryB) {
                         compared = 1;
+                    } else {
+                        compared = -1;
                     }
-                    return compared * (order === "ascending" ? -1 : 1);
+                    return compared * (order === "ascending" ? 1 : -1);
                 });
             }
         });
