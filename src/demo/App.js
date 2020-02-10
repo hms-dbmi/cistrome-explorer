@@ -44,7 +44,6 @@ const demos = {
             ],
             rowSort: [
                 {field: "Tissue Type", type: "nominal", order: "ascending"},
-                {field: "Cell Type", type: "nominal", order: "ascending"},
                 {field: "Random 2", type: "quantitative", order: "descending"}
             ]
         }
