@@ -15,16 +15,16 @@ const demos = {
             rowLinkPosition: "left",
             colToolsPosition: "bottom",
             rowInfoAttributes: [
-                {name: "Cell Type", type: "nominal"},
-                {name: "Tissue Type", type: "nominal"},
-                {name: "Histone Modification", type: "nominal"},
-                {name: "Species", type: "nominal"}
+                {field: "Cell Type", type: "nominal"},
+                {field: "Tissue Type", type: "nominal"},
+                {field: "Histone Modification", type: "nominal"},
+                {field: "Species", type: "nominal"}
             ],
             rowSort: [
-                {attribute: "Species", type: "nominal", order: "ascending"},
-                {attribute: "Histone Modification", type: "nominal", order: "ascending"},
-                {attribute: "Tissue Type", type: "nominal", order: "ascending"},
-                {attribute: "Cell Type", type: "nominal", order: "ascending"}
+                {field: "Species", type: "nominal", order: "ascending"},
+                {field: "Histone Modification", type: "nominal", order: "ascending"},
+                {field: "Tissue Type", type: "nominal", order: "ascending"},
+                {field: "Cell Type", type: "nominal", order: "ascending"}
             ]
         }
     },
@@ -37,15 +37,15 @@ const demos = {
             rowLinkAttribute: "url",
             rowLinkNameAttribute: "id",
             rowInfoAttributes: [
-                {name: "Hierarchical Clustering", type: "tree"},
-                {name: "Cell Type", type: "nominal"},
-                {name: "Tissue Type", type: "nominal"},
-                {name: "Random 2", type: "quantitative"}
+                {field: "Hierarchical Clustering", type: "tree"},
+                {field: "Cell Type", type: "nominal"},
+                {field: "Tissue Type", type: "nominal"},
+                {field: "Random 2", type: "quantitative"}
             ],
             rowSort: [
-                {attribute: "Tissue Type", type: "nominal", order: "ascending"},
-                {attribute: "Cell Type", type: "nominal", order: "ascending"},
-                {attribute: "Random 2", type: "quantitative", order: "descending"}
+                {field: "Tissue Type", type: "nominal", order: "ascending"},
+                {field: "Cell Type", type: "nominal", order: "ascending"},
+                {field: "Random 2", type: "quantitative", order: "descending"}
             ]
         }
     }

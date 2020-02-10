@@ -10,7 +10,7 @@ import { matrixToTree } from './utils/tree.js';
  * @prop {number} width The width of this view.
  * @prop {number} height The height of this view.
  * @prop {array} rowInfo Array of JSON objects, one object for each row.
- * @prop {object} attribute The name and type of data field.
+ * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  */
 export function dendrogramTrack(props) {
@@ -18,12 +18,12 @@ export function dendrogramTrack(props) {
         two,
         left, top, width, height,
         rowInfo, 
-        attribute,
+        fieldInfo,
         isLeft
     } = props;
 
     // Data, layouts and styles
-    const { name: field } = attribute;
+    const { field } = fieldInfo;
     const hierarchyData = matrixToTree(rowInfo.map(d => d[field]));
     const root = d3.hierarchy(hierarchyData);
 

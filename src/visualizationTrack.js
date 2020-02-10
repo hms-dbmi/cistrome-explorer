@@ -18,18 +18,18 @@ export function visualizationTrack(props){
     const {
         two,
         left, top, width,
-        attribute,
+        fieldInfo,
         isLeft
     } = props;
 
     // Data, layouts and styles
-    const { name: field, type: fieldType } = attribute;
-    const isNominal = fieldType === "nominal";
+    const { field, type } = fieldInfo;
+    const isNominal = type === "nominal";
     const barAreaWidth = isNominal ? 20 : width - 20;
     const titleFontSize = 12;
 
     // Render proper visualization
-    switch(fieldType) {
+    switch(type) {
         case "nominal": 
         case "quantitative":
             verticalBarTrack(props);

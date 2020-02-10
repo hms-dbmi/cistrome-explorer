@@ -65,12 +65,12 @@ export default function TrackWrapper(props) {
         // Sort rows with the primary attribute for the last time.
         let sortOptions = options.rowSort.slice().reverse();
         sortOptions.forEach((d, i) => {
-            const { attribute, type, order } = d;
+            const { field, type, order } = d;
             if(type === "quantitative") {
-                transformedRowInfo.sort((a, b) => (a[attribute] - b[attribute]) * (order === "ascending" ? 1 : -1));
+                transformedRowInfo.sort((a, b) => (a[field] - b[field]) * (order === "ascending" ? 1 : -1));
             } else {
                 transformedRowInfo.sort(function(a, b) {
-                    let compared = 0, categoryA = a[attribute].toUpperCase(), categoryB = b[attribute].toUpperCase();
+                    let compared = 0, categoryA = a[field].toUpperCase(), categoryB = b[field].toUpperCase();
                     if(categoryA > categoryB){
                         compared = -1;
                     } else {

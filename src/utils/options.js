@@ -44,9 +44,9 @@ const baseSchema = {
         },
         "fieldInfo": {
             "type": "object",
-            "required": ["name", "type"],
+            "required": ["field", "type"],
             "properties": {
-                "name": {
+                "field": {
                     "type": "string",
                     "description": "The name of a data field"
                 },
@@ -59,9 +59,9 @@ const baseSchema = {
         },
         "sortInfo": {
             "type": "object",
-            "required": ["attribute", "order"],
+            "required": ["field", "order"],
             "properties": {
-                "attribute": {
+                "field": {
                     "type": "string",
                     "description": "The name of a data field"
                 },

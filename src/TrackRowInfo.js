@@ -52,12 +52,12 @@ export default function TrackRowInfo(props) {
     // Determine position of each dimension.
     let xDomain = [], xRange = [];
     for(let i = 0; i < rowInfoAttributes.length; i++) {
-        const attribute = isLeft ? rowInfoAttributes[rowInfoAttributes.length - i - 1] : rowInfoAttributes[i];
+        const fieldInfo = isLeft ? rowInfoAttributes[rowInfoAttributes.length - i - 1] : rowInfoAttributes[i];
         let currentLeft = unitWidth * i;
 
         // Domain and range for mouse event
         xDomain.push(currentLeft + unitWidth);
-        xRange.push(attribute.name);
+        xRange.push(fieldInfo.field);
     }
     
     // Scales
@@ -76,14 +76,14 @@ export default function TrackRowInfo(props) {
         });
       
         for(let i = 0; i < rowInfoAttributes.length; i++) {
-            const attribute = isLeft ? rowInfoAttributes[rowInfoAttributes.length - i - 1] : rowInfoAttributes[i];
+            const fieldInfo = isLeft ? rowInfoAttributes[rowInfoAttributes.length - i - 1] : rowInfoAttributes[i];
             let currentLeft = unitWidth * i;
 
             visualizationTrack({
                 two, 
                 left: currentLeft, top: 0, width: unitWidth, height: height,
                 rowInfo,
-                attribute,
+                fieldInfo,
                 isLeft
             });
         }

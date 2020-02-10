@@ -11,7 +11,7 @@ import { margin } from './visualizationTrack.js';
  * @prop {number} width The width of this view.
  * @prop {number} height The height of this view.
  * @prop {array} rowInfo Array of JSON objects, one object for each row.
- * @prop {object} attribute The name and type of data field.
+ * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  */
 export function verticalBarTrack(props) {
@@ -19,13 +19,13 @@ export function verticalBarTrack(props) {
         two,
         left, top, width, height,
         rowInfo, 
-        attribute,
+        fieldInfo,
         isLeft
     } = props;
 
     // Data, layouts and styles
-    const { name: field, type: fieldType } = attribute;
-    const isNominal = fieldType === "nominal";
+    const { field, type } = fieldInfo;
+    const isNominal = type === "nominal";
     const barAreaWidth = isNominal ? 20 : width - 20;
     const textAreaWidth = isNominal ? 50 : 20;
     const fontSize = 10;
