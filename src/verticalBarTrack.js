@@ -40,7 +40,7 @@ export function verticalBarTrack(props) {
         .range([0, barAreaWidth])
     const colorScale = isNominal ? 
         d3.scaleOrdinal()
-            .domain(Array.from(new Set(rowInfo.map(d => d[field]))))
+            .domain(Array.from(new Set(rowInfo.map(d => d[field]))).sort()) 
             .range(d3.schemeSet3) : 
         d3.scaleLinear()
             .domain(valueExtent)
