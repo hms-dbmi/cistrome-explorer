@@ -134,28 +134,28 @@ export default function TrackRowInfo(props) {
             style={{
                 top: `${d.top + 2}px`,
                 left: `${d.left + 2}px`, 
-                width: `${d.width}px`,
+                width: `${40}px`,
                 height: `${20}px`,
-                display: mouseX === i ? "block" : "none"
+                visibility: mouseX === i ? "visible" : "hidden"
             }}
         >
             <svg
-                className="cistrome-track-control-button"
+                className="cistrome-track-control-button-left"
                 onClick={() => console.log("button clicked!")}
-                style={{
-                    height: '20px', 
-                    width: '20px',
-                    background: "lightgray",
-                    padding: "4px",
-                    cursor: "pointer"
-                }}
             >
-                <title>Sort rows</title>
+                <title>Sort rows in ascending order</title>
+                <use xlinkHref="#chevron_up" />
+            </svg>
+            <svg
+                className="cistrome-track-control-button-right"
+                onClick={() => console.log("button clicked!")}
+            >
+                <title>Sort rows in descending order</title>
                 <use xlinkHref="#chevron_down" />
             </svg>
         </div>
     ), this);
-    
+
     function onMouseLeave() {
         setMouseX(-1);
         destroyTooltip();

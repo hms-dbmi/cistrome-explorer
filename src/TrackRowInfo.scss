@@ -9,14 +9,48 @@
 }
 
 .cistrome-track-control {
+    display: "flex";
+    flex-direction: "row";
     position: absolute;
-}
-
-.cistrome-track-control-button {
     border-radius: 2.5px;
+    background: white;
+    opacity: 0.6;
+    box-shadow: 0 0 0 1px rgba(0,0,0,.05),0 0 3px 0 rgba(0,0,0,.1);
+    cursor: pointer;
 }
 
-.cistrome-track-control-button:hover {
+.cistrome-track-control:hover {
+    opacity: 1;
+}
+
+.cistrome-track-control-button-left,
+.cistrome-track-control-button-right,
+.cistrome-track-control-button-top,
+.cistrome-track-control-button-middle,
+.cistrome-track-control-button-bottom {
+    height: 20px;
+    width: 20px;
+    padding: 4px;
+}
+
+.cistrome-track-control-button-left {
+    border-radius: 2.5px 0 0 2.5px;
+}
+.cistrome-track-control-button-right {
+    border-radius: 0 2.5px 2.5px 0;
+}
+.cistrome-track-control-button-top {
+    border-radius: 2.5px 2.5px 0 0;
+}
+.cistrome-track-control-button-bottom {
+    border-radius: 0 0 2.5px 2.5px;
+}
+
+.cistrome-track-control-button-left:hover,
+.cistrome-track-control-button-right:hover,
+.cistrome-track-control-button-top:hover,
+.cistrome-track-control-button-middle:hover,
+.cistrome-track-control-button-bottom:hover {
     color: #fff;
     background: #337ab7;
     opacity: 1;
