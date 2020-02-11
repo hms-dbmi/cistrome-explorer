@@ -4,6 +4,7 @@ import { HiGlassComponent } from 'higlass';
 import register from 'higlass-register';
 import StackedBarTrack from 'higlass-multivec/es/StackedBarTrack.js';
 
+import d3 from './utils/d3.js';
 import TrackWrapper from './TrackWrapper.js';
 import Tooltip from './Tooltip.js';
 
@@ -119,7 +120,7 @@ export default function CistromeHGW(props) {
             hgRef.current.api.off('viewConfig');
         };
     }, [hgRef]);
-    
+
     const hgComponent = useMemo(() => {
         const hgOptions = {
             ...hgOptionsBase,

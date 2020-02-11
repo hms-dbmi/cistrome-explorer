@@ -75,19 +75,27 @@ export default function TrackRowInfo(props) {
             key={i}
             className={"cistrome-track-control"}
             style={{
-                top: `${d.top}px`,
-                left: `${d.left}px`, 
+                top: `${d.top + 2}px`,
+                left: `${d.left + 2}px`, 
                 width: `${d.width}px`,
                 height: `${20}px`,
                 display: mouseX === i ? "block" : "none"
             }}
         >
-            <button 
+            <svg
+                className="cistrome-track-control-button"
                 onClick={() => console.log("button clicked!")}
                 style={{
-                    position: 'relative'
+                    height: '20px', 
+                    width: '20px',
+                    background: "lightgray",
+                    padding: "4px",
+                    cursor: "pointer"
                 }}
-            >s</button>
+            >
+                <title>Sort rows</title>
+                <use xlinkHref="#chevron_down" />
+            </svg>
         </div>
     ), this);
     
@@ -120,7 +128,6 @@ export default function TrackRowInfo(props) {
         const teardown = draw(canvas);
         
         d3.select(canvas).on("mousemove", () => {
-            console.log("mouseover")
             const mouse = d3.mouse(canvas);
             const mouseX = mouse[0];
             const mouseY = mouse[1];
@@ -146,19 +153,17 @@ export default function TrackRowInfo(props) {
                 content: `${x}: ${xVal}`
             });
         });
-
-        d3.select(canvas).on("mouseout", function() {
-            console.log("mouseout")
-            // setMousex(-1);
-            destroyTooltip();
-        });
-
         return teardown;
     });
 
+    function onMouseLeave() {
+        setMousex(-1);
+        destroyTooltip();
+    };
+    
     return (
-        <div 
-            className="cistrome-hgw-child"
+        <div className="cistrome-hgw-child"
+            onMouseLeave={onMouseLeave}
             style={{
                 top: `${top}px`,
                 left: `${left}px`, 
