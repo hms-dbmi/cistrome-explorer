@@ -38,7 +38,7 @@ export default function TrackRowInfo(props) {
         register
     } = props;
 
-    const [mouseX, setMousex] = useState(-1);
+    const [mouseX, setMouseX] = useState(-1);
 
     // Dimensions
     const isLeft = rowInfoPosition === "left";
@@ -68,36 +68,6 @@ export default function TrackRowInfo(props) {
         xDomain.push(currentLeft + unitWidth);
         xRange.push(fieldInfo.field);
     });
-
-    // Make small control panels for each track.
-    let trackControls = trackProps.map((d, i) => (
-        <div 
-            key={i}
-            className={"cistrome-track-control"}
-            style={{
-                top: `${d.top + 2}px`,
-                left: `${d.left + 2}px`, 
-                width: `${d.width}px`,
-                height: `${20}px`,
-                display: mouseX === i ? "block" : "none"
-            }}
-        >
-            <svg
-                className="cistrome-track-control-button"
-                onClick={() => console.log("button clicked!")}
-                style={{
-                    height: '20px', 
-                    width: '20px',
-                    background: "lightgray",
-                    padding: "4px",
-                    cursor: "pointer"
-                }}
-            >
-                <title>Sort rows</title>
-                <use xlinkHref="#chevron_down" />
-            </svg>
-        </div>
-    ), this);
     
     // Scales
     const xScale = d3.scaleThreshold()
@@ -136,10 +106,10 @@ export default function TrackRowInfo(props) {
             const x = xScale(mouseX);
             let xVal;
             if(y !== undefined && x !== undefined){
-                setMousex(rowInfoAttributes.map(d => d.field).indexOf(x));
+                setMouseX(rowInfoAttributes.map(d => d.field).indexOf(x));
                 xVal = rowInfo[y][x];
             } else {
-                setMousex(-1);
+                setMouseX(-1);
                 destroyTooltip();
                 return;
             }
@@ -156,11 +126,41 @@ export default function TrackRowInfo(props) {
         return teardown;
     });
 
+    // Make small control panels for each track.
+    let trackControls = trackProps.map((d, i) => (
+        <div 
+            key={i}
+            className={"cistrome-track-control"}
+            style={{
+                top: `${d.top + 2}px`,
+                left: `${d.left + 2}px`, 
+                width: `${d.width}px`,
+                height: `${20}px`,
+                display: mouseX === i ? "block" : "none"
+            }}
+        >
+            <svg
+                className="cistrome-track-control-button"
+                onClick={() => console.log("button clicked!")}
+                style={{
+                    height: '20px', 
+                    width: '20px',
+                    background: "lightgray",
+                    padding: "4px",
+                    cursor: "pointer"
+                }}
+            >
+                <title>Sort rows</title>
+                <use xlinkHref="#chevron_down" />
+            </svg>
+        </div>
+    ), this);
+    
     function onMouseLeave() {
-        setMousex(-1);
+        setMouseX(-1);
         destroyTooltip();
     };
-    
+
     return (
         <div className="cistrome-hgw-child"
             onMouseLeave={onMouseLeave}
