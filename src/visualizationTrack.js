@@ -14,7 +14,7 @@ export const margin = 5;
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  */
-export default function visualizationTrack(props){
+export function visualizationTrack(props) {
     const {
         two,
         left, top, width,
