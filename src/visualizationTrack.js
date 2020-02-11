@@ -11,10 +11,10 @@ export const margin = 5;
  * @prop {number} width The width of this view.
  * @prop {number} height The height of this view.
  * @prop {array} rowInfo Array of JSON objects, one object for each row.
- * @prop {object} attribute The name and type of data field.
+ * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  */
-export function visualizationTrack(props){
+export default function visualizationTrack(props){
     const {
         two,
         left, top, width,
