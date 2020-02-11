@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { CistromeHGW } from '../index.js';
 
@@ -51,7 +51,7 @@ const demos = {
 };
 
 export default function App() {
-
+    
     const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[1]);
 
     return (

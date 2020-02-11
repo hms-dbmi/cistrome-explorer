@@ -4,6 +4,8 @@ import { HiGlassComponent } from 'higlass';
 import register from 'higlass-register';
 import StackedBarTrack from 'higlass-multivec/es/StackedBarTrack.js';
 
+import PubSub from 'pubsub-js';
+import { EVENT } from './constants.js';
 import d3 from './utils/d3.js';
 import { all as icons, createSymbolIcon } from './utils/icons.js'
 import TrackWrapper from './TrackWrapper.js';
@@ -112,6 +114,23 @@ export default function CistromeHGW(props) {
         setOptions(processWrapperOptions(optionsRaw));
     }, [optionsRaw]);
     
+    // Change options by interactions.
+    useEffect(() => {
+        const newOptions = PubSub.subscribe(EVENT.SORT, (msg, data) => {
+            setOptions(processWrapperOptions({
+                ...optionsRaw,
+                rowSort: [{
+                    field: data.field,
+                    type: data.type,
+                    order: data.order
+                }]
+            }));
+        });
+        return () => {
+            PubSub.unsubscribe(newOptions);
+        };
+    });
+
     useEffect(() => {
         hgRef.current.api.on('viewConfig', (newViewConfigString) => {
             const newViewConfig = JSON.parse(newViewConfigString);

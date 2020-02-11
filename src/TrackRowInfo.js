@@ -3,8 +3,8 @@ import range from 'lodash/range';
 import d3 from './utils/d3.js';
 import Two from './utils/two.js';
 
+import PubSub from 'pubsub-js';
 import { EVENT } from './constants.js';
-
 import './TrackRowInfo.scss';
 import { visualizationTrack } from './visualizationTrack.js';
 
@@ -86,10 +86,10 @@ export default function TrackRowInfo(props) {
         });
     
         trackProps.forEach(d => visualizationTrack({...d, two}));
-
+        
         two.update();
         return two.teardown;
-    }, [width, height]);
+    }); // [width, height]
 
     register("TrackRowInfo", draw);
 
@@ -131,33 +131,25 @@ export default function TrackRowInfo(props) {
     let trackControls = trackProps.map((d, i) => (
         <div 
             key={i}
-            className={"cistrome-track-control"}
+            className={"chgw-control"}
             style={{
                 top: `${d.top + 2}px`,
                 left: `${d.left + 2}px`, 
                 width: `${60}px`,
                 height: `${20}px`,
                 visibility: mouseX === i ? "visible" : "hidden"
-            }}
-        >
-            <svg
-                className="cistrome-track-control-button-left"
-                onClick={() => console.log("button clicked!")}
-            >
+            }}>
+            <svg className="chgw-button-sm chgw-button-left"
+                onClick={onSortAscClick}>
                 <title>Sort rows in ascending order</title>
                 <use xlinkHref="#sort_asc" />
             </svg>
-            <svg
-                className="cistrome-track-control-button-middle"
-                onClick={() => console.log("button clicked!")}
-            >
+            <svg className="chgw-button-sm chgw-button-middle"
+                onClick={onSortDescClick}>
                 <title>Sort rows in descending order</title>
                 <use xlinkHref="#sort_desc" />
             </svg>
-            <svg
-                className="cistrome-track-control-button-right"
-                onClick={() => console.log("button clicked!")}
-            >
+            <svg className="chgw-button-sm chgw-button-right">
                 <title>Search keywords</title>
                 <use xlinkHref="#search" />
             </svg>
@@ -168,6 +160,23 @@ export default function TrackRowInfo(props) {
         setMouseX(-1);
         destroyTooltip();
     };
+
+    function onSortAscClick() {
+        const { field, type } = rowInfoAttributes[mouseX];
+        PubSub.publish(EVENT.SORT, {
+            field,
+            type,
+            order: "ascending"
+        });
+    }
+    function onSortDescClick() {
+        const { field, type } = rowInfoAttributes[mouseX];
+        PubSub.publish(EVENT.SORT, {
+            field,
+            type,
+            order: "descending"
+        });
+    }
 
     return (
         <div className="cistrome-hgw-child"

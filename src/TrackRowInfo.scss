@@ -8,7 +8,7 @@
     position: relative;
 }
 
-.cistrome-track-control {
+.chgw-control {
     display: "flex";
     flex-direction: "row";
     position: absolute;
@@ -16,42 +16,44 @@
     background: white;
     opacity: 0.6;
     box-shadow: 0 0 0 1px rgba(0,0,0,.05),0 0 3px 0 rgba(0,0,0,.1);
-    cursor: pointer;
 }
 
-.cistrome-track-control:hover {
+.chgw-control:hover {
     opacity: 1;
 }
 
-.cistrome-track-control-button-left,
-.cistrome-track-control-button-right,
-.cistrome-track-control-button-top,
-.cistrome-track-control-button-middle,
-.cistrome-track-control-button-bottom {
+.chgw-button-sm {
     height: 20px;
     width: 20px;
     padding: 4px;
+    cursor: pointer;
 }
 
-.cistrome-track-control-button-left {
-    border-radius: 2.5px 0 0 2.5px;
-}
-.cistrome-track-control-button-right {
-    border-radius: 0 2.5px 2.5px 0;
-}
-.cistrome-track-control-button-top {
-    border-radius: 2.5px 2.5px 0 0;
-}
-.cistrome-track-control-button-bottom {
-    border-radius: 0 0 2.5px 2.5px;
-}
-
-.cistrome-track-control-button-left:hover,
-.cistrome-track-control-button-right:hover,
-.cistrome-track-control-button-top:hover,
-.cistrome-track-control-button-middle:hover,
-.cistrome-track-control-button-bottom:hover {
+.chgw-button-sm:hover {
     color: #fff;
     background: #337ab7;
     opacity: 1;
+}
+
+.chgw-button-left {
+    border-radius: 2.5px 0 0 2.5px;
+}
+.chgw-button-right {
+    border-radius: 0 2.5px 2.5px 0;
+}
+.chgw-button-top {
+    border-radius: 2.5px 2.5px 0 0;
+}
+.chgw-button-bottom {
+    border-radius: 0 0 2.5px 2.5px;
+}
+
+.chgw-button-disabled {
+    background: gray;
+    cursor: no-drop;
+}
+
+.chgw-button-disabled:hover {
+    color: black;
+    background: gray !important;
 }
