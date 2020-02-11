@@ -5,6 +5,7 @@ import register from 'higlass-register';
 import StackedBarTrack from 'higlass-multivec/es/StackedBarTrack.js';
 
 import d3 from './utils/d3.js';
+import { all as icons, createSymbolIcon } from './utils/icons.js'
 import TrackWrapper from './TrackWrapper.js';
 import Tooltip from './Tooltip.js';
 
@@ -48,6 +49,7 @@ export default function CistromeHGW(props) {
 
     const { viewConfig, options: optionsRaw } = props;
 
+    const baseRef = useRef();
     const hgRef = useRef();
     const drawRef = useRef({});
 
@@ -140,10 +142,20 @@ export default function CistromeHGW(props) {
         );
     }, [viewConfig]);
 
+    /*
+     * Add SVG icons.
+     */
+    useEffect(() => {
+        const baseSvg = d3.select(baseRef.current)
+            .append('svg')
+            .style('display', 'none');
+
+        icons.forEach(icon => createSymbolIcon(baseSvg, icon.id, icon.paths, icon.viewBox));
+    })
     
     console.log("CistromeHGW.render");
     return (
-        <div className="cistrome-hgw">
+        <div className="cistrome-hgw" ref={baseRef}>
             {hgComponent}
             {trackIds.map(([viewId, trackId, combinedTrackId], i) => (
                 <TrackWrapper

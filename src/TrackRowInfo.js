@@ -135,7 +135,7 @@ export default function TrackRowInfo(props) {
             style={{
                 top: `${d.top + 2}px`,
                 left: `${d.left + 2}px`, 
-                width: `${40}px`,
+                width: `${60}px`,
                 height: `${20}px`,
                 visibility: mouseX === i ? "visible" : "hidden"
             }}
@@ -145,14 +145,21 @@ export default function TrackRowInfo(props) {
                 onClick={() => console.log("button clicked!")}
             >
                 <title>Sort rows in ascending order</title>
-                <use xlinkHref="#chevron_up" />
+                <use xlinkHref="#sort_asc" />
+            </svg>
+            <svg
+                className="cistrome-track-control-button-middle"
+                onClick={() => console.log("button clicked!")}
+            >
+                <title>Sort rows in descending order</title>
+                <use xlinkHref="#sort_desc" />
             </svg>
             <svg
                 className="cistrome-track-control-button-right"
                 onClick={() => console.log("button clicked!")}
             >
-                <title>Sort rows in descending order</title>
-                <use xlinkHref="#chevron_down" />
+                <title>Search keywords</title>
+                <use xlinkHref="#search" />
             </svg>
         </div>
     ), this);
