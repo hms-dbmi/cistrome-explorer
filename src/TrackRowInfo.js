@@ -123,6 +123,7 @@ export default function TrackRowInfo(props) {
                 content: `${x}: ${xVal}`
             });
         });
+        d3.select(canvas).on("mouseout", () => destroyTooltip());
         return teardown;
     });
 
