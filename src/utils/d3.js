@@ -22,7 +22,6 @@ import { hierarchy, cluster } from "d3-hierarchy";
  */
 const scaleBand = vega_scale("band");
 
-
 export default {
     get event() { return d3_event; }, // https://stackoverflow.com/a/40048292
     select,

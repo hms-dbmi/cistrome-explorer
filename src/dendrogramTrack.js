@@ -1,5 +1,5 @@
-import range from 'lodash/range';
 import d3 from './utils/d3.js';
+
 import { matrixToTree } from './utils/tree.js';
 
 /**

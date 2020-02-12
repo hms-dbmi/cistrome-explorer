@@ -1,6 +1,8 @@
 import range from 'lodash/range';
 import d3 from './utils/d3.js';
 
+import { margin } from './visualizationTrack.js';
+
 /**
  * Bar chart for rendering an attribute.
  * @prop {object} two An instance of the Two class.
@@ -26,7 +28,6 @@ export function verticalBarTrack(props) {
     const isNominal = fieldType === "nominal";
     const barAreaWidth = isNominal ? 20 : width - 20;
     const textAreaWidth = isNominal ? 50 : 20;
-    const margin = 5;
     const fontSize = 10;
     
     // Scales
