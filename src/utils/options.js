@@ -193,3 +193,38 @@ export function processWrapperOptions(optionsRaw) {
 
     return options;
 }
+
+/**
+ * Update rowSort information in options.
+ * @param {(object|object[]|null)} optionsRaw The raw value of the options prop.
+ * @param {object} sortInfo The name and type of data field and sorting order.
+ */
+export function updateRowSortOptions(optionsRaw, sortInfo) {
+    let optionsNewSort;
+    if(Array.isArray(optionsRaw)){
+        const globalDefaults = optionsRaw.find(o => (o.viewId === DEFAULT_OPTIONS_KEY && o.trackId === DEFAULT_OPTIONS_KEY));
+        const index = optionsRaw.indexOf(globalDefaults);
+        optionsNewSort = [
+            ...optionsRaw.slice(0, index),
+            {
+                ...globalDefaults,
+                rowSort: [{
+                    field: sortInfo.field,
+                    type: sortInfo.type,
+                    order: sortInfo.order
+                }]
+            },
+            ...optionsRaw.slice(index + 1),
+        ];
+    } else {
+        optionsNewSort = {
+            ...optionsRaw,
+            rowSort: [{
+                field: sortInfo.field,
+                type: sortInfo.type,
+                order: sortInfo.order
+            }]
+        };
+    }
+    return optionsNewSort;
+}

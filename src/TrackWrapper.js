@@ -102,7 +102,7 @@ export default function TrackWrapper(props) {
                     trackWidth={trackWidth}
                     rowInfoAttributes={leftAttrs}
                     rowSort={options.rowSort}
-                    rowInfoPosition={"left"}
+                    rowInfoPosition="left"
                     register={register}
                 />) : null}
             {rightAttrs.length !== 0 ? 
@@ -114,7 +114,7 @@ export default function TrackWrapper(props) {
                     trackWidth={trackWidth}
                     rowInfoAttributes={rightAttrs}
                     rowSort={options.rowSort}
-                    rowInfoPosition={"right"}
+                    rowInfoPosition="right"
                     register={register}
                 />) : null}
             {options.colToolsPosition !== "hidden" ? 
