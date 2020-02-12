@@ -1,5 +1,6 @@
-import { verticalBarTrack } from "./verticalBarTrack";
-import { dendrogramTrack } from "./dendrogramTrack";
+import { verticalBarTrack } from "./verticalBarTrack.js";
+import { dendrogramTrack } from "./dendrogramTrack.js";
+import { urlTrack } from "./urlTrack.js"
 
 export const margin = 5;
 
@@ -33,6 +34,9 @@ export function visualizationTrack(props) {
         case "nominal": 
         case "quantitative":
             verticalBarTrack(props);
+            break;
+        case "url":
+            urlTrack(props);
             break;
         case "tree":
             dendrogramTrack(props);

@@ -2,7 +2,6 @@ import React from 'react';
 
 import TrackColTools from './TrackColTools.js';
 import TrackRowInfo from './TrackRowInfo.js';
-import TrackRowLink from './TrackRowLink.js';
 
 // TODO: remove the below fakedata import.
 //       see https://github.com/hms-dbmi/cistrome-higlass-wrapper/issues/26
@@ -88,28 +87,29 @@ export default function TrackWrapper(props) {
     console.log("TrackWrapper.render");
     return (
         <div className="cistrome-hgw-track-wrapper">
-            {options.rowInfoPosition !== "hidden" ? 
+            {options.rowInfoAttributes.map(d => d.position === "left").length !== 0 ? 
                 (<TrackRowInfo 
                     rowInfo={transformedRowInfo}
                     trackX={trackX}
                     trackY={trackY}
                     trackHeight={trackHeight}
                     trackWidth={trackWidth}
-                    rowInfoAttributes={options.rowInfoAttributes}
-                    rowInfoPosition={options.rowInfoPosition}
+                    rowInfoAttributes={options.rowInfoAttributes.filter(d => d.position === "left")}
                     rowSort={options.rowSort}
+                    rowInfoPosition={"left"}
                     register={register}
                 />) : null}
-            {options.rowLinkPosition !== "hidden" ? 
-                (<TrackRowLink
+            {options.rowInfoAttributes.map(d => d.position === "right").length !== 0 ? 
+                (<TrackRowInfo
                     rowInfo={transformedRowInfo}
                     trackX={trackX}
                     trackY={trackY}
                     trackHeight={trackHeight}
                     trackWidth={trackWidth}
-                    rowLinkAttribute={options.rowLinkAttribute}
-                    rowLinkNameAttribute={options.rowLinkNameAttribute}
-                    rowLinkPosition={options.rowLinkPosition}
+                    rowInfoAttributes={options.rowInfoAttributes.filter(d => d.position === "right")}
+                    rowSort={options.rowSort}
+                    rowInfoPosition={"right"}
+                    register={register}
                 />) : null}
             {options.colToolsPosition !== "hidden" ? 
                 (<TrackColTools
