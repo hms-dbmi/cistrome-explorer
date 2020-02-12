@@ -13,7 +13,8 @@ import { processWrapperOptions, DEFAULT_OPTIONS_KEY } from './utils/options.js';
 import { 
     getHMTrackIdsFromViewConfig, 
     getSiblingVPHTrackIdsFromViewConfig,
-    updateViewConfigOnSelectGenomicInterval
+    updateViewConfigOnSelectGenomicInterval,
+    updateViewConfigOnSelectRowInterval
 } from './utils/viewconf.js';
 
 import './CistromeHGW.scss';
@@ -172,6 +173,13 @@ export default function CistromeHGW(props) {
                     onSelectGenomicInterval={() => {
                         const currViewConfig = hgRef.current.api.getViewConfig();
                         const newViewConfig = updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, trackId);
+                        hgRef.current.api.setViewConfig(newViewConfig).then(() => {
+                            onViewConfig(newViewConfig);
+                        });
+                    }}
+                    onSelectRowInterval={() => {
+                        const currViewConfig = hgRef.current.api.getViewConfig();
+                        const newViewConfig = updateViewConfigOnSelectRowInterval(currViewConfig, viewId, trackId);
                         hgRef.current.api.setViewConfig(newViewConfig).then(() => {
                             onViewConfig(newViewConfig);
                         });

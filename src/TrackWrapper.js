@@ -12,12 +12,13 @@ import fakedata from './demo/fakedata/index.js';
  * Wrapper component associated with a particular HiGlass track.
  * @prop {object} options Options associated with the track. Contains values for all possible options.
  * @prop {object} multivecTrack A `horizontal-multivec` track object returned by `hgc.api.getTrackObject()`.
- * @prop {(object|null)} combinedTrack A `combined` track object returned by `hgc.api.getTrackObject()`. 
+ * @prop {(object|null)} combinedTrack A `combined` track object returned by `hgc.api.getTrackObject()`.
  *                              If not null, it is the parent track of the `multivecTrack`.
  * @prop {object[]} siblingTracks An array of `viewport-projection-horizontal` track objects, which
  *                                are siblings of `multivecTrack` (children of the same `combined` track).
- * @prop {function} onSelectGenomicInterval The function to call upon selection of a genomic interval. 
+ * @prop {function} onSelectGenomicInterval The function to call upon selection of a genomic interval.
  *                                          Passed down to the `TrackColTools` component.
+ * @prop {function} onSelectRowInterval The function to call upon selection of a row interval.
  * @prop {function} register The function for child components to call to register their draw functions.
  */
 export default function TrackWrapper(props) {
@@ -27,6 +28,7 @@ export default function TrackWrapper(props) {
         combinedTrack,
         siblingTracks,
         onSelectGenomicInterval,
+        onSelectRowInterval,
         register
     } = props;
 
@@ -124,6 +126,7 @@ export default function TrackWrapper(props) {
                     onSelectGenomicInterval={onSelectGenomicInterval}
                     register={register}
                 />) : null}
+            <button style={{ position: 'absolute'}}onClick={onSelectRowInterval}>Select row interval</button>
         </div>
     );
 }

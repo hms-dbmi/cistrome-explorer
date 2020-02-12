@@ -4,7 +4,8 @@
 export const TRACK_TYPE = Object.freeze({
     HORIZONTAL_MULTIVEC: "horizontal-multivec",
     COMBINED: "combined",
-    VIEWPORT_PROJECTION_HORIZONTAL: "viewport-projection-horizontal"
+    VIEWPORT_PROJECTION_HORIZONTAL: "viewport-projection-horizontal",
+    VIEWPORT_PROJECTION_VERTICAL: "viewport-projection-vertical"
 });
 
 /*

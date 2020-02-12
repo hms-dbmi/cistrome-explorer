@@ -126,7 +126,7 @@ export function updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, 
                     foundTrack = track;
 
                     const newView = cloneDeep(foundView);
-                    newView.uid = newView.uid + "-with-projection";
+                    newView.uid = newView.uid + "-with-col-projection";
                     if(addView) {
                         // Need view.uid values to be unique.
                         newView.uid += uuidv4();
@@ -141,7 +141,7 @@ export function updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, 
                         contents: [
                             newTrackInner,
                             {
-                                uid: newTrackInner.uid + "-projection",
+                                uid: newTrackInner.uid + "-col-projection",
                                 type: TRACK_TYPE.VIEWPORT_PROJECTION_HORIZONTAL,
                                 fromViewUid: viewId,
                                 options: {
@@ -161,6 +161,67 @@ export function updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, 
                         foundView.layout.x = newView.layout.w + 1;
                         newViewConfig.views.push(foundView);
                     }
+                } else if(track.type === TRACK_TYPE.COMBINED) {
+                    // We currently do not need to handle this case, but may want to in the future, 
+                    // to allow multiple interval selections per `horizontal-multivec` track.
+                }
+            }
+        }
+    }
+
+    return newViewConfig;
+};
+
+
+/**
+ * This function updates the view config when the user would like to create a row interval selection.
+ * @param {object} currViewConfig The current HiGlass view config.
+ * @param {string} viewId The uid of view containing the `horizontal-multivec` track that was the target of the action.
+ * @param {string} trackId The uid of the `horizontal-multivec` track that was the target of the action.
+ * @returns {object} The updated HiGlass view config.
+ */
+export function updateViewConfigOnSelectRowInterval(currViewConfig, viewId, trackId) {
+    const newViewConfig = cloneDeep(currViewConfig);
+
+    // Find the view associated with this viewId.
+    const foundViewIndex = newViewConfig.views.findIndex(v => v.uid === viewId);
+    const foundView = newViewConfig.views[foundViewIndex];
+    
+    // Find the track object.
+    let foundTrack;
+    for(let [tracksPos, tracks] of Object.entries(foundView.tracks)) {
+        if(Array.isArray(tracks)) {
+            for(let [i, track] of tracks.entries()) {
+                if(track.type === TRACK_TYPE.HORIZONTAL_MULTIVEC && track.uid === trackId) {
+                    foundTrack = track;
+
+                    const newView = cloneDeep(foundView);
+                    newView.uid = newView.uid + "-with-row-projection";
+                    const newTrackInner = cloneDeep(foundTrack);
+
+                    newView.tracks[tracksPos][i] = {
+                        type: TRACK_TYPE.COMBINED,
+                        uid: newTrackInner.uid + "-combined",
+                        height: newTrackInner.height,
+                        width: newTrackInner.width,
+                        contents: [
+                            newTrackInner,
+                            {
+                                uid: newTrackInner.uid + "-row-projection",
+                                type: TRACK_TYPE.VIEWPORT_PROJECTION_VERTICAL,
+                                fromViewUid: viewId,
+                                options: {
+                                    projectionFillColor: "#777",
+                                    projectionStrokeColor: "#777",
+                                    projectionFillOpacity: 0.3,
+                                    projectionStrokeOpacity: 0.7,
+                                    strokeWidth: 1
+                                }
+                            }
+                        ]
+                    };
+
+                    newViewConfig.views[foundViewIndex] = newView;
                 } else if(track.type === TRACK_TYPE.COMBINED) {
                     // We currently do not need to handle this case, but may want to in the future, 
                     // to allow multiple interval selections per `horizontal-multivec` track.
