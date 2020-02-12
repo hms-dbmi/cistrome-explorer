@@ -5,6 +5,13 @@ import { EVENT } from './constants.js';
 import { SEARCH, SORT_ASC, SORT_DESC } from './utils/icons.js';
 import './TrackControl.scss';
 
+/**
+ * Component to control each vertical track.
+ * @prop {number} left The control horizontal offset.
+ * @prop {number} top The control vertical offset.
+ * @prop {boolean} isVisible The visibility of the control.
+ * @prop {object} fieldInfo JSON object of the name and type of an attribute.
+ */
 export default function TrackControl(props){
     const {
         left, top, isVisible, fieldInfo
