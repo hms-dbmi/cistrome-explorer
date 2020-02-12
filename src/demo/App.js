@@ -4,6 +4,8 @@ import { CistromeHGW } from '../index.js';
 
 import hgDemoViewConfig1 from '../viewconfigs/horizontal-multivec-1.json';
 import hgDemoViewConfig2 from '../viewconfigs/horizontal-multivec-2.json';
+import hgDemoViewConfig4 from '../viewconfigs/horizontal-multivec-4.json';
+
 
 import './App.scss';
 
@@ -37,6 +39,38 @@ const demos = {
                 {name: "Random 2", type: "quantitative"}
             ]
         }
+    },
+    "Demo 4": {
+        viewConfig: hgDemoViewConfig4,
+        options: [
+            {
+                viewId: "default",
+                trackId: "default",
+                colToolsPosition: "bottom",
+                rowLinkAttribute: "url",
+                rowLinkNameAttribute: "id"
+            },
+            {
+                viewId: "cistrome-view-4-1",
+                trackId: "cistrome-track-4-1",
+                rowInfoPosition: "left",
+                rowLinkPosition: "right",
+                infoAttributes: [
+                    {name: "Tissue Type", type: "nominal"},
+                    {name: "Random 2", type: "quantitative"}
+                ]
+            },
+            {
+                viewId: "cistrome-view-4-2",
+                trackId: "cistrome-track-4-2",
+                rowInfoPosition: "right",
+                rowLinkPosition: "hidden",
+                infoAttributes: [
+                    {name: "Hierarchical Clustering", type: "tree"},
+                    {name: "Cell Type", type: "nominal"}
+                ]
+            }
+        ]
     }
 };
 
