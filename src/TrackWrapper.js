@@ -1,8 +1,10 @@
 import React from 'react';
+import range from 'lodash/range';
 
 import TrackColTools from './TrackColTools.js';
 import TrackRowInfo from './TrackRowInfo.js';
 import TrackRowLink from './TrackRowLink.js';
+import TrackRowHighlight from './TrackRowHighlight.js';
 
 // TODO: remove the below fakedata import.
 //       see https://github.com/hms-dbmi/cistrome-higlass-wrapper/issues/26
@@ -16,6 +18,8 @@ import fakedata from './demo/fakedata/index.js';
  *                              If not null, it is the parent track of the `multivecTrack`.
  * @prop {object[]} siblingTracks An array of `viewport-projection-horizontal` track objects, which
  *                                are siblings of `multivecTrack` (children of the same `combined` track).
+ * @prop {(number[]|null)} selectedRows Array of row indices for selected rows. Null if all rows should be selected.
+ * @prop {(number[]|null)} highlitRows Array of row indices for highlighted rows. Null if no rows should be highlighted.
  * @prop {function} onSelectGenomicInterval The function to call upon selection of a genomic interval.
  *                                          Passed down to the `TrackColTools` component.
  * @prop {function} onSelectRowInterval The function to call upon selection of a row interval.
@@ -27,12 +31,13 @@ export default function TrackWrapper(props) {
         multivecTrack,
         combinedTrack,
         siblingTracks,
+        selectedRows,
+        highlitRows,
         onSelectGenomicInterval,
-        onSelectRowInterval,
         register
     } = props;
 
-    if(!multivecTrack || !multivecTrack.tilesetInfo) {
+    if(!multivecTrack || !multivecTrack.tilesetInfo || !multivecTrack.tilesetInfo.shape) {
         // The track or track tileset info has not yet loaded.
         return null;
     }
@@ -41,6 +46,7 @@ export default function TrackWrapper(props) {
     const trackY = multivecTrack.position[1];
     const trackWidth = multivecTrack.dimensions[0];
     const trackHeight = multivecTrack.dimensions[1];
+    const totalNumRows = multivecTrack.tilesetInfo.shape[1];
 
     // Attempt to obtain metadata values from the `tilesetInfo` field of the track.
     let rowInfo = [];
@@ -51,10 +57,9 @@ export default function TrackWrapper(props) {
         //       see https://github.com/hms-dbmi/cistrome-higlass-wrapper/issues/26
         // rowInfo = multivecTrack.tilesetInfo.row_infos.map(JSON.parse);
 
-        // TODO: remove the below lines.
+        // TODO: remove the below line.
         //       see https://github.com/hms-dbmi/cistrome-higlass-wrapper/issues/26
-        const numRows = multivecTrack.tilesetInfo.shape[1];
-        rowInfo = fakedata[multivecTrack.id].tilesetInfo.rowInfo.slice(0, numRows);
+        rowInfo = fakedata[multivecTrack.id].tilesetInfo.rowInfo.slice(0, totalNumRows);
     } catch(e) {
         console.log(e);
     }
@@ -126,7 +131,15 @@ export default function TrackWrapper(props) {
                     onSelectGenomicInterval={onSelectGenomicInterval}
                     register={register}
                 />) : null}
-            <button style={{ position: 'absolute'}}onClick={onSelectRowInterval}>Select row interval</button>
+            <TrackRowHighlight 
+                trackX={trackX}
+                trackY={trackY}
+                trackHeight={trackHeight}
+                trackWidth={trackWidth}
+                totalNumRows={totalNumRows}
+                highlitRows={highlitRows}
+                register={register}
+            />
         </div>
     );
 }

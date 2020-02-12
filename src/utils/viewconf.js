@@ -208,8 +208,9 @@ export function updateViewConfigOnSelectRowInterval(currViewConfig, viewId, trac
                             newTrackInner,
                             {
                                 uid: newTrackInner.uid + "-row-projection",
-                                type: TRACK_TYPE.VIEWPORT_PROJECTION_VERTICAL,
+                                type: "row-highlight-track",
                                 fromViewUid: viewId,
+                                fromTrackUid: trackId,
                                 options: {
                                     projectionFillColor: "#777",
                                     projectionStrokeColor: "#777",
