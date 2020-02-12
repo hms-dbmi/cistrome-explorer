@@ -13,8 +13,10 @@ toc:
 - visualizationTrack
 - verticalBarTrack
 - dendrogramTrack
+- urlTrack
 - validateWrapperOptions
 - processWrapperOptions
+- updateRowSortOptions
 - getRetinaRatio
 - traverseViewConfig
 - getHMTrackIdsFromViewConfig
