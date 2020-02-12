@@ -147,7 +147,8 @@ export function processWrapperOptions(optionsRaw) {
             rowInfoPosition: "right",
             rowLinkPosition: "left",
             rowLinkAttribute: "url",
-            colToolsPosition: "bottom"
+            colToolsPosition: "bottom",
+            rowInfoAttributes: []
         }
     };
 
