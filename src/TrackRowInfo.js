@@ -5,9 +5,9 @@ import Two from './utils/two.js';
 
 import PubSub from 'pubsub-js';
 import { EVENT } from './constants.js';
-import './TrackRowInfo.scss';
 import { visualizationTrack } from './visualizationTrack.js';
-import { SEARCH, SORT_ASC, SORT_DESC } from './utils/icons.js';
+import TrackControl from './TrackControl.js'
+import './TrackRowInfo.scss';
 
 function destroyTooltip() {
     PubSub.publish(EVENT.TOOLTIP, {
@@ -128,57 +128,21 @@ export default function TrackRowInfo(props) {
         return teardown;
     });
 
-    // Make small control panels for each track.
-    let trackControls = trackProps.map((d, i) => (
-        <div 
-            key={i}
-            className={"chgw-control"}
-            style={{
-                top: `${d.top + 2}px`,
-                left: `${d.left + 2}px`, 
-                width: `${60}px`,
-                height: `${20}px`,
-                visibility: mouseX === i ? "visible" : "hidden"
-            }}>
-            <svg className="chgw-button-sm chgw-button-left"
-                onClick={onSortAscClick} viewBox={SORT_ASC.viewBox}>
-                <title>Sort rows in ascending order</title>
-                <path d={SORT_ASC.path} fill="currentColor"/>
-            </svg>
-            <svg className="chgw-button-sm chgw-button-middle"
-                onClick={onSortDescClick} viewBox={SORT_DESC.viewBox}>
-                <title>Sort rows in descending order</title>
-                <path d={SORT_DESC.path} fill="currentColor"/>
-            </svg>
-            <svg className="chgw-button-sm chgw-button-right"
-                viewBox={SEARCH.viewBox}>
-                <title>Search keywords</title>
-                <path d={SEARCH.path} fill="currentColor"/>
-            </svg>
-        </div>
-    ), this);
-
     function onMouseLeave() {
         setMouseX(-1);
         destroyTooltip();
     };
 
-    function onSortAscClick() {
-        const { field, type } = rowInfoAttributes[mouseX];
-        PubSub.publish(EVENT.SORT, {
-            field,
-            type,
-            order: "ascending"
-        });
-    }
-    function onSortDescClick() {
-        const { field, type } = rowInfoAttributes[mouseX];
-        PubSub.publish(EVENT.SORT, {
-            field,
-            type,
-            order: "descending"
-        });
-    }
+    // Make small control panels for each track.
+    let trackControls = trackProps.map((d, i) => (
+        <TrackControl
+            key={i}
+            top={d.top + 2}
+            left={d.left + 2}
+            isVisible={mouseX === i}
+            fieldInfo={rowInfoAttributes[i]}
+        />
+    ), this);
 
     return (
         <div className="cistrome-hgw-child"
