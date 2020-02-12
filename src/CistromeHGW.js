@@ -49,7 +49,6 @@ export default function CistromeHGW(props) {
 
     const { viewConfig, options: optionsRaw } = props;
 
-    const baseRef = useRef();
     const hgRef = useRef();
     const drawRef = useRef({});
 
@@ -161,7 +160,7 @@ export default function CistromeHGW(props) {
     
     console.log("CistromeHGW.render");
     return (
-        <div className="cistrome-hgw" ref={baseRef}>
+        <div className="cistrome-hgw">
             {hgComponent}
             {trackIds.map(([viewId, trackId, combinedTrackId], i) => (
                 <TrackWrapper
