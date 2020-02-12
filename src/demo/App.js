@@ -13,14 +13,12 @@ const demos = {
     "Demo 1": {
         viewConfig: hgDemoViewConfig1,
         options: {
-            rowInfoPosition: "right",
-            rowLinkPosition: "left",
             colToolsPosition: "bottom",
             rowInfoAttributes: [
-                {field: "Cell Type", type: "nominal"},
-                {field: "Tissue Type", type: "nominal"},
-                {field: "Histone Modification", type: "nominal"},
-                {field: "Species", type: "nominal"}
+                {field: "Histone Modification", type: "nominal", position: "left"},
+                {field: "Cell Type", type: "nominal", position: "right"},
+                {field: "Tissue Type", type: "nominal", position: "right"},
+                {field: "Species", type: "nominal", position: "right"}
             ],
             rowSort: [
                 {field: "Species", type: "nominal", order: "ascending"},
@@ -33,16 +31,13 @@ const demos = {
     "Demo 2": {
         viewConfig: hgDemoViewConfig2,
         options: {
-            rowInfoPosition: "right",
-            rowLinkPosition: "left",
             colToolsPosition: "bottom",
-            rowLinkAttribute: "url",
-            rowLinkNameAttribute: "id",
             rowInfoAttributes: [
-                {field: "Hierarchical Clustering", type: "tree"},
-                {field: "Cell Type", type: "nominal"},
-                {field: "Tissue Type", type: "nominal"},
-                {field: "Random 2", type: "quantitative"}
+                {field: "Random 2", type: "quantitative", position: "left"},
+                {field: "url", type: "url", position: "left", title: "Cell Type"},
+                {field: "Hierarchical Clustering", type: "tree", position: "right"},
+                {field: "Cell Type", type: "nominal", position: "right"},
+                {field: "Tissue Type", type: "nominal", position: "right"}
             ],
             rowSort: [
                 {field: "Tissue Type", type: "nominal", order: "ascending"},
@@ -56,28 +51,23 @@ const demos = {
             {
                 viewId: "default",
                 trackId: "default",
-                colToolsPosition: "bottom",
-                rowLinkAttribute: "url",
-                rowLinkNameAttribute: "id"
+                colToolsPosition: "bottom"
             },
             {
                 viewId: "cistrome-view-4-1",
                 trackId: "cistrome-track-4-1",
-                rowInfoPosition: "left",
-                rowLinkPosition: "right",
                 rowInfoAttributes: [
-                    {field: "Tissue Type", type: "nominal"},
-                    {field: "Random 2", type: "quantitative"}
+                    {field: "Tissue Type", type: "nominal", position: "left"},
+                    {field: "Random 2", type: "quantitative", position: "left"},
+                    {field: "url", type: "url", position: "right", title: "id"}
                 ]
             },
             {
                 viewId: "cistrome-view-4-2",
                 trackId: "cistrome-track-4-2",
-                rowInfoPosition: "right",
-                rowLinkPosition: "hidden",
                 rowInfoAttributes: [
-                    {field: "Hierarchical Clustering", type: "tree"},
-                    {field: "Cell Type", type: "nominal"}
+                    {field: "Hierarchical Clustering", type: "tree", position: "right"},
+                    {field: "Cell Type", type: "nominal", position: "right"}
                 ]
             }
         ]

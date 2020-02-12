@@ -38,17 +38,32 @@ export default function TrackRowHighlight(props) {
 
     // Render each track.
     const draw = useCallback((domElement) => {
+        d3.select(domElement).selectAll("g").remove();
         const g = d3.select(domElement).append("g").attr("class", "brush");
 
-        const brushed = () => {
-            if(d3.event.sourceEvent.type === "brush") return;
-            // TODO
+        const brush = d3.brushY()
+            .extent([[0, 0], [width, height]]);
+
+        function brushed() {
+            if (d3.event.sourceEvent.type === "brush") return;
+            const selection = d3.event.selection;
+            if(selection) {
+                const i = selection.map(yScale.invert);
+                d3.select(this).call(brush.move, i.map(yScale));
+            }
         };
 
-        const brush = d3.brushY()
-            .on("brush", brushed);
 
+        const dest = [0, height];
+        
         g.call(brush);
+        brush.on('brush', null);
+        g.call(brush.move, dest);
+        brush.on("brush", brushed);
+
+        g.selectAll('.overlay')
+            .style('pointer-events', 'none');
+        
     }, [width, height]);
 
     register("TrackRowHighlight", draw);

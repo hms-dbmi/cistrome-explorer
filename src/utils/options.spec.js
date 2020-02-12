@@ -6,7 +6,7 @@ describe('Utilities for processing wrapper component options', () => {
     it('Should validate options object when incorrect', () => {
         const valid = validateWrapperOptions(
             {
-                rowInfoPosition: "top"
+                colToolsPosition: "left"
             }
         );
         expect(valid).toBe(false);
@@ -15,7 +15,7 @@ describe('Utilities for processing wrapper component options', () => {
     it('Should validate options object when correct', () => {
         const valid = validateWrapperOptions(
             {
-                rowInfoPosition: "right"
+                colToolsPosition: "bottom"
             }
         );
         expect(valid).toBe(true);
@@ -24,7 +24,7 @@ describe('Utilities for processing wrapper component options', () => {
     it('Should validate options array when incorrect', () => {
         const valid = validateWrapperOptions([
             {
-                rowInfoPosition: "top"
+                colToolsPosition: "left"
             }
         ]);
         expect(valid).toBe(false);
@@ -35,7 +35,7 @@ describe('Utilities for processing wrapper component options', () => {
             {
                 viewId: "viewA",
                 trackId: "trackA",
-                rowInfoPosition: "left"
+                colToolsPosition: "bottom"
             }
         ]);
         expect(valid).toBe(true);
@@ -44,12 +44,12 @@ describe('Utilities for processing wrapper component options', () => {
     it('Should process options object', () => {
         const processedOptions = processWrapperOptions(
             {
-                rowInfoPosition: "left"
+                colToolsPosition: "bottom"
             }
         );
 
         expect(Object.keys(processedOptions)).toEqual(['default']);
-        expect(processedOptions.default.rowInfoPosition).toEqual("left");
+        expect(processedOptions.default.colToolsPosition).toEqual("bottom");
     });
 
     it('Should process options array with global default', () => {
@@ -57,12 +57,12 @@ describe('Utilities for processing wrapper component options', () => {
             {
                 viewId: "default",
                 trackId: "default",
-                rowInfoPosition: "left"
+                colToolsPosition: "bottom"
             }
         ]);
 
         expect(Object.keys(processedOptions)).toEqual(['default']);
-        expect(processedOptions.default.rowInfoPosition).toEqual("left");
+        expect(processedOptions.default.colToolsPosition).toEqual("bottom");
     });
 
     it('Should process options array with view default', () => {
@@ -70,18 +70,18 @@ describe('Utilities for processing wrapper component options', () => {
             {
                 viewId: "default",
                 trackId: "default",
-                rowInfoPosition: "left"
+                colToolsPosition: "bottom"
             },
             {
                 viewId: "viewA",
                 trackId: "default",
-                rowInfoPosition: "right"
+                colToolsPosition: "top"
             }
         ]);
 
         expect(Object.keys(processedOptions)).toEqual(['default', 'viewA']);
-        expect(processedOptions.default.rowInfoPosition).toEqual("left");
-        expect(processedOptions.viewA.default.rowInfoPosition).toEqual("right");
+        expect(processedOptions.default.colToolsPosition).toEqual("bottom");
+        expect(processedOptions.viewA.default.colToolsPosition).toEqual("top");
     });
 
     it('Should process options array with view and track defaults', () => {
@@ -89,35 +89,35 @@ describe('Utilities for processing wrapper component options', () => {
             {
                 viewId: "default",
                 trackId: "default",
-                rowInfoPosition: "left"
+                colToolsPosition: "top"
             },
             {
                 viewId: "viewA",
                 trackId: "default",
-                rowInfoPosition: "right"
+                colToolsPosition: "bottom"
             },
             {
                 viewId: "viewA",
                 trackId: "trackA",
-                rowInfoPosition: "hidden"
+                colToolsPosition: "hidden"
             },
             {
                 viewId: "viewA",
                 trackId: "trackB",
-                rowInfoPosition: "left"
+                colToolsPosition: "top"
             },
             {
                 viewId: "viewB",
                 trackId: "default",
-                rowInfoPosition: "hidden"
+                colToolsPosition: "hidden"
             },
         ]);
 
         expect(Object.keys(processedOptions)).toEqual(['default', 'viewA', 'viewB']);
-        expect(processedOptions.default.rowInfoPosition).toEqual("left");
-        expect(processedOptions.viewA.default.rowInfoPosition).toEqual("right");
-        expect(processedOptions.viewA.trackA.rowInfoPosition).toEqual("hidden");
-        expect(processedOptions.viewA.trackB.rowInfoPosition).toEqual("left");
-        expect(processedOptions.viewB.default.rowInfoPosition).toEqual("hidden");
+        expect(processedOptions.default.colToolsPosition).toEqual("top");
+        expect(processedOptions.viewA.default.colToolsPosition).toEqual("bottom");
+        expect(processedOptions.viewA.trackA.colToolsPosition).toEqual("hidden");
+        expect(processedOptions.viewA.trackB.colToolsPosition).toEqual("top");
+        expect(processedOptions.viewB.default.colToolsPosition).toEqual("hidden");
     });
 });

@@ -9,9 +9,9 @@ import { format } from "d3-format";
 import { schemeSet3, interpolateViridis } from "d3-scale-chromatic";
 import { mouse, event as d3_event } from "d3-selection";
 import { scaleLinear, scaleOrdinal, scaleThreshold } from "d3-scale";
+import { scale as vega_scale } from "vega-scale";
 import { extent } from "d3-array";
 import { hsl } from "d3-color";
-import { scale as vega_scale } from "vega-scale";
 import { hierarchy, cluster } from "d3-hierarchy";
 import { brushY } from "d3-brush";
 

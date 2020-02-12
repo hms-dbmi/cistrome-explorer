@@ -98,6 +98,24 @@ export default function TrackRowInfo(props) {
         const canvas = canvasRef.current;
         const teardown = draw(canvas);
         
+        // Handle mouse click interaction on each track
+        d3.select(canvas).on("click", () => {
+            const mouse = d3.mouse(canvas);
+            const mouseX = mouse[0];
+            const mouseY = mouse[1];
+
+            const y = yScale.invert(mouseY);
+            const x = xScale(mouseX);
+            if(y !== undefined && x !== undefined){
+                const { type } = rowInfoAttributes.find(d => d.field === x);
+                if(type === "url") {
+                    window.open(rowInfo[y][x]);
+                }
+                else { 
+                    // ...
+                }
+            }
+        });
         d3.select(canvas).on("mousemove", () => {
             const mouse = d3.mouse(canvas);
             const mouseX = mouse[0];
@@ -134,15 +152,18 @@ export default function TrackRowInfo(props) {
     };
 
     // Make small control panels for each track.
-    let trackControls = trackProps.map((d, i) => (
-        <TrackControl
-            key={i}
-            top={d.top + 2}
-            left={d.left + 2}
-            isVisible={mouseX === i}
-            fieldInfo={rowInfoAttributes[i]}
-        />
-    ), this);
+    let trackControls = trackProps.map(function(d, i){ 
+        const index = isLeft ? rowInfoAttributes.length - i - 1 : i;
+        return (
+            <TrackControl
+                key={index}
+                top={d.top + 2}
+                left={d.left + 2}
+                isVisible={mouseX === index}
+                fieldInfo={rowInfoAttributes[index]}
+            />
+        )
+    }, this);
 
     return (
         <div className="cistrome-hgw-child"
