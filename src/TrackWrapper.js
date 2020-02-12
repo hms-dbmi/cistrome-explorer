@@ -71,8 +71,10 @@ export default function TrackWrapper(props) {
     if(options.rowSort && options.rowSort.length > 0) {
         let sortOptions = options.rowSort.slice().reverse();
         sortOptions.forEach((d, i) => {
-            const { field, type, order } = d;
-            if(type === "quantitative") {
+            const { field, type, order, title } = d;
+            if(type === "tree") {
+                // Do nothing for the "tree" type.
+            } else if(type === "quantitative") {
                 transformedRowInfo.sort((a, b) => (a[field] - b[field]) * (order === "ascending" ? 1 : -1));
             } else {
                 transformedRowInfo.sort(function(a, b) {

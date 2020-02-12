@@ -62,7 +62,7 @@ const baseSchema = {
                 },
                 "type": {
                     "type": "string",
-                    "enum": ["nominal", "quantitative"],
+                    "enum": ["nominal", "quantitative", "url"],
                     "description": "The data type of a field"
                 },
                 "order": {
