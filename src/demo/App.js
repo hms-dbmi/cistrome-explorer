@@ -65,9 +65,9 @@ const demos = {
                 trackId: "cistrome-track-4-1",
                 rowInfoPosition: "left",
                 rowLinkPosition: "right",
-                infoAttributes: [
-                    {name: "Tissue Type", type: "nominal"},
-                    {name: "Random 2", type: "quantitative"}
+                rowInfoAttributes: [
+                    {field: "Tissue Type", type: "nominal"},
+                    {field: "Random 2", type: "quantitative"}
                 ]
             },
             {
@@ -75,9 +75,9 @@ const demos = {
                 trackId: "cistrome-track-4-2",
                 rowInfoPosition: "right",
                 rowLinkPosition: "hidden",
-                infoAttributes: [
-                    {name: "Hierarchical Clustering", type: "tree"},
-                    {name: "Cell Type", type: "nominal"}
+                rowInfoAttributes: [
+                    {field: "Hierarchical Clustering", type: "tree"},
+                    {field: "Cell Type", type: "nominal"}
                 ]
             }
         ]
