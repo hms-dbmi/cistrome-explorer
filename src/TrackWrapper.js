@@ -2,7 +2,6 @@ import React from 'react';
 
 import TrackColTools from './TrackColTools.js';
 import TrackRowInfo from './TrackRowInfo.js';
-import TrackRowLink from './TrackRowLink.js';
 
 // TODO: remove the below fakedata import.
 //       see https://github.com/hms-dbmi/cistrome-higlass-wrapper/issues/26
@@ -29,6 +28,10 @@ export default function TrackWrapper(props) {
         onSelectGenomicInterval,
         register
     } = props;
+
+    // Attributes to visualize based on the position
+    const leftAttrs = options.rowInfoAttributes.filter(d => d.position === "left");
+    const rightAttrs = options.rowInfoAttributes.filter(d => d.position === "right");
 
     if(!multivecTrack || !multivecTrack.tilesetInfo) {
         // The track or track tileset info has not yet loaded.
@@ -68,8 +71,10 @@ export default function TrackWrapper(props) {
     if(options.rowSort && options.rowSort.length > 0) {
         let sortOptions = options.rowSort.slice().reverse();
         sortOptions.forEach((d, i) => {
-            const { field, type, order } = d;
-            if(type === "quantitative") {
+            const { field, type, order, title } = d;
+            if(type === "tree") {
+                // Do nothing for the "tree" type.
+            } else if(type === "quantitative") {
                 transformedRowInfo.sort((a, b) => (a[field] - b[field]) * (order === "ascending" ? 1 : -1));
             } else {
                 transformedRowInfo.sort(function(a, b) {
@@ -88,28 +93,29 @@ export default function TrackWrapper(props) {
     console.log("TrackWrapper.render");
     return (
         <div className="cistrome-hgw-track-wrapper">
-            {options.rowInfoPosition !== "hidden" ? 
+            {leftAttrs.length !== 0 ? 
                 (<TrackRowInfo 
                     rowInfo={transformedRowInfo}
                     trackX={trackX}
                     trackY={trackY}
                     trackHeight={trackHeight}
                     trackWidth={trackWidth}
-                    rowInfoAttributes={options.rowInfoAttributes}
-                    rowInfoPosition={options.rowInfoPosition}
+                    rowInfoAttributes={leftAttrs}
                     rowSort={options.rowSort}
+                    rowInfoPosition={"left"}
                     register={register}
                 />) : null}
-            {options.rowLinkPosition !== "hidden" ? 
-                (<TrackRowLink
+            {rightAttrs.length !== 0 ? 
+                (<TrackRowInfo
                     rowInfo={transformedRowInfo}
                     trackX={trackX}
                     trackY={trackY}
                     trackHeight={trackHeight}
                     trackWidth={trackWidth}
-                    rowLinkAttribute={options.rowLinkAttribute}
-                    rowLinkNameAttribute={options.rowLinkNameAttribute}
-                    rowLinkPosition={options.rowLinkPosition}
+                    rowInfoAttributes={rightAttrs}
+                    rowSort={options.rowSort}
+                    rowInfoPosition={"right"}
+                    register={register}
                 />) : null}
             {options.colToolsPosition !== "hidden" ? 
                 (<TrackColTools

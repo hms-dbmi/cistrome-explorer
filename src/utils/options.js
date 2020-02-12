@@ -14,20 +14,6 @@ const baseSchema = {
             "properties": {
                 "viewId": { "type": "string" },
                 "trackId": { "type": "string" },
-                "rowInfoPosition": {
-                    "type": "string",
-                    "enum": ["hidden", "left", "right"]
-                },
-                "rowLinkPosition": {
-                    "type": "string",
-                    "enum": ["hidden", "left", "right"]
-                },
-                "rowLinkAttribute": {
-                    "type": "string"
-                },
-                "rowLinkNameAttribute": {
-                    "type": "string"
-                },
                 "colToolsPosition": {
                     "type": "string",
                     "enum": ["hidden", "bottom", "top"]
@@ -52,8 +38,17 @@ const baseSchema = {
                 },
                 "type": {
                     "type": "string",
-                    "enum": ["nominal", "quantitative", "tree"],
+                    "enum": ["nominal", "quantitative", "url", "tree"],
                     "description": "The data type of a field"
+                },
+                "position": {
+                    "type": "string",
+                    "enum": ["left", "right"],
+                    "description": "The position to show a data attribute relative to a higlass track"
+                },
+                "title": {
+                    "type": "string",
+                    "description": "The name of a data field to alternatively use for displaying urls"
                 }
             }
         },
@@ -67,7 +62,7 @@ const baseSchema = {
                 },
                 "type": {
                     "type": "string",
-                    "enum": ["nominal", "quantitative"],
+                    "enum": ["nominal", "quantitative", "url"],
                     "description": "The data type of a field"
                 },
                 "order": {
