@@ -4,6 +4,8 @@ import { HiGlassComponent } from 'higlass';
 import register from 'higlass-register';
 import StackedBarTrack from 'higlass-multivec/es/StackedBarTrack.js';
 
+import PubSub from 'pubsub-js';
+import { EVENT } from './constants.js';
 import TrackWrapper from './TrackWrapper.js';
 import Tooltip from './Tooltip.js';
 
@@ -109,6 +111,23 @@ export default function CistromeHGW(props) {
         setOptions(processWrapperOptions(optionsRaw));
     }, [optionsRaw]);
     
+    // Change options by interactions.
+    useEffect(() => {
+        const newOptions = PubSub.subscribe(EVENT.SORT, (msg, data) => {
+            setOptions(processWrapperOptions({
+                ...optionsRaw,
+                rowSort: [{
+                    field: data.field,
+                    type: data.type,
+                    order: data.order
+                }]
+            }));
+        });
+        return () => {
+            PubSub.unsubscribe(newOptions);
+        };
+    });
+
     useEffect(() => {
         hgRef.current.api.on('viewConfig', (newViewConfigString) => {
             const newViewConfig = JSON.parse(newViewConfigString);
@@ -119,7 +138,7 @@ export default function CistromeHGW(props) {
             hgRef.current.api.off('viewConfig');
         };
     }, [hgRef]);
-    
+
     const hgComponent = useMemo(() => {
         const hgOptions = {
             ...hgOptionsBase,
@@ -138,7 +157,6 @@ export default function CistromeHGW(props) {
             />
         );
     }, [viewConfig]);
-
     
     console.log("CistromeHGW.render");
     return (

@@ -11,7 +11,8 @@ export const TRACK_TYPE = Object.freeze({
  * Events for PubSub.
  */
 export const EVENT = Object.freeze({
-    TOOLTIP: "tooltip"
+    TOOLTIP: "tooltip",
+    SORT: "sort"
 });
 
 /*

@@ -32,24 +32,48 @@ const baseSchema = {
                     "type": "string",
                     "enum": ["hidden", "bottom", "top"]
                 },
-                "infoAttributes": {
+                "rowInfoAttributes": {
                     "type": "array",
                     "items": { "$ref": "#/definitions/fieldInfo" }
+                },
+                "rowSort": {
+                    "type": "array",
+                    "items": { "$ref": "#/definitions/sortInfo" }
                 }
             }
         },
         "fieldInfo": {
             "type": "object",
-            "required": ["name", "type"],
+            "required": ["field", "type"],
             "properties": {
-                "name": {
+                "field": {
                     "type": "string",
-                    "description": "The name of data field"
+                    "description": "The name of a data field"
                 },
                 "type": {
                     "type": "string",
                     "enum": ["nominal", "quantitative", "tree"],
                     "description": "The data type of a field"
+                }
+            }
+        },
+        "sortInfo": {
+            "type": "object",
+            "required": ["field", "order"],
+            "properties": {
+                "field": {
+                    "type": "string",
+                    "description": "The name of a data field"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": ["nominal", "quantitative"],
+                    "description": "The data type of a field"
+                },
+                "order": {
+                    "type": "string",
+                    "enum": ["descending", "ascending"],
+                    "description": "The order of sorting"
                 }
             }
         }

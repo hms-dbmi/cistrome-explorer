@@ -16,11 +16,17 @@ const demos = {
             rowInfoPosition: "right",
             rowLinkPosition: "left",
             colToolsPosition: "bottom",
-            infoAttributes: [
-                {name: "Cell Type", type: "nominal"},
-                {name: "Tissue Type", type: "nominal"},
-                {name: "Histone Modification", type: "nominal"},
-                {name: "Species", type: "nominal"}
+            rowInfoAttributes: [
+                {field: "Cell Type", type: "nominal"},
+                {field: "Tissue Type", type: "nominal"},
+                {field: "Histone Modification", type: "nominal"},
+                {field: "Species", type: "nominal"}
+            ],
+            rowSort: [
+                {field: "Species", type: "nominal", order: "ascending"},
+                {field: "Histone Modification", type: "nominal", order: "ascending"},
+                {field: "Tissue Type", type: "nominal", order: "ascending"},
+                {field: "Cell Type", type: "nominal", order: "ascending"}
             ]
         }
     },
@@ -32,11 +38,15 @@ const demos = {
             colToolsPosition: "bottom",
             rowLinkAttribute: "url",
             rowLinkNameAttribute: "id",
-            infoAttributes: [
-                {name: "Hierarchical Clustering", type: "tree"},
-                {name: "Cell Type", type: "nominal"},
-                {name: "Tissue Type", type: "nominal"},
-                {name: "Random 2", type: "quantitative"}
+            rowInfoAttributes: [
+                {field: "Hierarchical Clustering", type: "tree"},
+                {field: "Cell Type", type: "nominal"},
+                {field: "Tissue Type", type: "nominal"},
+                {field: "Random 2", type: "quantitative"}
+            ],
+            rowSort: [
+                {field: "Tissue Type", type: "nominal", order: "ascending"},
+                {field: "Random 2", type: "quantitative", order: "descending"}
             ]
         }
     },
@@ -75,7 +85,7 @@ const demos = {
 };
 
 export default function App() {
-
+    
     const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[1]);
 
     return (

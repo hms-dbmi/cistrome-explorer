@@ -1,12 +1,13 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import range from 'lodash/range';
 import d3 from './utils/d3.js';
 import Two from './utils/two.js';
 
+import PubSub from 'pubsub-js';
 import { EVENT } from './constants.js';
-
-import './TrackRowInfo.scss';
 import { visualizationTrack } from './visualizationTrack.js';
+import TrackControl from './TrackControl.js'
+import './TrackRowInfo.scss';
 
 function destroyTooltip() {
     PubSub.publish(EVENT.TOOLTIP, {
@@ -33,16 +34,18 @@ export default function TrackRowInfo(props) {
         trackX, trackY,
         trackWidth, trackHeight, 
         rowInfo, 
-        infoAttributes,
+        rowInfoAttributes,
         rowInfoPosition,
         register
     } = props;
+
+    const [mouseX, setMouseX] = useState(-1);
 
     // Dimensions
     const isLeft = rowInfoPosition === "left";
     const top = trackY;
     const unitWidth = 100;
-    const width = unitWidth * infoAttributes.length;
+    const width = unitWidth * rowInfoAttributes.length;
     const height = trackHeight;
     const left = isLeft ? trackX - width : trackX + trackWidth;
 
@@ -50,15 +53,22 @@ export default function TrackRowInfo(props) {
     const canvasRef = useRef();
 
     // Determine position of each dimension.
-    let xDomain = [], xRange = [];
-    for(let i = 0; i < infoAttributes.length; i++) {
-        const attribute = isLeft ? infoAttributes[infoAttributes.length - i - 1] : infoAttributes[i];
+    let trackProps = [], xDomain = [], xRange = [];
+    rowInfoAttributes.forEach((attribute, i) => {
+        const fieldInfo = isLeft ? rowInfoAttributes[rowInfoAttributes.length - i - 1] : attribute;
         let currentLeft = unitWidth * i;
 
-        // Domain and range for mouse event
+        trackProps.push({
+            left: currentLeft, top: 0, width: unitWidth, height: height,
+            rowInfo,
+            fieldInfo,
+            isLeft
+        });
+
+        // Domain and range for mouse event.
         xDomain.push(currentLeft + unitWidth);
-        xRange.push(attribute.name);
-    }
+        xRange.push(fieldInfo.field);
+    });
     
     // Scales
     const xScale = d3.scaleThreshold()
@@ -68,36 +78,26 @@ export default function TrackRowInfo(props) {
         .domain(range(rowInfo.length))
         .range([0, height]);
 
+    // Render each track.
     const draw = useCallback((domElement) => {
         const two = new Two({
             width,
             height,
             domElement
         });
-      
-        for(let i = 0; i < infoAttributes.length; i++) {
-            const attribute = isLeft ? infoAttributes[infoAttributes.length - i - 1] : infoAttributes[i];
-            let currentLeft = unitWidth * i;
-
-            visualizationTrack({
-                two, 
-                left: currentLeft, top: 0, width: unitWidth, height: height,
-                rowInfo,
-                attribute,
-                isLeft
-            });
-        }
-
+    
+        trackProps.forEach(d => visualizationTrack({...d, two}));
+        
         two.update();
         return two.teardown;
-    }, [width, height]);
+    }); // [width, height]
 
     register("TrackRowInfo", draw);
 
     useEffect(() => {
         const canvas = canvasRef.current;
         const teardown = draw(canvas);
-
+        
         d3.select(canvas).on("mousemove", () => {
             const mouse = d3.mouse(canvas);
             const mouseX = mouse[0];
@@ -106,9 +106,11 @@ export default function TrackRowInfo(props) {
             const y = yScale.invert(mouseY);
             const x = xScale(mouseX);
             let xVal;
-            if(x !== "m"){
+            if(y !== undefined && x !== undefined){
+                setMouseX(rowInfoAttributes.map(d => d.field).indexOf(x));
                 xVal = rowInfo[y][x];
             } else {
+                setMouseX(-1);
                 destroyTooltip();
                 return;
             }
@@ -122,15 +124,29 @@ export default function TrackRowInfo(props) {
                 content: `${x}: ${xVal}`
             });
         });
-
-        d3.select(canvas).on("mouseout", destroyTooltip)
-
+        d3.select(canvas).on("mouseout", () => destroyTooltip());
         return teardown;
     });
 
+    function onMouseLeave() {
+        setMouseX(-1);
+        destroyTooltip();
+    };
+
+    // Make small control panels for each track.
+    let trackControls = trackProps.map((d, i) => (
+        <TrackControl
+            key={i}
+            top={d.top + 2}
+            left={d.left + 2}
+            isVisible={mouseX === i}
+            fieldInfo={rowInfoAttributes[i]}
+        />
+    ), this);
+
     return (
-        <div 
-            className="cistrome-hgw-child"
+        <div className="cistrome-hgw-child"
+            onMouseLeave={onMouseLeave}
             style={{
                 top: `${top}px`,
                 left: `${left}px`, 
@@ -148,6 +164,7 @@ export default function TrackRowInfo(props) {
                     height: `${height}px`,
                 }}
             />
+            {trackControls}
         </div>
     );
 }

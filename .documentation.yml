@@ -6,6 +6,7 @@ toc:
 - TrackColSelectionInfo
 - TrackColTools
 - TrackRowInfo
+- TrackControl
 - TrackRowLink
 - TrackWrapper
 - name: Functions (internal)

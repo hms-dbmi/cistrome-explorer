@@ -57,23 +57,52 @@ export default function TrackWrapper(props) {
         console.log(e);
     }
 
+    /*
+     * Transform data based on options (e.g., sorting, filtering).
+     */
+    // Filter
+    // ...
+    
+    // Sort
+    let transformedRowInfo = rowInfo.slice();
+    if(options.rowSort && options.rowSort.length > 0) {
+        let sortOptions = options.rowSort.slice().reverse();
+        sortOptions.forEach((d, i) => {
+            const { field, type, order } = d;
+            if(type === "quantitative") {
+                transformedRowInfo.sort((a, b) => (a[field] - b[field]) * (order === "ascending" ? 1 : -1));
+            } else {
+                transformedRowInfo.sort(function(a, b) {
+                    let compared = 0, categoryA = a[field].toUpperCase(), categoryB = b[field].toUpperCase();
+                    if(categoryA > categoryB) {
+                        compared = 1;
+                    } else {
+                        compared = -1;
+                    }
+                    return compared * (order === "ascending" ? 1 : -1);
+                });
+            }
+        });
+    }
+
     console.log("TrackWrapper.render");
     return (
         <div className="cistrome-hgw-track-wrapper">
             {options.rowInfoPosition !== "hidden" ? 
                 (<TrackRowInfo 
-                    rowInfo={rowInfo}
+                    rowInfo={transformedRowInfo}
                     trackX={trackX}
                     trackY={trackY}
                     trackHeight={trackHeight}
                     trackWidth={trackWidth}
-                    infoAttributes={options.infoAttributes}
+                    rowInfoAttributes={options.rowInfoAttributes}
                     rowInfoPosition={options.rowInfoPosition}
+                    rowSort={options.rowSort}
                     register={register}
                 />) : null}
             {options.rowLinkPosition !== "hidden" ? 
                 (<TrackRowLink
-                    rowInfo={rowInfo}
+                    rowInfo={transformedRowInfo}
                     trackX={trackX}
                     trackY={trackY}
                     trackHeight={trackHeight}

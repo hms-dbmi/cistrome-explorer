@@ -11,25 +11,25 @@ export const margin = 5;
  * @prop {number} width The width of this view.
  * @prop {number} height The height of this view.
  * @prop {array} rowInfo Array of JSON objects, one object for each row.
- * @prop {object} attribute The name and type of data field.
+ * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  */
-export function visualizationTrack(props){
+export function visualizationTrack(props) {
     const {
         two,
         left, top, width,
-        attribute,
+        fieldInfo,
         isLeft
     } = props;
 
     // Data, layouts and styles
-    const { name: field, type: fieldType } = attribute;
-    const isNominal = fieldType === "nominal";
+    const { field, type } = fieldInfo;
+    const isNominal = type === "nominal";
     const barAreaWidth = isNominal ? 20 : width - 20;
     const titleFontSize = 12;
 
     // Render proper visualization
-    switch(fieldType) {
+    switch(type) {
         case "nominal": 
         case "quantitative":
             verticalBarTrack(props);
@@ -42,8 +42,6 @@ export function visualizationTrack(props){
     // Title
     const titleLeft = left + (isLeft ? margin : width - margin);
     const titleRotate = isLeft ? -Math.PI/2 : Math.PI/2;
-
-    // Draw a title of each dimension
     const titleText = field;
     const title = two.makeText(titleLeft, top, 12, barAreaWidth, titleText);
     title.fill = "#9A9A9A";
