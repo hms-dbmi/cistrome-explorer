@@ -54,7 +54,7 @@ export function verticalBarTrack(props) {
     rowInfo.forEach((d, i) => {
 
         // To aggregate bars, check if there is a same category on the next row.
-        if(i + 1 < rowInfo.length && d[field] === rowInfo[i+1][field]) {
+        if(type === "nominal" && i + 1 < rowInfo.length && d[field] === rowInfo[i+1][field]) {
             if(aggregateStartIdx === -1) {
                 aggregateStartIdx = i;
             }
