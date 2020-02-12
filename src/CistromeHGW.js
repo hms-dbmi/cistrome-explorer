@@ -6,8 +6,6 @@ import StackedBarTrack from 'higlass-multivec/es/StackedBarTrack.js';
 
 import PubSub from 'pubsub-js';
 import { EVENT } from './constants.js';
-import d3 from './utils/d3.js';
-import { all as icons, createSymbolIcon } from './utils/icons.js'
 import TrackWrapper from './TrackWrapper.js';
 import Tooltip from './Tooltip.js';
 
@@ -160,17 +158,6 @@ export default function CistromeHGW(props) {
             />
         );
     }, [viewConfig]);
-
-    /*
-     * Add SVG icons.
-     */
-    useEffect(() => {
-        const baseSvg = d3.select(baseRef.current)
-            .append('svg')
-            .style('display', 'none');
-
-        icons.forEach(icon => createSymbolIcon(baseSvg, icon.id, icon.paths, icon.viewBox));
-    })
     
     console.log("CistromeHGW.render");
     return (

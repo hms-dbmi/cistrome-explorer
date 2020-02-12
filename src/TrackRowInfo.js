@@ -7,6 +7,7 @@ import PubSub from 'pubsub-js';
 import { EVENT } from './constants.js';
 import './TrackRowInfo.scss';
 import { visualizationTrack } from './visualizationTrack.js';
+import { SEARCH, SORT_ASC, SORT_DESC } from './utils/icons.js';
 
 function destroyTooltip() {
     PubSub.publish(EVENT.TOOLTIP, {
@@ -140,18 +141,19 @@ export default function TrackRowInfo(props) {
                 visibility: mouseX === i ? "visible" : "hidden"
             }}>
             <svg className="chgw-button-sm chgw-button-left"
-                onClick={onSortAscClick}>
+                onClick={onSortAscClick} viewBox={SORT_ASC.viewBox}>
                 <title>Sort rows in ascending order</title>
-                <use xlinkHref="#sort_asc" />
+                <path d={SORT_ASC.path} fill="currentColor"/>
             </svg>
             <svg className="chgw-button-sm chgw-button-middle"
-                onClick={onSortDescClick}>
+                onClick={onSortDescClick} viewBox={SORT_DESC.viewBox}>
                 <title>Sort rows in descending order</title>
-                <use xlinkHref="#sort_desc" />
+                <path d={SORT_DESC.path} fill="currentColor"/>
             </svg>
-            <svg className="chgw-button-sm chgw-button-right">
+            <svg className="chgw-button-sm chgw-button-right"
+                viewBox={SEARCH.viewBox}>
                 <title>Search keywords</title>
-                <use xlinkHref="#search" />
+                <path d={SEARCH.path} fill="currentColor"/>
             </svg>
         </div>
     ), this);
