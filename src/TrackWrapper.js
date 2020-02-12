@@ -29,6 +29,10 @@ export default function TrackWrapper(props) {
         register
     } = props;
 
+    // Attributes to visualize based on the position
+    const leftAttrs = options.rowInfoAttributes.filter(d => d.position === "left");
+    const rightAttrs = options.rowInfoAttributes.filter(d => d.position === "right");
+
     if(!multivecTrack || !multivecTrack.tilesetInfo) {
         // The track or track tileset info has not yet loaded.
         return null;
@@ -87,26 +91,26 @@ export default function TrackWrapper(props) {
     console.log("TrackWrapper.render");
     return (
         <div className="cistrome-hgw-track-wrapper">
-            {options.rowInfoAttributes.map(d => d.position === "left").length !== 0 ? 
+            {leftAttrs.length !== 0 ? 
                 (<TrackRowInfo 
                     rowInfo={transformedRowInfo}
                     trackX={trackX}
                     trackY={trackY}
                     trackHeight={trackHeight}
                     trackWidth={trackWidth}
-                    rowInfoAttributes={options.rowInfoAttributes.filter(d => d.position === "left")}
+                    rowInfoAttributes={leftAttrs}
                     rowSort={options.rowSort}
                     rowInfoPosition={"left"}
                     register={register}
                 />) : null}
-            {options.rowInfoAttributes.map(d => d.position === "right").length !== 0 ? 
+            {rightAttrs.length !== 0 ? 
                 (<TrackRowInfo
                     rowInfo={transformedRowInfo}
                     trackX={trackX}
                     trackY={trackY}
                     trackHeight={trackHeight}
                     trackWidth={trackWidth}
-                    rowInfoAttributes={options.rowInfoAttributes.filter(d => d.position === "right")}
+                    rowInfoAttributes={rightAttrs}
                     rowSort={options.rowSort}
                     rowInfoPosition={"right"}
                     register={register}
