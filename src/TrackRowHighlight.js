@@ -1,13 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import range from 'lodash/range';
 import d3 from './utils/d3.js';
-import Two from './utils/two.js';
-
-import PubSub from 'pubsub-js';
-import { EVENT } from './constants.js';
-import { visualizationTrack } from './visualizationTrack.js';
-import TrackControl from './TrackControl.js'
-import './TrackRowInfo.scss';
 
 
 /**
@@ -45,19 +38,17 @@ export default function TrackRowHighlight(props) {
 
     // Render each track.
     const draw = useCallback((domElement) => {
-        const two = new Two({
-            width,
-            height,
-            domElement
-        });
+        const g = d3.select(domElement).append("g").attr("class", "brush");
 
-        const rect = two.makeRect(0, 0, width, height);
-        rect.fill = "blue";
-        rect.opacity = 0.7;
-    
-        
-        two.update();
-        return two.teardown;
+        const brushed = () => {
+            if(d3.event.sourceEvent.type === "brush") return;
+            // TODO
+        };
+
+        const brush = d3.brushY()
+            .on("brush", brushed);
+
+        g.call(brush);
     }, [width, height]);
 
     register("TrackRowHighlight", draw);
@@ -65,31 +56,21 @@ export default function TrackRowHighlight(props) {
     useEffect(() => {
         const svg = svgRef.current;
         const teardown = draw(svg);
-       
         return teardown;
     });
 
     
     return (
-        <div className="cistrome-hgw-child"
+        <svg
+            ref={svgRef}
             style={{
+                position: 'absolute',
                 top: `${top}px`,
-                left: `${left}px`, 
+                left: `${left}px`,
                 width: `${width}px`,
                 height: `${height}px`,
+                pointerEvents: 'none'
             }}
-        >
-            <svg
-                ref={svgRef}
-                style={{
-                    position: 'relative',
-                    top: 0,
-                    left: 0, 
-                    width: `${width}px`,
-                    height: `${height}px`,
-                    pointerEvents: 'none'
-                }}
-            />
-        </div>
+        />
     );
 }
