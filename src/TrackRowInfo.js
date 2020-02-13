@@ -1,21 +1,24 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+
+import TrackRowInfoVis from "./TrackRowInfoVis.js";
+
 import range from 'lodash/range';
 import d3 from './utils/d3.js';
 import Two from './utils/two.js';
 
 import PubSub from 'pubsub-js';
 import { EVENT } from './constants.js';
-import { visualizationTrack } from './visualizationTrack.js';
-import TrackControl from './TrackControl.js'
-import './TrackRowInfo.scss';
+/*import { visualizationTrack } from './visualizationTrack.js';*/
+/*import TrackControl from './TrackControl.js'*/
+/*import './TrackRowInfo.scss';*/
 
-function destroyTooltip() {
+/*function destroyTooltip() {
     PubSub.publish(EVENT.TOOLTIP, {
         x: null,
         y: null,
         content: null
     });
-}
+}*/
 
 /**
  * Component for visualization of row info attribute values.
@@ -39,7 +42,7 @@ export default function TrackRowInfo(props) {
         register
     } = props;
 
-    const [mouseX, setMouseX] = useState(-1);
+    /*const [mouseX, setMouseX] = useState(-1);*/
 
     // Dimensions
     const isLeft = rowInfoPosition === "left";
@@ -49,8 +52,6 @@ export default function TrackRowInfo(props) {
     const height = trackHeight;
     const left = isLeft ? trackX - width : trackX + trackWidth;
 
-    // Render canvas
-    const canvasRef = useRef();
 
     // Determine position of each dimension.
     let trackProps = [], xDomain = [], xRange = [];
@@ -60,7 +61,6 @@ export default function TrackRowInfo(props) {
 
         trackProps.push({
             left: currentLeft, top: 0, width: unitWidth, height: height,
-            rowInfo,
             fieldInfo,
             isLeft
         });
@@ -71,14 +71,14 @@ export default function TrackRowInfo(props) {
     });
     
     // Scales
-    const xScale = d3.scaleThreshold()
+    /*const xScale = d3.scaleThreshold()
         .domain(xDomain)
-        .range(xRange);
-    const yScale = d3.scaleBand()
+        .range(xRange);*/
+    /*const yScale = d3.scaleBand()
         .domain(range(rowInfo.length))
-        .range([0, height]);
+        .range([0, height]);*/
 
-    // Render each track.
+    /*// Render each track.
     const draw = useCallback((domElement) => {
         const two = new Two({
             width,
@@ -92,9 +92,9 @@ export default function TrackRowInfo(props) {
         return two.teardown;
     }); // [width, height]
 
-    register("TrackRowInfo", draw);
+    register("TrackRowInfo", draw);*/
 
-    useEffect(() => {
+    /*useEffect(() => {
         const canvas = canvasRef.current;
         const teardown = draw(canvas);
         
@@ -144,13 +144,14 @@ export default function TrackRowInfo(props) {
         });
         d3.select(canvas).on("mouseout", () => destroyTooltip());
         return teardown;
-    });
+    });*/
 
-    function onMouseLeave() {
+    /*function onMouseLeave() {
         setMouseX(-1);
         destroyTooltip();
-    };
+    };*/
 
+    /*
     // Make small control panels for each track.
     let trackControls = trackProps.map(function(d, i){ 
         const index = isLeft ? rowInfoAttributes.length - i - 1 : i;
@@ -163,11 +164,12 @@ export default function TrackRowInfo(props) {
                 fieldInfo={rowInfoAttributes[index]}
             />
         )
-    }, this);
+    }, this);*/
 
+    console.log("TrackRowInfo.render");
     return (
-        <div className="cistrome-hgw-child"
-            onMouseLeave={onMouseLeave}
+        <div 
+            className="cistrome-hgw-child"
             style={{
                 top: `${top}px`,
                 left: `${left}px`, 
@@ -175,17 +177,20 @@ export default function TrackRowInfo(props) {
                 height: `${height}px`,
             }}
         >
-            <canvas
-                ref={canvasRef}
-                style={{
-                    position: 'relative',
-                    top: 0,
-                    left: 0, 
-                    width: `${width}px`,
-                    height: `${height}px`,
-                }}
-            />
-            {trackControls}
+            {trackProps.map((d, i) => (
+                <TrackRowInfoVis
+                    key={i}
+                    left={d.left}
+                    top={d.top}
+                    width={d.width}
+                    height={d.height}
+                    isLeft={d.isLeft}
+                    fieldInfo={d.fieldInfo}
+
+                    rowInfo={rowInfo}
+                    register={register}
+                />
+            ))}
         </div>
     );
 }
