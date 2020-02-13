@@ -228,7 +228,7 @@
                   ]
                 },
                 {
-                  "uid": "cistrome-track-1-projection",
+                  "uid": "cistrome-track-1-col-projection",
                   "type": "viewport-projection-horizontal",
                   "fromViewUid": "cistrome-view-1",
                   "options": {
@@ -256,7 +256,7 @@
           "moved": false,
           "static": false
         },
-        "uid": "cistrome-view-1-with-projection"
+        "uid": "cistrome-view-1-with-col-projection"
       }
     ],
     "zoomLocks": {
