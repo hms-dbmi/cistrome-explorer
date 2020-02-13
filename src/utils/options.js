@@ -139,9 +139,6 @@ export function processWrapperOptions(optionsRaw) {
     // Set up the default options:
     const options = {
         [DEFAULT_OPTIONS_KEY]: {
-            rowInfoPosition: "right",
-            rowLinkPosition: "left",
-            rowLinkAttribute: "url",
             colToolsPosition: "bottom",
             rowInfoAttributes: []
         }
