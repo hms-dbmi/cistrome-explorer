@@ -10,7 +10,7 @@ import { schemeSet3, interpolateViridis } from "d3-scale-chromatic";
 import { mouse, event as d3_event } from "d3-selection";
 import { scaleLinear, scaleOrdinal, scaleThreshold } from "d3-scale";
 import { scale as vega_scale } from "vega-scale";
-import { extent } from "d3-array";
+import { extent, bisectRight } from "d3-array";
 import { hsl } from "d3-color";
 import { hierarchy, cluster } from "d3-hierarchy";
 import { brushY } from "d3-brush";
@@ -22,6 +22,7 @@ import { brushY } from "d3-brush";
  * - https://github.com/vega/vega/blob/5d76c88eeead37e4589f9a4278ea1296683f5f68/packages/vega-scale/src/scales/scaleBand.js
  */
 const scaleBand = vega_scale("band");
+const scalePoint = vega_scale("point");
 
 export default {
     get event() { return d3_event; }, // https://stackoverflow.com/a/40048292
@@ -33,8 +34,10 @@ export default {
     scaleLinear,
     scaleOrdinal,
     scaleThreshold,
+    scalePoint,
     scaleBand,
     extent,
+    bisectRight,
     hsl,
     hierarchy,
     cluster,
