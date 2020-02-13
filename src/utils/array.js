@@ -25,3 +25,18 @@ export function modifyItemInArray(array, index, item) {
         ...array.slice(index + 1)
     ];
 }
+
+/**
+ * Remove item from an array stored in a certain index.
+ * @prop {array} array Array to be updated.
+ * @prop {number} index Index of an item to be removed.
+ */
+export function removeItemFromArray(array, index) {
+    return {
+      item: array[index],
+      array: [
+        ...array.slice(0, index),
+        ...array.slice(index + 1)
+      ]
+    };
+  }

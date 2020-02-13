@@ -23,6 +23,9 @@ toc:
 - getSiblingVPHTrackIdsFromViewConfig
 - updateViewConfigOnSelectGenomicInterval
 - resolveIntervalCoordinates
+- insertItemToArray
+- modifyItemInArray
+- removeItemFromArray
 - name: Classes (internal)
 - Two
 - TwoRectangle
