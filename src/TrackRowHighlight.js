@@ -1,16 +1,18 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import range from 'lodash/range';
 import d3 from './utils/d3.js';
+import Two from './utils/two.js';
 
 
 /**
- * Component for visualization of row info attribute values.
+ * Component for visualizing highlighted rows of a multivec track.
  * @prop {number} trackX The track horizontal offset.
  * @prop {number} trackY The track vertical offset.
  * @prop {number} trackWidth The track width.
  * @prop {number} trackHeight The track height.
  * @prop {number} totalNumRows The number of rows.
- * @prop {number} highlitRows Array of highlighted row indices.
+ * @prop {(number[]|null)} selectedRows Array of selected row indices.
+ * @prop {(number[]|null)} highlitRows Array of highlighted row indices.
  * @prop {function} register The function for child components to call to register their draw functions.
  */
 export default function TrackRowHighlight(props) {
@@ -19,6 +21,7 @@ export default function TrackRowHighlight(props) {
         trackX, trackY,
         trackWidth, trackHeight, 
         totalNumRows,
+        selectedRows,
         highlitRows,
         register
     } = props;
@@ -28,61 +31,55 @@ export default function TrackRowHighlight(props) {
     const height = trackHeight;
     const width = trackWidth;
 
-    // Render svg
-    const svgRef = useRef();
+    // Render canvas
+    const canvasRef = useRef();
 
-    const yScale = d3.scalePoint()
-        .domain(range(totalNumRows))
-        .range([0, height])
-        .padding(0.5);
-    
-    const yRange = yScale.domain().map(yScale);
-    const dy = yScale.step() / 2;
+    const yScale = d3.scaleBand()
+        .range([0, height]);
+
+    if(selectedRows) {
+        // Non-null selectedRows means a subset of rows are selected, potentially in a particular order.
+        yScale.domain(selectedRows);
+    } else {
+        // Null selectedRows means all rows are selected, in the default order.
+        yScale.domain(range(totalNumRows));
+    }
+
+    const rowHeight = yScale.bandwidth();
 
     // Render each track.
     const draw = useCallback((domElement) => {
-        d3.select(domElement).selectAll("g").remove();
-        const g = d3.select(domElement).append("g").attr("class", "brush");
+        const two = new Two({
+            width,
+            height,
+            domElement
+        });
 
-        const brush = d3.brushY()
-            .extent([[0, 0], [width, height]]);
-
-        function brushed() {
-            if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush") return;
-            const selection = d3.event.selection;
-            if(selection) {
-                const i0 = d3.bisectRight(yRange, selection[0]);
-                const i1 = d3.bisectRight(yRange, selection[1]) - 1;
-                const y0 = yRange[i0] - dy;
-                const y1 = yRange[i1] + dy;
-                d3.select(this).call(brush.move, y1 > y0 ? [y0, y1] : null);
+        if(highlitRows) {
+            for(let i of highlitRows) {
+                const rect = two.makeRect(0, yScale(i), width, rowHeight);
+                rect.stroke = null;
+                rect.fill = "#000";
+                rect.opacity = 0.2;
             }
-        };
-        
-        g.call(brush);
-        brush.on('brush', null);
-        // Do initial brush move to highlight all rows.
-        g.call(brush.move, yScale.range());
-        brush.on("brush", brushed);
+        }
 
-        g.selectAll('.overlay')
-            .style('pointer-events', 'none');
-        /*g.selectAll('.selection')
-            .style('pointer-events', 'none');*/
-        
-    }, [width, height]);
+        two.update();
+        return two.teardown;
+    }, [width, height, totalNumRows, selectedRows, highlitRows]);
 
     register("TrackRowHighlight", draw);
 
     useEffect(() => {
-        const svg = svgRef.current;
-        const teardown = draw(svg);
+        const canvas = canvasRef.current;
+        const teardown = draw(canvas);
         return teardown;
     });
 
+    console.log("TrackRowHighlight.render");
     return (
-        <svg
-            ref={svgRef}
+        <canvas
+            ref={canvasRef}
             style={{
                 position: 'absolute',
                 top: `${top}px`,

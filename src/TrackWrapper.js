@@ -143,7 +143,8 @@ export default function TrackWrapper(props) {
                 trackHeight={trackHeight}
                 trackWidth={trackWidth}
                 totalNumRows={totalNumRows}
-                highlitRows={[1, 2, 3]}
+                selectedRows={selectedRows}
+                highlitRows={highlitRows}
                 register={register}
             />
         </div>

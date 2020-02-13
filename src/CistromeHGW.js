@@ -13,8 +13,7 @@ import { processWrapperOptions, DEFAULT_OPTIONS_KEY } from './utils/options.js';
 import { 
     getHMTrackIdsFromViewConfig, 
     getSiblingVPHTrackIdsFromViewConfig,
-    updateViewConfigOnSelectGenomicInterval,
-    updateViewConfigOnSelectRowInterval
+    updateViewConfigOnSelectGenomicInterval
 } from './utils/viewconf.js';
 
 import './CistromeHGW.scss';
