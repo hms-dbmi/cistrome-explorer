@@ -2,6 +2,7 @@ import merge from 'lodash/merge';
 import cloneDeep from 'lodash/cloneDeep';
 import omit from 'lodash/omit';
 import Ajv from 'ajv';
+import { insertItemToArray, modifyItemInArray } from './array.js'
 
 export const DEFAULT_OPTIONS_KEY = "default";
 
@@ -192,4 +193,44 @@ export function processWrapperOptions(optionsRaw) {
     }
 
     return options;
+}
+
+/**
+ * Update rowSort information in options.
+ * @param {(object|object[]|null)} options The raw value of the options prop.
+ * @param {object} sortInfo The name and type of data field and sorting order.
+ */
+export function updateRowSortOptions(options, sortInfo) {
+    let optionsNewSort;
+    let newRowSort = [{
+        field: sortInfo.field,
+        type: sortInfo.type,
+        order: sortInfo.order
+    }];
+
+    if(Array.isArray(options)){
+        let optionsRaw = options.slice();
+        let globalDefaults = optionsRaw.find(o => (o.viewId === DEFAULT_OPTIONS_KEY && o.trackId === DEFAULT_OPTIONS_KEY));
+        
+        // If there is no globar defaults, add one.
+        if(!globalDefaults) {
+            globalDefaults = {
+                viewId: DEFAULT_OPTIONS_KEY,
+                trackId: DEFAULT_OPTIONS_KEY
+            };
+            optionsRaw = insertItemToArray(optionsRaw, 0, globalDefaults);
+        }
+
+        const index = optionsRaw.indexOf(globalDefaults);
+        optionsNewSort = modifyItemInArray(optionsRaw, index, {
+            ...globalDefaults,
+            rowSort: newRowSort
+        });
+    } else {
+        optionsNewSort = {
+            ...options,
+            rowSort: newRowSort
+        };
+    }
+    return optionsNewSort;
 }

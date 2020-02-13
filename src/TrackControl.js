@@ -17,19 +17,19 @@ export default function TrackControl(props){
     } = props;
 
     function onSortAscClick() {
-        const { field, type } = fieldInfo;
+        const { field, type, title } = fieldInfo;
         if(type === "tree") return;
         PubSub.publish(EVENT.SORT, {
-            field,
+            field: (type === "url" && title ? title : field),
             type,
             order: "ascending"
         });
     }
     function onSortDescClick() {
-        const { field, type } = fieldInfo;
+        const { field, type, title } = fieldInfo;
         if(type === "tree") return;
         PubSub.publish(EVENT.SORT, {
-            field,
+            field: (type === "url" && title ? title : field),
             type,
             order: "descending"
         });
