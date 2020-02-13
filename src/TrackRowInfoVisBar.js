@@ -8,11 +8,21 @@ import { EVENT } from "./constants.js";
 import { destroyTooltip } from "./utils/tooltip.js";
 import { drawVisTitle } from "./utils/vis.js";
 
-import TrackControl from './TrackControl.js';
+import TrackRowInfoControl from './TrackRowInfoControl.js';
 
 export const margin = 5;
 
-
+/**
+ * Component for visualization of row info quantitative or nominal attribute values.
+ * @prop {number} left The left position of this view.
+ * @prop {number} top The top position of this view.
+ * @prop {number} width The width of this view.
+ * @prop {number} height The height of this view.
+ * @prop {object[]} rowInfo Array of JSON objects, one object for each row.
+ * @prop {object} fieldInfo The name and type of data field.
+ * @prop {boolean} isLeft Is this view on the left side of the track?
+ * @prop {function} register The function for child components to call to register their draw functions.
+ */
 export default function TrackRowInfoVisBar(props) {
     const {
         left, top, width, height,
@@ -172,7 +182,7 @@ export default function TrackRowInfoVisBar(props) {
                     position: 'relative'
                 }}
             />
-            <TrackControl
+            <TrackRowInfoControl
                 isLeft={isLeft}
                 isVisible={mouseX !== null}
                 fieldInfo={fieldInfo}

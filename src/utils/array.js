@@ -39,4 +39,4 @@ export function removeItemFromArray(array, index) {
         ...array.slice(index + 1)
       ]
     };
-  }
+}

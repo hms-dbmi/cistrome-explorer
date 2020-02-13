@@ -8,7 +8,7 @@ import { EVENT } from "./constants.js";
 import { destroyTooltip } from "./utils/tooltip.js";
 import { drawVisTitle } from "./utils/vis.js";
 
-import TrackControl from './TrackControl.js';
+import TrackRowInfoControl from './TrackRowInfoControl.js';
 
 const margin = 5;
 
@@ -154,7 +154,7 @@ export default function TrackRowInfoVisLink(props) {
                     position: 'relative'
                 }}
             />
-            <TrackControl
+            <TrackRowInfoControl
                 isLeft={isLeft}
                 isVisible={mouseX !== null}
                 fieldInfo={fieldInfo}

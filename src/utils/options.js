@@ -199,6 +199,7 @@ export function processWrapperOptions(optionsRaw) {
  * Update rowSort information in options.
  * @param {(object|object[]|null)} options The raw value of the options prop.
  * @param {object} sortInfo The name and type of data field and sorting order.
+ * @returns {(object|object[])} The new options object or array.
  */
 export function updateRowSortOptions(options, sortInfo) {
     let optionsNewSort;

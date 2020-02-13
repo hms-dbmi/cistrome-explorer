@@ -5,7 +5,7 @@ toc:
 - Tooltip
 - TrackColSelectionInfo
 - TrackColTools
-- TrackControl
+- TrackRowInfoControl
 - TrackRowHighlight
 - TrackRowInfo
 - TrackRowInfoVisBar

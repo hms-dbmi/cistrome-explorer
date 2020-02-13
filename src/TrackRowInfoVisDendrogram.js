@@ -9,7 +9,7 @@ import { destroyTooltip } from "./utils/tooltip.js";
 import { drawVisTitle } from "./utils/vis.js";
 import { matrixToTree } from './utils/tree.js';
 
-import TrackControl from './TrackControl.js';
+import TrackRowInfoControl from './TrackRowInfoControl.js';
 
 /**
  * Component for visualization of row info hierarchies.
@@ -157,7 +157,7 @@ export default function TrackRowInfoVisDendrogram(props) {
                     position: 'relative'
                 }}
             />
-            <TrackControl
+            <TrackRowInfoControl
                 isLeft={isLeft}
                 isVisible={mouseX !== null}
                 fieldInfo={fieldInfo}

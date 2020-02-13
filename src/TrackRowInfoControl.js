@@ -3,14 +3,14 @@ import PubSub from 'pubsub-js';
 
 import { EVENT } from './constants.js';
 import { SEARCH, SORT_ASC, SORT_DESC } from './utils/icons.js';
-import './TrackControl.scss';
+import './TrackRowInfoControl.scss';
 
 /**
- * Component to control each vertical track.
+ * Component with control buttons for each vertical track (for sorting, searching, etc).
  * @prop {boolean} isVisible The visibility of the control.
  * @prop {object} fieldInfo JSON object of the name and type of an attribute.
  */
-export default function TrackControl(props){
+export default function TrackRowInfoControl(props){
     const {
        isVisible, 
        fieldInfo
