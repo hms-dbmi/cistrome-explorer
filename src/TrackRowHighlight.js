@@ -50,6 +50,8 @@ export default function TrackRowHighlight(props) {
             if(selection) {
                 const i = selection.map(yScale.invert);
                 d3.select(this).call(brush.move, i.map(yScale));
+                // TODO: rounding
+                // https://observablehq.com/@d3/brush-snapping?collection=@d3/d3-brush
             }
         };
 
