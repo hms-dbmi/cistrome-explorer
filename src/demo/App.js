@@ -51,7 +51,10 @@ const demos = {
             {
                 viewId: "default",
                 trackId: "default",
-                colToolsPosition: "bottom"
+                colToolsPosition: "bottom",
+                rowSort: [
+                    {field: "Random 2", type: "quantitative", order: "ascending"}
+                ]
             },
             {
                 viewId: "cistrome-view-4-1",

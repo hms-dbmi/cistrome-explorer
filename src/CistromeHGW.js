@@ -9,7 +9,7 @@ import { EVENT } from './constants.js';
 import TrackWrapper from './TrackWrapper.js';
 import Tooltip from './Tooltip.js';
 
-import { processWrapperOptions, DEFAULT_OPTIONS_KEY } from './utils/options.js';
+import { processWrapperOptions, DEFAULT_OPTIONS_KEY, updateRowSortOptions } from './utils/options.js';
 import { 
     getHMTrackIdsFromViewConfig, 
     getSiblingVPHTrackIdsFromViewConfig,
@@ -122,14 +122,7 @@ export default function CistromeHGW(props) {
     // Change options by interactions.
     useEffect(() => {
         const newOptions = PubSub.subscribe(EVENT.SORT, (msg, data) => {
-            setOptions(processWrapperOptions({
-                ...optionsRaw,
-                rowSort: [{
-                    field: data.field,
-                    type: data.type,
-                    order: data.order
-                }]
-            }));
+            setOptions(processWrapperOptions(updateRowSortOptions(optionsRaw, data)));
         });
         return () => {
             PubSub.unsubscribe(newOptions);

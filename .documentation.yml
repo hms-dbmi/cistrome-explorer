@@ -16,12 +16,16 @@ toc:
 - urlTrack
 - validateWrapperOptions
 - processWrapperOptions
+- updateRowSortOptions
 - getRetinaRatio
 - traverseViewConfig
 - getHMTrackIdsFromViewConfig
 - getSiblingVPHTrackIdsFromViewConfig
 - updateViewConfigOnSelectGenomicInterval
 - resolveIntervalCoordinates
+- insertItemToArray
+- modifyItemInArray
+- removeItemFromArray
 - name: Classes (internal)
 - Two
 - TwoRectangle
