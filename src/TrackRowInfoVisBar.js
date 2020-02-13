@@ -70,9 +70,7 @@ export default function TrackRowInfoVisBar(props) {
         const teardown = draw(canvas);
 
         d3.select(canvas).on("mousemove", () => {
-            const mouse = d3.mouse(canvas);
-            const mouseX = mouse[0];
-            const mouseY = mouse[1];
+            const [mouseX, mouseY] = d3.mouse(canvas);
 
             const y = yScale.invert(mouseY);
             let fieldVal;
@@ -94,9 +92,12 @@ export default function TrackRowInfoVisBar(props) {
                 content: `${field}: ${fieldVal}`
             });
         });
+
+        // Handle mouse leave.
         d3.select(canvas).on("mouseout", destroyTooltip);
         d3.select(div).on("mouseleave", () => setMouseX(null));
 
+        // Clean up.
         return () => {
             teardown();
             d3.select(div).on("mouseleave", null);

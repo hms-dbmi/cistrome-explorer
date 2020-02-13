@@ -70,7 +70,7 @@ export default function TrackRowInfoVisLink(props) {
         return two.teardown;
     });
     
-    register("TrackRowInfoVisBar", draw);
+    register("TrackRowInfoVisLink", draw);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -78,9 +78,7 @@ export default function TrackRowInfoVisLink(props) {
         const teardown = draw(canvas);
 
         d3.select(canvas).on("mousemove", () => {
-            const mouse = d3.mouse(canvas);
-            const mouseX = mouse[0];
-            const mouseY = mouse[1];
+            const [mouseX, mouseY] = d3.mouse(canvas);
 
             const y = yScale.invert(mouseY);
             let fieldVal;
@@ -102,6 +100,18 @@ export default function TrackRowInfoVisLink(props) {
                 content: `${field}: ${fieldVal}`
             });
         });
+
+        // Handle mouse click interaction to visit links.
+        d3.select(canvas).on("click", () => {
+            const [mouseX, mouseY] = d3.mouse(canvas);
+
+            const y = yScale.invert(mouseY);
+            if(y !== undefined) {
+               window.open(rowInfo[y][field]);
+            }
+        });
+
+        // Handle mouse leave.
         d3.select(canvas).on("mouseout", destroyTooltip);
         d3.select(div).on("mouseleave", () => setMouseX(null));
 
@@ -111,7 +121,7 @@ export default function TrackRowInfoVisLink(props) {
         };
     }, [top, left, width, height]);
 
-    console.log("TrackRowInfoVis.render");
+    console.log("TrackRowInfoVisLink.render");
     return (
         <div
             ref={divRef}

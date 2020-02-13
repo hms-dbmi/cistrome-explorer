@@ -70,9 +70,7 @@ export default function TrackRowInfoVisDendrogram(props) {
         const teardown = draw(canvas);
 
         d3.select(canvas).on("mousemove", () => {
-            const mouse = d3.mouse(canvas);
-            const mouseX = mouse[0];
-            const mouseY = mouse[1];
+            const [mouseX, mouseY] = d3.mouse(canvas);
 
             const y = yScale.invert(mouseY);
             let fieldVal;
