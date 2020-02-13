@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React from 'react';
 
 import TrackRowInfoVisBar from './TrackRowInfoVisBar.js';
 import TrackRowInfoVisLink from './TrackRowInfoVisLink.js';
@@ -12,13 +12,13 @@ const fieldTypeToVisComponent = {
 };
 
 /**
- * Component for visualization of row info attribute values.
+ * Parent component for visualization of row info attribute values.
  * @prop {number} trackX The track horizontal offset.
  * @prop {number} trackY The track vertical offset.
  * @prop {number} trackWidth The track width.
  * @prop {number} trackHeight The track height.
  * @prop {array} rowInfo Array of JSON objects, one object for each row.
- * @prop {array} infoAttributes Array of JSON object, one object for the names and types of each attribute.
+ * @prop {array} rowInfoAttributes Array of JSON object, one object for the names and types of each attribute.
  * @prop {string} rowInfoPosition The value of the `rowInfoPosition` option.
  * @prop {function} register The function for child components to call to register their draw functions.
  */
