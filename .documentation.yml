@@ -5,14 +5,15 @@ toc:
 - Tooltip
 - TrackColSelectionInfo
 - TrackColTools
-- TrackRowInfo
 - TrackControl
-- TrackRowLink
+- TrackRowHighlight
+- TrackRowInfo
 - TrackWrapper
 - name: Functions (internal)
 - visualizationTrack
 - verticalBarTrack
 - dendrogramTrack
+- urlTrack
 - validateWrapperOptions
 - processWrapperOptions
 - getRetinaRatio
@@ -20,7 +21,6 @@ toc:
 - getHMTrackIdsFromViewConfig
 - getSiblingVPHTrackIdsFromViewConfig
 - updateViewConfigOnSelectGenomicInterval
-- updateViewConfigOnSelectRowInterval
 - resolveIntervalCoordinates
 - name: Classes (internal)
 - Two
