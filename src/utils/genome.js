@@ -36,4 +36,4 @@ export function resolveIntervalCoordinates(coordSystem, absStart, absEnd) {
             reject();
         });
     });
-};
+}

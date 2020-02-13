@@ -121,13 +121,14 @@ export default function CistromeHGW(props) {
     
     // Change options by interactions.
     useEffect(() => {
-        const newOptions = PubSub.subscribe(EVENT.SORT, (msg, data) => {
-            setOptions(processWrapperOptions(updateRowSortOptions(optionsRaw, data)));
+        const sortToken = PubSub.subscribe(EVENT.SORT, (msg, data) => {
+            const newOptions = processWrapperOptions(updateRowSortOptions(optionsRaw, data));
+            setOptions(newOptions);
         });
         return () => {
-            PubSub.unsubscribe(newOptions);
+            PubSub.unsubscribe(sortToken);
         };
-    });
+    }, [optionsRaw]);
 
     useEffect(() => {
         hgRef.current.api.on('viewConfig', (newViewConfigString) => {
