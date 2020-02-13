@@ -55,6 +55,8 @@ export default function CistromeHGW(props) {
     const [options, setOptions] = useState({});
     const [trackIds, setTrackIds] = useState([]);
     const [siblingTrackIds, setSiblingTrackIds] = useState({});
+    const [selectedRows, setSelectedRows] = useState({});
+    const [highlitRows, setHighlitRows] = useState({});
 
     /*
      * Function to call when the view config has changed.
@@ -65,12 +67,18 @@ export default function CistromeHGW(props) {
     const onViewConfig = useCallback((newViewConfig) => {
         const newTrackIds = getHMTrackIdsFromViewConfig(newViewConfig);
         const newSiblingTrackIds = {};
+        const newSelectedRows = {};
+        const newHighlitRows = {};
         for(let trackId of newTrackIds) {
             // Each trackId is actually an array `[viewId, trackId]`, which is why we want trackId[1].
             newSiblingTrackIds[trackId[1]] = getSiblingVPHTrackIdsFromViewConfig(newViewConfig, trackId[1]);
+            newSelectedRows[trackId[1]] = null;
+            newHighlitRows[trackId[1]] = null;
         }
         setTrackIds(newTrackIds);
         setSiblingTrackIds(newSiblingTrackIds);
+        setSelectedRows(newSelectedRows);
+        setHighlitRows(newHighlitRows);
     }, []);
 
     /*
@@ -169,6 +177,8 @@ export default function CistromeHGW(props) {
                     multivecTrack={getTrackObject(viewId, trackId)}
                     combinedTrack={(combinedTrackId ? getTrackObject(viewId, combinedTrackId) : null)}
                     siblingTracks={siblingTrackIds[trackId] ? siblingTrackIds[trackId].map(d => getTrackObject(viewId, d[1])) : []}
+                    selectedRows={selectedRows[trackId] ? selectedRows[trackId] : null}
+                    highlitRows={highlitRows[trackId] ? highlitRows[trackId] : null}
                     onSelectGenomicInterval={() => {
                         const currViewConfig = hgRef.current.api.getViewConfig();
                         const newViewConfig = updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, trackId);

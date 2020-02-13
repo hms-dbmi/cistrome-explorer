@@ -4,7 +4,7 @@ import { CistromeHGW } from '../index.js';
 
 import hgDemoViewConfig1 from '../viewconfigs/horizontal-multivec-1.json';
 import hgDemoViewConfig2 from '../viewconfigs/horizontal-multivec-2.json';
-import hgDemoViewConfig4 from '../viewconfigs/horizontal-multivec-4.json';
+import hgDemoViewConfig3 from '../viewconfigs/horizontal-multivec-4.json';
 
 
 import './App.scss';
@@ -45,8 +45,8 @@ const demos = {
             ]
         }
     },
-    "Demo 4": {
-        viewConfig: hgDemoViewConfig4,
+    "Demo 3": {
+        viewConfig: hgDemoViewConfig3,
         options: [
             {
                 viewId: "default",
