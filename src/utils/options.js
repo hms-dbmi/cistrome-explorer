@@ -201,14 +201,15 @@ export function processWrapperOptions(optionsRaw) {
  * @param {object} sortInfo The name and type of data field and sorting order.
  */
 export function updateRowSortOptions(options, sortInfo) {
-    let optionsRaw = options.slice(), optionsNewSort;
+    let optionsNewSort;
     let newRowSort = [{
         field: sortInfo.field,
         type: sortInfo.type,
         order: sortInfo.order
     }];
 
-    if(Array.isArray(optionsRaw)){
+    if(Array.isArray(options)){
+        let optionsRaw = options.slice();
         let globalDefaults = optionsRaw.find(o => (o.viewId === DEFAULT_OPTIONS_KEY && o.trackId === DEFAULT_OPTIONS_KEY));
         
         // If there is no globar defaults, add one.
@@ -227,7 +228,7 @@ export function updateRowSortOptions(options, sortInfo) {
         });
     } else {
         optionsNewSort = {
-            ...optionsRaw,
+            ...options,
             rowSort: newRowSort
         };
     }
