@@ -1,17 +1,27 @@
 import React, { useRef, useCallback, useEffect, useState } from "react";
-import Two from "./utils/two.js";
 import range from "lodash/range";
 import PubSub from "pubsub-js";
+
 import d3 from "./utils/d3.js";
-import { destroyTooltip } from "./utils/tooltip.js";
+import Two from "./utils/two.js";
 import { EVENT } from "./constants.js";
+import { destroyTooltip } from "./utils/tooltip.js";
+import { drawVisTitle } from "./utils/vis.js";
+import { matrixToTree } from './utils/tree.js';
 
 import TrackControl from './TrackControl.js';
 
-
-export const margin = 5;
-
-
+/**
+ * Component for visualization of row info hierarchies.
+ * @prop {number} left The left position of this view.
+ * @prop {number} top The top position of this view.
+ * @prop {number} width The width of this view.
+ * @prop {number} height The height of this view.
+ * @prop {object[]} rowInfo Array of JSON objects, one object for each row.
+ * @prop {object} fieldInfo The name and type of data field.
+ * @prop {boolean} isLeft Is this view on the left side of the track?
+ * @prop {function} register The function for child components to call to register their draw functions.
+ */
 export default function TrackRowInfoVisDendrogram(props) {
     const {
         left, top, width, height,
@@ -26,10 +36,8 @@ export default function TrackRowInfoVisDendrogram(props) {
     const [mouseX, setMouseX] = useState(null);
 
     // Data, layouts and styles
-    const { field, type } = fieldInfo;
-    const isNominal = type === "nominal";
-    const barAreaWidth = isNominal ? 20 : width - 20;
-    const titleFontSize = 12;
+    const { field } = fieldInfo;
+    const isNominal = false;
 
     const yScale = d3.scaleBand()
         .domain(range(rowInfo.length))
@@ -42,27 +50,53 @@ export default function TrackRowInfoVisDendrogram(props) {
             domElement
         });
 
-        // Title
-        const titleLeft = (isLeft ? margin : width - margin);
-        const titleRotate = isLeft ? -Math.PI/2 : Math.PI/2;
-        const titleText = field;
-        const title = two.makeText(titleLeft, top, 12, barAreaWidth, titleText);
-        title.fill = "#9A9A9A";
-        title.fontsize = titleFontSize;
-        title.align = isLeft ? "end" : "start";
-        title.baseline = "top";
-        title.rotation = titleRotate;
+        drawVisTitle(field, { two, isLeft, isNominal, width });
 
+        const hierarchyData = matrixToTree(rowInfo.map(d => d[field]));
+        const root = d3.hierarchy(hierarchyData);
 
+        const treeLayout = d3.cluster()
+            .size([height, width])
+            .separation(() => 1);
+        treeLayout(root);
+
+        const descendants = root.descendants();
+
+        let pathFunction;
+        if(isLeft){
+            pathFunction = (d) => {
+                return two.makePath(
+                    left + d.parent.y, top + d.parent.x,
+                    left + d.parent.y, top + d.x,
+                    left + d.y, top + d.x,
+                    left + d.parent.y, top + d.x
+                );
+            }
+        } else {
+            pathFunction = (d) => {
+                return two.makePath(
+                    left + width -  d.parent.y, top + d.parent.x,
+                    left + width - d.parent.y, top + d.x,
+                    left + width - d.y, top + d.x,
+                    left + width - d.parent.y, top + d.x
+                );
+            }
+        }
         
-
-
-
+        descendants.forEach((d, i) => {
+            if(i > 0) {
+                const path = pathFunction(d);
+                path.stroke = "#555";
+                path.opacity = 0.6;
+                path.linewidth = 1.5;
+            }
+        });
+        
         two.update();
         return two.teardown;
     });
     
-    register("TrackRowInfoVisBar", draw);
+    register("TrackRowInfoVisDendrogram", draw);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -99,9 +133,9 @@ export default function TrackRowInfoVisDendrogram(props) {
             teardown();
             d3.select(div).on("mouseleave", null);
         };
-    }, [top, left, width, height]);
+    }, [top, left, width, height, rowInfo]);
 
-    console.log("TrackRowInfoVis.render");
+    console.log("TrackRowInfoVisDendrogram.render");
     return (
         <div
             ref={divRef}

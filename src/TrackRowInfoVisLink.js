@@ -12,6 +12,17 @@ import TrackControl from './TrackControl.js';
 
 const margin = 5;
 
+/**
+ * Component for visualization of row info URL values.
+ * @prop {number} left The left position of this view.
+ * @prop {number} top The top position of this view.
+ * @prop {number} width The width of this view.
+ * @prop {number} height The height of this view.
+ * @prop {object[]} rowInfo Array of JSON objects, one object for each row.
+ * @prop {object} fieldInfo The name and type of data field.
+ * @prop {boolean} isLeft Is this view on the left side of the track?
+ * @prop {function} register The function for child components to call to register their draw functions.
+ */
 export default function TrackRowInfoVisLink(props) {
     const {
         left, top, width, height,
@@ -26,8 +37,8 @@ export default function TrackRowInfoVisLink(props) {
     const [mouseX, setMouseX] = useState(null);
 
     // Data, layouts and styles
-    const { field, type, title } = fieldInfo;
-    const isNominal = type === "nominal";
+    const { field, title } = fieldInfo;
+    const isNominal = false;
     
     const fontSize = 10;
     const textAlign = isLeft ? "end" : "start";
@@ -119,7 +130,7 @@ export default function TrackRowInfoVisLink(props) {
             teardown();
             d3.select(div).on("mouseleave", null);
         };
-    }, [top, left, width, height]);
+    }, [top, left, width, height, rowInfo]);
 
     console.log("TrackRowInfoVisLink.render");
     return (

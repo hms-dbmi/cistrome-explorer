@@ -1,6 +1,14 @@
 
 
-
+/**
+ * Common function for rendering the title text for a vertical visualization component.
+ * @prop {string} text The title text content.
+ * @prop {object} options
+ * @prop {Two} options.two
+ * @prop {boolean} options.isLeft
+ * @prop {boolean} options.isNominal
+ * @prop {number} options.width
+ */
 export function drawVisTitle(text, { two, isLeft, isNominal, width }) {
     const margin = 5;
     const barAreaWidth = isNominal ? 20 : width - 20;

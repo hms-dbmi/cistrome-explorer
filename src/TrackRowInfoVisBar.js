@@ -1,13 +1,14 @@
 import React, { useRef, useCallback, useEffect, useState } from "react";
-import Two from "./utils/two.js";
 import range from "lodash/range";
 import PubSub from "pubsub-js";
+
 import d3 from "./utils/d3.js";
-import { destroyTooltip } from "./utils/tooltip.js";
+import Two from "./utils/two.js";
 import { EVENT } from "./constants.js";
+import { destroyTooltip } from "./utils/tooltip.js";
+import { drawVisTitle } from "./utils/vis.js";
 
 import TrackControl from './TrackControl.js';
-
 
 export const margin = 5;
 
@@ -28,12 +29,12 @@ export default function TrackRowInfoVisBar(props) {
     // Data, layouts and styles
     const { field, type } = fieldInfo;
     const isNominal = type === "nominal";
-    const barAreaWidth = isNominal ? 20 : width - 20;
-    const titleFontSize = 12;
+   
 
     const yScale = d3.scaleBand()
         .domain(range(rowInfo.length))
         .range([0, height]);
+    const rowHeight = yScale.bandwidth();
 
     const draw = useCallback((domElement) => {
         const two = new Two({
@@ -42,21 +43,66 @@ export default function TrackRowInfoVisBar(props) {
             domElement
         });
 
-        // Title
-        const titleLeft = (isLeft ? margin : width - margin);
-        const titleRotate = isLeft ? -Math.PI/2 : Math.PI/2;
-        const titleText = field;
-        const title = two.makeText(titleLeft, top, 12, barAreaWidth, titleText);
-        title.fill = "#9A9A9A";
-        title.fontsize = titleFontSize;
-        title.align = isLeft ? "end" : "start";
-        title.baseline = "top";
-        title.rotation = titleRotate;
+        drawVisTitle(field, { two, isLeft, isNominal, width });
 
-
+        const barAreaWidth = isNominal ? 20 : width - 20;
+        const textAreaWidth = isNominal ? 50 : 20;
+        const fontSize = 10;
         
+        // Scales
+        const valueExtent = [0, d3.extent(rowInfo.map(d => d[field]))[1]];   // Zero baseline
+       
+        const xScale = d3.scaleLinear()
+            .domain(valueExtent)
+            .range([0, barAreaWidth]);
 
+        const colorScale = isNominal ? 
+            d3.scaleOrdinal()
+                .domain(Array.from(new Set(rowInfo.map(d => d[field]))).sort()) 
+                .range(d3.schemeSet3) : 
+            d3.scaleLinear()
+                .domain(valueExtent)
+                .range([0, 1]);
+    
 
+        // Render visual components for each row (i.e., bars and texts).
+        const textAlign = isLeft ? "end" : "start";
+        let aggregateStartIdx = -1, sameCategoriesNearby = 1;
+
+        rowInfo.forEach((d, i) => {
+            // To aggregate bars, check if there is a same category on the next row.
+            if(type === "nominal" && i + 1 < rowInfo.length && d[field] === rowInfo[i+1][field]) {
+                if(aggregateStartIdx === -1) {
+                    aggregateStartIdx = i;
+                }
+                sameCategoriesNearby++;
+                return;
+            }
+
+            const barTop = aggregateStartIdx !== -1 ? yScale(aggregateStartIdx) : yScale(i);
+            const barHeight = rowHeight * sameCategoriesNearby;
+            const barWidth = isNominal ? barAreaWidth : xScale(d[field]);        
+            const barLeft = (isLeft ? width - barWidth : 0);
+            const textLeft = (isLeft ? width - barWidth - margin : barWidth + margin);
+            const color = isNominal ? colorScale(d[field]) : 
+                d3.interpolateViridis(colorScale(d[field]));
+
+            const rect = two.makeRect(barLeft, barTop, barWidth, barHeight);
+            rect.fill = color;
+
+            // Render text labels when the space is enough.
+            if(barHeight >= fontSize){
+                const text = two.makeText(textLeft, barTop + barHeight/2, textAreaWidth, barHeight, d[field]);
+                text.fill = d3.hsl(color).darker(3);
+                text.fontsize = fontSize;
+                text.align = textAlign;
+                text.baseline = "middle";
+                text.overflow = "ellipsis";
+            }
+
+            aggregateStartIdx = -1;
+            sameCategoriesNearby = 1;
+        });
 
         two.update();
         return two.teardown;
@@ -102,9 +148,9 @@ export default function TrackRowInfoVisBar(props) {
             teardown();
             d3.select(div).on("mouseleave", null);
         };
-    }, [top, left, width, height]);
+    }, [top, left, width, height, rowInfo]);
 
-    console.log("TrackRowInfoVis.render");
+    console.log("TrackRowInfoVisBar.render");
     return (
         <div
             ref={divRef}

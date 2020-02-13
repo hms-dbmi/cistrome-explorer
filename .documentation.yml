@@ -8,12 +8,11 @@ toc:
 - TrackControl
 - TrackRowHighlight
 - TrackRowInfo
+- TrackRowInfoVisBar
+- TrackRowInfoVisDendrogram
+- TrackRowInfoVisLink
 - TrackWrapper
 - name: Functions (internal)
-- visualizationTrack
-- verticalBarTrack
-- dendrogramTrack
-- urlTrack
 - validateWrapperOptions
 - processWrapperOptions
 - updateRowSortOptions
@@ -26,6 +25,8 @@ toc:
 - insertItemToArray
 - modifyItemInArray
 - removeItemFromArray
+- drawVisTitle
+- matrixToTree
 - name: Classes (internal)
 - Two
 - TwoRectangle
