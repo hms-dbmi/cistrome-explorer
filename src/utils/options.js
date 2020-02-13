@@ -209,14 +209,15 @@ export function updateRowSortOptions(options, sortInfo) {
     }];
 
     if(Array.isArray(optionsRaw)){
-        const globalDefaults = optionsRaw.find(o => (o.viewId === DEFAULT_OPTIONS_KEY && o.trackId === DEFAULT_OPTIONS_KEY));
+        let globalDefaults = optionsRaw.find(o => (o.viewId === DEFAULT_OPTIONS_KEY && o.trackId === DEFAULT_OPTIONS_KEY));
         
         // If there is no globar defaults, add one.
         if(!globalDefaults) {
-            optionsRaw = insertItemToArray(optionsRaw, 0, {
+            globalDefaults = {
                 viewId: DEFAULT_OPTIONS_KEY,
                 trackId: DEFAULT_OPTIONS_KEY
-            });
+            };
+            optionsRaw = insertItemToArray(optionsRaw, 0, globalDefaults);
         }
 
         const index = optionsRaw.indexOf(globalDefaults);
