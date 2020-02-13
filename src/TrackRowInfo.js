@@ -1,24 +1,15 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 
-import TrackRowInfoVis from "./TrackRowInfoVis.js";
+import TrackRowInfoVisBar from './TrackRowInfoVisBar.js';
+import TrackRowInfoVisLink from './TrackRowInfoVisLink.js';
+import TrackRowInfoVisDendrogram from './TrackRowInfoVisDendrogram.js';
 
-import range from 'lodash/range';
-import d3 from './utils/d3.js';
-import Two from './utils/two.js';
-
-import PubSub from 'pubsub-js';
-import { EVENT } from './constants.js';
-/*import { visualizationTrack } from './visualizationTrack.js';*/
-/*import TrackControl from './TrackControl.js'*/
-/*import './TrackRowInfo.scss';*/
-
-/*function destroyTooltip() {
-    PubSub.publish(EVENT.TOOLTIP, {
-        x: null,
-        y: null,
-        content: null
-    });
-}*/
+const fieldTypeToVisComponent = {
+    "nominal": TrackRowInfoVisBar,
+    "quantitative": TrackRowInfoVisBar,
+    "url": TrackRowInfoVisLink,
+    "tree": TrackRowInfoVisDendrogram
+};
 
 /**
  * Component for visualization of row info attribute values.
@@ -42,8 +33,6 @@ export default function TrackRowInfo(props) {
         register
     } = props;
 
-    /*const [mouseX, setMouseX] = useState(-1);*/
-
     // Dimensions
     const isLeft = rowInfoPosition === "left";
     const top = trackY;
@@ -51,7 +40,6 @@ export default function TrackRowInfo(props) {
     const width = unitWidth * rowInfoAttributes.length;
     const height = trackHeight;
     const left = isLeft ? trackX - width : trackX + trackWidth;
-
 
     // Determine position of each dimension.
     let trackProps = [], xDomain = [], xRange = [];
@@ -69,102 +57,6 @@ export default function TrackRowInfo(props) {
         xDomain.push(currentLeft + unitWidth);
         xRange.push(fieldInfo.field);
     });
-    
-    // Scales
-    /*const xScale = d3.scaleThreshold()
-        .domain(xDomain)
-        .range(xRange);*/
-    /*const yScale = d3.scaleBand()
-        .domain(range(rowInfo.length))
-        .range([0, height]);*/
-
-    /*// Render each track.
-    const draw = useCallback((domElement) => {
-        const two = new Two({
-            width,
-            height,
-            domElement
-        });
-    
-        trackProps.forEach(d => visualizationTrack({...d, two}));
-        
-        two.update();
-        return two.teardown;
-    }); // [width, height]
-
-    register("TrackRowInfo", draw);*/
-
-    /*useEffect(() => {
-        const canvas = canvasRef.current;
-        const teardown = draw(canvas);
-        
-        // Handle mouse click interaction on each track
-        d3.select(canvas).on("click", () => {
-            const mouse = d3.mouse(canvas);
-            const mouseX = mouse[0];
-            const mouseY = mouse[1];
-
-            const y = yScale.invert(mouseY);
-            const x = xScale(mouseX);
-            if(y !== undefined && x !== undefined){
-                const { type } = rowInfoAttributes.find(d => d.field === x);
-                if(type === "url") {
-                    window.open(rowInfo[y][x]);
-                }
-                else { 
-                    // ...
-                }
-            }
-        });
-        d3.select(canvas).on("mousemove", () => {
-            const mouse = d3.mouse(canvas);
-            const mouseX = mouse[0];
-            const mouseY = mouse[1];
-
-            const y = yScale.invert(mouseY);
-            const x = xScale(mouseX);
-            let xVal;
-            if(y !== undefined && x !== undefined){
-                setMouseX(rowInfoAttributes.map(d => d.field).indexOf(x));
-                xVal = rowInfo[y][x];
-            } else {
-                setMouseX(-1);
-                destroyTooltip();
-                return;
-            }
-
-            const mouseViewportX = d3.event.clientX;
-            const mouseViewportY = d3.event.clientY;
-            
-            PubSub.publish(EVENT.TOOLTIP, {
-                x: mouseViewportX,
-                y: mouseViewportY,
-                content: `${x}: ${xVal}`
-            });
-        });
-        d3.select(canvas).on("mouseout", () => destroyTooltip());
-        return teardown;
-    });*/
-
-    /*function onMouseLeave() {
-        setMouseX(-1);
-        destroyTooltip();
-    };*/
-
-    /*
-    // Make small control panels for each track.
-    let trackControls = trackProps.map(function(d, i){ 
-        const index = isLeft ? rowInfoAttributes.length - i - 1 : i;
-        return (
-            <TrackControl
-                key={index}
-                top={d.top + 2}
-                left={d.left + 2}
-                isVisible={mouseX === index}
-                fieldInfo={rowInfoAttributes[index]}
-            />
-        )
-    }, this);*/
 
     console.log("TrackRowInfo.render");
     return (
@@ -177,19 +69,19 @@ export default function TrackRowInfo(props) {
                 height: `${height}px`,
             }}
         >
-            {trackProps.map((d, i) => (
-                <TrackRowInfoVis
-                    key={i}
-                    left={d.left}
-                    top={d.top}
-                    width={d.width}
-                    height={d.height}
-                    isLeft={d.isLeft}
-                    fieldInfo={d.fieldInfo}
-
-                    rowInfo={rowInfo}
-                    register={register}
-                />
+            {trackProps.map((d, i) => React.createElement(
+                fieldTypeToVisComponent[d.fieldInfo.type],
+                {
+                    key: i,
+                    left: d.left,
+                    top: d.top,
+                    width: d.width,
+                    height: d.height,
+                    isLeft: d.isLeft,
+                    fieldInfo: d.fieldInfo,
+                    rowInfo: rowInfo,
+                    register: register,
+                }
             ))}
         </div>
     );
