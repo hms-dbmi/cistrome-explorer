@@ -126,7 +126,7 @@ export function updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, 
                     foundTrack = track;
 
                     const newView = cloneDeep(foundView);
-                    newView.uid = newView.uid + "-with-projection";
+                    newView.uid = newView.uid + "-with-col-projection";
                     if(addView) {
                         // Need view.uid values to be unique.
                         newView.uid += uuidv4();
@@ -141,7 +141,7 @@ export function updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, 
                         contents: [
                             newTrackInner,
                             {
-                                uid: newTrackInner.uid + "-projection",
+                                uid: newTrackInner.uid + "-col-projection",
                                 type: TRACK_TYPE.VIEWPORT_PROJECTION_HORIZONTAL,
                                 fromViewUid: viewId,
                                 options: {

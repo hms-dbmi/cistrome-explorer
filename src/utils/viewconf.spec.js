@@ -32,19 +32,19 @@ describe('Utilities for processing higlass view config objects', () => {
 
         expect(newViewConfig.views.length).toEqual(1);
         expect(newViewConfig.views[0].tracks.center.length).toEqual(1);
-        expect(newViewConfig.views[0].uid).toEqual("cistrome-view-1-with-projection");
+        expect(newViewConfig.views[0].uid).toEqual("cistrome-view-1-with-col-projection");
         expect(newViewConfig.views[0].tracks.center[0].type).toEqual("combined");
         expect(newViewConfig.views[0].tracks.center[0].contents.length).toEqual(2);
         expect(newViewConfig.views[0].tracks.center[0].contents[0].type).toEqual("horizontal-multivec");
         expect(newViewConfig.views[0].tracks.center[0].contents[0].uid).toEqual("cistrome-track-1");
         expect(newViewConfig.views[0].tracks.center[0].contents[1].type).toEqual("viewport-projection-horizontal");
-        expect(newViewConfig.views[0].tracks.center[0].contents[1].uid).toEqual("cistrome-track-1-projection");
+        expect(newViewConfig.views[0].tracks.center[0].contents[1].uid).toEqual("cistrome-track-1-col-projection");
     });
 
     it('Should find all viewport-projection-horizontal track siblings of a particular horizontal-multivec track', () => {
         const siblingTrackIds = getSiblingVPHTrackIdsFromViewConfig(hgDemoViewConfig3, "cistrome-track-1");
         expect(siblingTrackIds.length).toEqual(1);
-        expect(siblingTrackIds[0]).toEqual(["cistrome-view-1-with-projection", "cistrome-track-1-projection", "cistrome-track-1-combined"]);
+        expect(siblingTrackIds[0]).toEqual(["cistrome-view-1-with-col-projection", "cistrome-track-1-col-projection", "cistrome-track-1-combined"]);
 
         const siblingTrackIdsEmpty = getSiblingVPHTrackIdsFromViewConfig(hgDemoViewConfig3, "some-unknown-track");
         expect(siblingTrackIdsEmpty.length).toEqual(0);
