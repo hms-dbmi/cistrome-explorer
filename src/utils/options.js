@@ -2,6 +2,7 @@ import merge from 'lodash/merge';
 import cloneDeep from 'lodash/cloneDeep';
 import omit from 'lodash/omit';
 import Ajv from 'ajv';
+import { insertItemToArray, modifyItemInArray } from './array.js'
 
 export const DEFAULT_OPTIONS_KEY = "default";
 
@@ -196,34 +197,37 @@ export function processWrapperOptions(optionsRaw) {
 
 /**
  * Update rowSort information in options.
- * @param {(object|object[]|null)} optionsRaw The raw value of the options prop.
+ * @param {(object|object[]|null)} options The raw value of the options prop.
  * @param {object} sortInfo The name and type of data field and sorting order.
  */
-export function updateRowSortOptions(optionsRaw, sortInfo) {
-    let optionsNewSort;
+export function updateRowSortOptions(options, sortInfo) {
+    let optionsRaw = options.slice(), optionsNewSort;
+    let newRowSort = [{
+        field: sortInfo.field,
+        type: sortInfo.type,
+        order: sortInfo.order
+    }];
+
     if(Array.isArray(optionsRaw)){
         const globalDefaults = optionsRaw.find(o => (o.viewId === DEFAULT_OPTIONS_KEY && o.trackId === DEFAULT_OPTIONS_KEY));
+        
+        // If there is no globar defaults, add one.
+        if(!globalDefaults) {
+            optionsRaw = insertItemToArray(optionsRaw, 0, {
+                viewId: DEFAULT_OPTIONS_KEY,
+                trackId: DEFAULT_OPTIONS_KEY
+            });
+        }
+
         const index = optionsRaw.indexOf(globalDefaults);
-        optionsNewSort = [
-            ...optionsRaw.slice(0, index),
-            {
-                ...globalDefaults,
-                rowSort: [{
-                    field: sortInfo.field,
-                    type: sortInfo.type,
-                    order: sortInfo.order
-                }]
-            },
-            ...optionsRaw.slice(index + 1),
-        ];
+        optionsNewSort = modifyItemInArray(optionsRaw, index, {
+            ...globalDefaults,
+            rowSort: newRowSort
+        });
     } else {
         optionsNewSort = {
             ...optionsRaw,
-            rowSort: [{
-                field: sortInfo.field,
-                type: sortInfo.type,
-                order: sortInfo.order
-            }]
+            rowSort: newRowSort
         };
     }
     return optionsNewSort;

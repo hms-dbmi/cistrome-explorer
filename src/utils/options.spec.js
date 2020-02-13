@@ -120,4 +120,85 @@ describe('Utilities for processing wrapper component options', () => {
         expect(processedOptions.viewA.trackB.colToolsPosition).toEqual("top");
         expect(processedOptions.viewB.default.colToolsPosition).toEqual("hidden");
     });
+
+    it('Should add sorting options to global default', () => {
+        const updatedOptions = updateRowSortOptions([
+            {
+                viewId: "default",
+                trackId: "default",
+                colToolsPosition: "bottom"
+            },
+            {
+                viewId: "viewA",
+                trackId: "default",
+                colToolsPosition: "top"
+            }],
+            {
+                field: "groupA",
+                type: "nominal",
+                order: "ascending"
+            }
+        );
+        const globalDefaultOptions = updatedOptions.find(o => (o.viewId === DEFAULT_OPTIONS_KEY && o.trackId === DEFAULT_OPTIONS_KEY));
+        expect(globalDefaultOptions.rowSort.length).toBe(1);
+        expect(globalDefaultOptions.rowSort[0].field).toBe("groupA");
+        expect(globalDefaultOptions.rowSort[0].type).toBe("nominal");
+        expect(globalDefaultOptions.rowSort[0].order).toBe("ascending");
+    });
+
+    it('Should update sorting options to global default', () => {
+        const updatedOptions = updateRowSortOptions([
+            {
+                viewId: "default",
+                trackId: "default",
+                colToolsPosition: "bottom",
+                rowSort: [{
+                    field: "groupB",
+                    type: "quantitative",
+                    order: "descending"
+                },
+                {
+                    field: "groupC",
+                    type: "quantitative",
+                    order: "descending"
+                }]
+            },
+            {
+                viewId: "viewA",
+                trackId: "default",
+                colToolsPosition: "top"
+            }],
+            {
+                field: "groupA",
+                type: "nominal",
+                order: "ascending"
+            }
+        );
+        const globalDefaultOptions = updatedOptions.find(o => (o.viewId === DEFAULT_OPTIONS_KEY && o.trackId === DEFAULT_OPTIONS_KEY));
+        expect(globalDefaultOptions.rowSort.length).toBe(1);
+        expect(globalDefaultOptions.rowSort[0].field).toBe("groupA");
+        expect(globalDefaultOptions.rowSort[0].type).toBe("nominal");
+        expect(globalDefaultOptions.rowSort[0].order).toBe("ascending");
+    });
+
+    it('Should add global default options and add sorting info to the options', () => {
+        const updatedOptions = updateRowSortOptions([
+            {
+                viewId: "viewA",
+                trackId: "default",
+                colToolsPosition: "top"
+            }],
+            {
+                field: "groupA",
+                type: "nominal",
+                order: "ascending"
+            }
+        );
+        const globalDefaultOptions = updatedOptions.find(o => (o.viewId === DEFAULT_OPTIONS_KEY && o.trackId === DEFAULT_OPTIONS_KEY));
+        expect(globalDefaultOptions !== undefined).toBe(true);
+        expect(globalDefaultOptions.rowSort.length).toBe(1);
+        expect(globalDefaultOptions.rowSort[0].field).toBe("groupA");
+        expect(globalDefaultOptions.rowSort[0].type).toBe("nominal");
+        expect(globalDefaultOptions.rowSort[0].order).toBe("ascending");
+    });
 });
