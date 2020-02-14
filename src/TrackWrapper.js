@@ -18,8 +18,6 @@ import fakedata from './demo/fakedata/index.js';
  *                              If not null, it is the parent track of the `multivecTrack`.
  * @prop {object[]} siblingTracks An array of `viewport-projection-horizontal` track objects, which
  *                                are siblings of `multivecTrack` (children of the same `combined` track).
- * @prop {(number[]|null)} selectedRows Array of row indices for selected rows. Null if all rows should be selected.
- * @prop {(number[]|null)} highlitRows Array of row indices for highlighted rows. Null if no rows should be highlighted.
  * @prop {function} onSelectGenomicInterval The function to call upon selection of a genomic interval.
  *                                          Passed down to the `TrackColTools` component.
  * @prop {function} onSelectRowInterval The function to call upon selection of a row interval.
@@ -29,10 +27,9 @@ export default function TrackWrapper(props) {
     const { 
         options, 
         multivecTrack,
+        multivecTrackTilesetId,
         combinedTrack,
         siblingTracks,
-        selectedRows,
-        highlitRows,
         onSelectGenomicInterval,
         drawRegister
     } = props;
@@ -54,6 +51,8 @@ export default function TrackWrapper(props) {
     const trackHeight = multivecTrack.dimensions[1];
     const totalNumRows = multivecTrack.tilesetInfo.shape[1];
 
+
+
     // Attempt to obtain metadata values from the `tilesetInfo` field of the track.
     let rowInfo = [];
     let trackAssembly = null;
@@ -66,15 +65,25 @@ export default function TrackWrapper(props) {
         // TODO: remove the below line.
         //       see https://github.com/hms-dbmi/cistrome-higlass-wrapper/issues/26
         rowInfo = fakedata[multivecTrack.id].tilesetInfo.rowInfo.slice(0, totalNumRows);
-        if(!context.state[multivecTrack.id]) {
+        
+        if(multivecTrack.id && !context.state[multivecTrack.id]) {
             context.dispatch({
                 type: ACTION.SET_ROW_INFO,
-                tilesetUid: multivecTrack.id,
+                trackId: multivecTrack.id,
                 rowInfo: rowInfo
             });
         }
     } catch(e) {
         console.log(e);
+    }
+
+    let selectedRows = [];
+    let highlitRows = [];
+    try {
+        selectedRows = context.state[multivecTrackTilesetId].selectedRows;
+        highlitRows = context.state[multivecTrackTilesetId].highlitRows;
+    } catch(e) {
+        // pass
     }
 
     /*

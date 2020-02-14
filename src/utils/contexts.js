@@ -27,7 +27,7 @@ const reducer = createReducer({
     [ACTION.SET_ROW_INFO]: (state, action) => {
         return {
             ...state,
-            [action.tilesetUid]: {
+            [action.trackId]: {
                 rowInfo: action.rowInfo,
                 selectedRows: null,
                 highlitRows: null,
@@ -36,7 +36,9 @@ const reducer = createReducer({
         };
     },
     [ACTION.SELECT_ROWS]: (state, action) => {
-        state[action.tilesetUid].selectedRows = action.selectedRows;
+        if(state[action.trackId]) {
+            state[action.trackId].selectedRows = action.selectedRows;
+        }
         return state;
     },
     [ACTION.HIGHLIGHT_ROWS]: (state, action) => {
