@@ -6,8 +6,6 @@ import Two from "./utils/two.js";
 import { drawVisTitle } from "./utils/vis.js";
 import { matrixToTree } from './utils/tree.js';
 
-import TrackRowInfoControl from './TrackRowInfoControl.js';
-
 /**
  * Component for visualization of row info hierarchies.
  * @prop {number} left The left position of this view.
@@ -140,11 +138,6 @@ export default function TrackRowInfoVisDendrogram(props) {
                     height: `${height}px`,
                     position: 'relative'
                 }}
-            />
-            <TrackRowInfoControl
-                isLeft={isLeft}
-                isVisible={mouseX !== null}
-                fieldInfo={fieldInfo}
             />
         </div>
     );
