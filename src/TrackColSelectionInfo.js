@@ -33,7 +33,7 @@ const numberFormatter = d3.format(",");
  * @prop {object} projectionTrack A `viewport-projection-horizontal` track object.
  * @prop {(string|null)} trackAssembly The genome assembly/coordSystem value obtained from the associated `horizontal-multivec` track.
  * @prop {string} colToolsPosition The value of the colToolsPosition option.
- * @prop {function} register The function for child components to call to register their draw functions.
+ * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function TrackColSelectionInfo(props) {
 
@@ -43,7 +43,7 @@ export default function TrackColSelectionInfo(props) {
         projectionTrack,
         trackAssembly,
         colToolsPosition,
-        register
+        drawRegister
     } = props;
     
     const [chrStartName, setChrStartName] = useState(null);
@@ -125,7 +125,7 @@ export default function TrackColSelectionInfo(props) {
         return two.teardown;
     }, [width, height, chrStartName, chrStartPos, chrEndName, chrEndPos]);
 
-    register("TrackColSelectionInfo", draw);
+    drawRegister("TrackColSelectionInfo", draw);
 
     useEffect(() => {
         const canvas = canvasRef.current;

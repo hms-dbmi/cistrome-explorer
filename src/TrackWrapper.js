@@ -22,7 +22,7 @@ import fakedata from './demo/fakedata/index.js';
  * @prop {function} onSelectGenomicInterval The function to call upon selection of a genomic interval.
  *                                          Passed down to the `TrackColTools` component.
  * @prop {function} onSelectRowInterval The function to call upon selection of a row interval.
- * @prop {function} register The function for child components to call to register their draw functions.
+ * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function TrackWrapper(props) {
     const { 
@@ -33,7 +33,7 @@ export default function TrackWrapper(props) {
         selectedRows,
         highlitRows,
         onSelectGenomicInterval,
-        register
+        drawRegister
     } = props;
 
     if(!multivecTrack || !multivecTrack.tilesetInfo || !multivecTrack.tilesetInfo.shape) {
@@ -110,7 +110,7 @@ export default function TrackWrapper(props) {
                     rowInfoAttributes={leftAttrs}
                     rowSort={options.rowSort}
                     rowInfoPosition="left"
-                    register={register}
+                    drawRegister={drawRegister}
                 />) : null}
             {rightAttrs.length !== 0 ? 
                 (<TrackRowInfo
@@ -122,7 +122,7 @@ export default function TrackWrapper(props) {
                     rowInfoAttributes={rightAttrs}
                     rowSort={options.rowSort}
                     rowInfoPosition="right"
-                    register={register}
+                    drawRegister={drawRegister}
                 />) : null}
             {options.colToolsPosition !== "hidden" ? 
                 (<TrackColTools
@@ -135,7 +135,7 @@ export default function TrackWrapper(props) {
                     siblingTracks={siblingTracks}
                     colToolsPosition={options.colToolsPosition}
                     onSelectGenomicInterval={onSelectGenomicInterval}
-                    register={register}
+                    drawRegister={drawRegister}
                 />) : null}
             <TrackRowHighlight 
                 trackX={trackX}
@@ -145,7 +145,7 @@ export default function TrackWrapper(props) {
                 totalNumRows={totalNumRows}
                 selectedRows={selectedRows}
                 highlitRows={highlitRows}
-                register={register}
+                drawRegister={drawRegister}
             />
         </div>
     );
