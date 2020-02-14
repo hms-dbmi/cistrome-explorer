@@ -20,7 +20,7 @@ const fieldTypeToVisComponent = {
  * @prop {array} rowInfo Array of JSON objects, one object for each row.
  * @prop {array} rowInfoAttributes Array of JSON object, one object for the names and types of each attribute.
  * @prop {string} rowInfoPosition The value of the `rowInfoPosition` option.
- * @prop {function} register The function for child components to call to register their draw functions.
+ * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function TrackRowInfo(props) {
 
@@ -30,7 +30,7 @@ export default function TrackRowInfo(props) {
         rowInfo, 
         rowInfoAttributes,
         rowInfoPosition,
-        register
+        drawRegister
     } = props;
 
     // Dimensions
@@ -80,7 +80,7 @@ export default function TrackRowInfo(props) {
                     isLeft: d.isLeft,
                     fieldInfo: d.fieldInfo,
                     rowInfo: rowInfo,
-                    register: register,
+                    drawRegister: drawRegister,
                 }
             ))}
         </div>

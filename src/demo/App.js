@@ -15,14 +15,13 @@ const demos = {
         options: {
             colToolsPosition: "bottom",
             rowInfoAttributes: [
-                {field: "Histone Modification", type: "nominal", position: "left"},
+                {field: "Species", type: "nominal", position: "left"},
+                {field: "h_ward", type: "tree", position: "right"},
                 {field: "Cell Type", type: "nominal", position: "right"},
-                {field: "Tissue Type", type: "nominal", position: "right"},
-                {field: "Species", type: "nominal", position: "right"}
+                {field: "Tissue Type", type: "nominal", position: "right"}
             ],
             rowSort: [
                 {field: "Species", type: "nominal", order: "ascending"},
-                {field: "Histone Modification", type: "nominal", order: "ascending"},
                 {field: "Tissue Type", type: "nominal", order: "ascending"},
                 {field: "Cell Type", type: "nominal", order: "ascending"}
             ]

@@ -21,7 +21,7 @@ const margin = 5;
  * @prop {object[]} rowInfo Array of JSON objects, one object for each row.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
- * @prop {function} register The function for child components to call to register their draw functions.
+ * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function TrackRowInfoVisLink(props) {
     const {
@@ -29,7 +29,7 @@ export default function TrackRowInfoVisLink(props) {
         fieldInfo,
         isLeft,
         rowInfo,
-        register,
+        drawRegister,
     } = props;
 
     const divRef = useRef();
@@ -81,7 +81,7 @@ export default function TrackRowInfoVisLink(props) {
         return two.teardown;
     });
     
-    register("TrackRowInfoVisLink", draw);
+    drawRegister("TrackRowInfoVisLink", draw);
 
     useEffect(() => {
         const canvas = canvasRef.current;

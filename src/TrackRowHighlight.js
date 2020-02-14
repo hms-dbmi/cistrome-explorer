@@ -13,7 +13,7 @@ import Two from './utils/two.js';
  * @prop {number} totalNumRows The number of rows.
  * @prop {(number[]|null)} selectedRows Array of selected row indices.
  * @prop {(number[]|null)} highlitRows Array of highlighted row indices.
- * @prop {function} register The function for child components to call to register their draw functions.
+ * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function TrackRowHighlight(props) {
 
@@ -23,7 +23,7 @@ export default function TrackRowHighlight(props) {
         totalNumRows,
         selectedRows,
         highlitRows,
-        register
+        drawRegister
     } = props;
 
     const top = trackY;
@@ -68,7 +68,7 @@ export default function TrackRowHighlight(props) {
         return two.teardown;
     }, [width, height, totalNumRows, selectedRows, highlitRows]);
 
-    register("TrackRowHighlight", draw);
+    drawRegister("TrackRowHighlight", draw);
 
     useEffect(() => {
         const canvas = canvasRef.current;

@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState, useMemo, useCallback } from 'react';
 
 import { HiGlassComponent } from 'higlass';
-import register from 'higlass-register';
+import higlassRegister from 'higlass-register';
 import StackedBarTrack from 'higlass-multivec/es/StackedBarTrack.js';
 
 import PubSub from 'pubsub-js';
@@ -18,7 +18,7 @@ import {
 
 import './CistromeHGW.scss';
 
-register({
+higlassRegister({
     name: 'StackedBarTrack',
     track: StackedBarTrack,
     config: StackedBarTrack.config,
@@ -111,7 +111,7 @@ export default function CistromeHGW(props) {
      * Function for child components to call to "register" their draw functions.
      * These draw functions will be called when the component is exported to SVG.
      */
-    const register = useCallback((key, drawFunction) => {
+    const drawRegister = useCallback((key, drawFunction) => {
         drawRef.current[key] = drawFunction;
     }, [drawRef]);
 
@@ -180,7 +180,7 @@ export default function CistromeHGW(props) {
                             onViewConfig(newViewConfig);
                         });
                     }}
-                    register={register}
+                    drawRegister={drawRegister}
                 />
             ))}
             <Tooltip />
