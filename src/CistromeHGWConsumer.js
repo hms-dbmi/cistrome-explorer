@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState, useMemo, useCallback, useContext } from 'react';
 import PubSub from 'pubsub-js';
+import isEqual from 'lodash/isEqual';
 
 import { HiGlassComponent } from 'higlass';
 import higlassRegister from 'higlass-register';
@@ -64,11 +65,21 @@ export default function CistromeHGWConsumer(props) {
         for(let trackId of newTrackIds) {
             // Each trackId is actually an object `{ viewId, trackId }`, which is why we want trackId.trackId.
             newSiblingTrackIds[trackId.trackId] = getSiblingVPHTrackIdsFromViewConfig(newViewConfig, trackId.trackId);
-            context.dispatch({
-                type: ACTION.SELECT_ROWS,
-                trackId: trackId.trackId,
-                selectedRows: getHMSelectedRowsFromViewConfig(newViewConfig, trackId.viewId, trackId.trackId)
-            });
+
+            const newSelectedRows = getHMSelectedRowsFromViewConfig(newViewConfig, trackId.viewId, trackId.trackId);
+
+            if(
+                !context.state[trackId.viewId] 
+                || !context.state[trackId.viewId][trackId.trackId] 
+                || !isEqual(newSelectedRows, context.state[trackId.viewId][trackId.trackId].selectedRows)
+            ) {
+                context.dispatch({
+                    type: ACTION.SELECT_ROWS,
+                    viewId: trackId.viewId,
+                    trackId: trackId.trackId,
+                    selectedRows: newSelectedRows
+                });
+            }
 
             //newHighlitRows[trackId.trackId] = null;
         }
@@ -105,7 +116,6 @@ export default function CistromeHGWConsumer(props) {
     const setTrackSelectedRows = useCallback((selectedRows, viewId, trackId) => {
         const currViewConfig = hgRef.current.api.getViewConfig();
         const newViewConfig = updateViewConfigOnSelectRowsByTrack(currViewConfig, selectedRows, viewId, trackId);
-        console.log(newViewConfig);
         hgRef.current.api.setViewConfig(newViewConfig).then(() => {
             onViewConfig(newViewConfig);
         });
@@ -125,7 +135,7 @@ export default function CistromeHGWConsumer(props) {
             const newOptionsRaw = updateRowSortOptions(optionsRaw, data);
             setOptions(processWrapperOptions(newOptionsRaw));
             // TODO: generalize. need to obtain the viewId,trackId from the sort event data.
-            const newSelectedRows = selectRows(context.state['cistrome-view-2'], {}, null);
+            const newSelectedRows = selectRows(context.state['cistrome-view-2']['cistrome-track-2'], {}, null);
             setTrackSelectedRows(newSelectedRows, 'cistrome-view-2', 'cistrome-track-2');
         });
 
@@ -139,9 +149,7 @@ export default function CistromeHGWConsumer(props) {
             onViewConfig(newViewConfig);
         });         
 
-        return () => {
-            hgRef.current.api.off('viewConfig');
-        };
+        return () => hgRef.current.api.off('viewConfig');
     }, [hgRef]);
 
     const hgComponent = useMemo(() => {
@@ -172,6 +180,8 @@ export default function CistromeHGWConsumer(props) {
                     key={i}
                     options={getTrackWrapperOptions(viewId, trackId)}
                     multivecTrack={getTrackObject(viewId, trackId)}
+                    multivecTrackViewId={viewId}
+                    multivecTrackTrackId={trackId}
                     multivecTrackTilesetId={trackTilesetId}
                     combinedTrack={(combinedTrackId ? getTrackObject(viewId, combinedTrackId) : null)}
                     siblingTracks={siblingTrackIds[trackId] ? siblingTrackIds[trackId].map(d => getTrackObject(viewId, d.trackId)) : []}

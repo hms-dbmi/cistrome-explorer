@@ -1,4 +1,5 @@
 import React, { createContext, useReducer } from "react";
+import merge from 'lodash/merge';
 
 export const ACTION = Object.freeze({
     SET_ROW_INFO: "set_row_info",
@@ -25,20 +26,21 @@ function createReducer(handlers) {
 
 const reducer = createReducer({
     [ACTION.SET_ROW_INFO]: (state, action) => {
-        return {
-            ...state,
-            // TODO: also use viewId to specify selectRows state
-            [action.trackId]: {
-                rowInfo: action.rowInfo,
-                selectedRows: null,
-                highlitRows: null,
-                rowSort: [],
+        return merge(state,
+            {
+                [action.viewId]: {
+                    [action.trackId]: {
+                        rowInfo: action.rowInfo,
+                        selectedRows: null,
+                        highlitRows: null,
+                    }
+                }
             }
-        };
+        );
     },
     [ACTION.SELECT_ROWS]: (state, action) => {
-        if(state[action.trackId]) {
-            state[action.trackId].selectedRows = action.selectedRows;
+        if(state[action.viewId] && state[action.viewId][action.trackId]) {
+            state[action.viewId][action.trackId].selectedRows = action.selectedRows;
         }
         return state;
     },

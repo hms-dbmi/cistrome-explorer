@@ -27,7 +27,8 @@ export default function TrackWrapper(props) {
     const { 
         options, 
         multivecTrack,
-        multivecTrackTilesetId,
+        multivecTrackViewId,
+        multivecTrackTrackId,
         combinedTrack,
         siblingTracks,
         onSelectGenomicInterval,
@@ -66,10 +67,11 @@ export default function TrackWrapper(props) {
         //       see https://github.com/hms-dbmi/cistrome-higlass-wrapper/issues/26
         rowInfo = fakedata[multivecTrack.id].tilesetInfo.rowInfo.slice(0, totalNumRows);
         
-        if(multivecTrack.id && !context.state[multivecTrack.id]) {
+        if(!context.state[multivecTrackViewId] || !context.state[multivecTrackViewId][multivecTrackTrackId]) {
             context.dispatch({
                 type: ACTION.SET_ROW_INFO,
-                trackId: multivecTrack.id,
+                viewId: multivecTrackViewId,
+                trackId: multivecTrackTrackId,
                 rowInfo: rowInfo
             });
         }
@@ -77,44 +79,17 @@ export default function TrackWrapper(props) {
         console.log(e);
     }
 
-    let selectedRows = [];
-    let highlitRows = [];
+    let selectedRows;
+    let highlitRows;
     try {
-        selectedRows = context.state[multivecTrackTilesetId].selectedRows;
-        highlitRows = context.state[multivecTrackTilesetId].highlitRows;
+        selectedRows = context.state[multivecTrackViewId][multivecTrackTrackId].selectedRows;
+        highlitRows = context.state[multivecTrackViewId][multivecTrackTrackId].highlitRows;
     } catch(e) {
         // pass
+        console.log(e);
     }
 
-    /*
-     * Transform data based on options (e.g., sorting, filtering).
-     */
-    // Filter
-    // ...
-    
-    // Sort
-    let transformedRowInfo = rowInfo.slice();
-    if(options.rowSort && options.rowSort.length > 0) {
-        let sortOptions = options.rowSort.slice().reverse();
-        sortOptions.forEach((d, i) => {
-            const { field, type, order } = d;
-            if(type === "tree") {
-                // Do nothing for the "tree" type.
-            } else if(type === "quantitative") {
-                transformedRowInfo.sort((a, b) => (a[field] - b[field]) * (order === "ascending" ? 1 : -1));
-            } else {
-                transformedRowInfo.sort(function(a, b) {
-                    let compared = 0, categoryA = a[field].toUpperCase(), categoryB = b[field].toUpperCase();
-                    if(categoryA > categoryB) {
-                        compared = 1;
-                    } else {
-                        compared = -1;
-                    }
-                    return compared * (order === "ascending" ? 1 : -1);
-                });
-            }
-        });
-    }
+    const transformedRowInfo = (!selectedRows ? rowInfo : selectedRows.map(i => rowInfo[i]));
 
     console.log("TrackWrapper.render");
     return (

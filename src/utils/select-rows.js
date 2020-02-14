@@ -7,7 +7,7 @@ export function selectRows(rowInfoOrig, sortOptions, filterOptions) {
         // Null means select all rows.
         return null;
     } else {
-        return [1, 3, 5];
+        return [5, 1, 3, 1, 5];
     }
     // Filter
     // ...
