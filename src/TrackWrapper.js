@@ -14,6 +14,8 @@ import fakedata from './demo/fakedata/index.js';
  * Wrapper component associated with a particular HiGlass track.
  * @prop {object} options Options associated with the track. Contains values for all possible options.
  * @prop {object} multivecTrack A `horizontal-multivec` track object returned by `hgc.api.getTrackObject()`.
+ * @prop {string} multivecTrackViewId The viewId for the multivecTrack.
+ * @prop {string} multivecTrackTrackId The trackId for the multivecTrack.
  * @prop {(object|null)} combinedTrack A `combined` track object returned by `hgc.api.getTrackObject()`.
  *                              If not null, it is the parent track of the `multivecTrack`.
  * @prop {object[]} siblingTracks An array of `viewport-projection-horizontal` track objects, which
@@ -90,9 +92,6 @@ export default function TrackWrapper(props) {
     }
 
     const transformedRowInfo = (!selectedRows ? rowInfo : selectedRows.map(i => rowInfo[i]));
-
-    console.log(JSON.stringify(rowInfo.map(d => ({ "t": d["Tissue Type"] }))));
-    console.log(JSON.stringify(selectedRows));
 
     console.log("TrackWrapper.render");
     return (

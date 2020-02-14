@@ -4,7 +4,6 @@
  * @returns {object} Tree structure.
  */
 export function matrixToTree(inputMatrix) {
-  
     const group = (matrix, level) => {
         return matrix.reduce((a, h) => {
             if(a.hasOwnProperty(h[level])) {

@@ -15,6 +15,8 @@ import { matrixToTree } from './utils/tree.js';
  * @prop {object[]} rowInfo Array of JSON objects, one object for each row.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
+ * @prop {string} viewId The viewId for the horizontal-multivec track.
+ * @prop {string} trackId The trackId for the horizontal-multivec track.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function TrackRowInfoVisDendrogram(props) {
@@ -22,12 +24,14 @@ export default function TrackRowInfoVisDendrogram(props) {
         left, top, width, height,
         fieldInfo,
         isLeft,
+        viewId,
+        trackId,
         rowInfo,
         drawRegister,
     } = props;
 
     // TODO: fix infinite recursion bug
-    return null;
+   
 
     const divRef = useRef();
     const canvasRef = useRef();

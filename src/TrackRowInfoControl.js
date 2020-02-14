@@ -7,6 +7,8 @@ import './TrackRowInfoControl.scss';
 
 /**
  * Component with control buttons for each vertical track (for sorting, searching, etc).
+ * @prop {string} viewId The viewId for the horizontal-multivec track.
+ * @prop {string} trackId The trackId for the horizontal-multivec track.
  * @prop {boolean} isVisible The visibility of the control.
  * @prop {object} fieldInfo JSON object of the name and type of an attribute.
  */

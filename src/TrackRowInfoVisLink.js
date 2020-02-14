@@ -21,6 +21,8 @@ const margin = 5;
  * @prop {object[]} rowInfo Array of JSON objects, one object for each row.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
+ * @prop {string} viewId The viewId for the horizontal-multivec track.
+ * @prop {string} trackId The trackId for the horizontal-multivec track.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function TrackRowInfoVisLink(props) {
