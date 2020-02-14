@@ -1,15 +1,10 @@
 import React, { useRef, useCallback, useEffect, useState } from "react";
 import range from "lodash/range";
-import PubSub from "pubsub-js";
 
 import d3 from "./utils/d3.js";
 import Two from "./utils/two.js";
-import { EVENT } from "./constants.js";
-import { destroyTooltip } from "./utils/tooltip.js";
 import { drawVisTitle } from "./utils/vis.js";
 import { matrixToTree } from './utils/tree.js';
-
-import TrackRowInfoControl from './TrackRowInfoControl.js';
 
 /**
  * Component for visualization of row info hierarchies.
@@ -20,7 +15,7 @@ import TrackRowInfoControl from './TrackRowInfoControl.js';
  * @prop {object[]} rowInfo Array of JSON objects, one object for each row.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
- * @prop {function} register The function for child components to call to register their draw functions.
+ * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function TrackRowInfoVisDendrogram(props) {
     const {
@@ -28,7 +23,7 @@ export default function TrackRowInfoVisDendrogram(props) {
         fieldInfo,
         isLeft,
         rowInfo,
-        register,
+        drawRegister,
     } = props;
 
     const divRef = useRef();
@@ -53,6 +48,7 @@ export default function TrackRowInfoVisDendrogram(props) {
         drawVisTitle(field, { two, isLeft, isNominal, width });
 
         const hierarchyData = matrixToTree(rowInfo.map(d => d[field]));
+
         const root = d3.hierarchy(hierarchyData);
 
         const treeLayout = d3.cluster()
@@ -66,19 +62,19 @@ export default function TrackRowInfoVisDendrogram(props) {
         if(isLeft){
             pathFunction = (d) => {
                 return two.makePath(
-                    left + d.parent.y, top + d.parent.x,
-                    left + d.parent.y, top + d.x,
-                    left + d.y, top + d.x,
-                    left + d.parent.y, top + d.x
+                    d.parent.y, top + d.parent.x,
+                    d.parent.y, top + d.x,
+                    d.y, top + d.x,
+                    d.parent.y, top + d.x
                 );
             }
         } else {
             pathFunction = (d) => {
                 return two.makePath(
-                    left + width -  d.parent.y, top + d.parent.x,
-                    left + width - d.parent.y, top + d.x,
-                    left + width - d.y, top + d.x,
-                    left + width - d.parent.y, top + d.x
+                    width -  d.parent.y, top + d.parent.x,
+                    width - d.parent.y, top + d.x,
+                    width - d.y, top + d.x,
+                    width - d.parent.y, top + d.x
                 );
             }
         }
@@ -96,7 +92,7 @@ export default function TrackRowInfoVisDendrogram(props) {
         return two.teardown;
     });
     
-    register("TrackRowInfoVisDendrogram", draw);
+    drawRegister("TrackRowInfoVisDendrogram", draw);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -105,28 +101,14 @@ export default function TrackRowInfoVisDendrogram(props) {
 
         d3.select(canvas).on("mousemove", () => {
             const [mouseX, mouseY] = d3.mouse(canvas);
-
             const y = yScale.invert(mouseY);
-            let fieldVal;
             if(y !== undefined){
                 setMouseX(true);
-                fieldVal = rowInfo[y][field];
             } else {
                 setMouseX(null);
-                destroyTooltip();
                 return;
             }
-
-            const mouseViewportX = d3.event.clientX;
-            const mouseViewportY = d3.event.clientY;
-            
-            PubSub.publish(EVENT.TOOLTIP, {
-                x: mouseViewportX,
-                y: mouseViewportY,
-                content: `${field}: ${fieldVal}`
-            });
         });
-        d3.select(canvas).on("mouseout", destroyTooltip);
         d3.select(div).on("mouseleave", () => setMouseX(null));
 
         return () => {
@@ -155,11 +137,6 @@ export default function TrackRowInfoVisDendrogram(props) {
                     height: `${height}px`,
                     position: 'relative'
                 }}
-            />
-            <TrackRowInfoControl
-                isLeft={isLeft}
-                isVisible={mouseX !== null}
-                fieldInfo={fieldInfo}
             />
         </div>
     );
