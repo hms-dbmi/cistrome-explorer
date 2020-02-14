@@ -97,6 +97,8 @@ export default function TrackWrapper(props) {
             {leftAttrs.length !== 0 ? 
                 (<TrackRowInfo 
                     rowInfo={transformedRowInfo}
+                    viewId={multivecTrackViewId}
+                    trackId={multivecTrackTrackId}
                     trackX={trackX}
                     trackY={trackY}
                     trackHeight={trackHeight}
@@ -109,6 +111,8 @@ export default function TrackWrapper(props) {
             {rightAttrs.length !== 0 ? 
                 (<TrackRowInfo
                     rowInfo={transformedRowInfo}
+                    viewId={multivecTrackViewId}
+                    trackId={multivecTrackTrackId}
                     trackX={trackX}
                     trackY={trackY}
                     trackHeight={trackHeight}

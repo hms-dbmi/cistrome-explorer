@@ -12,7 +12,7 @@ import { selectRows } from './utils/select-rows.js';
 import TrackWrapper from './TrackWrapper.js';
 import Tooltip from './Tooltip.js';
 
-import { processWrapperOptions, DEFAULT_OPTIONS_KEY, updateRowSortOptions } from './utils/options.js';
+import { processWrapperOptions, getTrackWrapperOptions, updateRowSortOptions } from './utils/options.js';
 import { 
     getHMTrackIdsFromViewConfig, 
     getSiblingVPHTrackIdsFromViewConfig,
@@ -85,10 +85,6 @@ export default function CistromeHGWConsumer(props) {
         }
         setTrackIds(newTrackIds);
         setSiblingTrackIds(newSiblingTrackIds);
-
-        // TODO: dispatch to context
-        //setSelectedRows(newSelectedRows);
-        //setHighlitRows(newHighlitRows);
     }, []);
 
     // Function to get a track object from the higlass API.
@@ -100,20 +96,7 @@ export default function CistromeHGWConsumer(props) {
         }
     }, []);
 
-    // Function to get an options object for a particular track.
-    const getTrackWrapperOptions = useCallback((viewId, trackId) => {
-        if(options[viewId]) {
-            if(options[viewId][trackId]) {
-                return options[viewId][trackId];
-            } else {
-                return options[viewId][DEFAULT_OPTIONS_KEY];
-            }
-        } else {
-            return options[DEFAULT_OPTIONS_KEY];
-        }
-    }, [options]);
-
-    const setTrackSelectedRows = useCallback((selectedRows, viewId, trackId) => {
+    const setTrackSelectedRows = useCallback((viewId, trackId, selectedRows) => {
         const currViewConfig = hgRef.current.api.getViewConfig();
         const newViewConfig = updateViewConfigOnSelectRowsByTrack(currViewConfig, selectedRows, viewId, trackId);
         hgRef.current.api.setViewConfig(newViewConfig).then(() => {
@@ -133,10 +116,12 @@ export default function CistromeHGWConsumer(props) {
 
         const sortToken = PubSub.subscribe(EVENT.SORT, (msg, data) => {
             const newOptionsRaw = updateRowSortOptions(optionsRaw, data);
-            setOptions(processWrapperOptions(newOptionsRaw));
-            // TODO: generalize. need to obtain the viewId,trackId from the sort event data.
-            const newSelectedRows = selectRows(context.state['cistrome-view-2']['cistrome-track-2'], {}, null);
-            setTrackSelectedRows(newSelectedRows, 'cistrome-view-2', 'cistrome-track-2');
+            const newOptions = processWrapperOptions(newOptionsRaw)
+            setOptions(newOptions);
+
+            const trackOptions = getTrackWrapperOptions(newOptions, data.viewId, data.trackId);
+            const newSelectedRows = selectRows(context.state[data.viewId][data.trackId].rowInfo, trackOptions);
+            setTrackSelectedRows(data.viewId, data.trackId, newSelectedRows);
         });
 
         return () => PubSub.unsubscribe(sortToken);
@@ -178,7 +163,7 @@ export default function CistromeHGWConsumer(props) {
             {trackIds.map(({ viewId, trackId, trackTilesetId, combinedTrackId }, i) => (
                 <TrackWrapper
                     key={i}
-                    options={getTrackWrapperOptions(viewId, trackId)}
+                    options={getTrackWrapperOptions(options, viewId, trackId)}
                     multivecTrack={getTrackObject(viewId, trackId)}
                     multivecTrackViewId={viewId}
                     multivecTrackTrackId={trackId}

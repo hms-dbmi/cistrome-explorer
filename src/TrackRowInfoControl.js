@@ -12,8 +12,9 @@ import './TrackRowInfoControl.scss';
  */
 export default function TrackRowInfoControl(props){
     const {
-       isVisible, 
-       fieldInfo
+        viewId, trackId,
+        isVisible, 
+        fieldInfo
     } = props;
 
     function onSortAscClick() {
@@ -22,7 +23,9 @@ export default function TrackRowInfoControl(props){
         PubSub.publish(EVENT.SORT, {
             field: (type === "url" && title ? title : field),
             type,
-            order: "ascending"
+            order: "ascending",
+            viewId,
+            trackId,
         });
     }
     function onSortDescClick() {
@@ -31,7 +34,9 @@ export default function TrackRowInfoControl(props){
         PubSub.publish(EVENT.SORT, {
             field: (type === "url" && title ? title : field),
             type,
-            order: "descending"
+            order: "descending",
+            viewId,
+            trackId,
         });
     }
 

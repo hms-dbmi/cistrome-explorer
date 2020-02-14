@@ -28,6 +28,8 @@ export default function TrackRowInfoVisBar(props) {
         left, top, width, height,
         fieldInfo,
         isLeft,
+        viewId,
+        trackId,
         rowInfo,
         drawRegister,
     } = props;
@@ -182,6 +184,8 @@ export default function TrackRowInfoVisBar(props) {
                 }}
             />
             <TrackRowInfoControl
+                viewId={viewId}
+                trackId={trackId}
                 isLeft={isLeft}
                 isVisible={mouseX !== null}
                 fieldInfo={fieldInfo}

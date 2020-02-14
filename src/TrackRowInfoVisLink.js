@@ -25,6 +25,7 @@ const margin = 5;
  */
 export default function TrackRowInfoVisLink(props) {
     const {
+        viewId, trackId,
         left, top, width, height,
         fieldInfo,
         isLeft,
@@ -154,6 +155,8 @@ export default function TrackRowInfoVisLink(props) {
                 }}
             />
             <TrackRowInfoControl
+                viewId={viewId}
+                trackId={trackId}
                 isLeft={isLeft}
                 isVisible={mouseX !== null}
                 fieldInfo={fieldInfo}

@@ -196,6 +196,21 @@ export function processWrapperOptions(optionsRaw) {
 }
 
 /**
+ * TODO
+ */
+export function getTrackWrapperOptions(options, viewId, trackId) {
+    if(options[viewId]) {
+        if(options[viewId][trackId]) {
+            return options[viewId][trackId];
+        } else {
+            return options[viewId][DEFAULT_OPTIONS_KEY];
+        }
+    } else {
+        return options[DEFAULT_OPTIONS_KEY];
+    }
+}
+
+/**
  * Update rowSort information in options.
  * @param {(object|object[]|null)} options The raw value of the options prop.
  * @param {object} sortInfo The name and type of data field and sorting order.
