@@ -135,7 +135,6 @@ export default function TrackRowInfoVisDendrogram(props) {
         };
     }, [top, left, width, height, rowInfo]);
 
-    console.log("TrackRowInfoVisDendrogram.render");
     return (
         <div
             ref={divRef}

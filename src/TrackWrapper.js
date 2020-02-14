@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import range from 'lodash/range';
 
+import { InfoContext } from "./utils/contexts.js";
 import TrackColTools from './TrackColTools.js';
 import TrackRowInfo from './TrackRowInfo.js';
 import TrackRowHighlight from './TrackRowHighlight.js';
@@ -36,6 +37,8 @@ export default function TrackWrapper(props) {
         register
     } = props;
 
+    const infoContext = useContext(InfoContext);
+
     if(!multivecTrack || !multivecTrack.tilesetInfo || !multivecTrack.tilesetInfo.shape) {
         // The track or track tileset info has not yet loaded.
         return null;
@@ -63,6 +66,13 @@ export default function TrackWrapper(props) {
         // TODO: remove the below line.
         //       see https://github.com/hms-dbmi/cistrome-higlass-wrapper/issues/26
         rowInfo = fakedata[multivecTrack.id].tilesetInfo.rowInfo.slice(0, totalNumRows);
+        if(!infoContext.state[multivecTrack.id]) {
+            infoContext.dispatch({
+                type: 'set_row_info',
+                tilesetUid: multivecTrack.id,
+                rowInfo: rowInfo
+            });
+        }
     } catch(e) {
         console.log(e);
     }

@@ -160,7 +160,6 @@ export default function TrackRowInfoVisBar(props) {
         };
     }, [top, left, width, height, rowInfo]);
 
-    console.log("TrackRowInfoVisBar.render");
     return (
         <div
             ref={divRef}

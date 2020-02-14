@@ -132,7 +132,6 @@ export default function TrackRowInfoVisLink(props) {
         };
     }, [top, left, width, height, rowInfo]);
 
-    console.log("TrackRowInfoVisLink.render");
     return (
         <div
             ref={divRef}
