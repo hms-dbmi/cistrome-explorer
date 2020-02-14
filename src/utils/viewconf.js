@@ -199,11 +199,6 @@ export function updateViewConfigOnSelectRowsByTrack(currViewConfig, selectedRows
     return newViewConfig;
 }
 
-export function updateViewConfigOnSelectRowsByTileset(currViewConfig, selectedRows, tilesetId) {
-    // TODO
-    return currViewConfig;
-}
-
 export function getHMSelectedRowsFromViewConfig(viewConfig, targetViewId, targetTrackId) {
     let selectedRows = [];
     traverseViewConfig(viewConfig, (d) => {

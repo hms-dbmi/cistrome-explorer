@@ -91,6 +91,9 @@ export default function TrackWrapper(props) {
 
     const transformedRowInfo = (!selectedRows ? rowInfo : selectedRows.map(i => rowInfo[i]));
 
+    console.log(JSON.stringify(rowInfo.map(d => ({ "t": d["Tissue Type"] }))));
+    console.log(JSON.stringify(selectedRows));
+
     console.log("TrackWrapper.render");
     return (
         <div className="cistrome-hgw-track-wrapper">

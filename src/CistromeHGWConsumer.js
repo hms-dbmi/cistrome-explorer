@@ -67,7 +67,6 @@ export default function CistromeHGWConsumer(props) {
             newSiblingTrackIds[trackId.trackId] = getSiblingVPHTrackIdsFromViewConfig(newViewConfig, trackId.trackId);
 
             const newSelectedRows = getHMSelectedRowsFromViewConfig(newViewConfig, trackId.viewId, trackId.trackId);
-
             if(
                 !context.state[trackId.viewId] 
                 || !context.state[trackId.viewId][trackId.trackId] 
@@ -81,7 +80,7 @@ export default function CistromeHGWConsumer(props) {
                 });
             }
 
-            //newHighlitRows[trackId.trackId] = null;
+            // TODO: dispatch for highlighting
         }
         setTrackIds(newTrackIds);
         setSiblingTrackIds(newSiblingTrackIds);
@@ -137,6 +136,7 @@ export default function CistromeHGWConsumer(props) {
         return () => hgRef.current.api.off('viewConfig');
     }, [hgRef]);
 
+    // We only want to render HiGlass once.
     const hgComponent = useMemo(() => {
         const hgOptions = {
             ...hgOptionsBase,

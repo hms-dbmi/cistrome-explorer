@@ -1,6 +1,12 @@
 /* eslint-env node */
 
-import { validateWrapperOptions, processWrapperOptions, updateRowSortOptions, DEFAULT_OPTIONS_KEY } from './options.js';
+import { 
+    validateWrapperOptions, 
+    processWrapperOptions, 
+    updateRowSortOptions, 
+    getTrackWrapperOptions,
+    DEFAULT_OPTIONS_KEY 
+} from './options.js';
 
 describe('Utilities for processing wrapper component options', () => {
     it('Should validate options object when incorrect', () => {
@@ -201,4 +207,33 @@ describe('Utilities for processing wrapper component options', () => {
         expect(globalDefaultOptions.rowSort[0].type).toBe("nominal");
         expect(globalDefaultOptions.rowSort[0].order).toBe("ascending");
     });
+
+    it('Should return the processed options object for a particular track', () => {
+        const trackOptionsAA = getTrackWrapperOptions({
+            viewA: { trackA: { colToolsPosition: "top" } },
+            [DEFAULT_OPTIONS_KEY]: { colToolsPosition: "bottom" }
+        }, "viewA", "trackA");
+        expect(trackOptionsAA.colToolsPosition).toEqual("top");
+
+        const trackOptionsAB = getTrackWrapperOptions({
+            viewA: { trackA: { colToolsPosition: "top" } },
+            [DEFAULT_OPTIONS_KEY]: { colToolsPosition: "bottom" }
+        }, "viewA", "trackB");
+        expect(trackOptionsAB.colToolsPosition).toEqual("bottom");
+
+        const trackOptionsBA = getTrackWrapperOptions({
+            viewA: { trackA: { colToolsPosition: "top" } },
+            [DEFAULT_OPTIONS_KEY]: { colToolsPosition: "bottom" }
+        }, "viewB", "trackA");
+        expect(trackOptionsBA.colToolsPosition).toEqual("bottom");
+
+        const trackOptionsCA = getTrackWrapperOptions({
+            viewA: { trackA: { colToolsPosition: "top" } },
+            viewC: { [DEFAULT_OPTIONS_KEY]: { colToolsPosition: "hidden" } },
+            [DEFAULT_OPTIONS_KEY]: { colToolsPosition: "bottom" }
+        }, "viewC", "trackA");
+        expect(trackOptionsCA.colToolsPosition).toEqual("hidden");
+    });
+
+
 });

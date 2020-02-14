@@ -11,7 +11,9 @@ export function selectRows(rowInfo, options) {
     } else {
         // Filter
         // ...
-        
+
+        console.log(options);
+
         // Sort
         let transformedRowInfo = Array.from(rowInfo.entries());
         if(options.rowSort && options.rowSort.length > 0) {
