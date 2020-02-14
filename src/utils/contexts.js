@@ -27,6 +27,7 @@ const reducer = createReducer({
     [ACTION.SET_ROW_INFO]: (state, action) => {
         return {
             ...state,
+            // TODO: also use viewId to specify selectRows state
             [action.trackId]: {
                 rowInfo: action.rowInfo,
                 selectedRows: null,
