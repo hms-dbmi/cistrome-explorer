@@ -103,7 +103,6 @@ export function getSiblingVPHTrackIdsFromViewConfig(viewConf, targetTrackId) {
     return [];
 }
 
-
 /**
  * This function updates the view config when the user would like to create a genomic interval selection.
  * @param {object} currViewConfig The current HiGlass view config.
@@ -178,7 +177,14 @@ export function updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, 
     return newViewConfig;
 }
 
-
+/**
+ * Set the `selectRows` option for a particular track, and return the updated view config object.
+ * @param {object} currViewConfig A valid higlass view config object.
+ * @param {number[]} selectedRows The array of row indices, which will become the value of the track option.
+ * @param {string} targetViewId The view ID for the track of interest.
+ * @param {string} targetTrackId The track ID for the track of interest.
+ * @returns {object} The new view config. 
+ */
 export function updateViewConfigOnSelectRowsByTrack(currViewConfig, selectedRows, targetViewId, targetTrackId) {
     const newViewConfig = cloneDeep(currViewConfig);
     traverseViewConfig(currViewConfig, (d) => {
@@ -199,8 +205,15 @@ export function updateViewConfigOnSelectRowsByTrack(currViewConfig, selectedRows
     return newViewConfig;
 }
 
+/**
+ * Get the `selectRows` option for a particular track.
+ * @param {object} viewConfig A valid higlass view config object.
+ * @param {string} targetViewId The view ID for the track of interest.
+ * @param {string} targetTrackId The track ID for the track of interest.
+ * @returns {(number[]|null)} The value of the `selectRows` option for the track.
+ */
 export function getHMSelectedRowsFromViewConfig(viewConfig, targetViewId, targetTrackId) {
-    let selectedRows = [];
+    let selectedRows = null;
     traverseViewConfig(viewConfig, (d) => {
         // The horizontal-multivec track could be standalone, or within a "combined" track.
         if(d.trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC 

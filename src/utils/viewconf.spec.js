@@ -1,14 +1,18 @@
 /* eslint-env node */
+import cloneDeep from 'lodash/cloneDeep';
 
 import { 
     getHMTrackIdsFromViewConfig,
     getSiblingVPHTrackIdsFromViewConfig,
-    updateViewConfigOnSelectGenomicInterval
+    updateViewConfigOnSelectGenomicInterval,
+    updateViewConfigOnSelectRowsByTrack,
+    getHMSelectedRowsFromViewConfig
 } from './viewconf.js';
 
 import hgDemoViewConfig1 from '../viewconfigs/horizontal-multivec-1.json';
 import hgDemoViewConfig2 from '../viewconfigs/horizontal-multivec-2.json';
 import hgDemoViewConfig3 from '../viewconfigs/horizontal-multivec-3.json';
+import hgDemoViewConfig5 from '../viewconfigs/horizontal-multivec-5.json';
 
 describe('Utilities for processing higlass view config objects', () => {
     it('Should find all horizontal-multivec track IDs', () => {
@@ -46,6 +50,17 @@ describe('Utilities for processing higlass view config objects', () => {
 
         const siblingTrackIdsEmpty = getSiblingVPHTrackIdsFromViewConfig(hgDemoViewConfig3, "some-unknown-track");
         expect(siblingTrackIdsEmpty.length).toEqual(0);
+    });
+
+    it('Should set the selectRows option value of a particular horizontal-multivec track', () => {
+        const currViewConfig = cloneDeep(hgDemoViewConfig2);
+        const newViewConfig = updateViewConfigOnSelectRowsByTrack(currViewConfig, [1, 2, 3], "cistrome-view-2", "cistrome-track-2");
+        expect(newViewConfig.views[0].tracks.center[0].options.selectRows).toEqual([1, 2, 3]);
+    });
+
+    it('Should get the selectRows option value of a particular horizontal-multivec track', () => {
+        const selectedRows = getHMSelectedRowsFromViewConfig(hgDemoViewConfig5, "cistrome-view-5", "cistrome-track-5");
+        expect(selectedRows).toEqual([5, 3, 1, 4]);
     });
 
 });
