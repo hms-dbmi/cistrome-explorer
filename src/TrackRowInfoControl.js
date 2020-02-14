@@ -1,7 +1,7 @@
 import React from 'react';
 import PubSub from 'pubsub-js';
 
-import { EVENT } from './constants.js';
+import { EVENT } from './utils/constants.js';
 import { SEARCH, SORT_ASC, SORT_DESC } from './utils/icons.js';
 import './TrackRowInfoControl.scss';
 

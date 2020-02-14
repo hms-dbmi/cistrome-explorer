@@ -1,7 +1,7 @@
 import cloneDeep from 'lodash/cloneDeep';
 import uuidv4 from 'uuid/v4';
 
-import { TRACK_TYPE } from '../constants.js';
+import { TRACK_TYPE } from './constants.js';
 
 /**
  * Execute a callback function for every view, track, and innerTrack in a view config object.
@@ -48,7 +48,7 @@ export function traverseViewConfig(viewConf, callback) {
             }
         }
     }
-};
+}
 
 /**
  * This function finds the horizontal-multivec tracks in the view config.
@@ -66,7 +66,7 @@ export function getHMTrackIdsFromViewConfig(viewConf) {
         }
     });
     return mvTracks;
-};
+}
 
 /**
  * This function finds the `viewport-projection-horizontal` tracks that are siblings of a particular target track.
@@ -95,7 +95,7 @@ export function getSiblingVPHTrackIdsFromViewConfig(viewConf, targetTrackId) {
         return matchObj.siblingIds;
     }
     return [];
-};
+}
 
 
 /**
@@ -170,4 +170,15 @@ export function updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, 
     }
 
     return newViewConfig;
-};
+}
+
+
+export function updateViewConfigOnSelectRows(currViewConfig) {
+    // TODO
+    return currViewConfig;
+}
+
+export function getHMSelectedRowsFromViewConfig() {
+    // TODO
+    return null;
+}

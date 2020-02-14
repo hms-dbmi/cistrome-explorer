@@ -5,7 +5,7 @@ import { HiGlassComponent } from 'higlass';
 import higlassRegister from 'higlass-register';
 import StackedBarTrack from 'higlass-multivec/es/StackedBarTrack.js';
 
-import { EVENT } from './constants.js';
+import { EVENT } from './utils/constants.js';
 import { InfoContext } from './utils/contexts.js';
 import TrackWrapper from './TrackWrapper.js';
 import Tooltip from './Tooltip.js';
@@ -14,7 +14,9 @@ import { processWrapperOptions, DEFAULT_OPTIONS_KEY, updateRowSortOptions } from
 import { 
     getHMTrackIdsFromViewConfig, 
     getSiblingVPHTrackIdsFromViewConfig,
-    updateViewConfigOnSelectGenomicInterval
+    updateViewConfigOnSelectGenomicInterval,
+    updateViewConfigOnSelectRows,
+    getHMSelectedRowsFromViewConfig
 } from './utils/viewconf.js';
 
 import './CistromeHGW.scss';
@@ -49,7 +51,7 @@ export default function CistromeHGWConsumer(props) {
     const [selectedRows, setSelectedRows] = useState({});
     const [highlitRows, setHighlitRows] = useState({});
 
-    const infoContext = useContext(InfoContext);
+    const context = useContext(InfoContext);
 
     /*
      * Function to call when the view config has changed.
@@ -65,11 +67,13 @@ export default function CistromeHGWConsumer(props) {
         for(let trackId of newTrackIds) {
             // Each trackId is actually an array `[viewId, trackId]`, which is why we want trackId[1].
             newSiblingTrackIds[trackId[1]] = getSiblingVPHTrackIdsFromViewConfig(newViewConfig, trackId[1]);
-            newSelectedRows[trackId[1]] = null;
+            newSelectedRows[trackId[1]] = getHMSelectedRowsFromViewConfig(newViewConfig, trackId[1]);
             newHighlitRows[trackId[1]] = null;
         }
         setTrackIds(newTrackIds);
         setSiblingTrackIds(newSiblingTrackIds);
+
+        // TODO: dispatch to context
         setSelectedRows(newSelectedRows);
         setHighlitRows(newHighlitRows);
     }, []);
@@ -95,6 +99,14 @@ export default function CistromeHGWConsumer(props) {
             return options[DEFAULT_OPTIONS_KEY];
         }
     }, [options]);
+
+    const setTrackSelectedRows = useCallback((viewId, trackId, selectedRows) => {
+        const currViewConfig = hgRef.current.api.getViewConfig();
+        const newViewConfig = updateViewConfigOnSelectRows(currViewConfig, viewId, trackId, selectedRows);
+        hgRef.current.api.setViewConfig(newViewConfig).then(() => {
+            onViewConfig(newViewConfig);
+        });
+    }, [hgRef]);
     
 
     // Function for child components to call to "register" their draw functions.

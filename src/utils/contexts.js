@@ -1,5 +1,11 @@
 import React, { createContext, useReducer } from "react";
 
+export const ACTION = Object.freeze({
+    SET_ROW_INFO: "set_row_info",
+    SELECT_ROWS: "select_rows",
+    HIGHLIGHT_ROWS: "highlight_rows"
+});
+
 /**
  * Helper function for constructing a reducer 
  * from an object mapping action types to handler functions.
@@ -18,7 +24,7 @@ function createReducer(handlers) {
 }
 
 const reducer = createReducer({
-    'set_row_info': (state, action) => {
+    [ACTION.SET_ROW_INFO]: (state, action) => {
         return {
             ...state,
             [action.tilesetUid]: {
@@ -29,17 +35,24 @@ const reducer = createReducer({
             }
         };
     },
-    'set_selected_rows': (state, action) => {
+    [ACTION.SELECT_ROWS]: (state, action) => {
         state[action.tilesetUid].selectedRows = action.selectedRows;
+        return state;
+    },
+    [ACTION.HIGHLIGHT_ROWS]: (state, action) => {
+        // TODO
         return state;
     }
 });
 
+/*
+ * The following code is loosely based on this article:
+ * https://blog.logrocket.com/use-hooks-and-context-not-react-and-redux/
+ */
 const initialState = {};
 export const InfoContext = createContext(initialState);
 export const InfoProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
-
     return (
         <InfoContext.Provider value={{ state, dispatch }}>
             {children}

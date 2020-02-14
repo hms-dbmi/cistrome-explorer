@@ -3,7 +3,7 @@ import d3 from './utils/d3.js';
 import Two from './utils/two.js';
 
 import { resolveIntervalCoordinates } from './utils/genome.js';
-import { CISTROME_DBTOOLKIT_MAX_INTERVAL_SIZE } from './constants.js';
+import { CISTROME_DBTOOLKIT_MAX_INTERVAL_SIZE } from './utils/constants.js';
 
 import './TrackColSelectionInfo.scss';
 
