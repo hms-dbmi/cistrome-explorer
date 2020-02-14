@@ -1,47 +1,48 @@
 import React, { createContext, useReducer } from "react";
 
-/*
- * Context mapping tileset UIDs to row infos.
- * Structured as follows:
- * ```
- * {
- *   "my_tileset_id": {
- * 	    rowInfo: [{}, {}],
- * 	    selectedRows: [1, 2, 3],
- * 	    highlitRows: [1, 2]
- *   }
- * }
- * ```
+/**
+ * Helper function for constructing a reducer 
+ * from an object mapping action types to handler functions.
+ * See https://redux.js.org/recipes/reducing-boilerplate#reducers
+ * @param {object} handlers Keys are action type strings, values are handler functions.
+ * @returns {function} The reducer function.
  */
-const initialState = {};
-const InfoContext = createContext(initialState);
+function createReducer(handlers) {
+    return function reducer(state, action) {
+        if (handlers.hasOwnProperty(action.type)) {
+            return handlers[action.type](state, action)
+        } else {
+            return state
+        }
+    }
+}
 
-const InfoProvider = ({ children }) => {
-    const [state, dispatch] = useReducer((state, action) => {
-        switch(action.type) {
-            case 'set_row_info':
-                return {
-                    ...state,
-                    [action.tilesetUid]: {
-                        rowInfo: action.rowInfo,
-                        selectedRows: null,
-                        highlitRows: null,
-                        rowSort: [],
-                    }
-                };
-            case 'set_selected_rows':
-                state[action.tilesetUid].selectedRows = action.selectedRows;
-                return state;
-            default:
-                throw new Error();
+const reducer = createReducer({
+    'set_row_info': (state, action) => {
+        return {
+            ...state,
+            [action.tilesetUid]: {
+                rowInfo: action.rowInfo,
+                selectedRows: null,
+                highlitRows: null,
+                rowSort: [],
+            }
         };
-    }, initialState);
+    },
+    'set_selected_rows': (state, action) => {
+        state[action.tilesetUid].selectedRows = action.selectedRows;
+        return state;
+    }
+});
+
+const initialState = {};
+export const InfoContext = createContext(initialState);
+export const InfoProvider = ({ children }) => {
+    const [state, dispatch] = useReducer(reducer, initialState);
 
     return (
         <InfoContext.Provider value={{ state, dispatch }}>
             {children}
         </InfoContext.Provider>
     );
-}
-
-export { InfoContext, InfoProvider };
+};
