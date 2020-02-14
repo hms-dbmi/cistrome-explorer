@@ -29,10 +29,7 @@ export default function TrackRowInfoVisDendrogram(props) {
         rowInfo,
         drawRegister,
     } = props;
-
-    // TODO: fix infinite recursion bug
-   
-
+    
     const divRef = useRef();
     const canvasRef = useRef();
     const [mouseX, setMouseX] = useState(null);
