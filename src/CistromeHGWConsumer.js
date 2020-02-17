@@ -60,29 +60,28 @@ export default function CistromeHGWConsumer(props) {
      * to sibling `viewport-projection-horizontal` track IDs.
      */
     const onViewConfig = useCallback((newViewConfig) => {
-        const newTrackIds = getHMTrackIdsFromViewConfig(newViewConfig);
+        const newTrackInfos = getHMTrackIdsFromViewConfig(newViewConfig);
         const newSiblingTrackIds = {};
-        for(let trackId of newTrackIds) {
-            // Each trackId is actually an object `{ viewId, trackId }`, which is why we want trackId.trackId.
-            newSiblingTrackIds[trackId.trackId] = getSiblingVPHTrackIdsFromViewConfig(newViewConfig, trackId.trackId);
+        for(let trackInfo of newTrackInfos) {
+            newSiblingTrackIds[trackInfo.trackId] = getSiblingVPHTrackIdsFromViewConfig(newViewConfig, trackInfo.trackId);
 
-            const newSelectedRows = getHMSelectedRowsFromViewConfig(newViewConfig, trackId.viewId, trackId.trackId);
+            const newSelectedRows = getHMSelectedRowsFromViewConfig(newViewConfig, trackInfo.viewId, trackInfo.trackId);
             if(
-                !context.state[trackId.viewId] 
-                || !context.state[trackId.viewId][trackId.trackId] 
-                || !isEqual(newSelectedRows, context.state[trackId.viewId][trackId.trackId].selectedRows)
+                !context.state[trackInfo.viewId] 
+                || !context.state[trackInfo.viewId][trackInfo.trackId] 
+                || !isEqual(newSelectedRows, context.state[trackInfo.viewId][trackInfo.trackId].selectedRows)
             ) {
                 context.dispatch({
                     type: ACTION.SELECT_ROWS,
-                    viewId: trackId.viewId,
-                    trackId: trackId.trackId,
+                    viewId: trackInfo.viewId,
+                    trackId: trackInfo.trackId,
                     selectedRows: newSelectedRows
                 });
             }
 
             // TODO: dispatch for highlighting
         }
-        setTrackIds(newTrackIds);
+        setTrackIds(newTrackInfos);
         setSiblingTrackIds(newSiblingTrackIds);
     }, []);
 
