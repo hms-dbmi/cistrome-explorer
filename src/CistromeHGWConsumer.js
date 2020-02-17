@@ -48,8 +48,8 @@ export default function CistromeHGWConsumer(props) {
     const drawRef = useRef({});
 
     const [options, setOptions] = useState({});
-    const [trackIds, setTrackIds] = useState([]);
-    const [siblingTrackIds, setSiblingTrackIds] = useState({});
+    const [trackInfos, setTrackInfos] = useState([]);
+    const [siblingTrackInfos, setSiblingTrackInfos] = useState({});
 
     const context = useContext(InfoContext);
 
@@ -61,9 +61,9 @@ export default function CistromeHGWConsumer(props) {
      */
     const onViewConfig = useCallback((newViewConfig) => {
         const newTrackInfos = getHMTrackIdsFromViewConfig(newViewConfig);
-        const newSiblingTrackIds = {};
+        const newSiblingTrackInfos = {};
         for(let trackInfo of newTrackInfos) {
-            newSiblingTrackIds[trackInfo.trackId] = getSiblingVPHTrackIdsFromViewConfig(newViewConfig, trackInfo.trackId);
+            newSiblingTrackInfos[trackInfo.trackId] = getSiblingVPHTrackIdsFromViewConfig(newViewConfig, trackInfo.trackId);
 
             const newSelectedRows = getHMSelectedRowsFromViewConfig(newViewConfig, trackInfo.viewId, trackInfo.trackId);
             if(
@@ -81,8 +81,8 @@ export default function CistromeHGWConsumer(props) {
 
             // TODO: dispatch for highlighting
         }
-        setTrackIds(newTrackInfos);
-        setSiblingTrackIds(newSiblingTrackIds);
+        setTrackInfos(newTrackInfos);
+        setSiblingTrackInfos(newSiblingTrackInfos);
     }, []);
 
     // Function to get a track object from the higlass API.
@@ -159,7 +159,7 @@ export default function CistromeHGWConsumer(props) {
     return (
         <div className="cistrome-hgw">
             {hgComponent}
-            {trackIds.map(({ viewId, trackId, trackTilesetId, combinedTrackId }, i) => (
+            {trackInfos.map(({ viewId, trackId, trackTilesetId, combinedTrackId }, i) => (
                 <TrackWrapper
                     key={i}
                     options={getTrackWrapperOptions(options, viewId, trackId)}
@@ -168,7 +168,7 @@ export default function CistromeHGWConsumer(props) {
                     multivecTrackTrackId={trackId}
                     multivecTrackTilesetId={trackTilesetId}
                     combinedTrack={(combinedTrackId ? getTrackObject(viewId, combinedTrackId) : null)}
-                    siblingTracks={siblingTrackIds[trackId] ? siblingTrackIds[trackId].map(d => getTrackObject(viewId, d.trackId)) : []}
+                    siblingTracks={siblingTrackInfos[trackId] ? siblingTrackInfos[trackId].map(d => getTrackObject(viewId, d.trackId)) : []}
                     onSelectGenomicInterval={() => {
                         const currViewConfig = hgRef.current.api.getViewConfig();
                         const newViewConfig = updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, trackId);
