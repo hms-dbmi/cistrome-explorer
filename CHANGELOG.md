@@ -1,5 +1,3 @@
-
-
 ## 0.1.0 - in progress
 
 ### Added
@@ -15,6 +13,8 @@
 - Added buttons for sorting according to a particular attribute, which appear upon hovering over the visualization for the attribute in the `TrackRowInfo` component.
 - Added a new demo with a HiGlass viewconfig containing two `horizontal-multivec` tracks, where two sets of options for the wrapper component are specified based on the `viewId` and `trackId` of each track.
 - Added a mechanism for components to "register" their `draw()` functions, to prepare for drawing visualizations to SVG when the user would like to export the current visual state.
+- Added a global variable that stores `rowInfo` as well as sorting & highlighting info, using `React.Context`.
+- Added a mechanism to sort rows of a HiGrass `horizontal-multivec` track and vertical tracks on the left and right sides which is activated when users click on sorting buttons.
 
 ### Changed
 - Moved to rendering the row info categorical metadata on a single `<canvas/>` element, rather than colored HTML elements for each row.

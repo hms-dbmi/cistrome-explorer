@@ -2,6 +2,7 @@ toc:
 - name: React Components
 - CistromeHGW
 - name: React Components (internal)
+- CistromeHGWConsumer
 - Tooltip
 - TrackColSelectionInfo
 - TrackColTools
@@ -16,12 +17,16 @@ toc:
 - validateWrapperOptions
 - processWrapperOptions
 - updateRowSortOptions
+- getTrackWrapperOptions
 - getRetinaRatio
 - traverseViewConfig
 - getHMTrackIdsFromViewConfig
 - getSiblingVPHTrackIdsFromViewConfig
 - updateViewConfigOnSelectGenomicInterval
+- updateViewConfigOnSelectRowsByTrack
+- getHMSelectedRowsFromViewConfig
 - resolveIntervalCoordinates
+- selectRows
 - insertItemToArray
 - modifyItemInArray
 - removeItemFromArray
