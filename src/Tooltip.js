@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PubSub from 'pubsub-js';
 
-import { EVENT } from './constants.js';
+import { EVENT } from './utils/constants.js';
 
 import './Tooltip.scss';
 

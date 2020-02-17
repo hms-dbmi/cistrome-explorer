@@ -235,3 +235,21 @@ export function updateRowSortOptions(options, sortInfo) {
     }
     return optionsNewSort;
 }
+
+/**
+ * Get the options for a specific track, using its viewId and trackId.
+ * @param {object} options A _processed_ options object.
+ * @param {string} viewId The viewId for the track of interest.
+ * @param {string} trackId The trackId for the track of interest.
+ * @returns {object} The options object for the track, or the default options object.
+ */
+export function getTrackWrapperOptions(options, viewId, trackId) {
+    if(options[viewId]) {
+        if(options[viewId][trackId]) {
+            return options[viewId][trackId];
+        } else if(options[viewId][DEFAULT_OPTIONS_KEY]) {
+            return options[viewId][DEFAULT_OPTIONS_KEY];
+        }
+    }
+    return options[DEFAULT_OPTIONS_KEY];
+}

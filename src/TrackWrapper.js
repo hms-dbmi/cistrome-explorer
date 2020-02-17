@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import range from 'lodash/range';
 
+import { InfoContext, ACTION } from "./utils/contexts.js";
 import TrackColTools from './TrackColTools.js';
 import TrackRowInfo from './TrackRowInfo.js';
 import TrackRowHighlight from './TrackRowHighlight.js';
@@ -13,12 +14,12 @@ import fakedata from './demo/fakedata/index.js';
  * Wrapper component associated with a particular HiGlass track.
  * @prop {object} options Options associated with the track. Contains values for all possible options.
  * @prop {object} multivecTrack A `horizontal-multivec` track object returned by `hgc.api.getTrackObject()`.
+ * @prop {string} multivecTrackViewId The viewId for the multivecTrack.
+ * @prop {string} multivecTrackTrackId The trackId for the multivecTrack.
  * @prop {(object|null)} combinedTrack A `combined` track object returned by `hgc.api.getTrackObject()`.
  *                              If not null, it is the parent track of the `multivecTrack`.
  * @prop {object[]} siblingTracks An array of `viewport-projection-horizontal` track objects, which
  *                                are siblings of `multivecTrack` (children of the same `combined` track).
- * @prop {(number[]|null)} selectedRows Array of row indices for selected rows. Null if all rows should be selected.
- * @prop {(number[]|null)} highlitRows Array of row indices for highlighted rows. Null if no rows should be highlighted.
  * @prop {function} onSelectGenomicInterval The function to call upon selection of a genomic interval.
  *                                          Passed down to the `TrackColTools` component.
  * @prop {function} onSelectRowInterval The function to call upon selection of a row interval.
@@ -28,13 +29,15 @@ export default function TrackWrapper(props) {
     const { 
         options, 
         multivecTrack,
+        multivecTrackViewId,
+        multivecTrackTrackId,
         combinedTrack,
         siblingTracks,
-        selectedRows,
-        highlitRows,
         onSelectGenomicInterval,
         drawRegister
     } = props;
+
+    const context = useContext(InfoContext);
 
     if(!multivecTrack || !multivecTrack.tilesetInfo || !multivecTrack.tilesetInfo.shape) {
         // The track or track tileset info has not yet loaded.
@@ -51,6 +54,8 @@ export default function TrackWrapper(props) {
     const trackHeight = multivecTrack.dimensions[1];
     const totalNumRows = multivecTrack.tilesetInfo.shape[1];
 
+
+
     // Attempt to obtain metadata values from the `tilesetInfo` field of the track.
     let rowInfo = [];
     let trackAssembly = null;
@@ -63,39 +68,30 @@ export default function TrackWrapper(props) {
         // TODO: remove the below line.
         //       see https://github.com/hms-dbmi/cistrome-higlass-wrapper/issues/26
         rowInfo = fakedata[multivecTrack.id].tilesetInfo.rowInfo.slice(0, totalNumRows);
+        
+        if(!context.state[multivecTrackViewId] || !context.state[multivecTrackViewId][multivecTrackTrackId]) {
+            context.dispatch({
+                type: ACTION.SET_ROW_INFO,
+                viewId: multivecTrackViewId,
+                trackId: multivecTrackTrackId,
+                rowInfo: rowInfo
+            });
+        }
     } catch(e) {
         console.log(e);
     }
 
-    /*
-     * Transform data based on options (e.g., sorting, filtering).
-     */
-    // Filter
-    // ...
-    
-    // Sort
-    let transformedRowInfo = rowInfo.slice();
-    if(options.rowSort && options.rowSort.length > 0) {
-        let sortOptions = options.rowSort.slice().reverse();
-        sortOptions.forEach((d, i) => {
-            const { field, type, order } = d;
-            if(type === "tree") {
-                // Do nothing for the "tree" type.
-            } else if(type === "quantitative") {
-                transformedRowInfo.sort((a, b) => (a[field] - b[field]) * (order === "ascending" ? 1 : -1));
-            } else {
-                transformedRowInfo.sort(function(a, b) {
-                    let compared = 0, categoryA = a[field].toUpperCase(), categoryB = b[field].toUpperCase();
-                    if(categoryA > categoryB) {
-                        compared = 1;
-                    } else {
-                        compared = -1;
-                    }
-                    return compared * (order === "ascending" ? 1 : -1);
-                });
-            }
-        });
+    let selectedRows;
+    let highlitRows;
+    try {
+        selectedRows = context.state[multivecTrackViewId][multivecTrackTrackId].selectedRows;
+        highlitRows = context.state[multivecTrackViewId][multivecTrackTrackId].highlitRows;
+    } catch(e) {
+        // pass
+        console.log(e);
     }
+
+    const transformedRowInfo = (!selectedRows ? rowInfo : selectedRows.map(i => rowInfo[i]));
 
     console.log("TrackWrapper.render");
     return (
@@ -103,6 +99,8 @@ export default function TrackWrapper(props) {
             {leftAttrs.length !== 0 ? 
                 (<TrackRowInfo 
                     rowInfo={transformedRowInfo}
+                    viewId={multivecTrackViewId}
+                    trackId={multivecTrackTrackId}
                     trackX={trackX}
                     trackY={trackY}
                     trackHeight={trackHeight}
@@ -115,6 +113,8 @@ export default function TrackWrapper(props) {
             {rightAttrs.length !== 0 ? 
                 (<TrackRowInfo
                     rowInfo={transformedRowInfo}
+                    viewId={multivecTrackViewId}
+                    trackId={multivecTrackTrackId}
                     trackX={trackX}
                     trackY={trackY}
                     trackHeight={trackHeight}

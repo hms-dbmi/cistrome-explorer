@@ -1,7 +1,7 @@
 import cloneDeep from 'lodash/cloneDeep';
 import uuidv4 from 'uuid/v4';
 
-import { TRACK_TYPE } from '../constants.js';
+import { TRACK_TYPE } from './constants.js';
 
 /**
  * Execute a callback function for every view, track, and innerTrack in a view config object.
@@ -24,21 +24,27 @@ export function traverseViewConfig(viewConf, callback) {
                             callback({
                                 viewI,
                                 viewId: view.uid,
+                                trackPos: tracksPos,
                                 trackI,
-                                trackType: track.type, 
-                                trackId: track.uid
+                                trackType: track.type,
+                                trackId: track.uid,
+                                trackTilesetId: track.tilesetUid,
+                                trackOptions: track.options
                             });
                             if(track.type === TRACK_TYPE.COMBINED && Array.isArray(track.contents)) {
                                 for(let [innerTrackI, innerTrack] of track.contents.entries()) {
                                     callback({ 
                                         viewI,
                                         viewId: view.uid,
+                                        trackPos: tracksPos,
                                         trackI,
                                         trackType: track.type, 
                                         trackId: track.uid, 
                                         innerTrackI,
                                         innerTrackType: innerTrack.type, 
-                                        innerTrackId: innerTrack.uid
+                                        innerTrackId: innerTrack.uid,
+                                        innerTrackTilesetId: innerTrack.tilesetUid,
+                                        innerTrackOptions: innerTrack.options
                                     });
                                 }
                             }
@@ -48,31 +54,31 @@ export function traverseViewConfig(viewConf, callback) {
             }
         }
     }
-};
+}
 
 /**
  * This function finds the horizontal-multivec tracks in the view config.
  * @param {object} viewConf A valid HiGlass viewConfig object.
- * @returns {array} Array containing `[viewId, trackId, null]` or `[viewId, trackId, combinedTrackId]` for each horizontal-multivec track.
+ * @returns {array} Array containing `{ viewId, trackId, ... }` for each horizontal-multivec track.
  */
 export function getHMTrackIdsFromViewConfig(viewConf) {
     const mvTracks = [];
-    traverseViewConfig(viewConf, ({ viewId, trackType, trackId, innerTrackType, innerTrackId }) => {
+    traverseViewConfig(viewConf, ({ viewId, trackType, trackId, trackTilesetId, innerTrackType, innerTrackId, innerTrackTilesetId }) => {
         // The horizontal-multivec track could be standalone, or within a "combined" track.
-        if(trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC && trackId) {
-            mvTracks.push([viewId, trackId, null]);
-        } else if(trackType === TRACK_TYPE.COMBINED && trackId && innerTrackType === TRACK_TYPE.HORIZONTAL_MULTIVEC && innerTrackId) {
-            mvTracks.push([viewId, innerTrackId, trackId]);
+        if(trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC) {
+            mvTracks.push({ viewId, trackId, trackTilesetId });
+        } else if(trackType === TRACK_TYPE.COMBINED && innerTrackType === TRACK_TYPE.HORIZONTAL_MULTIVEC) {
+            mvTracks.push({ viewId, trackId: innerTrackId, trackTilesetId: innerTrackTilesetId, combinedTrackId: trackId });
         }
     });
     return mvTracks;
-};
+}
 
 /**
  * This function finds the `viewport-projection-horizontal` tracks that are siblings of a particular target track.
  * @param {object} viewConf A valid HiGlass viewConfig object.
  * @param {string} targetTrackId The `uid` of the track to target.
- * @returns {array} Array containing `[viewId, trackId, null]` or `[viewId, trackId, combinedTrackId]` for each sibling `viewport-projection-horizontal` track.
+ * @returns {object[]} Array containing `{ viewId, trackId, ... }` for each sibling `viewport-projection-horizontal` track.
  */
 export function getSiblingVPHTrackIdsFromViewConfig(viewConf, targetTrackId) {
     const potentialMatches = {};
@@ -84,7 +90,7 @@ export function getSiblingVPHTrackIdsFromViewConfig(viewConf, targetTrackId) {
                     siblingIds: []
                 };
             } else if(innerTrackType === TRACK_TYPE.VIEWPORT_PROJECTION_HORIZONTAL) {
-                potentialMatches[trackId].siblingIds.push([viewId, innerTrackId, trackId]);
+                potentialMatches[trackId].siblingIds.push({ viewId, trackId: innerTrackId, combinedTrackId: trackId });
             } else if(innerTrackId === targetTrackId) {
                 potentialMatches[trackId].match = true;
             }
@@ -95,8 +101,7 @@ export function getSiblingVPHTrackIdsFromViewConfig(viewConf, targetTrackId) {
         return matchObj.siblingIds;
     }
     return [];
-};
-
+}
 
 /**
  * This function updates the view config when the user would like to create a genomic interval selection.
@@ -170,4 +175,59 @@ export function updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, 
     }
 
     return newViewConfig;
-};
+}
+
+/**
+ * Set the `selectRows` option for a particular track, and return the updated view config object.
+ * @param {object} currViewConfig A valid higlass view config object.
+ * @param {number[]} selectedRows The array of row indices, which will become the value of the track option.
+ * @param {string} targetViewId The view ID for the track of interest.
+ * @param {string} targetTrackId The track ID for the track of interest.
+ * @returns {object} The new view config. 
+ */
+export function updateViewConfigOnSelectRowsByTrack(currViewConfig, selectedRows, targetViewId, targetTrackId) {
+    const newViewConfig = cloneDeep(currViewConfig);
+    traverseViewConfig(currViewConfig, (d) => {
+        // The horizontal-multivec track could be standalone, or within a "combined" track.
+        if(d.trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC 
+            && d.viewId === targetViewId 
+            && d.trackId === targetTrackId
+        ) {
+            newViewConfig.views[d.viewI].tracks[d.trackPos][d.trackI].options.selectRows = selectedRows;
+        } else if(d.trackType === TRACK_TYPE.COMBINED 
+            && d.innerTrackType === TRACK_TYPE.HORIZONTAL_MULTIVEC 
+            && d.viewId === targetViewId 
+            && d.innerTrackId === targetTrackId
+        ) {
+            newViewConfig.views[d.viewI].tracks[d.trackPos][d.trackI].contents[d.innerTrackI].options.selectRows = selectedRows;
+        }
+    });
+    return newViewConfig;
+}
+
+/**
+ * Get the `selectRows` option for a particular track.
+ * @param {object} viewConfig A valid higlass view config object.
+ * @param {string} targetViewId The view ID for the track of interest.
+ * @param {string} targetTrackId The track ID for the track of interest.
+ * @returns {(number[]|null)} The value of the `selectRows` option for the track.
+ */
+export function getHMSelectedRowsFromViewConfig(viewConfig, targetViewId, targetTrackId) {
+    let selectedRows = null;
+    traverseViewConfig(viewConfig, (d) => {
+        // The horizontal-multivec track could be standalone, or within a "combined" track.
+        if(d.trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC 
+            && d.viewId === targetViewId 
+            && d.trackId === targetTrackId
+        ) {
+            selectedRows = d.trackOptions.selectRows;
+        } else if(d.trackType === TRACK_TYPE.COMBINED 
+            && d.innerTrackType === TRACK_TYPE.HORIZONTAL_MULTIVEC 
+            && d.viewId === targetViewId 
+            && d.innerTrackId === targetTrackId
+        ) {
+            selectedRows = d.innerTrackOptions.selectRows;
+        }
+    });
+    return selectedRows;
+}

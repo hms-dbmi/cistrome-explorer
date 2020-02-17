@@ -4,7 +4,7 @@ import PubSub from "pubsub-js";
 
 import d3 from "./utils/d3.js";
 import Two from "./utils/two.js";
-import { EVENT } from "./constants.js";
+import { EVENT } from "./utils/constants.js";
 import { destroyTooltip } from "./utils/tooltip.js";
 import { drawVisTitle } from "./utils/vis.js";
 
@@ -21,6 +21,8 @@ export const margin = 5;
  * @prop {object[]} rowInfo Array of JSON objects, one object for each row.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
+ * @prop {string} viewId The viewId for the horizontal-multivec track.
+ * @prop {string} trackId The trackId for the horizontal-multivec track.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function TrackRowInfoVisBar(props) {
@@ -28,6 +30,8 @@ export default function TrackRowInfoVisBar(props) {
         left, top, width, height,
         fieldInfo,
         isLeft,
+        viewId,
+        trackId,
         rowInfo,
         drawRegister,
     } = props;
@@ -160,7 +164,6 @@ export default function TrackRowInfoVisBar(props) {
         };
     }, [top, left, width, height, rowInfo]);
 
-    console.log("TrackRowInfoVisBar.render");
     return (
         <div
             ref={divRef}
@@ -183,6 +186,8 @@ export default function TrackRowInfoVisBar(props) {
                 }}
             />
             <TrackRowInfoControl
+                viewId={viewId}
+                trackId={trackId}
                 isLeft={isLeft}
                 isVisible={mouseX !== null}
                 fieldInfo={fieldInfo}

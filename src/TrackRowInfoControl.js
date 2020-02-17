@@ -1,19 +1,22 @@
 import React from 'react';
 import PubSub from 'pubsub-js';
 
-import { EVENT } from './constants.js';
+import { EVENT } from './utils/constants.js';
 import { SEARCH, SORT_ASC, SORT_DESC } from './utils/icons.js';
 import './TrackRowInfoControl.scss';
 
 /**
  * Component with control buttons for each vertical track (for sorting, searching, etc).
+ * @prop {string} viewId The viewId for the horizontal-multivec track.
+ * @prop {string} trackId The trackId for the horizontal-multivec track.
  * @prop {boolean} isVisible The visibility of the control.
  * @prop {object} fieldInfo JSON object of the name and type of an attribute.
  */
 export default function TrackRowInfoControl(props){
     const {
-       isVisible, 
-       fieldInfo
+        viewId, trackId,
+        isVisible, 
+        fieldInfo
     } = props;
 
     function onSortAscClick() {
@@ -22,7 +25,9 @@ export default function TrackRowInfoControl(props){
         PubSub.publish(EVENT.SORT, {
             field: (type === "url" && title ? title : field),
             type,
-            order: "ascending"
+            order: "ascending",
+            viewId,
+            trackId,
         });
     }
     function onSortDescClick() {
@@ -31,7 +36,9 @@ export default function TrackRowInfoControl(props){
         PubSub.publish(EVENT.SORT, {
             field: (type === "url" && title ? title : field),
             type,
-            order: "descending"
+            order: "descending",
+            viewId,
+            trackId,
         });
     }
 
