@@ -3,7 +3,7 @@
 import { 
     validateWrapperOptions, 
     processWrapperOptions, 
-    updateRowSortOptions, 
+    updateOptionsWithKey, 
     getTrackWrapperOptions,
     DEFAULT_OPTIONS_KEY 
 } from './options.js';
@@ -128,7 +128,7 @@ describe('Utilities for processing wrapper component options', () => {
     });
 
     it('Should add sorting options to global default', () => {
-        const updatedOptions = updateRowSortOptions([
+        const updatedOptions = updateOptionsWithKey([
             {
                 viewId: "default",
                 trackId: "default",
@@ -139,11 +139,12 @@ describe('Utilities for processing wrapper component options', () => {
                 trackId: "default",
                 colToolsPosition: "top"
             }],
-            {
+            [{
                 field: "groupA",
                 type: "nominal",
                 order: "ascending"
-            }
+            }],
+            "rowSort"
         );
         const globalDefaultOptions = updatedOptions.find(o => (o.viewId === DEFAULT_OPTIONS_KEY && o.trackId === DEFAULT_OPTIONS_KEY));
         expect(globalDefaultOptions.rowSort.length).toBe(1);
@@ -153,7 +154,7 @@ describe('Utilities for processing wrapper component options', () => {
     });
 
     it('Should update sorting options to global default', () => {
-        const updatedOptions = updateRowSortOptions([
+        const updatedOptions = updateOptionsWithKey([
             {
                 viewId: "default",
                 trackId: "default",
@@ -174,11 +175,12 @@ describe('Utilities for processing wrapper component options', () => {
                 trackId: "default",
                 colToolsPosition: "top"
             }],
-            {
+            [{
                 field: "groupA",
                 type: "nominal",
                 order: "ascending"
-            }
+            }],
+            "rowSort"
         );
         const globalDefaultOptions = updatedOptions.find(o => (o.viewId === DEFAULT_OPTIONS_KEY && o.trackId === DEFAULT_OPTIONS_KEY));
         expect(globalDefaultOptions.rowSort.length).toBe(1);
@@ -188,17 +190,18 @@ describe('Utilities for processing wrapper component options', () => {
     });
 
     it('Should add global default options and add sorting info to the options', () => {
-        const updatedOptions = updateRowSortOptions([
+        const updatedOptions = updateOptionsWithKey([
             {
                 viewId: "viewA",
                 trackId: "default",
                 colToolsPosition: "top"
             }],
-            {
+            [{
                 field: "groupA",
                 type: "nominal",
                 order: "ascending"
-            }
+            }],
+            "rowSort"
         );
         const globalDefaultOptions = updatedOptions.find(o => (o.viewId === DEFAULT_OPTIONS_KEY && o.trackId === DEFAULT_OPTIONS_KEY));
         expect(globalDefaultOptions !== undefined).toBe(true);

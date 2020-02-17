@@ -41,6 +41,18 @@ export default function TrackRowInfoControl(props){
             trackId,
         });
     }
+    function onSearchClick(event) {
+        const { field, type, title } = fieldInfo;
+        if(type === "tree") return;
+        PubSub.publish(EVENT.SEARCH_OPEN, {
+            top: event.clientY, 
+            left: event.clientX,
+            field: (type === "url" && title ? title : field),
+            type: (type === "url" ? "nominal" : type),
+            viewId, 
+            trackId,
+        });
+    }
 
     return (
         <div 
@@ -59,7 +71,7 @@ export default function TrackRowInfoControl(props){
                 <path d={SORT_DESC.path} fill="currentColor"/>
             </svg>
             <svg className="chgw-button-sm chgw-button-right"
-                viewBox={SEARCH.viewBox}>
+                onClick={onSearchClick} viewBox={SEARCH.viewBox}>
                 <title>Search keywords</title>
                 <path d={SEARCH.path} fill="currentColor"/>
             </svg>

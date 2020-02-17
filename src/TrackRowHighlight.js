@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import range from 'lodash/range';
 import d3 from './utils/d3.js';
 import Two from './utils/two.js';

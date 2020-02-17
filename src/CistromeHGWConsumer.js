@@ -11,8 +11,9 @@ import { InfoContext, ACTION } from './utils/contexts.js';
 import { selectRows } from './utils/select-rows.js';
 import TrackWrapper from './TrackWrapper.js';
 import Tooltip from './Tooltip.js';
+import TrackRowSearch from './TrackRowSearch.js';
 
-import { processWrapperOptions, getTrackWrapperOptions, updateRowSortOptions } from './utils/options.js';
+import { processWrapperOptions, getTrackWrapperOptions, updateOptionsWithKey } from './utils/options.js';
 import { 
     getHMTrackIdsFromViewConfig, 
     getSiblingVPHTrackIdsFromViewConfig,
@@ -21,7 +22,7 @@ import {
     getHMSelectedRowsFromViewConfig
 } from './utils/viewconf.js';
 
-import './CistromeHGW.scss';
+import './CistromeHGWConsumer.scss';
 
 higlassRegister({
     name: 'StackedBarTrack',
@@ -39,6 +40,8 @@ const hgOptionsBase = {
 
 /**
  * CistromeHGW passes its props through, and wraps this component with the context provider.
+ * @prop {object} viewConfig A HiGlass viewConfig object.
+ * @prop {(object|object[])} options Options for the wrapper component.
  */
 export default function CistromeHGWConsumer(props) {
 
@@ -112,8 +115,10 @@ export default function CistromeHGWConsumer(props) {
     useEffect(() => {
         setOptions(processWrapperOptions(optionsRaw));
 
+        // Row sorting options
         const sortToken = PubSub.subscribe(EVENT.SORT, (msg, data) => {
-            const newOptionsRaw = updateRowSortOptions(optionsRaw, data);
+            const newRowSort = [{field: data.field, type: data.type, order: data.order}];
+            const newOptionsRaw = updateOptionsWithKey(optionsRaw, newRowSort, "rowSort");
             const newOptions = processWrapperOptions(newOptionsRaw)
             setOptions(newOptions);
 
@@ -122,7 +127,19 @@ export default function CistromeHGWConsumer(props) {
             setTrackSelectedRows(data.viewId, data.trackId, newSelectedRows);
         });
 
-        return () => PubSub.unsubscribe(sortToken);
+        // Row highlighting options. 
+        // Highlighting options are specified in the Wrapper options, unlike sorting.
+        const hlToken = PubSub.subscribe(EVENT.SEARCH_CHANGE, (msg, data) => {
+            const newRowHighlight = [{field: data.field, type: data.type, contains: data.contains}];
+            const newOptionsRaw = updateOptionsWithKey(optionsRaw, newRowHighlight, "rowHighlight");
+            const newOptions = processWrapperOptions(newOptionsRaw)
+            setOptions(newOptions);
+        });
+
+        return () => {
+            PubSub.unsubscribe(sortToken);
+            PubSub.unsubscribe(hlToken);
+        };
     }, [optionsRaw]);
 
     // Listen for higlass view config changes.
@@ -180,6 +197,7 @@ export default function CistromeHGWConsumer(props) {
                 />
             ))}
             <Tooltip />
+            <TrackRowSearch />
         </div>
     );
 }

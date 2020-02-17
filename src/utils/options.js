@@ -26,6 +26,10 @@ const baseSchema = {
                 "rowSort": {
                     "type": "array",
                     "items": { "$ref": "#/definitions/sortInfo" }
+                },
+                "rowHighlight": {
+                    "type": "array",
+                    "items": { "$ref": "#/definitions/highlightInfo" }
                 }
             }
         },
@@ -70,6 +74,25 @@ const baseSchema = {
                     "type": "string",
                     "enum": ["descending", "ascending"],
                     "description": "The order of sorting"
+                }
+            }
+        },
+        "highlightInfo" : {
+            "type": "object",
+            "required": ["field", "type", "contains"],
+            "properties": {
+                "field": {
+                    "type": "string",
+                    "description": "The name of a data field"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": ["nominal", "quantitative"],
+                    "description": "The data type of a field"
+                },
+                "contains": {
+                    "type": "string",
+                    "description": "The substring to search for"
                 }
             }
         }
@@ -196,18 +219,14 @@ export function processWrapperOptions(optionsRaw) {
 }
 
 /**
- * Update rowSort information in options.
+ * Update a part of options, such as rowSort or rowHighlight.
  * @param {(object|object[]|null)} options The raw value of the options prop.
- * @param {object} sortInfo The name and type of data field and sorting order.
+ * @param {object} subOption New sub-option to replace.
+ * @param {string} key Key of the sub-option to replace in "options."
  * @returns {(object|object[])} The new options object or array.
  */
-export function updateRowSortOptions(options, sortInfo) {
-    let optionsNewSort;
-    let newRowSort = [{
-        field: sortInfo.field,
-        type: sortInfo.type,
-        order: sortInfo.order
-    }];
+export function updateOptionsWithKey(options, subOption, key) {
+    let newOptions;
 
     if(Array.isArray(options)){
         let optionsRaw = options.slice();
@@ -223,17 +242,17 @@ export function updateRowSortOptions(options, sortInfo) {
         }
 
         const index = optionsRaw.indexOf(globalDefaults);
-        optionsNewSort = modifyItemInArray(optionsRaw, index, {
+        newOptions = modifyItemInArray(optionsRaw, index, {
             ...globalDefaults,
-            rowSort: newRowSort
+            [key]: subOption
         });
     } else {
-        optionsNewSort = {
+        newOptions = {
             ...options,
-            rowSort: newRowSort
+            [key]: subOption
         };
     }
-    return optionsNewSort;
+    return newOptions;
 }
 
 /**
