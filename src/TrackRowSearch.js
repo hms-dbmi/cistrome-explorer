@@ -5,7 +5,11 @@ import { CLOSE } from './utils/icons.js';
 import './TrackRowSearch.scss';
 
 /**
- * Text field to serach for keywords. Subscribes to 'search' event via `PubSub`.
+ * Text field to serach for keywords.
+ * @prop {number} top The top coordinate.
+ * @prop {number} left The left coordinate.
+ * @prop {function} onChange The function to call when the search keyword has changed.
+ * @prop {function} onClose The function to call when the search field should be closed.
  * @example
  * <TrackRowSearch/>
  */
