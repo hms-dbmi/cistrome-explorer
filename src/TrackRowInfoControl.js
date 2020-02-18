@@ -8,6 +8,8 @@ import TrackRowSearch from './TrackRowSearch.js';
 
 import './TrackRowInfoControl.scss';
 
+const LOCAL_EVENT_SEARCH_OPEN = "search-open";
+
 /**
  * Component with control buttons for each vertical track (for sorting, searching, etc).
  * @prop {boolean} isVisible The visibility of the control.
@@ -33,8 +35,10 @@ export default function TrackRowInfoControl(props){
     const controlField = (type === "url" && title ? title : field);
     const controlType = (type === "url" ? "nominal" : type);
 
+    // Subscribe to the search open events of other TrackRowInfoControl components,
+    // so that only one search is open at a time.
     useEffect(() => {
-        const searchOpenToken = PubSub.subscribe(EVENT.SEARCH_OPEN, (msg, otherDivRef) => {
+        const searchOpenToken = PubSub.subscribe(LOCAL_EVENT_SEARCH_OPEN, (msg, otherDivRef) => {
             if(divRef !== otherDivRef) {
                 setIsSearching(false);
             }
@@ -56,7 +60,7 @@ export default function TrackRowInfoControl(props){
         setSearchTop(event.clientY - parentRect.y);
         setSearchLeft(event.clientX - parentRect.x);
 
-        PubSub.publish(EVENT.SEARCH_OPEN, divRef);
+        PubSub.publish(LOCAL_EVENT_SEARCH_OPEN, divRef);
     }
     function onSearchClose() {
         setIsSearching(false);
