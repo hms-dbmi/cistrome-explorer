@@ -1,3 +1,5 @@
+import { matrixToTree } from './tree.js';
+import d3 from './d3.js';
 
 /**
  * Generate an array of selected row indices based on sort and filter options.
@@ -9,15 +11,18 @@ export function selectRows(rowInfo, options) {
     if(options) {
         // Filter
         // ...
-        
+
         // Sort
         let transformedRowInfo = Array.from(rowInfo.entries());
         if(options.rowSort && options.rowSort.length > 0) {
             let sortOptions = options.rowSort.slice().reverse();
-            sortOptions.forEach((d, i) => {
+            sortOptions.forEach((d) => {
                 const { field, type, order } = d;
                 if(type === "tree") {
-                    // Do nothing for the "tree" type.
+                    const hierarchyData = matrixToTree(rowInfo.map(d => d[field]));
+                    const root = d3.hierarchy(hierarchyData);
+                    const leaves = root.leaves().map(l => l.data.i);
+                    transformedRowInfo = leaves.map((i) => transformedRowInfo[i]);
                 } else if(type === "quantitative") {
                     transformedRowInfo.sort((a, b) => (a[1][field] - b[1][field]) * (order === "ascending" ? 1 : -1));
                 } else if(type === "nominal") {

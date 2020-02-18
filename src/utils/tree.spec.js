@@ -21,7 +21,7 @@ describe('Functions for manipulating hierarchy data structures', () => {
             ["i-0", "i-4", "i-29", "3-6"]
         ];
         const tree = matrixToTree(matrix);
-        const expectedTree = {"name":"root","children":[{"name":"i-0","children":[{"name":"i-0","children":[{"name":"i-0","children":[{"name":"i-0","children":[{"name":"4-1"},{"name":"4-2"}]},{"name":"3-4"}]},{"name":"2-4"}]},{"name":"i-4","children":[{"name":"i-4","children":[{"name":"i-4","children":[{"name":"4-3"},{"name":"4-4"},{"name":"4-5"}]},{"name":"i-11","children":[{"name":"4-6"},{"name":"4-7"},{"name":"4-8"}]}]},{"name":"i-29","children":[{"name":"3-5"},{"name":"3-6"}]}]}]}]};
+        const expectedTree = {"name":"root","children":[{"name":"i-0","children":[{"name":"i-0","children":[{"name":"i-0","children":[{"name":"i-0","children":[{i: 0, "name":"4-1"},{i: 1, "name":"4-2"}]},{i: 2, "name":"3-4"}]},{i: 3, "name":"2-4"}]},{"name":"i-4","children":[{"name":"i-4","children":[{"name":"i-4","children":[{i: 4, "name":"4-3"},{i: 5, "name":"4-4"},{i: 6, "name":"4-5"}]},{"name":"i-11","children":[{i: 7, "name":"4-6"},{i: 8, "name":"4-7"},{i: 9, "name":"4-8"}]}]},{"name":"i-29","children":[{i: 10, "name":"3-5"},{i: 11, "name":"3-6"}]}]}]}]};
         expect(tree).toEqual(expectedTree);
     });
 
@@ -33,7 +33,7 @@ describe('Functions for manipulating hierarchy data structures', () => {
             ["i-0", "i-4", "i-29", "3-5"]
         ];
         const tree = matrixToTree(matrix);
-        const expectedTree = {"name":"root","children":[{"name":"i-0","children":[{"name":"i-0","children":[{"name":"i-0","children":[{"name":"i-0","children":[{"name":"4-1"},{"name":"4-2"}]}]}]},{"name":"i-4","children":[{"name":"i-4"},{"name":"i-29"}]}]}]};
+        const expectedTree = {"name":"root","children":[{"name":"i-0","children":[{"name":"i-0","children":[{"name":"i-0","children":[{"name":"i-0","children":[{i: 0, "name":"4-1"},{i: 1, "name":"4-2"}]}]}]},{"name":"i-4","children":[{i: 2, "name":"i-4"},{i: 3, "name":"i-29"}]}]}]};
         expect(tree).toEqual(expectedTree);
     });
 });

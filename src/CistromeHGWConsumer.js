@@ -10,7 +10,11 @@ import { selectRows, highlightRowsFromSearch } from './utils/select-rows.js';
 import TrackWrapper from './TrackWrapper.js';
 import Tooltip from './Tooltip.js';
 
-import { processWrapperOptions, getTrackWrapperOptions, updateGlobalOptionsWithKey } from './utils/options.js';
+import { 
+    processWrapperOptions, 
+    getTrackWrapperOptions, 
+    updateGlobalOptionsWithKey 
+} from './utils/options.js';
 import { 
     getHMTrackIdsFromViewConfig, 
     getSiblingVPHTrackIdsFromViewConfig,
@@ -128,6 +132,7 @@ export default function CistromeHGWConsumer(props) {
         setOptions(newOptions);
     });
 
+    // Callback function for searching.
     const onSearchRows = useCallback((viewId, trackId, field, type, contains) => {
         const newRowHighlight = { field, type, contains };
         const newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, newRowHighlight, "rowHighlight");
