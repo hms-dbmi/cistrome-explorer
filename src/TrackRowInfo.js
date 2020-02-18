@@ -1,8 +1,10 @@
-import React from 'react';
-
+import React, { useRef, createRef, useState, useEffect} from 'react';
+import d3 from './utils/d3.js';
+import { modifyItemInArray } from './utils/array.js';
 import TrackRowInfoVisBar from './TrackRowInfoVisBar.js';
 import TrackRowInfoVisLink from './TrackRowInfoVisLink.js';
 import TrackRowInfoVisDendrogram from './TrackRowInfoVisDendrogram.js';
+import './TrackResizer.scss';
 
 const fieldTypeToVisComponent = {
     "nominal": TrackRowInfoVisBar,
@@ -41,38 +43,104 @@ export default function TrackRowInfo(props) {
     } = props;
 
     // Dimensions
+    const defaultUnitWidth = 100;
     const isLeft = rowInfoPosition === "left";
     const top = trackY;
-    const unitWidth = 100;
-    const width = unitWidth * rowInfoAttributes.length;
     const height = trackHeight;
+    let unitWidths = [];    // Store default unit width for each vertical tracks
+    rowInfoAttributes.forEach((fieldInfo) => {
+        unitWidths.push({
+            field: fieldInfo.field,
+            type: fieldInfo.type,
+            width: defaultUnitWidth
+        });
+    });
+    const [widths, setWidths] = useState(unitWidths);
+    const width = d3.sum(widths.map(d => d.width));
     const left = isLeft ? trackX - width : trackX + trackWidth;
 
+    const divRef = useRef();
+    const resizerRef = useRef([...Array(rowInfoAttributes.length)].map(() => createRef()));
+    const [resizingIndex, setResizingIndex] = useState(-1);
+    
     // Determine position of each dimension.
-    let trackProps = [], xDomain = [], xRange = [];
+    let trackProps = [];
+    let currentLeft = 0;
     rowInfoAttributes.forEach((attribute, i) => {
         const fieldInfo = isLeft ? rowInfoAttributes[rowInfoAttributes.length - i - 1] : attribute;
-        let currentLeft = unitWidth * i;
+        const width = widths.find(d => d.field === fieldInfo.field && d.type === fieldInfo.type).width;
 
         trackProps.push({
-            left: currentLeft, top: 0, width: unitWidth, height: height,
+            left: currentLeft, top: 0, width, height,
             fieldInfo,
             isLeft
         });
-
-        // Domain and range for mouse event.
-        xDomain.push(currentLeft + unitWidth);
-        xRange.push(fieldInfo.field);
+        currentLeft += width;
     });
+
+    console.log(trackProps);
+    
+    let resizers = trackProps.map((d, i) => {
+        const resizerWidth = 4, resizerHeight = 10, margin = 2;
+        return (
+            <div
+                ref={resizerRef.current[i]}
+                key={i}
+                className="visualization-resizer"
+                style={{
+                    top: `${d.top + (d.height + resizerHeight) / 2.0}px`,
+                    left: `${isLeft ? d.left + margin : d.left + d.width - resizerWidth - margin}px`,
+                    height: `${resizerHeight}px`,
+                    width: `${resizerWidth}px`,
+                    // visibility: mouseX !== null ? "visible" : "hidden"
+                }}
+            />
+        );
+    });
+
+    useEffect(() => {
+        const div = divRef.current;
+        d3.select(div).on("mouseup", () => {
+            console.log("MOUSE_UP"); 
+            setResizingIndex(-1);
+        });
+
+        d3.select(div).on("mousemove", () => {
+            if(resizingIndex !== -1) {
+                const { left } = trackProps[resizingIndex];
+                const [mouseX, mouseY] = d3.mouse(div);
+                console.log("MOUSE_MOVE:", resizingIndex);
+                let newWidth = isLeft ? trackProps[resizingIndex].width - (mouseX - left) : (mouseX - left);
+                const minWidth = 50;
+                if(newWidth < minWidth) {
+                    newWidth = minWidth;
+                }
+                setWidths(modifyItemInArray(widths, resizingIndex, {
+                    field: rowInfoAttributes[resizingIndex].field,
+                    type: rowInfoAttributes[resizingIndex].type,
+                    width: newWidth
+                }));
+            }
+        });
+        
+        resizerRef.current.forEach((resizer, i) => {
+            d3.select(resizer.current).on("mousedown", () => {
+                const selectedIndex = isLeft ? resizerRef.current.length - i - 1 : i;
+                console.log("MOUSE_DOWN:", selectedIndex);
+                setResizingIndex(selectedIndex);
+            });
+        });
+    })
 
     console.log("TrackRowInfo.render");
     return (
-        <div 
+        <div
+            ref={divRef}
             className="cistrome-hgw-child"
             style={{
                 top: `${top}px`,
                 left: `${left}px`, 
-                width: `${width}px`,
+                width: `${width + 20}px`,
                 height: `${height}px`,
             }}
         >
@@ -94,6 +162,7 @@ export default function TrackRowInfo(props) {
                     drawRegister: drawRegister,
                 }
             ))}
+            {resizers}
         </div>
     );
 }

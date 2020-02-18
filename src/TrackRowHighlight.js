@@ -19,7 +19,7 @@ export default function TrackRowHighlight(props) {
 
     const {
         trackX, trackY,
-        trackWidth, trackHeight, 
+        trackWidth, trackHeight,
         totalNumRows,
         selectedRows,
         highlitRows,

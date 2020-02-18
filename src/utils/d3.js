@@ -10,7 +10,7 @@ import { schemeSet3, interpolateViridis } from "d3-scale-chromatic";
 import { mouse, event as d3_event } from "d3-selection";
 import { scaleLinear, scaleOrdinal, scaleThreshold } from "d3-scale";
 import { scale as vega_scale } from "vega-scale";
-import { extent } from "d3-array";
+import { extent, sum } from "d3-array";
 import { hsl } from "d3-color";
 import { hierarchy, cluster } from "d3-hierarchy";
 
@@ -34,6 +34,7 @@ export default {
     scaleThreshold,
     scaleBand,
     extent,
+    sum,
     hsl,
     hierarchy,
     cluster

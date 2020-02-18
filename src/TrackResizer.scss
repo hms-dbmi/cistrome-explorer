@@ -1,0 +1,18 @@
+.visualization-resizer {
+    position: absolute;
+    cursor: ew-resize;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    opacity: 0.3;
+    z-index: 1;
+    transform-origin: center;
+    scale: 1;
+    transition: scale .15s ease, opacity .15s ease;
+}
+
+.visualization-resizer:hover {
+    box-shadow: 0 0 3px 1px #0089ff;
+    background: #0089ff;
+    opacity: 1;
+    scale: 2;
+} 
