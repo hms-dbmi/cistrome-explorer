@@ -44,6 +44,7 @@ export default function TrackRowInfo(props) {
 
     // Dimensions
     const defaultUnitWidth = 100;
+    const marginForMouseEvent = 20;
     const isLeft = rowInfoPosition === "left";
     const top = trackY;
     const height = trackHeight;
@@ -77,8 +78,6 @@ export default function TrackRowInfo(props) {
         });
         currentLeft += width;
     });
-
-    console.log(trackProps);
     
     let resizers = trackProps.map((d, i) => {
         const resizerWidth = 4, resizerHeight = 10, margin = 2;
@@ -89,7 +88,7 @@ export default function TrackRowInfo(props) {
                 className="visualization-resizer"
                 style={{
                     top: `${d.top + (d.height + resizerHeight) / 2.0}px`,
-                    left: `${isLeft ? d.left + margin : d.left + d.width - resizerWidth - margin}px`,
+                    left: `${isLeft ? d.left + margin + marginForMouseEvent : d.left + d.width - resizerWidth - margin}px`,
                     height: `${resizerHeight}px`,
                     width: `${resizerWidth}px`,
                     // visibility: mouseX !== null ? "visible" : "hidden"
@@ -100,35 +99,31 @@ export default function TrackRowInfo(props) {
 
     useEffect(() => {
         const div = divRef.current;
-        d3.select(div).on("mouseup", () => {
-            console.log("MOUSE_UP"); 
-            setResizingIndex(-1);
+
+        resizerRef.current.forEach((resizer, i) => {
+            d3.select(resizer.current).on("mousedown", () => setResizingIndex(i));
         });
+
+        d3.select(div).on("mouseup", () => setResizingIndex(-1));
 
         d3.select(div).on("mousemove", () => {
             if(resizingIndex !== -1) {
-                const { left } = trackProps[resizingIndex];
+                const { left: trackLeft, width: trackWidth } = trackProps[resizingIndex];
+                const { field, type } = trackProps[resizingIndex].fieldInfo;
                 const [mouseX, mouseY] = d3.mouse(div);
-                console.log("MOUSE_MOVE:", resizingIndex);
-                let newWidth = isLeft ? trackProps[resizingIndex].width - (mouseX - left) : (mouseX - left);
+                let newWidth = isLeft ? trackWidth - (mouseX - trackLeft - marginForMouseEvent) : (mouseX - trackLeft);
                 const minWidth = 50;
                 if(newWidth < minWidth) {
                     newWidth = minWidth;
                 }
-                setWidths(modifyItemInArray(widths, resizingIndex, {
-                    field: rowInfoAttributes[resizingIndex].field,
-                    type: rowInfoAttributes[resizingIndex].type,
-                    width: newWidth
-                }));
+                const mIdx = widths.indexOf(widths.find(d => d.field === field && d.type === type));
+                if(mIdx !== -1){
+                    setWidths(modifyItemInArray(widths, mIdx, {
+                        field, type,
+                        width: newWidth
+                    }));
+                }
             }
-        });
-        
-        resizerRef.current.forEach((resizer, i) => {
-            d3.select(resizer.current).on("mousedown", () => {
-                const selectedIndex = isLeft ? resizerRef.current.length - i - 1 : i;
-                console.log("MOUSE_DOWN:", selectedIndex);
-                setResizingIndex(selectedIndex);
-            });
         });
     })
 
@@ -139,8 +134,8 @@ export default function TrackRowInfo(props) {
             className="cistrome-hgw-child"
             style={{
                 top: `${top}px`,
-                left: `${left}px`, 
-                width: `${width + 20}px`,
+                left: `${isLeft ? left - marginForMouseEvent : left}px`, 
+                width: `${width + marginForMouseEvent}px`,
                 height: `${height}px`,
             }}
         >
@@ -148,7 +143,7 @@ export default function TrackRowInfo(props) {
                 fieldTypeToVisComponent[d.fieldInfo.type],
                 {
                     key: i,
-                    left: d.left,
+                    left: isLeft ? marginForMouseEvent + d.left : d.left,
                     top: d.top,
                     width: d.width,
                     height: d.height,
