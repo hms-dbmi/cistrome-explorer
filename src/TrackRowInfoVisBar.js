@@ -47,7 +47,6 @@ export default function TrackRowInfoVisBar(props) {
     // Data, layouts and styles
     const { field, type } = fieldInfo;
     const isNominal = type === "nominal";
-   
 
     const yScale = d3.scaleBand()
         .domain(range(rowInfo.length))
@@ -63,8 +62,10 @@ export default function TrackRowInfoVisBar(props) {
 
         drawVisTitle(field, { two, isLeft, isNominal, width });
 
-        const barAreaWidth = isNominal ? 20 : width - 20;
-        const textAreaWidth = isNominal ? 50 : 20;
+        const textAreaWidth = isNominal ? width - 20 : 20;
+        const barAreaWidth = width - textAreaWidth;
+        const minTrackWidth = 40;
+        const isTextLabel = width > minTrackWidth;
         const fontSize = 10;
         
         // Scales
@@ -109,7 +110,7 @@ export default function TrackRowInfoVisBar(props) {
             rect.fill = color;
 
             // Render text labels when the space is enough.
-            if(barHeight >= fontSize){
+            if(barHeight >= fontSize && isTextLabel){
                 const text = two.makeText(textLeft, barTop + barHeight/2, textAreaWidth, barHeight, d[field]);
                 text.fill = d3.hsl(color).darker(3);
                 text.fontsize = fontSize;

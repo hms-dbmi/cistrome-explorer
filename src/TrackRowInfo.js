@@ -47,7 +47,6 @@ export default function TrackRowInfo(props) {
     const marginForMouseEvent = 20;
     const isLeft = rowInfoPosition === "left";
     const top = trackY;
-    const height = trackHeight;
     let unitWidths = [];    // Store default unit width for each vertical tracks
     rowInfoAttributes.forEach((fieldInfo) => {
         unitWidths.push({
@@ -57,16 +56,16 @@ export default function TrackRowInfo(props) {
         });
     });
     const [widths, setWidths] = useState(unitWidths);
-    const width = d3.sum(widths.map(d => d.width));
-    const left = isLeft ? trackX - width : trackX + trackWidth;
+    const totalWidth = d3.sum(widths.map(d => d.width));
+    const height = trackHeight;
+    const left = isLeft ? trackX - totalWidth : trackX + trackWidth;
 
     const divRef = useRef();
     const resizerRef = useRef([...Array(rowInfoAttributes.length)].map(() => createRef()));
     const [resizingIndex, setResizingIndex] = useState(-1);
     
     // Determine position of each dimension.
-    let trackProps = [];
-    let currentLeft = 0;
+    let trackProps = [], currentLeft = 0;
     rowInfoAttributes.forEach((attribute, i) => {
         const fieldInfo = isLeft ? rowInfoAttributes[rowInfoAttributes.length - i - 1] : attribute;
         const width = widths.find(d => d.field === fieldInfo.field && d.type === fieldInfo.type).width;
@@ -87,11 +86,10 @@ export default function TrackRowInfo(props) {
                 key={i}
                 className="visualization-resizer"
                 style={{
-                    top: `${d.top + (d.height + resizerHeight) / 2.0}px`,
-                    left: `${isLeft ? d.left + margin + marginForMouseEvent : d.left + d.width - resizerWidth - margin}px`,
+                    top: `${d.top + (d.height - resizerHeight) / 2.0}px`,
+                    left: `${isLeft ? marginForMouseEvent + d.left + margin : d.left + d.width - resizerWidth - margin}px`,
                     height: `${resizerHeight}px`,
-                    width: `${resizerWidth}px`,
-                    // visibility: mouseX !== null ? "visible" : "hidden"
+                    width: `${resizerWidth}px`
                 }}
             />
         );
@@ -112,7 +110,7 @@ export default function TrackRowInfo(props) {
                 const { field, type } = trackProps[resizingIndex].fieldInfo;
                 const [mouseX, mouseY] = d3.mouse(div);
                 let newWidth = isLeft ? trackWidth - (mouseX - trackLeft - marginForMouseEvent) : (mouseX - trackLeft);
-                const minWidth = 50;
+                const minWidth = 40;
                 if(newWidth < minWidth) {
                     newWidth = minWidth;
                 }
@@ -125,6 +123,8 @@ export default function TrackRowInfo(props) {
                 }
             }
         });
+
+        d3.select(div).on("mouseleave", () => setResizingIndex(-1));
     })
 
     console.log("TrackRowInfo.render");
@@ -134,8 +134,8 @@ export default function TrackRowInfo(props) {
             className="cistrome-hgw-child"
             style={{
                 top: `${top}px`,
-                left: `${isLeft ? left - marginForMouseEvent : left}px`, 
-                width: `${width + marginForMouseEvent}px`,
+                left: `${left - (isLeft ? marginForMouseEvent : 0)}px`, 
+                width: `${totalWidth + marginForMouseEvent}px`,
                 height: `${height}px`,
             }}
         >
@@ -143,7 +143,7 @@ export default function TrackRowInfo(props) {
                 fieldTypeToVisComponent[d.fieldInfo.type],
                 {
                     key: i,
-                    left: isLeft ? marginForMouseEvent + d.left : d.left,
+                    left: d.left + (isLeft ? marginForMouseEvent : 0),
                     top: d.top,
                     width: d.width,
                     height: d.height,
