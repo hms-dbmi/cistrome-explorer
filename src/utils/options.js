@@ -28,8 +28,23 @@ const baseSchema = {
                     "items": { "$ref": "#/definitions/sortInfo" }
                 },
                 "rowHighlight": {
-                    "type": "array",
-                    "items": { "$ref": "#/definitions/highlightInfo" }
+                    "type": "object",
+                    "required": ["field", "type", "contains"],
+                    "properties": {
+                        "field": {
+                            "type": "string",
+                            "description": "The name of a data field"
+                        },
+                        "type": {
+                            "type": "string",
+                            "enum": ["nominal", "quantitative"],
+                            "description": "The data type of a field"
+                        },
+                        "contains": {
+                            "type": "string",
+                            "description": "The substring to search for"
+                        }
+                    }
                 }
             }
         },
@@ -74,25 +89,6 @@ const baseSchema = {
                     "type": "string",
                     "enum": ["descending", "ascending"],
                     "description": "The order of sorting"
-                }
-            }
-        },
-        "highlightInfo" : {
-            "type": "object",
-            "required": ["field", "type", "contains"],
-            "properties": {
-                "field": {
-                    "type": "string",
-                    "description": "The name of a data field"
-                },
-                "type": {
-                    "type": "string",
-                    "enum": ["nominal", "quantitative"],
-                    "description": "The data type of a field"
-                },
-                "contains": {
-                    "type": "string",
-                    "description": "The substring to search for"
                 }
             }
         }
@@ -225,7 +221,7 @@ export function processWrapperOptions(optionsRaw) {
  * @param {string} key Key of the sub-option to replace in "options."
  * @returns {(object|object[])} The new options object or array.
  */
-export function updateOptionsWithKey(options, subOption, key) {
+export function updateGlobalOptionsWithKey(options, subOption, key) {
     let newOptions;
 
     if(Array.isArray(options)){

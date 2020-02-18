@@ -3,7 +3,7 @@
 import { 
     validateWrapperOptions, 
     processWrapperOptions, 
-    updateOptionsWithKey, 
+    updateGlobalOptionsWithKey, 
     getTrackWrapperOptions,
     DEFAULT_OPTIONS_KEY 
 } from './options.js';
@@ -128,7 +128,7 @@ describe('Utilities for processing wrapper component options', () => {
     });
 
     it('Should add sorting options to global default', () => {
-        const updatedOptions = updateOptionsWithKey([
+        const updatedOptions = updateGlobalOptionsWithKey([
             {
                 viewId: "default",
                 trackId: "default",
@@ -154,7 +154,7 @@ describe('Utilities for processing wrapper component options', () => {
     });
 
     it('Should update sorting options to global default', () => {
-        const updatedOptions = updateOptionsWithKey([
+        const updatedOptions = updateGlobalOptionsWithKey([
             {
                 viewId: "default",
                 trackId: "default",
@@ -190,7 +190,7 @@ describe('Utilities for processing wrapper component options', () => {
     });
 
     it('Should add global default options and add sorting info to the options', () => {
-        const updatedOptions = updateOptionsWithKey([
+        const updatedOptions = updateGlobalOptionsWithKey([
             {
                 viewId: "viewA",
                 trackId: "default",

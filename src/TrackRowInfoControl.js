@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import PubSub from 'pubsub-js';
 
 import { EVENT } from './utils/constants.js';
@@ -16,8 +16,10 @@ export default function TrackRowInfoControl(props){
     const {
         viewId, trackId,
         isVisible, 
-        fieldInfo
+        fieldInfo,
     } = props;
+
+    const divRef = useRef();
 
     function onSortAscClick() {
         const { field, type, title } = fieldInfo;
@@ -44,9 +46,10 @@ export default function TrackRowInfoControl(props){
     function onSearchClick(event) {
         const { field, type, title } = fieldInfo;
         if(type === "tree") return;
+        const parentRect = divRef.current.closest(".cistrome-hgw").getBoundingClientRect();
         PubSub.publish(EVENT.SEARCH_OPEN, {
-            top: event.clientY, 
-            left: event.clientX,
+            top: event.clientY - parentRect.y,
+            left: event.clientX - parentRect.x,
             field: (type === "url" && title ? title : field),
             type: (type === "url" ? "nominal" : type),
             viewId, 
@@ -55,7 +58,7 @@ export default function TrackRowInfoControl(props){
     }
 
     return (
-        <div 
+        <div ref={divRef}
             className={"chgw-control"}
             style={{
                 visibility: isVisible ? "visible" : "hidden"

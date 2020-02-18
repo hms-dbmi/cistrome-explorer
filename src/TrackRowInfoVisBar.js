@@ -191,6 +191,8 @@ export default function TrackRowInfoVisBar(props) {
                 isLeft={isLeft}
                 isVisible={mouseX !== null}
                 fieldInfo={fieldInfo}
+                searchTop={top}
+                searchLeft={left}
             />
         </div>
     );

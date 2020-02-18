@@ -45,7 +45,9 @@ const reducer = createReducer({
         return state;
     },
     [ACTION.HIGHLIGHT_ROWS]: (state, action) => {
-        // TODO
+        if(state[action.viewId] && state[action.viewId][action.trackId]) {
+            state[action.viewId][action.trackId].highlitRows = action.highlitRows;
+        }
         return state;
     }
 });

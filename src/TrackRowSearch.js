@@ -51,6 +51,10 @@ export default function TrackRowSearch(){
         setField("");
         setViewId("");
         setTrackId("");
+
+        PubSub.publish(EVENT.SEARCH_CHANGE, {
+            contains: "", field, type, viewId, trackId
+        });
     }
 
     return (

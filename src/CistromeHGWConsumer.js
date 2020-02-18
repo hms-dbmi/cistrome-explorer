@@ -13,7 +13,7 @@ import TrackWrapper from './TrackWrapper.js';
 import Tooltip from './Tooltip.js';
 import TrackRowSearch from './TrackRowSearch.js';
 
-import { processWrapperOptions, getTrackWrapperOptions, updateOptionsWithKey } from './utils/options.js';
+import { processWrapperOptions, getTrackWrapperOptions, updateGlobalOptionsWithKey } from './utils/options.js';
 import { 
     getHMTrackIdsFromViewConfig, 
     getSiblingVPHTrackIdsFromViewConfig,
@@ -105,6 +105,30 @@ export default function CistromeHGWConsumer(props) {
         });
     }, [hgRef]);
     
+    const setHighlitRows = useCallback((viewId, trackId, field, type, contains) => {
+        const rowInfo = context.state[viewId][trackId].rowInfo;
+        let newHighlitRows = [];
+        if(contains === "") {
+            newHighlitRows = [];
+        } else if(type === "nominal") {
+            const rowsWithIndex = Array.from(rowInfo.entries());
+            const filteredRows = rowsWithIndex.filter(d => d[1][field].toUpperCase().includes(contains.toUpperCase()));
+            newHighlitRows = filteredRows.map(d => d[0]);
+        } else if(type === "quantitative") {
+            // TODO: Better deal with quantitative data. Need to update Wrapper options for this.
+            // refer vega filter, such as lt: https://vega.github.io/vega-lite/docs/filter.html
+            const rowsWithIndex = Array.from(rowInfo.entries());
+            const filteredRows = rowsWithIndex.filter(d => d[1][field].toString().includes(contains));
+            newHighlitRows = filteredRows.map(d => d[0]);
+        }
+
+        context.dispatch({
+            type: ACTION.HIGHLIGHT_ROWS,
+            viewId,
+            trackId,
+            highlitRows: newHighlitRows
+        });
+    });
 
     // Function for child components to call to "register" their draw functions.
     const drawRegister = useCallback((key, drawFunction) => {
@@ -118,7 +142,7 @@ export default function CistromeHGWConsumer(props) {
         // Row sorting options
         const sortToken = PubSub.subscribe(EVENT.SORT, (msg, data) => {
             const newRowSort = [{field: data.field, type: data.type, order: data.order}];
-            const newOptionsRaw = updateOptionsWithKey(optionsRaw, newRowSort, "rowSort");
+            const newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, newRowSort, "rowSort");
             const newOptions = processWrapperOptions(newOptionsRaw)
             setOptions(newOptions);
 
@@ -128,11 +152,13 @@ export default function CistromeHGWConsumer(props) {
         });
 
         // Row highlighting options. 
-        // Highlighting options are specified in the Wrapper options, unlike sorting.
         const hlToken = PubSub.subscribe(EVENT.SEARCH_CHANGE, (msg, data) => {
-            const newRowHighlight = [{field: data.field, type: data.type, contains: data.contains}];
-            const newOptionsRaw = updateOptionsWithKey(optionsRaw, newRowHighlight, "rowHighlight");
+            const newRowHighlight = {field: data.field, type: data.type, contains: data.contains};
+            const newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, newRowHighlight, "rowHighlight");
             const newOptions = processWrapperOptions(newOptionsRaw)
+
+            // Highlighting options are specified only in the Wrapper options.
+            setHighlitRows(data.viewId, data.trackId, data.field, data.type, data.contains);
             setOptions(newOptions);
         });
 

@@ -16,7 +16,7 @@ toc:
 - name: Functions (internal)
 - validateWrapperOptions
 - processWrapperOptions
-- updateOptionsWithKey
+- updateGlobalOptionsWithKey
 - getTrackWrapperOptions
 - getRetinaRatio
 - traverseViewConfig
