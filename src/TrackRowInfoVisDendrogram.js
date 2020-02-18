@@ -6,6 +6,8 @@ import Two from "./utils/two.js";
 import { drawVisTitle } from "./utils/vis.js";
 import { matrixToTree } from './utils/tree.js';
 
+import TrackRowInfoControl from './TrackRowInfoControl.js';
+
 /**
  * Component for visualization of row info hierarchies.
  * @prop {number} left The left position of this view.
@@ -27,6 +29,7 @@ export default function TrackRowInfoVisDendrogram(props) {
         viewId,
         trackId,
         rowInfo,
+        onSortRows,
         drawRegister,
     } = props;
     
@@ -52,8 +55,21 @@ export default function TrackRowInfoVisDendrogram(props) {
         drawVisTitle(field, { two, isLeft, isNominal, width });
 
         const hierarchyData = matrixToTree(rowInfo.map(d => d[field]));
-
         const root = d3.hierarchy(hierarchyData);
+        const leaves = root.leaves().map(l => l.data);
+
+        // Check whether dendrogram leaves can be aligned to the current row ordering.
+        let cannotAlign = false;
+        for(let i = 0; i < leaves.length; i++) {
+            if(leaves[i].i !== i) {
+                cannotAlign = true;
+                break;
+            }
+        }
+        if(cannotAlign) {
+            two.update();
+            return two.teardown;
+        }
 
         const treeLayout = d3.cluster()
             .size([height, width])
@@ -141,6 +157,15 @@ export default function TrackRowInfoVisDendrogram(props) {
                     height: `${height}px`,
                     position: 'relative'
                 }}
+            />
+            <TrackRowInfoControl
+                isLeft={isLeft}
+                isVisible={mouseX !== null}
+                fieldInfo={fieldInfo}
+                searchTop={null}
+                searchLeft={null}
+                onSortRows={onSortRows}
+                onSearchRows={null}
             />
         </div>
     );
