@@ -76,7 +76,7 @@ export default function TrackRowInfoControl(props){
                 style={{
                     visibility: isVisible ? "visible" : "hidden"
                 }}>
-                <svg className="chgw-button-sm chgw-button-left"
+                <svg className="chgw-button-sm chgw-button-top"
                     onClick={onSortAscClick} viewBox={SORT_ASC.viewBox}>
                     <title>Sort rows in ascending order</title>
                     <path d={SORT_ASC.path} fill="currentColor"/>
@@ -86,7 +86,7 @@ export default function TrackRowInfoControl(props){
                     <title>Sort rows in descending order</title>
                     <path d={SORT_DESC.path} fill="currentColor"/>
                 </svg>
-                <svg className="chgw-button-sm chgw-button-right"
+                <svg className="chgw-button-sm chgw-button-bottom"
                     onClick={onSearchClick} viewBox={SEARCH.viewBox}>
                     <title>Search keywords</title>
                     <path d={SEARCH.path} fill="currentColor"/>

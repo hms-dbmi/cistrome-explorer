@@ -85,7 +85,7 @@ export default function TrackRowInfo(props) {
                 ref={resizerRef.current[i]}
                 key={i}
                 className="visualization-resizer"
-                style={{
+                style={{    
                     top: `${d.top + (d.height - resizerHeight) / 2.0}px`,
                     left: `${isLeft ? marginForMouseEvent + d.left + margin : d.left + d.width - resizerWidth - margin}px`,
                     height: `${resizerHeight}px`,
