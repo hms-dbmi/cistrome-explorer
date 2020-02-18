@@ -65,7 +65,7 @@ export default function TrackColTools(props) {
                             position: 'absolute',
                             top: (isTop ? (2*height/3) : 2),
                         }}
-                    >Select genomic interval</button>
+                    >Select current interval</button>
                 ) : (
                     <div className="col-tools-selection-info">
                         {siblingTracks.map((siblingTrack, i) => (
