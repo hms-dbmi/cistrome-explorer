@@ -22,6 +22,8 @@ const fieldTypeToVisComponent = {
  * @prop {array} rowInfo Array of JSON objects, one object for each row.
  * @prop {array} rowInfoAttributes Array of JSON object, one object for the names and types of each attribute.
  * @prop {string} rowInfoPosition The value of the `rowInfoPosition` option.
+ * @prop {function} onSortRows The function to call upon a sort interaction.
+ * @prop {function} onSearchRows The function to call upon a search interaction.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function TrackRowInfo(props) {
@@ -33,6 +35,8 @@ export default function TrackRowInfo(props) {
         rowInfo, 
         rowInfoAttributes,
         rowInfoPosition,
+        onSortRows,
+        onSearchRows,
         drawRegister
     } = props;
 
@@ -85,6 +89,8 @@ export default function TrackRowInfo(props) {
                     viewId: viewId,
                     trackId: trackId,
                     rowInfo: rowInfo,
+                    onSortRows: onSortRows,
+                    onSearchRows: onSearchRows,
                     drawRegister: drawRegister,
                 }
             ))}

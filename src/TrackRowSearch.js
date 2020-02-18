@@ -9,14 +9,13 @@ import './TrackRowSearch.scss';
  * @example
  * <TrackRowSearch/>
  */
-export default function TrackRowSearch() {
+export default function TrackRowSearch(props) {
 
-    const [left, setLeft] = useState(null);
-    const [top, setTop] = useState(null);
-    const [field, setField] = useState("");
-    const [type, setType] = useState("");
-    const [viewId, setViewId] = useState("");
-    const [trackId, setTrackId] = useState("");
+    const {
+        top, left,
+        onChange,
+        onClose
+    } = props;
 
     const inputRef = useRef();
 
@@ -26,39 +25,17 @@ export default function TrackRowSearch() {
     const padding = 5;
     
     useEffect(() => {
-        const searchToken = PubSub.subscribe(EVENT.SEARCH_OPEN, (msg, data) => {
-            setLeft(data.left);
-            setTop(data.top);
-            setField(data.field);
-            setType(data.type);
-            setViewId(data.viewId);
-            setTrackId(data.trackId);
-
-            inputRef.current.focus();
-        });
-
-        return () => {
-            PubSub.unsubscribe(searchToken);
-        };
+        inputRef.current.focus();
     });
 
     function onKeywordChange(e) {
         const keyword = e.target.value;
-        PubSub.publish(EVENT.SEARCH_CHANGE, {
-            contains: keyword, field, type, viewId, trackId
-        });
+        onChange(keyword);
     }
 
     function onSearchClose() {
-        setLeft(null);
-        setTop(null);
-        setField("");
-        setViewId("");
-        setTrackId("");
-
-        PubSub.publish(EVENT.SEARCH_CHANGE, {
-            contains: "", field, type, viewId, trackId
-        });
+        onChange("");
+        onClose();
     }
 
     return (

@@ -12,9 +12,7 @@ export const TRACK_TYPE = Object.freeze({
  */
 export const EVENT = Object.freeze({
     TOOLTIP: "tooltip",
-    SORT: "sort",
-    SEARCH_OPEN: "search-open",
-    SEARCH_CHANGE: "search-change"
+    SEARCH_OPEN: "search-open"
 });
 
 /*

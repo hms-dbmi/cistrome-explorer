@@ -6,10 +6,7 @@
  * @returns {(number[]|null)} The array of selected indices.
  */
 export function selectRows(rowInfo, options) {
-    if(!options) {
-        // Null means select all rows.
-        return null;
-    } else {
+    if(options) {
         // Filter
         // ...
         
@@ -23,7 +20,7 @@ export function selectRows(rowInfo, options) {
                     // Do nothing for the "tree" type.
                 } else if(type === "quantitative") {
                     transformedRowInfo.sort((a, b) => (a[1][field] - b[1][field]) * (order === "ascending" ? 1 : -1));
-                } else {
+                } else if(type === "nominal") {
                     transformedRowInfo.sort(function(a, b) {
                         let compared = 0, categoryA = a[1][field].toUpperCase(), categoryB = b[1][field].toUpperCase();
                         if(categoryA > categoryB) {
@@ -36,9 +33,11 @@ export function selectRows(rowInfo, options) {
                 }
             });
         }
-
         return transformedRowInfo.map(d => d[0]);
     }
+
+    // Null means select all rows.
+    return null;
 }
 
 /**
