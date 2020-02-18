@@ -3,6 +3,7 @@
  * Generate an array of selected row indices based on sort and filter options.
  * @param {object[]} rowInfo The original/full default-ordered rowInfo array.
  * @param {object} options The track options object, containing sort/filter options.
+ * @returns {(number[]|null)} The array of selected indices.
  */
 export function selectRows(rowInfo, options) {
     if(!options) {
@@ -38,4 +39,30 @@ export function selectRows(rowInfo, options) {
 
         return transformedRowInfo.map(d => d[0]);
     }
+}
+
+/**
+ * Generate an array of highlighted row indices based on search keyword information.
+ * @param {object[]} rowInfo The original/full default-ordered rowInfo array.
+ * @param {string} field The attribute on which to search.
+ * @param {string} type The data type contained in the field value.
+ * @param {string} contains The search term.
+ * @returns {number[]} The array of highlit indices.
+ */
+export function highlightRowsFromSearch(rowInfo, field, type, contains) {
+    let newHighlitRows = [];
+    if(contains === "") {
+        newHighlitRows = [];
+    } else if(type === "nominal") {
+        const rowsWithIndex = Array.from(rowInfo.entries());
+        const filteredRows = rowsWithIndex.filter(d => d[1][field].toUpperCase().includes(contains.toUpperCase()));
+        newHighlitRows = filteredRows.map(d => d[0]);
+    } else if(type === "quantitative") {
+        // TODO: Better deal with quantitative data. Need to update Wrapper options for this.
+        // refer vega filter, such as lt: https://vega.github.io/vega-lite/docs/filter.html
+        const rowsWithIndex = Array.from(rowInfo.entries());
+        const filteredRows = rowsWithIndex.filter(d => d[1][field].toString().includes(contains));
+        newHighlitRows = filteredRows.map(d => d[0]);
+    }
+    return newHighlitRows;
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import PubSub from 'pubsub-js';
 import { EVENT } from './utils/constants.js';
 import { CLOSE } from './utils/icons.js';
@@ -9,7 +9,7 @@ import './TrackRowSearch.scss';
  * @example
  * <TrackRowSearch/>
  */
-export default function TrackRowSearch(){
+export default function TrackRowSearch() {
 
     const [left, setLeft] = useState(null);
     const [top, setTop] = useState(null);
@@ -17,6 +17,8 @@ export default function TrackRowSearch(){
     const [type, setType] = useState("");
     const [viewId, setViewId] = useState("");
     const [trackId, setTrackId] = useState("");
+
+    const inputRef = useRef();
 
     // Styles
     const width = 180;
@@ -31,6 +33,8 @@ export default function TrackRowSearch(){
             setType(data.type);
             setViewId(data.viewId);
             setTrackId(data.trackId);
+
+            inputRef.current.focus();
         });
 
         return () => {
@@ -68,6 +72,7 @@ export default function TrackRowSearch(){
             }}
         >
             <input
+                ref={inputRef}
                 type="text"
                 name="default name"
                 placeholder="keyword"
