@@ -60,7 +60,7 @@ export default function TrackRowHighlight(props) {
                 const rect = two.makeRect(0, yScale(i), width, rowHeight);
                 rect.stroke = null;
                 rect.fill = "#000";
-                rect.opacity = 0.2;
+                rect.opacity = 0.3;
             }
         }
 
