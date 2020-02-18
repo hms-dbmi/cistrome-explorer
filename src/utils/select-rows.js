@@ -54,13 +54,13 @@ export function highlightRowsFromSearch(rowInfo, field, type, contains) {
         newHighlitRows = [];
     } else if(type === "nominal") {
         const rowsWithIndex = Array.from(rowInfo.entries());
-        const filteredRows = rowsWithIndex.filter(d => d[1][field].toUpperCase().includes(contains.toUpperCase()));
+        const filteredRows = rowsWithIndex.filter(d => !d[1][field].toUpperCase().includes(contains.toUpperCase()));
         newHighlitRows = filteredRows.map(d => d[0]);
     } else if(type === "quantitative") {
         // TODO: Better deal with quantitative data. Need to update Wrapper options for this.
         // refer vega filter, such as lt: https://vega.github.io/vega-lite/docs/filter.html
         const rowsWithIndex = Array.from(rowInfo.entries());
-        const filteredRows = rowsWithIndex.filter(d => d[1][field].toString().includes(contains));
+        const filteredRows = rowsWithIndex.filter(d => !d[1][field].toString().includes(contains));
         newHighlitRows = filteredRows.map(d => d[0]);
     }
     return newHighlitRows;
