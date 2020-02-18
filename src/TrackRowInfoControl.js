@@ -1,8 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import PubSub from 'pubsub-js';
 
-import { EVENT } from './utils/constants.js';
-import { SEARCH, SORT_ASC, SORT_DESC } from './utils/icons.js';
+import { SEARCH, SORT_ASC, SORT_DESC, SORT_TREE } from './utils/icons.js';
 
 import TrackRowSearch from './TrackRowSearch.js';
 
@@ -31,7 +30,6 @@ export default function TrackRowInfoControl(props){
     const [searchLeft, setSearchLeft] = useState(null);
 
     const { field, type, title } = fieldInfo;
-    console.assert(type !== "tree");
     const controlField = (type === "url" && title ? title : field);
     const controlType = (type === "url" ? "nominal" : type);
 
@@ -69,6 +67,34 @@ export default function TrackRowInfoControl(props){
         onSearchRows(controlField, controlType, value);
     }
 
+    const buttons = [];
+    if(type !== "tree") {
+        buttons.push({
+            onClick: onSortAscClick,
+            icon: SORT_ASC,
+            title: "Sort rows in ascending order"
+        });
+        buttons.push({
+            onClick: onSortDescClick,
+            icon: SORT_DESC,
+            title: "Sort rows in descending order"
+        });
+    } else {
+        buttons.push({
+            onClick: onSortAscClick,
+            icon: SORT_TREE,
+            title: "Sort rows by hierarchy leaf order"
+        })
+    }
+
+    if(onSearchRows) {
+        buttons.push({
+            onClick: onSearchClick,
+            icon: SEARCH,
+            title: "Search keywords"
+        })
+    }
+
     return (
         <div>
             <div ref={divRef}
@@ -76,21 +102,27 @@ export default function TrackRowInfoControl(props){
                 style={{
                     visibility: isVisible ? "visible" : "hidden"
                 }}>
-                <svg className="chgw-button-sm chgw-button-left"
-                    onClick={onSortAscClick} viewBox={SORT_ASC.viewBox}>
-                    <title>Sort rows in ascending order</title>
-                    <path d={SORT_ASC.path} fill="currentColor"/>
-                </svg>
-                <svg className="chgw-button-sm chgw-button-middle"
-                    onClick={onSortDescClick} viewBox={SORT_DESC.viewBox}>
-                    <title>Sort rows in descending order</title>
-                    <path d={SORT_DESC.path} fill="currentColor"/>
-                </svg>
-                <svg className="chgw-button-sm chgw-button-right"
-                    onClick={onSearchClick} viewBox={SEARCH.viewBox}>
-                    <title>Search keywords</title>
-                    <path d={SEARCH.path} fill="currentColor"/>
-                </svg>
+                {buttons.map((button, i) => {
+                    let positionClass = "chgw-button-middle";
+                    if(buttons.length > 1) {
+                        if(i === 0) {
+                            positionClass = "chgw-button-left"
+                        } else if(i === buttons.length - 1) {
+                            positionClass = "chgw-button-right"
+                        }
+                    }
+                    return (
+                        <svg 
+                            key={button.title}
+                            className={`chgw-button-sm ${positionClass}`}
+                            onClick={button.onClick} 
+                            viewBox={button.icon.viewBox}
+                        >
+                            <title>{button.title}</title>
+                            <path d={button.icon.path} fill="currentColor"/>
+                        </svg>
+                    );
+                })}
             </div>
             {isSearching ? (
                 <TrackRowSearch 
