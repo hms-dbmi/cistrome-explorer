@@ -27,11 +27,13 @@ toc:
 - getHMSelectedRowsFromViewConfig
 - resolveIntervalCoordinates
 - selectRows
+- highlightRowsFromSearch
 - insertItemToArray
 - modifyItemInArray
 - removeItemFromArray
 - drawVisTitle
 - matrixToTree
+- createReducer
 - name: Classes (internal)
 - Two
 - TwoRectangle

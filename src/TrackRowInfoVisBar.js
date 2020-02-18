@@ -23,6 +23,8 @@ export const margin = 5;
  * @prop {boolean} isLeft Is this view on the left side of the track?
  * @prop {string} viewId The viewId for the horizontal-multivec track.
  * @prop {string} trackId The trackId for the horizontal-multivec track.
+ * @prop {function} onSortRows The function to call upon a sort interaction.
+ * @prop {function} onSearchRows The function to call upon a search interaction.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function TrackRowInfoVisBar(props) {
@@ -33,6 +35,8 @@ export default function TrackRowInfoVisBar(props) {
         viewId,
         trackId,
         rowInfo,
+        onSortRows,
+        onSearchRows,
         drawRegister,
     } = props;
 
@@ -186,13 +190,13 @@ export default function TrackRowInfoVisBar(props) {
                 }}
             />
             <TrackRowInfoControl
-                viewId={viewId}
-                trackId={trackId}
                 isLeft={isLeft}
                 isVisible={mouseX !== null}
                 fieldInfo={fieldInfo}
                 searchTop={top}
                 searchLeft={left}
+                onSortRows={onSortRows}
+                onSearchRows={onSearchRows}
             />
         </div>
     );

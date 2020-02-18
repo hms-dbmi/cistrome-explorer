@@ -1,22 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import PubSub from 'pubsub-js';
 import { EVENT } from './utils/constants.js';
 import { CLOSE } from './utils/icons.js';
 import './TrackRowSearch.scss';
 
 /**
- * Text field to serach for keywords. Subscribes to 'search' event via `PubSub`.
+ * Text field to serach for keywords.
+ * @prop {number} top The top coordinate.
+ * @prop {number} left The left coordinate.
+ * @prop {function} onChange The function to call when the search keyword has changed.
+ * @prop {function} onClose The function to call when the search field should be closed.
  * @example
  * <TrackRowSearch/>
  */
-export default function TrackRowSearch(){
+export default function TrackRowSearch(props) {
 
-    const [left, setLeft] = useState(null);
-    const [top, setTop] = useState(null);
-    const [field, setField] = useState("");
-    const [type, setType] = useState("");
-    const [viewId, setViewId] = useState("");
-    const [trackId, setTrackId] = useState("");
+    const {
+        top, left,
+        onChange,
+        onClose
+    } = props;
+
+    const inputRef = useRef();
 
     // Styles
     const width = 180;
@@ -24,37 +29,17 @@ export default function TrackRowSearch(){
     const padding = 5;
     
     useEffect(() => {
-        const searchToken = PubSub.subscribe(EVENT.SEARCH_OPEN, (msg, data) => {
-            setLeft(data.left);
-            setTop(data.top);
-            setField(data.field);
-            setType(data.type);
-            setViewId(data.viewId);
-            setTrackId(data.trackId);
-        });
-
-        return () => {
-            PubSub.unsubscribe(searchToken);
-        };
+        inputRef.current.focus();
     });
 
     function onKeywordChange(e) {
         const keyword = e.target.value;
-        PubSub.publish(EVENT.SEARCH_CHANGE, {
-            contains: keyword, field, type, viewId, trackId
-        });
+        onChange(keyword);
     }
 
     function onSearchClose() {
-        setLeft(null);
-        setTop(null);
-        setField("");
-        setViewId("");
-        setTrackId("");
-
-        PubSub.publish(EVENT.SEARCH_CHANGE, {
-            contains: "", field, type, viewId, trackId
-        });
+        onChange("");
+        onClose();
     }
 
     return (
@@ -68,6 +53,7 @@ export default function TrackRowSearch(){
             }}
         >
             <input
+                ref={inputRef}
                 type="text"
                 name="default name"
                 placeholder="keyword"
