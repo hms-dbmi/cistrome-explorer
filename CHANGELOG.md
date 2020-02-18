@@ -15,6 +15,7 @@
 - Added a mechanism for components to "register" their `draw()` functions, to prepare for drawing visualizations to SVG when the user would like to export the current visual state.
 - Added a global variable that stores `rowInfo` as well as sorting & highlighting info, using `React.Context`.
 - Added a mechanism to sort rows of a HiGrass `horizontal-multivec` track and vertical tracks on the left and right sides which is activated when users click on sorting buttons.
+- Added a feature to interactively highlight rows by typing keywords on a text field which appears when a search button is clicked.
 
 ### Changed
 - Moved to rendering the row info categorical metadata on a single `<canvas/>` element, rather than colored HTML elements for each row.
