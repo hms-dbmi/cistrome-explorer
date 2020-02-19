@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useEffect, useState, useMemo } from "react";
+import React, { useRef, useCallback, useEffect, useState } from "react";
 import range from "lodash/range";
 import PubSub from "pubsub-js";
 
@@ -8,6 +8,7 @@ import { EVENT } from "./utils/constants.js";
 import { destroyTooltip } from "./utils/tooltip.js";
 import { drawVisTitle } from "./utils/vis.js";
 import { matrixToTree } from './utils/tree.js';
+import { EXCLAMATION } from './utils/icons.js';
 
 import TrackRowInfoControl from './TrackRowInfoControl.js';
 
@@ -51,25 +52,22 @@ export default function TrackRowInfoVisDendrogram(props) {
 
     // Process the hierarchy data. Result will be null if the tree leaves
     // cannot be aligned based on the current rowInfo ordering.
-    const root = useMemo(() => {
-        const hierarchyData = matrixToTree(rowInfo.map(d => d[field]));
-        const root = d3.hierarchy(hierarchyData);
-        const leaves = root.leaves().map(l => l.data);
+    const hierarchyData = matrixToTree(rowInfo.map(d => d[field]));
+    const root = d3.hierarchy(hierarchyData);
+    const leaves = root.leaves().map(l => l.data);
 
-        // Check whether dendrogram leaves can be aligned to the current row ordering.
-        let cannotAlign = false;
-        for(let i = 0; i < leaves.length; i++) {
-            if(leaves[i].i !== i) {
-                cannotAlign = true;
-                break;
-            }
+    // Check whether dendrogram leaves can be aligned to the current row ordering.
+    let cannotAlign = false;
+    for(let i = 0; i < leaves.length; i++) {
+        if(leaves[i].i !== i) {
+            cannotAlign = true;
+            break;
         }
-
-        if(!cannotAlign) {
-            return root;
-        }
-        return null;
-    }, [rowInfo]);
+    }
+    const treeLayout = d3.cluster()
+        .size([height, width])
+        .separation(() => 1);
+    treeLayout(root);
 
     const draw = useCallback((domElement) => {
         const two = new Two({
@@ -77,57 +75,52 @@ export default function TrackRowInfoVisDendrogram(props) {
             height,
             domElement
         });
+        
+        // Draw the dendrogram.
+        const descendants = root.descendants();
+
+        let pathFunction;
+        if(isLeft){
+            pathFunction = (d) => {
+                return two.makePath(
+                    d.parent.y, top + d.parent.x,
+                    d.parent.y, top + d.x,
+                    d.y, top + d.x,
+                    d.parent.y, top + d.x
+                );
+            }
+        } else {
+            pathFunction = (d) => {
+                return two.makePath(
+                    width -  d.parent.y, top + d.parent.x,
+                    width - d.parent.y, top + d.x,
+                    width - d.y, top + d.x,
+                    width - d.parent.y, top + d.x
+                );
+            }
+        }
+        
+        descendants.forEach((d, i) => {
+            if(i > 0) {
+                const path = pathFunction(d);
+                path.stroke = "#555";
+                path.opacity = 0.6;
+                path.linewidth = 1.5;
+            }
+        });
+
+        if(cannotAlign){
+            const rect = two.makeRect(0, 0, width, height);
+            rect.fill = "white";
+            rect.opacity = 0.8;
+        }
 
         drawVisTitle(field, { two, isLeft, isNominal, width });
-
-        if(!root) {
-            // Draw a gray rectangle indicating that the dendrogram is hidden.
-            const rect = two.makeRect((isLeft ? 20 : 0), 0, width - 20, height);
-            rect.fill = "silver";
-            rect.opacity = 0.5;
-        } else {
-            // Draw the dendrogram.
-            const treeLayout = d3.cluster()
-                .size([height, width])
-                .separation(() => 1);
-            treeLayout(root);
-            const descendants = root.descendants();
-
-            let pathFunction;
-            if(isLeft){
-                pathFunction = (d) => {
-                    return two.makePath(
-                        d.parent.y, top + d.parent.x,
-                        d.parent.y, top + d.x,
-                        d.y, top + d.x,
-                        d.parent.y, top + d.x
-                    );
-                }
-            } else {
-                pathFunction = (d) => {
-                    return two.makePath(
-                        width -  d.parent.y, top + d.parent.x,
-                        width - d.parent.y, top + d.x,
-                        width - d.y, top + d.x,
-                        width - d.parent.y, top + d.x
-                    );
-                }
-            }
-            
-            descendants.forEach((d, i) => {
-                if(i > 0) {
-                    const path = pathFunction(d);
-                    path.stroke = "#555";
-                    path.opacity = 0.6;
-                    path.linewidth = 1.5;
-                }
-            });
-        }
 
         two.update();
         return two.teardown;
     });
-    
+
     drawRegister("TrackRowInfoVisDendrogram", draw);
 
     useEffect(() => {
@@ -138,14 +131,14 @@ export default function TrackRowInfoVisDendrogram(props) {
         d3.select(canvas).on("mousemove", () => {
             setMouseX(true);
 
-            if(!root) {
+            if(cannotAlign) {
                 // Show a tooltip indicating that the dendrogram has been hidden.
                 const mouseViewportX = d3.event.clientX;
                 const mouseViewportY = d3.event.clientY;
                 PubSub.publish(EVENT.TOOLTIP, {
                     x: mouseViewportX,
                     y: mouseViewportY,
-                    content: `Dendrogram is hidden due to the current row ordering.`
+                    content: `Dendrogram is inaccurate due to the current row ordering.`
                 });
             } else {
                 // The dendrogram is visible, so no tooltip should be shown on hover.
@@ -191,6 +184,23 @@ export default function TrackRowInfoVisDendrogram(props) {
                 onSortRows={onSortRows}
                 onSearchRows={null}
             />
+            {cannotAlign ? 
+                <div
+                    style={{
+                        position: "absolute",
+                        pointerEvents: "none",
+                        top: `${height / 2.0 - 25}px`,
+                        left: `${width / 2.0 - 25}px`,
+                    }}
+                >
+                    <svg 
+                        className={`chgw-button-alert`}
+                        viewBox={EXCLAMATION.viewBox}
+                    >
+                        <path d={EXCLAMATION.path} fill="currentColor"/>
+                    </svg>
+                </div>
+                : null}
         </div>
     );
 }
