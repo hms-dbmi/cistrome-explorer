@@ -1,8 +1,11 @@
-import React, { useRef, useCallback, useEffect, useState } from "react";
+import React, { useRef, useCallback, useEffect, useState, useMemo } from "react";
 import range from "lodash/range";
+import PubSub from "pubsub-js";
 
 import d3 from "./utils/d3.js";
 import Two from "./utils/two.js";
+import { EVENT } from "./utils/constants.js";
+import { destroyTooltip } from "./utils/tooltip.js";
 import { drawVisTitle } from "./utils/vis.js";
 import { matrixToTree } from './utils/tree.js';
 
@@ -35,6 +38,7 @@ export default function TrackRowInfoVisDendrogram(props) {
     
     const divRef = useRef();
     const canvasRef = useRef();
+
     const [mouseX, setMouseX] = useState(null);
 
     // Data, layouts and styles
@@ -45,15 +49,9 @@ export default function TrackRowInfoVisDendrogram(props) {
         .domain(range(rowInfo.length))
         .range([0, height]);
 
-    const draw = useCallback((domElement) => {
-        const two = new Two({
-            width,
-            height,
-            domElement
-        });
-
-        drawVisTitle(field, { two, isLeft, isNominal, width });
-
+    // Process the hierarchy data. Result will be null if the tree leaves
+    // cannot be aligned based on the current rowInfo ordering.
+    const root = useMemo(() => {
         const hierarchyData = matrixToTree(rowInfo.map(d => d[field]));
         const root = d3.hierarchy(hierarchyData);
         const leaves = root.leaves().map(l => l.data);
@@ -66,48 +64,67 @@ export default function TrackRowInfoVisDendrogram(props) {
                 break;
             }
         }
-        if(cannotAlign) {
-            two.update();
-            return two.teardown;
+
+        if(!cannotAlign) {
+            const treeLayout = d3.cluster()
+                .size([height, width])
+                .separation(() => 1);
+            treeLayout(root);
+            return root;
         }
 
-        const treeLayout = d3.cluster()
-            .size([height, width])
-            .separation(() => 1);
-        treeLayout(root);
+        return null;
+    }, [rowInfo]);
 
-        const descendants = root.descendants();
-
-        let pathFunction;
-        if(isLeft){
-            pathFunction = (d) => {
-                return two.makePath(
-                    d.parent.y, top + d.parent.x,
-                    d.parent.y, top + d.x,
-                    d.y, top + d.x,
-                    d.parent.y, top + d.x
-                );
-            }
-        } else {
-            pathFunction = (d) => {
-                return two.makePath(
-                    width -  d.parent.y, top + d.parent.x,
-                    width - d.parent.y, top + d.x,
-                    width - d.y, top + d.x,
-                    width - d.parent.y, top + d.x
-                );
-            }
-        }
-        
-        descendants.forEach((d, i) => {
-            if(i > 0) {
-                const path = pathFunction(d);
-                path.stroke = "#555";
-                path.opacity = 0.6;
-                path.linewidth = 1.5;
-            }
+    const draw = useCallback((domElement) => {
+        const two = new Two({
+            width,
+            height,
+            domElement
         });
-        
+
+        drawVisTitle(field, { two, isLeft, isNominal, width });
+
+        if(!root) {
+            // Draw a gray rectangle indicating that the dendrogram is hidden.
+            const rect = two.makeRect((isLeft ? 20 : 0), 0, width - 20, height);
+            rect.fill = "silver";
+            rect.opacity = 0.5;
+        } else {
+            // Draw the dendrogram.
+            const descendants = root.descendants();
+
+            let pathFunction;
+            if(isLeft){
+                pathFunction = (d) => {
+                    return two.makePath(
+                        d.parent.y, top + d.parent.x,
+                        d.parent.y, top + d.x,
+                        d.y, top + d.x,
+                        d.parent.y, top + d.x
+                    );
+                }
+            } else {
+                pathFunction = (d) => {
+                    return two.makePath(
+                        width -  d.parent.y, top + d.parent.x,
+                        width - d.parent.y, top + d.x,
+                        width - d.y, top + d.x,
+                        width - d.parent.y, top + d.x
+                    );
+                }
+            }
+            
+            descendants.forEach((d, i) => {
+                if(i > 0) {
+                    const path = pathFunction(d);
+                    path.stroke = "#555";
+                    path.opacity = 0.6;
+                    path.linewidth = 1.5;
+                }
+            });
+        }
+
         two.update();
         return two.teardown;
     });
@@ -120,22 +137,30 @@ export default function TrackRowInfoVisDendrogram(props) {
         const teardown = draw(canvas);
 
         d3.select(canvas).on("mousemove", () => {
-            const [mouseX, mouseY] = d3.mouse(canvas);
-            const y = yScale.invert(mouseY);
-            if(y !== undefined){
-                setMouseX(true);
+            setMouseX(true);
+
+            if(!root) {
+                // Show a tooltip indicating that the dendrogram has been hidden.
+                const mouseViewportX = d3.event.clientX;
+                const mouseViewportY = d3.event.clientY;
+                PubSub.publish(EVENT.TOOLTIP, {
+                    x: mouseViewportX,
+                    y: mouseViewportY,
+                    content: `Dendrogram is hidden due to the current row ordering.`
+                });
             } else {
-                setMouseX(null);
-                return;
+                // The dendrogram is visible, so no tooltip should be shown on hover.
+                destroyTooltip();
             }
         });
+        d3.select(canvas).on("mouseout", destroyTooltip);
         d3.select(div).on("mouseleave", () => setMouseX(null));
 
         return () => {
             teardown();
             d3.select(div).on("mouseleave", null);
         };
-    }, [top, left, width, height, rowInfo]);
+    }, [top, left, width, height, root]);
 
     return (
         <div
