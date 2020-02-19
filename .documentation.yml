@@ -12,7 +12,9 @@ toc:
 - TrackRowInfoVisBar
 - TrackRowInfoVisDendrogram
 - TrackRowInfoVisLink
+- TrackRowSearch
 - TrackWrapper
+- InfoProvider
 - name: Functions (internal)
 - validateWrapperOptions
 - processWrapperOptions
