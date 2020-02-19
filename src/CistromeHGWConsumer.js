@@ -64,6 +64,7 @@ export default function CistromeHGWConsumer(props) {
      * to sibling `viewport-projection-horizontal` track IDs.
      */
     const onViewConfig = useCallback((newViewConfig) => {
+        console.log(newViewConfig);
         const newTrackInfos = getHMTrackIdsFromViewConfig(newViewConfig);
         const newSiblingTrackInfos = {};
         for(let trackInfo of newTrackInfos) {

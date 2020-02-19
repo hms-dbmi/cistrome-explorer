@@ -1,5 +1,6 @@
 import React from 'react';
 
+import TrackColSelection from './TrackColSelection.js';
 import TrackColSelectionInfo from './TrackColSelectionInfo.js';
 
 import './TrackColTools.scss';
@@ -48,40 +49,43 @@ export default function TrackColTools(props) {
     }
     
     return (
-        <div
-            className="cistrome-hgw-child"
-            style={{
-                top: `${top}px`,
-                left: `${left}px`, 
-                width: `${width}px`,
-                height: `${height}px`
-            }}
-        >
-            <div className="col-tools">
-                {!combinedTrack ? (
-                    <button 
-                        onClick={onSelectGenomicInterval}
-                        style={{
-                            position: 'absolute',
-                            top: (isTop ? (2*height/3) : 2),
-                        }}
-                    >Select current interval</button>
-                ) : (
-                    <div className="col-tools-selection-info">
-                        {siblingTracks.map((siblingTrack, i) => (
-                            <TrackColSelectionInfo
-                                key={i}
-                                width={trackWidth}
-                                height={height}
-                                colToolsPosition={colToolsPosition}
-                                trackAssembly={trackAssembly}
-                                projectionTrack={siblingTrack}
-                                drawRegister={drawRegister}
-                            />
-                        ))}
-                    </div>
-                )}
+        <div>
+            <div
+                className="cistrome-hgw-child"
+                style={{
+                    top: `${top}px`,
+                    left: `${left}px`, 
+                    width: `${width}px`,
+                    height: `${height}px`
+                }}
+            >
+                <div className="col-tools">
+                    {!combinedTrack ? (
+                        <button 
+                            onClick={onSelectGenomicInterval}
+                            style={{
+                                position: 'absolute',
+                                top: (isTop ? (2*height/3) : 2),
+                            }}
+                        >Select current interval</button>
+                    ) : (
+                        <div className="col-tools-selection-info">
+                            {siblingTracks.map((siblingTrack, i) => (
+                                <TrackColSelectionInfo
+                                    key={i}
+                                    width={trackWidth}
+                                    height={height}
+                                    colToolsPosition={colToolsPosition}
+                                    trackAssembly={trackAssembly}
+                                    projectionTrack={siblingTrack}
+                                    drawRegister={drawRegister}
+                                />
+                            ))}
+                        </div>
+                    )}
+                </div>
             </div>
+            <TrackColSelection />
         </div>
     );
 };
