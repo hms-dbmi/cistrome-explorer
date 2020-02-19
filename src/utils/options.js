@@ -27,6 +27,25 @@ const baseSchema = {
                     "type": "array",
                     "items": { "$ref": "#/definitions/sortInfo" }
                 },
+                "rowFilter": {
+                    "type": "object",
+                    "required": ["field", "type", "contains"],
+                    "properties": {
+                        "field": {
+                            "type": "string",
+                            "description": "The name of a data field"
+                        },
+                        "type": {
+                            "type": "string",
+                            "enum": ["nominal", "quantitative"],
+                            "description": "The data type of a field"
+                        },
+                        "contains": {
+                            "type": "string",
+                            "description": "The substring to search for"
+                        }
+                    }
+                },
                 "rowHighlight": {
                     "type": "object",
                     "required": ["field", "type", "contains"],

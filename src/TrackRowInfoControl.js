@@ -129,6 +129,8 @@ export default function TrackRowInfoControl(props){
                 <TrackRowSearch 
                     top={searchTop}
                     left={searchLeft}
+                    field={controlField}
+                    type={controlType}
                     onChange={onSearchChange}
                     onFilter={onFilter}
                     onClose={onSearchClose}

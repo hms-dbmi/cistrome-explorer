@@ -9,17 +9,25 @@ import d3 from './d3.js';
  */
 export function selectRows(rowInfo, options) {
     if(options) {
+        let filteredRowInfo = Array.from(rowInfo);
         // Filter
-        // ...
-
+        if(options.rowFilter) {
+            const { field, type, contains } = options.rowFilter;
+            if(type === "nominal") {
+                filteredRowInfo = Array.from(filteredRowInfo.filter(d => d[field].toUpperCase().includes(contains.toUpperCase())));
+                console.log(filteredRowInfo, field, contains);
+            } else {
+                // Handle with quantitative value
+            }
+        }
         // Sort
-        let transformedRowInfo = Array.from(rowInfo.entries());
+        let transformedRowInfo = Array.from(filteredRowInfo.entries());
         if(options.rowSort && options.rowSort.length > 0) {
             let sortOptions = options.rowSort.slice().reverse();
             sortOptions.forEach((d) => {
                 const { field, type, order } = d;
                 if(type === "tree") {
-                    const hierarchyData = matrixToTree(rowInfo.map(d => d[field]));
+                    const hierarchyData = matrixToTree(filteredRowInfo.map(d => d[field]));
                     const root = d3.hierarchy(hierarchyData);
                     const leaves = root.leaves().map(l => l.data.i);
                     transformedRowInfo = leaves.map((i) => transformedRowInfo[i]);

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { CLOSE, FILTER } from './utils/icons.js';
 import './TrackRowSearch.scss';
 
@@ -15,12 +15,14 @@ export default function TrackRowSearch(props) {
 
     const {
         top, left,
+        field, type,
         onChange,
         onFilter,
         onClose
     } = props;
 
     const inputRef = useRef();
+    const [keyword, setKeyword] = useState("");
 
     // Styles
     const width = 180;
@@ -32,13 +34,21 @@ export default function TrackRowSearch(props) {
     });
 
     function onKeywordChange(e) {
-        const keyword = e.target.value;
-        onChange(keyword);
+        const newKeyword = e.target.value;
+        setKeyword(newKeyword);
+        onChange(newKeyword);
+    }
+
+    function onFilterClick() {
+        onFilter(field, type, keyword);
+        onChange("");
+        setKeyword("");
     }
 
     function onSearchClose() {
         onChange("");
         onClose();
+        setKeyword("");
     }
 
     return (
@@ -62,7 +72,7 @@ export default function TrackRowSearch(props) {
             />
             
             <svg className="chgw-button-sm chgw-search-button"
-                onClick={onFilter} viewBox={FILTER.viewBox}>
+                onClick={onFilterClick} viewBox={FILTER.viewBox}>
                 <title>Filter rows using the keyword.</title>
                 <path d={FILTER.path} fill="currentColor"/>
             </svg>

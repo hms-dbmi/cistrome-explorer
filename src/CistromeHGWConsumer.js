@@ -133,7 +133,14 @@ export default function CistromeHGWConsumer(props) {
     });
 
     const onFilter = useCallback((viewId, trackId, field, type, contains) => {
+        const newRowFilter = { field, type, contains };
+        const newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, newRowFilter, "rowFilter");
+        const newOptions = processWrapperOptions(newOptionsRaw);
 
+        const trackOptions = getTrackWrapperOptions(newOptions, viewId, trackId);
+        const newFilteredRows = selectRows(context.state[viewId][trackId].rowInfo, trackOptions);
+        setTrackSelectedRows(viewId, trackId, newFilteredRows);
+        setOptions(newOptions);
     });
 
     // Callback function for searching.
