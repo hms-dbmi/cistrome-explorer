@@ -1,7 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import PubSub from 'pubsub-js';
-import { EVENT } from './utils/constants.js';
-import { CLOSE } from './utils/icons.js';
+import React, { useEffect, useRef } from "react";
+import { CLOSE, FILTER } from './utils/icons.js';
 import './TrackRowSearch.scss';
 
 /**
@@ -54,6 +52,7 @@ export default function TrackRowSearch(props) {
         >
             <input
                 ref={inputRef}
+                className="cistrome-hgw-searchinput"
                 type="text"
                 name="default name"
                 placeholder="keyword"
@@ -61,7 +60,12 @@ export default function TrackRowSearch(props) {
                 style={{ width, height }}
             />
             
-            <svg className="chgw-button-sm chgw-search-close-button"
+            <svg className="chgw-button-sm chgw-search-button"
+                viewBox={FILTER.viewBox}>
+                <title>Filter rows using the keyword.</title>
+                <path d={FILTER.path} fill="currentColor"/>
+            </svg>
+            <svg className="chgw-button-sm chgw-search-button"
                 onClick={onSearchClose} viewBox={CLOSE.viewBox}>
                 <title>Close search box</title>
                 <path d={CLOSE.path} fill="currentColor"/>
