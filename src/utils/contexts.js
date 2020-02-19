@@ -58,7 +58,11 @@ const reducer = createReducer({
  */
 const initialState = {};
 export const InfoContext = createContext(initialState);
-export const InfoProvider = ({ children }) => {
+/**
+ * The provider component for the InfoContext context.
+ * @prop {React.Component[]} children The consumer components.
+ */
+export function InfoProvider({ children }) {
     const [state, dispatch] = useReducer(reducer, initialState);
     return (
         <InfoContext.Provider value={{ state, dispatch }}>
