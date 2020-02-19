@@ -22,9 +22,9 @@ const demos = {
                 {field: "Tissue Type", type: "nominal", position: "right"}
             ],
             rowSort: [
-                {field: "Species", type: "nominal", order: "ascending"},
-                {field: "Tissue Type", type: "nominal", order: "ascending"},
-                {field: "Cell Type", type: "nominal", order: "ascending"}
+                // {field: "Species", type: "nominal", order: "ascending"},
+                // {field: "Tissue Type", type: "nominal", order: "ascending"},
+                // {field: "Cell Type", type: "nominal", order: "ascending"}
             ]
         }
     },
@@ -40,8 +40,8 @@ const demos = {
                 {field: "Tissue Type", type: "nominal", position: "right"}
             ],
             rowSort: [
-                {field: "Tissue Type", type: "nominal", order: "ascending"},
-                {field: "Random 2", type: "quantitative", order: "descending"}
+                // {field: "Tissue Type", type: "nominal", order: "ascending"},
+                // {field: "Random 2", type: "quantitative", order: "descending"}
             ]
         }
     },

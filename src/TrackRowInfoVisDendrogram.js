@@ -52,7 +52,6 @@ export default function TrackRowInfoVisDendrogram(props) {
 
     // Process the hierarchy data. Result will be null if the tree leaves
     // cannot be aligned based on the current rowInfo ordering.
-    // const root = useMemo(() => {
     const hierarchyData = matrixToTree(rowInfo.map(d => d[field]));
     const root = d3.hierarchy(hierarchyData);
     const leaves = root.leaves().map(l => l.data);
@@ -153,7 +152,7 @@ export default function TrackRowInfoVisDendrogram(props) {
             teardown();
             d3.select(div).on("mouseleave", null);
         };
-    }, [top, left, width, height, root]);
+    }, [width, height, root]);
 
     return (
         <div
