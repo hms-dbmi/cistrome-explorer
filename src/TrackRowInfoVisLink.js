@@ -21,6 +21,7 @@ const margin = 5;
  * @prop {object[]} rowInfo Array of JSON objects, one object for each row.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
+ * @prop {string} sortOrder The order of sort applied in this track. If sort is not applied, then null.
  * @prop {string} viewId The viewId for the horizontal-multivec track.
  * @prop {string} trackId The trackId for the horizontal-multivec track.
  * @prop {function} onSortRows The function to call upon a sort interaction.
@@ -34,6 +35,7 @@ export default function TrackRowInfoVisLink(props) {
         fieldInfo,
         isLeft,
         rowInfo,
+        sortOrder,
         onSortRows,
         onSearchRows,
         drawRegister,
@@ -65,7 +67,7 @@ export default function TrackRowInfoVisLink(props) {
             domElement
         });
 
-        drawVisTitle(field, { two, isLeft, isNominal, width });
+        drawVisTitle(field, { two, isLeft, isNominal, width, sortOrder });
 
         if(rowHeight < fontSize) {
             // Bail out if there is not enough height per row to render links.

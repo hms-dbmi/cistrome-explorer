@@ -37,6 +37,7 @@ export default function TrackRowInfo(props) {
         rowInfo, 
         rowInfoAttributes,
         rowInfoPosition,
+        rowSort,
         onSortRows,
         onSearchRows,
         drawRegister
@@ -69,11 +70,14 @@ export default function TrackRowInfo(props) {
     rowInfoAttributes.forEach((attribute, i) => {
         const fieldInfo = isLeft ? rowInfoAttributes[rowInfoAttributes.length - i - 1] : attribute;
         const width = widths.find(d => d.field === fieldInfo.field && d.type === fieldInfo.type).width;
+        const sortInfo = rowSort.find(d => d.field === fieldInfo.field);
+        let sortOrder = sortInfo ? sortInfo.order : null;
 
         trackProps.push({
             left: currentLeft, top: 0, width, height,
             fieldInfo,
-            isLeft
+            isLeft,
+            sortOrder
         });
         currentLeft += width;
     });
@@ -152,6 +156,7 @@ export default function TrackRowInfo(props) {
                     viewId: viewId,
                     trackId: trackId,
                     rowInfo: rowInfo,
+                    sortOrder: d.sortOrder,
                     onSortRows: onSortRows,
                     onSearchRows: onSearchRows,
                     drawRegister: drawRegister,
