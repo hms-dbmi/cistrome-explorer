@@ -138,7 +138,7 @@ export default function TrackRowInfoVisDendrogram(props) {
                 PubSub.publish(EVENT.TOOLTIP, {
                     x: mouseViewportX,
                     y: mouseViewportY,
-                    content: `Dendrogram is hidden due to the current row ordering.`
+                    content: `Dendrogram is inaccurate due to the current row ordering.`
                 });
             } else {
                 // The dendrogram is visible, so no tooltip should be shown on hover.
