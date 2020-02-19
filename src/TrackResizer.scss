@@ -7,12 +7,12 @@
     z-index: 1;
     transform-origin: center;
     scale: 1;
-    transition: scale .15s ease, opacity .15s ease;
+    transition: transform .15s ease, opacity .15s ease;
 }
 
 .visualization-resizer:hover {
     box-shadow: 0 0 3px 1px #0089ff;
     background: #0089ff;
     opacity: 1;
-    scale: 3;
+    transform: scale(3);
 } 
