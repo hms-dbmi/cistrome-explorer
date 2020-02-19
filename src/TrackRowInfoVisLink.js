@@ -46,6 +46,8 @@ export default function TrackRowInfoVisLink(props) {
     // Data, layouts and styles
     const { field, title } = fieldInfo;
     const isNominal = false;
+    const minTrackWidth = 40;
+    const isTextLabel = width > minTrackWidth;
     
     const fontSize = 10;
     const textAlign = isLeft ? "end" : "start";
@@ -55,7 +57,6 @@ export default function TrackRowInfoVisLink(props) {
         .domain(range(rowInfo.length))
         .range([0, height]);
     const rowHeight = yScale.bandwidth();
-
 
     const draw = useCallback((domElement) => {
         const two = new Two({
@@ -75,8 +76,8 @@ export default function TrackRowInfoVisLink(props) {
             const textTop = yScale(i);
             const textLeft = isLeft ? width - margin : margin;
             const titleField = title ? title : field;
-    
-            const text = two.makeText(textLeft, textTop + rowHeight/2, width, rowHeight, info[titleField]);
+            const diplayText = isTextLabel ? info[titleField] : "Link";
+            const text = two.makeText(textLeft, textTop + rowHeight/2, width, rowHeight, diplayText);
             text.fill = "#23527C";
             text.fontsize = fontSize;
             text.align = textAlign;

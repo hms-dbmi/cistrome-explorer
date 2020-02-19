@@ -106,9 +106,9 @@ export default function TrackRowInfoControl(props){
                     let positionClass = "chgw-button-middle";
                     if(buttons.length > 1) {
                         if(i === 0) {
-                            positionClass = "chgw-button-left"
+                            positionClass = "chgw-button-top"
                         } else if(i === buttons.length - 1) {
-                            positionClass = "chgw-button-right"
+                            positionClass = "chgw-button-bottom"
                         }
                     }
                     return (

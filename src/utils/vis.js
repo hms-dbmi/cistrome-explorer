@@ -3,11 +3,11 @@
 /**
  * Common function for rendering the title text for a vertical visualization component.
  * @param {string} text The title text content.
- * @param {object} options
- * @param {Two} options.two
- * @param {boolean} options.isLeft
- * @param {boolean} options.isNominal
- * @param {number} options.width
+ * @param {object} options Options for drawing title.
+ * @param {Two} options.two The object of Two.js class.
+ * @param {boolean} options.isLeft In this view placed on the left side of the track?
+ * @param {boolean} options.isNominal Is this view visualizes a nominal value?
+ * @param {number} options.width Width of this view.
  */
 export function drawVisTitle(text, options) {
     const { two, isLeft, isNominal, width } = options;

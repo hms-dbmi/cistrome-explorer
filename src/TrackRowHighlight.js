@@ -3,7 +3,6 @@ import range from 'lodash/range';
 import d3 from './utils/d3.js';
 import Two from './utils/two.js';
 
-
 /**
  * Component for visualizing highlighted rows of a multivec track.
  * @prop {number} trackX The track horizontal offset.
@@ -19,7 +18,7 @@ export default function TrackRowHighlight(props) {
 
     const {
         trackX, trackY,
-        trackWidth, trackHeight, 
+        trackWidth, trackHeight,
         totalNumRows,
         selectedRows,
         highlitRows,
