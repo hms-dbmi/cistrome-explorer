@@ -37,6 +37,7 @@ export default function TrackWrapper(props) {
         onSelectGenomicInterval,
         onSortRows,
         onSearchRows,
+        onFilter,
         drawRegister
     } = props;
 
@@ -113,6 +114,7 @@ export default function TrackWrapper(props) {
                     rowInfoPosition="left"
                     onSortRows={onSortRows}
                     onSearchRows={onSearchRows}
+                    onFilter={onFilter}
                     drawRegister={drawRegister}
                 />) : null}
             {rightAttrs.length !== 0 ? 
@@ -129,6 +131,7 @@ export default function TrackWrapper(props) {
                     rowInfoPosition="right"
                     onSortRows={onSortRows}
                     onSearchRows={onSearchRows}
+                    onFilter={onFilter}
                     drawRegister={drawRegister}
                 />) : null}
             {options.colToolsPosition !== "hidden" ? 

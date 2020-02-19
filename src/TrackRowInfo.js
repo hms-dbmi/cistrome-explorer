@@ -40,6 +40,7 @@ export default function TrackRowInfo(props) {
         rowSort,
         onSortRows,
         onSearchRows,
+        onFilter,
         drawRegister
     } = props;
 
@@ -159,6 +160,7 @@ export default function TrackRowInfo(props) {
                     sortOrder: d.sortOrder,
                     onSortRows: onSortRows,
                     onSearchRows: onSearchRows,
+                    onFilter: onFilter,
                     drawRegister: drawRegister,
                 }
             ))}

@@ -38,6 +38,7 @@ export default function TrackRowInfoVisLink(props) {
         sortOrder,
         onSortRows,
         onSearchRows,
+        onFilter,
         drawRegister,
     } = props;
 
@@ -169,6 +170,7 @@ export default function TrackRowInfoVisLink(props) {
                 fieldInfo={fieldInfo}
                 onSortRows={onSortRows}
                 onSearchRows={onSearchRows}
+                onFilter={onFilter}
             />
         </div>
     );

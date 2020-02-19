@@ -16,6 +16,7 @@ export default function TrackRowSearch(props) {
     const {
         top, left,
         onChange,
+        onFilter,
         onClose
     } = props;
 
@@ -61,7 +62,7 @@ export default function TrackRowSearch(props) {
             />
             
             <svg className="chgw-button-sm chgw-search-button"
-                viewBox={FILTER.viewBox}>
+                onClick={onFilter} viewBox={FILTER.viewBox}>
                 <title>Filter rows using the keyword.</title>
                 <path d={FILTER.path} fill="currentColor"/>
             </svg>

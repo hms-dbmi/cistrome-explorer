@@ -39,6 +39,7 @@ export default function TrackRowInfoVisBar(props) {
         sortOrder,
         onSortRows,
         onSearchRows,
+        onFilter,
         drawRegister,
     } = props;
 
@@ -200,6 +201,7 @@ export default function TrackRowInfoVisBar(props) {
                 searchLeft={left}
                 onSortRows={onSortRows}
                 onSearchRows={onSearchRows}
+                onFilter={onFilter}
             />
         </div>
     );

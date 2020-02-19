@@ -132,6 +132,10 @@ export default function CistromeHGWConsumer(props) {
         setOptions(newOptions);
     });
 
+    const onFilter = useCallback((viewId, trackId, field, type, contains) => {
+
+    });
+
     // Callback function for searching.
     const onSearchRows = useCallback((viewId, trackId, field, type, contains) => {
         const newRowHighlight = { field, type, contains };
@@ -205,6 +209,9 @@ export default function CistromeHGWConsumer(props) {
                     }}
                     onSearchRows={(field, type, contains) => {
                         onSearchRows(viewId, trackId, field, type, contains);
+                    }}
+                    onFilter={(field, type, contains) => {
+                        onFilter(viewId, trackId, field, type, contains);
                     }}
                     drawRegister={drawRegister}
                 />

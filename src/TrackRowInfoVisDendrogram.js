@@ -34,6 +34,7 @@ export default function TrackRowInfoVisDendrogram(props) {
         trackId,
         rowInfo,
         onSortRows,
+        onFilter,
         drawRegister,
     } = props;
     
@@ -182,6 +183,7 @@ export default function TrackRowInfoVisDendrogram(props) {
                 searchTop={null}
                 searchLeft={null}
                 onSortRows={onSortRows}
+                onFilter={null}
                 onSearchRows={null}
             />
             {cannotAlign ? 

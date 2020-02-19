@@ -21,7 +21,8 @@ export default function TrackRowInfoControl(props){
         isVisible, 
         fieldInfo,
         onSortRows,
-        onSearchRows
+        onSearchRows,
+        onFilter
     } = props;
 
     const divRef = useRef();
@@ -129,6 +130,7 @@ export default function TrackRowInfoControl(props){
                     top={searchTop}
                     left={searchLeft}
                     onChange={onSearchChange}
+                    onFilter={onFilter}
                     onClose={onSearchClose}
                 />
             ) : null}
