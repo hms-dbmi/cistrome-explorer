@@ -10,7 +10,8 @@
     transition: transform .15s ease, opacity .15s ease;
 }
 
-.visualization-resizer:hover {
+.visualization-resizer:hover, 
+.visualization-resizer:active {
     box-shadow: 0 0 3px 1px #0089ff;
     background: #0089ff;
     opacity: 1;
