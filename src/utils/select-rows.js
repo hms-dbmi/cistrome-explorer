@@ -11,14 +11,18 @@ export function selectRows(rowInfo, options) {
     if(options) {
         let filteredRowInfo = Array.from(rowInfo);
         // Filter
-        if(options.rowFilter) {
-            const { field, type, contains } = options.rowFilter;
-            if(type === "nominal") {
-                filteredRowInfo = Array.from(filteredRowInfo.filter(d => d[field].toUpperCase().includes(contains.toUpperCase())));
-                console.log(filteredRowInfo, field, contains);
-            } else {
-                // Handle with quantitative value
-            }
+        if(options.rowFilter && options.rowFilter.length > 0) {
+            const filterInfos = options.rowFilter;
+            filterInfos.forEach(info => {
+                const { field, type, contains } = info;
+                if(type === "nominal") {
+                    filteredRowInfo = filteredRowInfo.filter(d => d[field].toUpperCase().includes(contains.toUpperCase()));                
+                } else if(type === "quantitative") {
+                    // TODO: Better deal with quantitative data. Need to update Wrapper options for this.
+                    // refer vega filter, such as lt: https://vega.github.io/vega-lite/docs/filter.html
+                    filteredRowInfo = filteredRowInfo.filter(d => d[field].toString().includes(contains));
+                }
+            });
         }
         // Sort
         let transformedRowInfo = Array.from(filteredRowInfo.entries());

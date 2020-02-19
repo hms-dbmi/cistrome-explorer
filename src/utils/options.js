@@ -28,23 +28,8 @@ const baseSchema = {
                     "items": { "$ref": "#/definitions/sortInfo" }
                 },
                 "rowFilter": {
-                    "type": "object",
-                    "required": ["field", "type", "contains"],
-                    "properties": {
-                        "field": {
-                            "type": "string",
-                            "description": "The name of a data field"
-                        },
-                        "type": {
-                            "type": "string",
-                            "enum": ["nominal", "quantitative"],
-                            "description": "The data type of a field"
-                        },
-                        "contains": {
-                            "type": "string",
-                            "description": "The substring to search for"
-                        }
-                    }
+                    "type": "array",
+                    "items": { "$ref": "#/definitions/filterInfo" }
                 },
                 "rowHighlight": {
                     "type": "object",
@@ -108,6 +93,25 @@ const baseSchema = {
                     "type": "string",
                     "enum": ["descending", "ascending"],
                     "description": "The order of sorting"
+                }
+            }
+        },
+        "filterInfo": {
+            "type": "object",
+            "required": ["field", "type", "contains"],
+            "properties": {
+                "field": {
+                    "type": "string",
+                    "description": "The name of a data field"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": ["nominal", "quantitative"],
+                    "description": "The data type of a field"
+                },
+                "contains": {
+                    "type": "string",
+                    "description": "The substring to search for"
                 }
             }
         }

@@ -46,12 +46,13 @@ const hgOptionsBase = {
  */
 export default function CistromeHGWConsumer(props) {
 
-    const { viewConfig, options: optionsRaw } = props;
+    const { viewConfig, options: initOptionsRaw } = props;
 
     const hgRef = useRef();
     const drawRef = useRef({});
 
-    const [options, setOptions] = useState({});
+    const [optionsRaw, setOptionsRaw] = useState(initOptionsRaw);
+    const [options, setOptions] = useState(processWrapperOptions(initOptionsRaw));
     const [trackInfos, setTrackInfos] = useState([]);
     const [siblingTrackInfos, setSiblingTrackInfos] = useState({});
 
@@ -122,24 +123,31 @@ export default function CistromeHGWConsumer(props) {
 
     // Callback function for sorting.
     const onSortRows = useCallback((viewId, trackId, field, type, order) => {
+        console.log(optionsRaw);
         const newRowSort = [ { field, type, order } ];
         const newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, newRowSort, "rowSort");
         const newOptions = processWrapperOptions(newOptionsRaw);
-
+        console.log(optionsRaw);
+        console.log(newOptions);
         const trackOptions = getTrackWrapperOptions(newOptions, viewId, trackId);
+        console.log("trackOptions", trackOptions);
         const newSelectedRows = selectRows(context.state[viewId][trackId].rowInfo, trackOptions);
         setTrackSelectedRows(viewId, trackId, newSelectedRows);
+        setOptionsRaw(newOptionsRaw);
         setOptions(newOptions);
     });
 
     const onFilter = useCallback((viewId, trackId, field, type, contains) => {
-        const newRowFilter = { field, type, contains };
+        const newRowFilter = [ { field, type, contains } ];
         const newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, newRowFilter, "rowFilter");
         const newOptions = processWrapperOptions(newOptionsRaw);
-
+        console.log(optionsRaw);
+        console.log(newOptions);
         const trackOptions = getTrackWrapperOptions(newOptions, viewId, trackId);
-        const newFilteredRows = selectRows(context.state[viewId][trackId].rowInfo, trackOptions);
-        setTrackSelectedRows(viewId, trackId, newFilteredRows);
+        console.log("trackOptions", trackOptions);
+        const newSelectedRows = selectRows(context.state[viewId][trackId].rowInfo, trackOptions);
+        setTrackSelectedRows(viewId, trackId, newSelectedRows);
+        setOptionsRaw(newOptionsRaw);
         setOptions(newOptions);
     });
 
@@ -152,13 +160,13 @@ export default function CistromeHGWConsumer(props) {
         // Highlighting options are specified only in the wrapper options.
         const newHighlitRows = highlightRowsFromSearch(context.state[viewId][trackId].rowInfo, field, type, contains);
         setHighlitRows(viewId, trackId, newHighlitRows);
+        setOptionsRaw(newOptionsRaw);
         setOptions(newOptions);
     });
 
-    // Do initial processing of the options prop.
     useEffect(() => {
-        setOptions(processWrapperOptions(optionsRaw));
-    }, [optionsRaw]);
+        console.log("On Mounted of CistromeHGWConsumer");
+    }, []);
 
     // Listen for higlass view config changes.
     useEffect(() => {
