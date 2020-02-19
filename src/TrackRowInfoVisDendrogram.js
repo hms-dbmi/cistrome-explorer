@@ -66,13 +66,8 @@ export default function TrackRowInfoVisDendrogram(props) {
         }
 
         if(!cannotAlign) {
-            const treeLayout = d3.cluster()
-                .size([height, width])
-                .separation(() => 1);
-            treeLayout(root);
             return root;
         }
-
         return null;
     }, [rowInfo]);
 
@@ -92,6 +87,10 @@ export default function TrackRowInfoVisDendrogram(props) {
             rect.opacity = 0.5;
         } else {
             // Draw the dendrogram.
+            const treeLayout = d3.cluster()
+                .size([height, width])
+                .separation(() => 1);
+            treeLayout(root);
             const descendants = root.descendants();
 
             let pathFunction;
@@ -160,7 +159,7 @@ export default function TrackRowInfoVisDendrogram(props) {
             teardown();
             d3.select(div).on("mouseleave", null);
         };
-    }, [top, left, width, height, root]);
+    }, [width, height, root]);
 
     return (
         <div
