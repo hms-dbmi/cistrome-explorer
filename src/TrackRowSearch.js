@@ -48,7 +48,7 @@ export default function TrackRowSearch(props) {
             style={{
                 display: ((left !== null && top !== null) ? 'flex' : 'none'),
                 left: left - (width + padding * 2) / 2,
-                top: top - (height + padding * 2) - 30,
+                top: top - (height + padding * 2) - 60,
                 padding
             }}
         >
