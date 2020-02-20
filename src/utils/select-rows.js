@@ -31,7 +31,7 @@ export function selectRows(rowInfo, options) {
             sortOptions.forEach((d) => {
                 const { field, type, order } = d;
                 if(type === "tree") {
-                    const hierarchyData = matrixToTree(filteredRowInfo.map(d => d[field]));
+                    const hierarchyData = matrixToTree(filteredRowInfo.map(d => d[1][field]));
                     const root = d3.hierarchy(hierarchyData);
                     const leaves = root.leaves().map(l => l.data.i);
                     transformedRowInfo = leaves.map((i) => transformedRowInfo[i]);
