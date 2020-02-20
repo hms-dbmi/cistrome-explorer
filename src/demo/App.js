@@ -17,7 +17,6 @@ const demos = {
             rowInfoAttributes: [
                 {field: "Hierarchical Clustering (Average)", type: "tree", position: "left"},
                 {field: "Random 1", type: "quantitative", position: "left"},
-                {field: "Random 2", type: "quantitative", position: "left"},
                 {field: "Random 3", type: "quantitative", position: "left"},
                 {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right"},
                 {field: "Cell Type", type: "nominal", position: "right"},
