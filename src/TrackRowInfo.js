@@ -138,7 +138,13 @@ export default function TrackRowInfo(props) {
                 if(newWidth < minWidth) {
                     newWidth = minWidth;
                 }
-                const mIdx = widths.indexOf(widths.find(d => d.field === field && d.type === type));
+                const mIdx = widths.indexOf(widths.find(d => {
+                    if(Array.isArray(d.field) && Array.isArray(field)) {
+                        return d.field.join() === field.join() && d.type === type;
+                    } else {
+                        return d.field === field && d.type === type;
+                    }
+                }));
                 if(mIdx !== -1){
                     setWidths(modifyItemInArray(widths, mIdx, {
                         field, type,

@@ -23,6 +23,7 @@ const demos = {
                 {field: "Cell Type", type: "nominal", position: "right"},
                 {field: "Tissue Type", type: "nominal", position: "right"},
                 {field: "Species", type: "nominal", position: "right"},
+                {field: ["Random 1", "Random 2", "Random 3", "Random 4"], type: "quantitative", position: "right"},
             ],
             rowSort: [
                 // {field: "Species", type: "nominal", order: "ascending"},
