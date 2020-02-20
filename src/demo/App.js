@@ -82,7 +82,7 @@ const demos = {
 
 export default function App() {
     
-    const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[1]);
+    const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[0]);
 
     return (
         <div className="app">
