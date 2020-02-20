@@ -265,7 +265,7 @@ export function processWrapperOptions(optionsRaw) {
 export function updateGlobalOptionsWithKey(options, subOption, key, { isReplace }) {
     let newOptions;
 
-    if(Array.isArray(options)){
+    if(Array.isArray(options)) {
         let optionsRaw = options.slice();
         let globalDefaults = optionsRaw.find(o => (o.viewId === DEFAULT_OPTIONS_KEY && o.trackId === DEFAULT_OPTIONS_KEY));
         

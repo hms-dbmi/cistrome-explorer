@@ -52,6 +52,10 @@ export default function TrackColTools(props) {
     } else if(colToolsPosition === "bottom") {
         top = trackY + trackHeight;
     }
+
+    function onButtonClick() {
+        onSelectGenomicInterval([ 600, 650 ]);
+    }
     
     return (
         <React.Fragment>
@@ -66,7 +70,7 @@ export default function TrackColTools(props) {
             >
                 <div className="col-tools">
                     <button 
-                        onClick={onSelectGenomicInterval}
+                        onClick={onButtonClick}
                         style={{
                             position: 'absolute',
                             top: (isTop ? (2*height/3) : 2),

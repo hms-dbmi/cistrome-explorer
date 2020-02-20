@@ -180,7 +180,8 @@ export default function CistromeHGWConsumer(props) {
 
     // Callback function for searching.
     const onSelectGenomicInterval = useCallback((viewId, trackId, intervalCoordinates) => {
-        const newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, intervalCoordinates, "colSelect", { isReplace: true });
+        const newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, intervalCoordinates, "colSelect", { isReplace: false });
+        console.log(newOptionsRaw);
         const newOptions = processWrapperOptions(newOptionsRaw);
 
         // Highlighting options are specified only in the wrapper options.
