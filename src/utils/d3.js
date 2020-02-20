@@ -13,6 +13,7 @@ import { scale as vega_scale } from "vega-scale";
 import { extent, sum } from "d3-array";
 import { hsl } from "d3-color";
 import { hierarchy, cluster } from "d3-hierarchy";
+import { brushX } from "d3-brush";
 
 /*
  * Same as `d3.scaleBand` but also supports `invert()`.
@@ -37,5 +38,6 @@ export default {
     sum,
     hsl,
     hierarchy,
-    cluster
+    cluster,
+    brushX
 };

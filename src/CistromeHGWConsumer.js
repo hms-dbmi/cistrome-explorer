@@ -105,7 +105,7 @@ export default function CistromeHGWConsumer(props) {
             return {
                 ...location,
                 xRange: [0, 1762],
-                yRange: [0, 791]
+                yRange: [0, 741]
             };
         } catch(e) {
             return null;
