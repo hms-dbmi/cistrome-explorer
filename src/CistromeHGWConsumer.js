@@ -46,15 +46,16 @@ const hgOptionsBase = {
  */
 export default function CistromeHGWConsumer(props) {
 
-    const { viewConfig, options: optionsRaw } = props;
+    const { viewConfig, options: initOptionsRaw } = props;
 
     const hgRef = useRef();
     const drawRef = useRef({});
 
-    const [options, setOptions] = useState({});
+    const [optionsRaw, setOptionsRaw] = useState(initOptionsRaw);
+    const [options, setOptions] = useState(processWrapperOptions(initOptionsRaw));
     const [trackInfos, setTrackInfos] = useState([]);
     const [siblingTrackInfos, setSiblingTrackInfos] = useState({});
-
+    
     const context = useContext(InfoContext);
 
     /*
@@ -123,31 +124,52 @@ export default function CistromeHGWConsumer(props) {
     // Callback function for sorting.
     const onSortRows = useCallback((viewId, trackId, field, type, order) => {
         const newRowSort = [ { field, type, order } ];
-        const newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, newRowSort, "rowSort");
+        const newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, newRowSort, "rowSort", { isReplace: true });
+        const newOptions = processWrapperOptions(newOptionsRaw);
+        
+        const trackOptions = getTrackWrapperOptions(newOptions, viewId, trackId);
+        const newSelectedRows = selectRows(context.state[viewId][trackId].rowInfo, trackOptions);
+
+        setTrackSelectedRows(viewId, trackId, newSelectedRows);
+        setOptionsRaw(newOptionsRaw);
+        setOptions(newOptions);
+    });
+
+    // Callback function for filtering.
+    const onFilter = useCallback((viewId, trackId, field, type, contains) => {
+        const isResetFilter = field === undefined;
+        const newRowFilter = isResetFilter ? [] : { field, type, contains };
+        let newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, newRowFilter, "rowFilter", { isReplace: isResetFilter });
+        newOptionsRaw = updateGlobalOptionsWithKey(newOptionsRaw, undefined, "rowHighlight", { isReplace: true });    // Reset highlight as well.
         const newOptions = processWrapperOptions(newOptionsRaw);
 
         const trackOptions = getTrackWrapperOptions(newOptions, viewId, trackId);
         const newSelectedRows = selectRows(context.state[viewId][trackId].rowInfo, trackOptions);
+
+        setHighlitRows(viewId, trackId, undefined);
         setTrackSelectedRows(viewId, trackId, newSelectedRows);
+        setOptionsRaw(newOptionsRaw);
         setOptions(newOptions);
     });
 
     // Callback function for searching.
     const onSearchRows = useCallback((viewId, trackId, field, type, contains) => {
         const newRowHighlight = { field, type, contains };
-        const newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, newRowHighlight, "rowHighlight");
+        const newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, newRowHighlight, "rowHighlight", { isReplace: true });
         const newOptions = processWrapperOptions(newOptionsRaw);
 
         // Highlighting options are specified only in the wrapper options.
         const newHighlitRows = highlightRowsFromSearch(context.state[viewId][trackId].rowInfo, field, type, contains);
         setHighlitRows(viewId, trackId, newHighlitRows);
+        setOptionsRaw(newOptionsRaw);
         setOptions(newOptions);
     });
 
     // Do initial processing of the options prop.
     useEffect(() => {
-        setOptions(processWrapperOptions(optionsRaw));
-    }, [optionsRaw]);
+        setOptionsRaw(initOptionsRaw);
+        setOptions(processWrapperOptions(initOptionsRaw));
+    }, [initOptionsRaw]);
 
     // Listen for higlass view config changes.
     useEffect(() => {
@@ -205,6 +227,9 @@ export default function CistromeHGWConsumer(props) {
                     }}
                     onSearchRows={(field, type, contains) => {
                         onSearchRows(viewId, trackId, field, type, contains);
+                    }}
+                    onFilter={(field, type, contains) => {
+                        onFilter(viewId, trackId, field, type, contains);
                     }}
                     drawRegister={drawRegister}
                 />

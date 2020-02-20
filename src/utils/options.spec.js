@@ -144,7 +144,8 @@ describe('Utilities for processing wrapper component options', () => {
                 type: "nominal",
                 order: "ascending"
             }],
-            "rowSort"
+            "rowSort",
+            { isReplace: true }
         );
         const globalDefaultOptions = updatedOptions.find(o => (o.viewId === DEFAULT_OPTIONS_KEY && o.trackId === DEFAULT_OPTIONS_KEY));
         expect(globalDefaultOptions.rowSort.length).toBe(1);
@@ -180,13 +181,51 @@ describe('Utilities for processing wrapper component options', () => {
                 type: "nominal",
                 order: "ascending"
             }],
-            "rowSort"
+            "rowSort",
+            { isReplace: true }
         );
         const globalDefaultOptions = updatedOptions.find(o => (o.viewId === DEFAULT_OPTIONS_KEY && o.trackId === DEFAULT_OPTIONS_KEY));
         expect(globalDefaultOptions.rowSort.length).toBe(1);
         expect(globalDefaultOptions.rowSort[0].field).toBe("groupA");
         expect(globalDefaultOptions.rowSort[0].type).toBe("nominal");
         expect(globalDefaultOptions.rowSort[0].order).toBe("ascending");
+    });
+
+    it('Should add filtering options in the list to global default', () => {
+        const updatedOptions = updateGlobalOptionsWithKey([
+            {
+                viewId: "default",
+                trackId: "default",
+                colToolsPosition: "bottom",
+                rowSort: [{
+                    field: "groupA",
+                    type: "quantitative",
+                    order: "descending"
+                }],
+                rowFilter: [{
+                    field: "groupB",
+                    type: "quantitative",
+                    contains: "substringB"
+                }]
+            },
+            {
+                viewId: "viewA",
+                trackId: "default",
+                colToolsPosition: "top"
+            }],
+            {
+                field: "groupC",
+                type: "nominal",
+                contains: "substringC"
+            },
+            "rowFilter",
+            { isReplace: false }
+        );
+        const globalDefaultOptions = updatedOptions.find(o => (o.viewId === DEFAULT_OPTIONS_KEY && o.trackId === DEFAULT_OPTIONS_KEY));
+        expect(globalDefaultOptions.rowFilter.length).toBe(2);
+        expect(globalDefaultOptions.rowFilter.filter(d => d.field === "groupC").length).toBe(1);
+        expect(globalDefaultOptions.rowFilter.filter(d => d.type === "nominal").length).toBe(1);
+        expect(globalDefaultOptions.rowFilter.filter(d => d.contains === "substringC").length).toBe(1);
     });
 
     it('Should add global default options and add sorting info to the options', () => {
@@ -201,7 +240,8 @@ describe('Utilities for processing wrapper component options', () => {
                 type: "nominal",
                 order: "ascending"
             }],
-            "rowSort"
+            "rowSort",
+            { isReplace: true }
         );
         const globalDefaultOptions = updatedOptions.find(o => (o.viewId === DEFAULT_OPTIONS_KEY && o.trackId === DEFAULT_OPTIONS_KEY));
         expect(globalDefaultOptions !== undefined).toBe(true);

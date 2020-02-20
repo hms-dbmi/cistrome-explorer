@@ -2,7 +2,7 @@ import { matrixToTree } from './tree.js';
 import d3 from './d3.js';
 
 /**
- * Generate an array of selected row indices based on sort and filter options.
+ * Generate an array of selected row indices based on filter and sort options.
  * @param {object[]} rowInfo The original/full default-ordered rowInfo array.
  * @param {object} options The track options object, containing sort/filter options.
  * @returns {(number[]|null)} The array of selected indices.
@@ -10,16 +10,28 @@ import d3 from './d3.js';
 export function selectRows(rowInfo, options) {
     if(options) {
         // Filter
-        // ...
-
+        let filteredRowInfo = Array.from(rowInfo.entries());
+        if(options.rowFilter && options.rowFilter.length > 0) {
+            const filterInfos = options.rowFilter;
+            filterInfos.forEach(info => {
+                const { field, type, contains } = info;
+                if(type === "nominal") {
+                    filteredRowInfo = filteredRowInfo.filter(d => d[1][field].toUpperCase().includes(contains.toUpperCase()));                
+                } else if(type === "quantitative") {
+                    // TODO: Better deal with quantitative data. Need to update Wrapper options for this.
+                    // refer vega filter, such as lt: https://vega.github.io/vega-lite/docs/filter.html
+                    filteredRowInfo = filteredRowInfo.filter(d => d[1][field].toString().includes(contains));
+                }
+            });
+        }
         // Sort
-        let transformedRowInfo = Array.from(rowInfo.entries());
+        let transformedRowInfo = Array.from(filteredRowInfo);
         if(options.rowSort && options.rowSort.length > 0) {
             let sortOptions = options.rowSort.slice().reverse();
             sortOptions.forEach((d) => {
                 const { field, type, order } = d;
                 if(type === "tree") {
-                    const hierarchyData = matrixToTree(rowInfo.map(d => d[field]));
+                    const hierarchyData = matrixToTree(filteredRowInfo.map(d => d[field]));
                     const root = d3.hierarchy(hierarchyData);
                     const leaves = root.leaves().map(l => l.data.i);
                     transformedRowInfo = leaves.map((i) => transformedRowInfo[i]);
