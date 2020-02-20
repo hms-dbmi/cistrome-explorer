@@ -20,8 +20,6 @@ export default function TrackColSelection(props) {
     } = props;
 
     const hgViewHeaderHeight = 24 + 4 + 4;
-    const [intervalStart, intervalEnd] = interval;
-    const intervalWidth = intervalEnd - intervalStart;
 
     const svgRef = useRef();
 
@@ -43,10 +41,11 @@ export default function TrackColSelection(props) {
         g.call(brush.move, interval);
         brush.on("brush", brushed);
 
-        // turn off the ability to select new regions for this brush
+        // Turn off the ability to select new regions for this brush
+        // See https://github.com/higlass/higlass/blob/develop/app/scripts/ViewportTrackerHorizontal.js#L34
         g.selectAll('.overlay')
             .style('pointer-events', 'none');
-            
+
     }, [svgRef]);
 
     return (
