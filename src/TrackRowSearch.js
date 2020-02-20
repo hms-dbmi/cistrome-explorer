@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { CLOSE, FILTER } from './utils/icons.js';
+import { CLOSE, FILTER, UNDO } from './utils/icons.js';
 import './TrackRowSearch.scss';
 
 /**
@@ -45,6 +45,11 @@ export default function TrackRowSearch(props) {
         setKeyword("");
     }
 
+    function onUndoClick() {
+        onFilter();
+        setKeyword("");
+    }
+
     function onSearchClose() {
         onChange("");
         onClose();
@@ -57,7 +62,7 @@ export default function TrackRowSearch(props) {
             style={{
                 display: ((left !== null && top !== null) ? 'flex' : 'none'),
                 left: left - (width + padding * 2) / 2,
-                top: top - (height + padding * 2) - 60,
+                top: top - (height + padding * 2) - 80,
                 padding
             }}
         >
@@ -75,6 +80,11 @@ export default function TrackRowSearch(props) {
                 onClick={onFilterClick} viewBox={FILTER.viewBox}>
                 <title>Filter rows using the keyword.</title>
                 <path d={FILTER.path} fill="currentColor"/>
+            </svg>
+            <svg className="chgw-button-sm chgw-search-button"
+                onClick={onUndoClick} viewBox={UNDO.viewBox}>
+                <title>Remove highlights and filters.</title>
+                <path d={UNDO.path} fill="currentColor"/>
             </svg>
             <svg className="chgw-button-sm chgw-search-button"
                 onClick={onSearchClose} viewBox={CLOSE.viewBox}>

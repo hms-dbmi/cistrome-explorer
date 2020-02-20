@@ -137,9 +137,10 @@ export default function CistromeHGWConsumer(props) {
 
     // Callback function for filtering.
     const onFilter = useCallback((viewId, trackId, field, type, contains) => {
-        const newRowFilter = { field, type, contains };
-        let newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, newRowFilter, "rowFilter", { isReplace: false });
-        newOptionsRaw = updateGlobalOptionsWithKey(newOptionsRaw, undefined, "rowHighlight", { isReplace: true });    // Reset highlight.
+        const isResetFilter = field === undefined;
+        const newRowFilter = isResetFilter ? [] : { field, type, contains };
+        let newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, newRowFilter, "rowFilter", { isReplace: isResetFilter });
+        newOptionsRaw = updateGlobalOptionsWithKey(newOptionsRaw, undefined, "rowHighlight", { isReplace: true });    // Reset highlight as well.
         const newOptions = processWrapperOptions(newOptionsRaw);
 
         const trackOptions = getTrackWrapperOptions(newOptions, viewId, trackId);
