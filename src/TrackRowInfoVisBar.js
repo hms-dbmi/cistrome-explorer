@@ -18,7 +18,7 @@ export const margin = 5;
  * @prop {number} top The top position of this view.
  * @prop {number} width The width of this view.
  * @prop {number} height The height of this view.
- * @prop {object[]} rowInfo Array of JSON objects, one object for each row.
+ * @prop {object[]} transformedRowInfo Array of JSON objects, one object for each row.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  * @prop {string} sortOrder The order of sort applied in this track. If sort is not applied, then null.
@@ -35,7 +35,7 @@ export default function TrackRowInfoVisBar(props) {
         isLeft,
         viewId,
         trackId,
-        rowInfo,
+        transformedRowInfo,
         sortOrder,
         onSortRows,
         onSearchRows,
@@ -52,7 +52,7 @@ export default function TrackRowInfoVisBar(props) {
     const isNominal = type === "nominal";
 
     const yScale = d3.scaleBand()
-        .domain(range(rowInfo.length))
+        .domain(range(transformedRowInfo.length))
         .range([0, height]);
     const rowHeight = yScale.bandwidth();
 
@@ -72,7 +72,7 @@ export default function TrackRowInfoVisBar(props) {
         const fontSize = 10;
         
         // Scales
-        const valueExtent = [0, d3.extent(rowInfo.map(d => d[field]))[1]];   // Zero baseline
+        const valueExtent = [0, d3.extent(transformedRowInfo.map(d => d[field]))[1]];   // Zero baseline
        
         const xScale = d3.scaleLinear()
             .domain(valueExtent)
@@ -80,7 +80,7 @@ export default function TrackRowInfoVisBar(props) {
 
         const colorScale = isNominal ? 
             d3.scaleOrdinal()
-                .domain(Array.from(new Set(rowInfo.map(d => d[field]))).sort()) 
+                .domain(Array.from(new Set(transformedRowInfo.map(d => d[field]))).sort()) 
                 .range(d3.schemeSet3) : 
             d3.scaleLinear()
                 .domain(valueExtent)
@@ -91,9 +91,9 @@ export default function TrackRowInfoVisBar(props) {
         const textAlign = isLeft ? "end" : "start";
         let aggregateStartIdx = -1, sameCategoriesNearby = 1;
 
-        rowInfo.forEach((d, i) => {
+        transformedRowInfo.forEach((d, i) => {
             // To aggregate bars, check if there is a same category on the next row.
-            if(type === "nominal" && i + 1 < rowInfo.length && d[field] === rowInfo[i+1][field]) {
+            if(type === "nominal" && i + 1 < transformedRowInfo.length && d[field] === transformedRowInfo[i+1][field]) {
                 if(aggregateStartIdx === -1) {
                     aggregateStartIdx = i;
                 }
@@ -144,7 +144,7 @@ export default function TrackRowInfoVisBar(props) {
             let fieldVal;
             if(y !== undefined){
                 setMouseX(true);
-                fieldVal = rowInfo[y][field];
+                fieldVal = transformedRowInfo[y][field];
             } else {
                 setMouseX(null);
                 destroyTooltip();
@@ -170,7 +170,7 @@ export default function TrackRowInfoVisBar(props) {
             teardown();
             d3.select(div).on("mouseleave", null);
         };
-    }, [top, left, width, height, rowInfo]);
+    }, [top, left, width, height, transformedRowInfo]);
 
     return (
         <div

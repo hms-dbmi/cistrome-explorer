@@ -103,7 +103,7 @@ export default function TrackWrapper(props) {
         <div className="cistrome-hgw-track-wrapper">
             {leftAttrs.length !== 0 ? 
                 (<TrackRowInfo 
-                    rowInfo={transformedRowInfo}
+                    transformedRowInfo={transformedRowInfo}
                     viewId={multivecTrackViewId}
                     trackId={multivecTrackTrackId}
                     trackX={trackX}
@@ -120,7 +120,7 @@ export default function TrackWrapper(props) {
                 />) : null}
             {rightAttrs.length !== 0 ? 
                 (<TrackRowInfo
-                    rowInfo={transformedRowInfo}
+                    transformedRowInfo={transformedRowInfo}
                     viewId={multivecTrackViewId}
                     trackId={multivecTrackTrackId}
                     trackX={trackX}

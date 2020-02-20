@@ -18,7 +18,7 @@ const margin = 5;
  * @prop {number} top The top position of this view.
  * @prop {number} width The width of this view.
  * @prop {number} height The height of this view.
- * @prop {object[]} rowInfo Array of JSON objects, one object for each row.
+ * @prop {object[]} transformedRowInfo Array of JSON objects, one object for each row.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  * @prop {string} sortOrder The order of sort applied in this track. If sort is not applied, then null.
@@ -34,7 +34,7 @@ export default function TrackRowInfoVisLink(props) {
         left, top, width, height,
         fieldInfo,
         isLeft,
-        rowInfo,
+        transformedRowInfo,
         sortOrder,
         onSortRows,
         onSearchRows,
@@ -57,7 +57,7 @@ export default function TrackRowInfoVisLink(props) {
 
     // Scales
     const yScale = d3.scaleBand()
-        .domain(range(rowInfo.length))
+        .domain(range(transformedRowInfo.length))
         .range([0, height]);
     const rowHeight = yScale.bandwidth();
 
@@ -75,7 +75,7 @@ export default function TrackRowInfoVisLink(props) {
             return two.teardown;
         }
 
-        rowInfo.forEach((info, i) => {
+        transformedRowInfo.forEach((info, i) => {
             const textTop = yScale(i);
             const textLeft = isLeft ? width - margin : margin;
             const titleField = title ? title : field;
@@ -106,7 +106,7 @@ export default function TrackRowInfoVisLink(props) {
             let fieldVal;
             if(y !== undefined){
                 setMouseX(true);
-                fieldVal = rowInfo[y][field];
+                fieldVal = transformedRowInfo[y][field];
             } else {
                 setMouseX(null);
                 destroyTooltip();
@@ -129,7 +129,7 @@ export default function TrackRowInfoVisLink(props) {
 
             const y = yScale.invert(mouseY);
             if(y !== undefined) {
-               window.open(rowInfo[y][field]);
+               window.open(transformedRowInfo[y][field]);
             }
         });
 
@@ -141,7 +141,7 @@ export default function TrackRowInfoVisLink(props) {
             teardown();
             d3.select(div).on("mouseleave", null);
         };
-    }, [top, left, width, height, rowInfo]);
+    }, [top, left, width, height, transformedRowInfo]);
 
     return (
         <div

@@ -2,15 +2,15 @@ import { matrixToTree } from './tree.js';
 import d3 from './d3.js';
 
 /**
- * Generate an array of selected row indices based on sort and filter options.
+ * Generate an array of selected row indices based on filter and sort options.
  * @param {object[]} rowInfo The original/full default-ordered rowInfo array.
  * @param {object} options The track options object, containing sort/filter options.
  * @returns {(number[]|null)} The array of selected indices.
  */
 export function selectRows(rowInfo, options) {
     if(options) {
-        let filteredRowInfo = Array.from(rowInfo.entries());
         // Filter
+        let filteredRowInfo = Array.from(rowInfo.entries());
         if(options.rowFilter && options.rowFilter.length > 0) {
             const filterInfos = options.rowFilter;
             filterInfos.forEach(info => {

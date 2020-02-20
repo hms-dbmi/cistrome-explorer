@@ -55,7 +55,7 @@ export default function CistromeHGWConsumer(props) {
     const [options, setOptions] = useState(processWrapperOptions(initOptionsRaw));
     const [trackInfos, setTrackInfos] = useState([]);
     const [siblingTrackInfos, setSiblingTrackInfos] = useState({});
-
+    
     const context = useContext(InfoContext);
 
     /*
@@ -135,6 +135,7 @@ export default function CistromeHGWConsumer(props) {
         setOptions(newOptions);
     });
 
+    // Callback function for filtering.
     const onFilter = useCallback((viewId, trackId, field, type, contains) => {
         const newRowFilter = { field, type, contains };
         let newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, newRowFilter, "rowFilter", false);
@@ -164,9 +165,10 @@ export default function CistromeHGWConsumer(props) {
     });
 
     useEffect(() => {
-        console.log("On Mounted of CistromeHGWConsumer");
-    }, []);
-
+        setOptionsRaw(initOptionsRaw);
+        setOptions(processWrapperOptions(initOptionsRaw));
+    }, [initOptionsRaw]);
+    
     // Listen for higlass view config changes.
     useEffect(() => {
         hgRef.current.api.on('viewConfig', (newViewConfigString) => {
