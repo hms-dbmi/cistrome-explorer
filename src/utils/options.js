@@ -262,7 +262,7 @@ export function processWrapperOptions(optionsRaw) {
  * @param {boolean} isReplace Replace a suboption with new one or add to array
  * @returns {(object|object[])} The new options object or array.
  */
-export function updateGlobalOptionsWithKey(options, subOption, key, { isReplace }) {
+export function updateGlobalOptionsWithKey(options, subOption, key, { isReplace, indexToReplace }) {
     let newOptions;
 
     if(Array.isArray(options)) {
@@ -281,12 +281,12 @@ export function updateGlobalOptionsWithKey(options, subOption, key, { isReplace 
         const index = optionsRaw.indexOf(globalDefaults);
         newOptions = modifyItemInArray(optionsRaw, index, {
             ...globalDefaults,
-            [key]: isReplace ? subOption : insertItemToArray(globalDefaults[key], 0, subOption)
+            [key]: isReplace ? subOption : (indexToReplace === undefined ? insertItemToArray(globalDefaults[key], 0, subOption) : modifyItemInArray(globalDefaults[key], indexToReplace, subOption))
         });
     } else {
         newOptions = {
             ...options,
-            [key]: isReplace ? subOption : insertItemToArray(options[key], 0, subOption)
+            [key]: isReplace ? subOption : (indexToReplace === undefined ? insertItemToArray(options[key], 0, subOption) : modifyItemInArray(options[key], indexToReplace, subOption))
         };
     }
     return newOptions;

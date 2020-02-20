@@ -179,8 +179,9 @@ export default function CistromeHGWConsumer(props) {
     });
 
     // Callback function for selecting a genomic interval.
-    const onSelectGenomicInterval = useCallback((viewId, trackId, intervalCoordinates) => {
-        const newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, intervalCoordinates, "colSelect", { isReplace: false });
+    const onSelectGenomicInterval = useCallback((viewId, trackId, intervalCoordinates, indexToReplace) => {
+        
+        const newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, intervalCoordinates, "colSelect", { isReplace: false, indexToReplace });
         const newOptions = processWrapperOptions(newOptionsRaw);
 
         // Interval selections are specified only in the wrapper options.
@@ -239,8 +240,8 @@ export default function CistromeHGWConsumer(props) {
                     multivecTrackTilesetId={trackTilesetId}
                     combinedTrack={(combinedTrackId ? getTrackObject(viewId, combinedTrackId) : null)}
                     siblingTracks={siblingTrackInfos[trackId] ? siblingTrackInfos[trackId].map(d => getTrackObject(viewId, d.trackId)) : []}
-                    onSelectGenomicInterval={(interval) => {
-                        onSelectGenomicInterval(viewId, trackId, interval);
+                    onSelectGenomicInterval={(interval, indexToReplace) => {
+                        onSelectGenomicInterval(viewId, trackId, interval, indexToReplace);
                     }}
                     onSortRows={(field, type, order) => {
                         onSortRows(viewId, trackId, field, type, order);

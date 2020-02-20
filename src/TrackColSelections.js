@@ -16,8 +16,10 @@ export default function TrackColSelections(props) {
         viewHeight,
         trackX, trackY,
         trackWidth, trackHeight,
-        colSelect,
         trackAssembly,
+        absGenomeScale,
+        colSelect,
+        onSelectGenomicInterval,
         drawRegister
     } = props;
 
@@ -26,6 +28,7 @@ export default function TrackColSelections(props) {
         return null;
     }
 
+    console.log("TrackColSelections.render");
     return (
         <div>
             {colSelect ? colSelect.map((interval, i) => (
@@ -39,6 +42,10 @@ export default function TrackColSelections(props) {
                     trackWidth={trackWidth}
                     trackHeight={trackHeight}
                     trackAssembly={trackAssembly}
+                    absGenomeScale={absGenomeScale}
+                    onSelectGenomicInterval={(interval) => {
+                        onSelectGenomicInterval(interval, i)
+                    }}
                     drawRegister={drawRegister}
                 />
             )) : null}

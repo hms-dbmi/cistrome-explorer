@@ -23,6 +23,7 @@ export default function TrackColTools(props) {
         trackX, trackY, 
         trackWidth, trackHeight,
         trackAssembly,
+        absGenomeScale,
         colToolsPosition,
         onSelectGenomicInterval
     } = props;
@@ -44,8 +45,12 @@ export default function TrackColTools(props) {
         top = trackY + trackHeight;
     }
 
+    const [g0, g1] = absGenomeScale.domain();
+
     function onButtonClick() {
-        onSelectGenomicInterval([ 600, 650 ]);
+        const gRange = (g1 - g0);
+        const midpt = g0 + (gRange/2);
+        onSelectGenomicInterval([ midpt - (gRange/10) , midpt + (gRange/10) ], undefined);
     }
     
     return (
@@ -62,8 +67,7 @@ export default function TrackColTools(props) {
                 <button 
                     onClick={onButtonClick}
                     style={{
-                        position: 'absolute',
-                        top: (isTop ? (2*height/3) : 2),
+                        marginTop: (isTop ? (2*height/3) : 2),
                     }}
                 >Select interval</button>
             </div>

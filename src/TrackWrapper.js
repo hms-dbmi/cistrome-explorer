@@ -64,6 +64,7 @@ export default function TrackWrapper(props) {
     const trackHeight = multivecTrack.dimensions[1];
     const totalNumRows = multivecTrack.tilesetInfo.shape[1];
 
+    const absGenomeScale = multivecTrack._xScale;
 
     // Attempt to obtain metadata values from the `tilesetInfo` field of the track.
     let rowInfo = [];
@@ -146,6 +147,7 @@ export default function TrackWrapper(props) {
                     trackHeight={trackHeight}
                     trackWidth={trackWidth}
                     trackAssembly={trackAssembly}
+                    absGenomeScale={absGenomeScale}
                     colToolsPosition={options.colToolsPosition}
                     onSelectGenomicInterval={onSelectGenomicInterval}
                     drawRegister={drawRegister}
@@ -168,7 +170,9 @@ export default function TrackWrapper(props) {
                 trackWidth={trackWidth}
                 trackHeight={trackHeight}
                 trackAssembly={trackAssembly}
+                absGenomeScale={absGenomeScale}
                 colSelect={options.colSelect}
+                onSelectGenomicInterval={onSelectGenomicInterval}
                 drawRegister={drawRegister}
             />
         </div>
