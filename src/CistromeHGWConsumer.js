@@ -64,12 +64,10 @@ export default function CistromeHGWConsumer(props) {
      * to sibling `viewport-projection-horizontal` track IDs.
      */
     const onViewConfig = useCallback((newViewConfig) => {
-        console.log(newViewConfig);
         const newTrackInfos = getHMTrackIdsFromViewConfig(newViewConfig);
         const newSiblingTrackInfos = {};
         for(let trackInfo of newTrackInfos) {
             newSiblingTrackInfos[trackInfo.trackId] = getSiblingVPHTrackIdsFromViewConfig(newViewConfig, trackInfo.trackId);
-
             const newSelectedRows = getHMSelectedRowsFromViewConfig(newViewConfig, trackInfo.viewId, trackInfo.trackId);
             if(
                 !context.state[trackInfo.viewId] 
@@ -83,8 +81,6 @@ export default function CistromeHGWConsumer(props) {
                     selectedRows: newSelectedRows
                 });
             }
-
-            // TODO: dispatch for highlighting
         }
         setTrackInfos(newTrackInfos);
         setSiblingTrackInfos(newSiblingTrackInfos);
@@ -94,6 +90,22 @@ export default function CistromeHGWConsumer(props) {
     const getTrackObject = useCallback((viewId, trackId) => {
         try {
             return hgRef.current.api.getTrackObject(viewId, trackId);
+        } catch(e) {
+            return null;
+        }
+    }, []);
+
+    // Function to get view location information from the higlass API.
+    const getViewLocationObject = useCallback((viewId) => {
+        try {
+            const location = hgRef.current.api.getLocation(viewId);
+            // TODO: remove the hard-coded xRange and yRange values below,
+            // once the hgc.api.getLocation() function has been updated to return them.
+            return {
+                ...location,
+                xRange: [0, 100],
+                yRange: [0, 100]
+            };
         } catch(e) {
             return null;
         }
@@ -188,6 +200,7 @@ export default function CistromeHGWConsumer(props) {
                 <TrackWrapper
                     key={i}
                     options={getTrackWrapperOptions(options, viewId, trackId)}
+                    viewLocation={getViewLocationObject(viewId)}
                     multivecTrack={getTrackObject(viewId, trackId)}
                     multivecTrackViewId={viewId}
                     multivecTrackTrackId={trackId}

@@ -13,6 +13,7 @@ import fakedata from './demo/fakedata/index.js';
 /**
  * Wrapper component associated with a particular HiGlass track.
  * @prop {object} options Options associated with the track. Contains values for all possible options.
+ * @prop {object} viewLocation Object containing the `yRange` array `[$0, $1]`, the vertical range of the HiGlass view associated with this track.
  * @prop {object} multivecTrack A `horizontal-multivec` track object returned by `hgc.api.getTrackObject()`.
  * @prop {string} multivecTrackViewId The viewId for the multivecTrack.
  * @prop {string} multivecTrackTrackId The trackId for the multivecTrack.
@@ -28,7 +29,8 @@ import fakedata from './demo/fakedata/index.js';
  */
 export default function TrackWrapper(props) {
     const { 
-        options, 
+        options,
+        viewLocation,
         multivecTrack,
         multivecTrackViewId,
         multivecTrackTrackId,
@@ -50,6 +52,11 @@ export default function TrackWrapper(props) {
     // Attributes to visualize based on the position
     const leftAttrs = options.rowInfoAttributes.filter(d => d.position === "left");
     const rightAttrs = options.rowInfoAttributes.filter(d => d.position === "right");
+
+    const viewY = viewLocation ? viewLocation.yRange[0] : 0;
+    const viewHeight = viewLocation ? (viewLocation.yRange[1] - viewLocation.yRange[0]) : 0;
+
+    console.log(viewY, viewHeight);
 
     const trackX = multivecTrack.position[0];
     const trackY = multivecTrack.position[1];
@@ -133,6 +140,8 @@ export default function TrackWrapper(props) {
                 />) : null}
             {options.colToolsPosition !== "hidden" ? 
                 (<TrackColTools
+                    viewY={viewY}
+                    viewHeight={viewHeight}
                     trackX={trackX}
                     trackY={trackY}
                     trackHeight={trackHeight}
