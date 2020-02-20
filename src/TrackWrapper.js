@@ -154,6 +154,7 @@ export default function TrackWrapper(props) {
                     combinedTrack={combinedTrack}
                     siblingTracks={siblingTracks}
                     colToolsPosition={options.colToolsPosition}
+                    colSelect={options.colSelect}
                     onSelectGenomicInterval={onSelectGenomicInterval}
                     drawRegister={drawRegister}
                 />) : null}

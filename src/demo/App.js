@@ -25,6 +25,10 @@ const demos = {
                 // {field: "Species", type: "nominal", order: "ascending"},
                 // {field: "Tissue Type", type: "nominal", order: "ascending"},
                 // {field: "Cell Type", type: "nominal", order: "ascending"}
+            ],
+            colSelect: [
+                [0, 100],
+                [300, 500]
             ]
         }
     },

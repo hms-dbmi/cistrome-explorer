@@ -49,6 +49,10 @@ const baseSchema = {
                             "description": "The substring to search for"
                         }
                     }
+                },
+                "colSelect": {
+                    "type": "array",
+                    "items": { "$ref": "#/definitions/colSelectInfo" }
                 }
             }
         },
@@ -114,6 +118,18 @@ const baseSchema = {
                     "description": "The substring to search for"
                 }
             }
+        },
+        "colSelectInfo": {
+            "type": "array",
+            "items": [
+                {
+                    "type": "number"
+                },
+                {
+                    "type": "number"
+                }
+            ],
+            "additionalItems": false
         }
     }
 };

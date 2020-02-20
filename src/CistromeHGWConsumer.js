@@ -178,6 +178,16 @@ export default function CistromeHGWConsumer(props) {
         setOptions(newOptions);
     });
 
+    // Callback function for searching.
+    const onSelectGenomicInterval = useCallback((viewId, trackId, intervalCoordinates) => {
+        const newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, intervalCoordinates, "colSelect", { isReplace: true });
+        const newOptions = processWrapperOptions(newOptionsRaw);
+
+        // Highlighting options are specified only in the wrapper options.
+        setOptionsRaw(newOptionsRaw);
+        setOptions(newOptions);
+    });
+
     // Do initial processing of the options prop.
     useEffect(() => {
         setOptionsRaw(initOptionsRaw);
@@ -229,12 +239,8 @@ export default function CistromeHGWConsumer(props) {
                     multivecTrackTilesetId={trackTilesetId}
                     combinedTrack={(combinedTrackId ? getTrackObject(viewId, combinedTrackId) : null)}
                     siblingTracks={siblingTrackInfos[trackId] ? siblingTrackInfos[trackId].map(d => getTrackObject(viewId, d.trackId)) : []}
-                    onSelectGenomicInterval={() => {
-                        const currViewConfig = hgRef.current.api.getViewConfig();
-                        const newViewConfig = updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, trackId);
-                        hgRef.current.api.setViewConfig(newViewConfig).then(() => {
-                            onViewConfig(newViewConfig);
-                        });
+                    onSelectGenomicInterval={(interval) => {
+                        onSelectGenomicInterval(viewId, trackId, interval);
                     }}
                     onSortRows={(field, type, order) => {
                         onSortRows(viewId, trackId, field, type, order);
