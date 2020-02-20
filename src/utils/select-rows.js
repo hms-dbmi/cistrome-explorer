@@ -9,23 +9,23 @@ import d3 from './d3.js';
  */
 export function selectRows(rowInfo, options) {
     if(options) {
-        let filteredRowInfo = Array.from(rowInfo);
+        let filteredRowInfo = Array.from(rowInfo.entries());
         // Filter
         if(options.rowFilter && options.rowFilter.length > 0) {
             const filterInfos = options.rowFilter;
             filterInfos.forEach(info => {
                 const { field, type, contains } = info;
                 if(type === "nominal") {
-                    filteredRowInfo = filteredRowInfo.filter(d => d[field].toUpperCase().includes(contains.toUpperCase()));                
+                    filteredRowInfo = filteredRowInfo.filter(d => d[1][field].toUpperCase().includes(contains.toUpperCase()));                
                 } else if(type === "quantitative") {
                     // TODO: Better deal with quantitative data. Need to update Wrapper options for this.
                     // refer vega filter, such as lt: https://vega.github.io/vega-lite/docs/filter.html
-                    filteredRowInfo = filteredRowInfo.filter(d => d[field].toString().includes(contains));
+                    filteredRowInfo = filteredRowInfo.filter(d => d[1][field].toString().includes(contains));
                 }
             });
         }
         // Sort
-        let transformedRowInfo = Array.from(filteredRowInfo.entries());
+        let transformedRowInfo = Array.from(filteredRowInfo);
         if(options.rowSort && options.rowSort.length > 0) {
             let sortOptions = options.rowSort.slice().reverse();
             sortOptions.forEach((d) => {

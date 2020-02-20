@@ -190,6 +190,7 @@ export function processWrapperOptions(optionsRaw) {
     // Validate the raw options:
     const valid = validateWrapperOptions(optionsRaw);
     if(!valid) {
+        console.log("Invalid Wrapper Options.");
         return options;
     }
 
@@ -242,9 +243,10 @@ export function processWrapperOptions(optionsRaw) {
  * @param {(object|object[]|null)} options The raw value of the options prop.
  * @param {object} subOption New sub-option to replace.
  * @param {string} key Key of the sub-option to replace in "options."
+ * @param {boolean} isReplace Replace a suboption with new one or add to array
  * @returns {(object|object[])} The new options object or array.
  */
-export function updateGlobalOptionsWithKey(options, subOption, key) {
+export function updateGlobalOptionsWithKey(options, subOption, key, isReplace) {
     let newOptions;
 
     if(Array.isArray(options)){
@@ -263,12 +265,12 @@ export function updateGlobalOptionsWithKey(options, subOption, key) {
         const index = optionsRaw.indexOf(globalDefaults);
         newOptions = modifyItemInArray(optionsRaw, index, {
             ...globalDefaults,
-            [key]: subOption
+            [key]: isReplace ? subOption : insertItemToArray(globalDefaults[key], 0, subOption)
         });
     } else {
         newOptions = {
             ...options,
-            [key]: subOption
+            [key]: isReplace ? subOption : insertItemToArray(options[key], 0, subOption)
         };
     }
     return newOptions;

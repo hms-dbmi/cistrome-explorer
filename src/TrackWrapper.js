@@ -24,6 +24,7 @@ import fakedata from './demo/fakedata/index.js';
  *                                          Passed down to the `TrackColTools` component.
  * @prop {function} onSortRows The function to call upon a sort interaction.
  * @prop {function} onSearchRows The function to call upon a search interaction.
+ * @prop {function} onFilter The function to call upon a filer interaction.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function TrackWrapper(props) {

@@ -40,8 +40,8 @@ export default function TrackRowSearch(props) {
     }
 
     function onFilterClick() {
-        onFilter(field, type, keyword);
-        onChange("");
+        const contains = keyword.toString();
+        onFilter(field, type, contains);
         setKeyword("");
     }
 

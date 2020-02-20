@@ -123,29 +123,28 @@ export default function CistromeHGWConsumer(props) {
 
     // Callback function for sorting.
     const onSortRows = useCallback((viewId, trackId, field, type, order) => {
-        console.log(optionsRaw);
         const newRowSort = [ { field, type, order } ];
-        const newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, newRowSort, "rowSort");
+        const newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, newRowSort, "rowSort", true);
         const newOptions = processWrapperOptions(newOptionsRaw);
-        console.log(optionsRaw);
-        console.log(newOptions);
+        
         const trackOptions = getTrackWrapperOptions(newOptions, viewId, trackId);
-        console.log("trackOptions", trackOptions);
         const newSelectedRows = selectRows(context.state[viewId][trackId].rowInfo, trackOptions);
+
         setTrackSelectedRows(viewId, trackId, newSelectedRows);
         setOptionsRaw(newOptionsRaw);
         setOptions(newOptions);
     });
 
     const onFilter = useCallback((viewId, trackId, field, type, contains) => {
-        const newRowFilter = [ { field, type, contains } ];
-        const newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, newRowFilter, "rowFilter");
+        const newRowFilter = { field, type, contains };
+        let newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, newRowFilter, "rowFilter", false);
+        newOptionsRaw = updateGlobalOptionsWithKey(newOptionsRaw, undefined, "rowHighlight", true);    // Reset highlight.
         const newOptions = processWrapperOptions(newOptionsRaw);
-        console.log(optionsRaw);
-        console.log(newOptions);
+
         const trackOptions = getTrackWrapperOptions(newOptions, viewId, trackId);
-        console.log("trackOptions", trackOptions);
         const newSelectedRows = selectRows(context.state[viewId][trackId].rowInfo, trackOptions);
+
+        setHighlitRows(viewId, trackId, undefined);
         setTrackSelectedRows(viewId, trackId, newSelectedRows);
         setOptionsRaw(newOptionsRaw);
         setOptions(newOptions);
@@ -154,7 +153,7 @@ export default function CistromeHGWConsumer(props) {
     // Callback function for searching.
     const onSearchRows = useCallback((viewId, trackId, field, type, contains) => {
         const newRowHighlight = { field, type, contains };
-        const newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, newRowHighlight, "rowHighlight");
+        const newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, newRowHighlight, "rowHighlight", true);
         const newOptions = processWrapperOptions(newOptionsRaw);
 
         // Highlighting options are specified only in the wrapper options.
