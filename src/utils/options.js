@@ -81,7 +81,7 @@ const baseSchema = {
             "required": ["field", "order"],
             "properties": {
                 "field": {
-                    "type": "string",
+                    "type": ["string", "array"],
                     "description": "The name of a data field"
                 },
                 "type": {
@@ -101,7 +101,7 @@ const baseSchema = {
             "required": ["field", "type", "contains"],
             "properties": {
                 "field": {
-                    "type": "string",
+                    "type": ["string", "array"],
                     "description": "The name of a data field"
                 },
                 "type": {

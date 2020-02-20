@@ -74,7 +74,13 @@ export default function TrackRowInfo(props) {
     let trackProps = [], currentLeft = 0;
     rowInfoAttributes.forEach((attribute, i) => {
         const fieldInfo = isLeft ? rowInfoAttributes[rowInfoAttributes.length - i - 1] : attribute;
-        const width = widths.find(d => d.field === fieldInfo.field && d.type === fieldInfo.type).width;
+        const width = widths.find(d => {
+            if(Array.isArray(d.field) && Array.isArray(fieldInfo.field)) {
+                return d.field.join() === fieldInfo.field.join() && d.type === fieldInfo.type;
+            } else {
+                return d.field === fieldInfo.field && d.type === fieldInfo.type;
+            }
+        }).width;
         
         // Title suffix.
         let titleSuffix = "";

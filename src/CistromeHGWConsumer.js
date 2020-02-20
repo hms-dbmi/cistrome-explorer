@@ -154,6 +154,8 @@ export default function CistromeHGWConsumer(props) {
 
     // Callback function for searching.
     const onSearchRows = useCallback((viewId, trackId, field, type, contains) => {
+        // TODO: Better handle with multiple fields & quantitative fields.
+        if(Array.isArray(field)) return;
         const newRowHighlight = { field, type, contains };
         const newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, newRowHighlight, "rowHighlight", { isReplace: true });
         const newOptions = processWrapperOptions(newOptionsRaw);
