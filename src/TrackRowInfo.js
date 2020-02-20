@@ -24,6 +24,8 @@ const fieldTypeToVisComponent = {
  * @prop {array} rowInfo Array of JSON objects, one object for each row.
  * @prop {array} rowInfoAttributes Array of JSON object, one object for the names and types of each attribute.
  * @prop {string} rowInfoPosition The value of the `rowInfoPosition` option.
+ * @prop {object} rowSort The options for sorting rows.
+ * @prop {object} rowFilter The options for filtering rows.
  * @prop {function} onSortRows The function to call upon a sort interaction.
  * @prop {function} onSearchRows The function to call upon a search interaction.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
@@ -38,6 +40,7 @@ export default function TrackRowInfo(props) {
         rowInfoAttributes,
         rowInfoPosition,
         rowSort,
+        rowFilter,
         onSortRows,
         onSearchRows,
         onFilter,
@@ -71,14 +74,23 @@ export default function TrackRowInfo(props) {
     rowInfoAttributes.forEach((attribute, i) => {
         const fieldInfo = isLeft ? rowInfoAttributes[rowInfoAttributes.length - i - 1] : attribute;
         const width = widths.find(d => d.field === fieldInfo.field && d.type === fieldInfo.type).width;
-        const sortInfo = rowSort.find(d => d.field === fieldInfo.field);
-        let sortOrder = sortInfo ? sortInfo.order : null;
+        
+        // Title suffix.
+        let titleSuffix = "";
+        const sortInfo = rowSort ? rowSort.find(d => d.field === fieldInfo.field) : undefined;
+        if(sortInfo) {
+            titleSuffix += ` | sort (${sortInfo.order})`;
+        }
+        const filterInfo = rowFilter ? rowFilter.filter(d => d.field === fieldInfo.field) : undefined;
+        if(filterInfo && filterInfo.length > 0) {
+            titleSuffix += ` | filter (${filterInfo.map(d => `"${d.contains}"`).join(', ')})`;
+        }
 
         trackProps.push({
             left: currentLeft, top: 0, width, height,
             fieldInfo,
             isLeft,
-            sortOrder
+            titleSuffix
         });
         currentLeft += width;
     });
@@ -157,7 +169,7 @@ export default function TrackRowInfo(props) {
                     viewId,
                     trackId,
                     transformedRowInfo,
-                    sortOrder: d.sortOrder,
+                    titleSuffix: d.titleSuffix,
                     onSortRows,
                     onSearchRows,
                     onFilter,

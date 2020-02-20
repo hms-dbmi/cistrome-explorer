@@ -36,7 +36,7 @@ export default function TrackRowInfoVisBar(props) {
         viewId,
         trackId,
         transformedRowInfo,
-        sortOrder,
+        titleSuffix,
         onSortRows,
         onSearchRows,
         onFilter,
@@ -63,7 +63,7 @@ export default function TrackRowInfoVisBar(props) {
             domElement
         });
 
-        drawVisTitle(field, { two, isLeft, isNominal, width, sortOrder });
+        drawVisTitle(field, { two, isLeft, isNominal, width, titleSuffix });
 
         const textAreaWidth = isNominal ? width - 20 : 20;
         const barAreaWidth = width - textAreaWidth;

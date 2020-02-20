@@ -10,14 +10,14 @@
  * @param {number} options.width Width of this view.
  */
 export function drawVisTitle(text, options) {
-    const { two, isLeft, isNominal, width, sortOrder } = options;
+    const { two, isLeft, isNominal, width, titleSuffix } = options;
     
     const margin = 5;
     const barAreaWidth = isNominal ? 20 : width - 20;
     const titleFontSize = 12;
     const titleLeft = (isLeft ? margin : width - margin);
     const titleRotate = isLeft ? -Math.PI/2 : Math.PI/2;
-    const fullText = sortOrder ? `${text} | sorted (${sortOrder})` : text;
+    const fullText = text + titleSuffix;
 
     const title = two.makeText(titleLeft, 0, 12, barAreaWidth, fullText);
     title.fill = "#9A9A9A";

@@ -35,7 +35,7 @@ export default function TrackRowInfoVisLink(props) {
         fieldInfo,
         isLeft,
         transformedRowInfo,
-        sortOrder,
+        titleSuffix,
         onSortRows,
         onSearchRows,
         onFilter,
@@ -68,7 +68,7 @@ export default function TrackRowInfoVisLink(props) {
             domElement
         });
 
-        drawVisTitle(field, { two, isLeft, isNominal, width, sortOrder });
+        drawVisTitle(field, { two, isLeft, isNominal, width, titleSuffix });
 
         if(rowHeight < fontSize) {
             // Bail out if there is not enough height per row to render links.
