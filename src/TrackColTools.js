@@ -1,8 +1,5 @@
 import React from 'react';
 
-import TrackColSelection from './TrackColSelection.js';
-import TrackColSelectionInfo from './TrackColSelectionInfo.js';
-
 import './TrackColTools.scss';
 
 /**
@@ -23,17 +20,11 @@ import './TrackColTools.scss';
 export default function TrackColTools(props) {
 
     const {
-        viewY,
-        viewHeight,
         trackX, trackY, 
         trackWidth, trackHeight,
         trackAssembly,
-        combinedTrack,
-        siblingTracks,
-        colSelect,
         colToolsPosition,
-        onSelectGenomicInterval,
-        drawRegister
+        onSelectGenomicInterval
     } = props;
 
     if(!trackAssembly) {
@@ -58,34 +49,24 @@ export default function TrackColTools(props) {
     }
     
     return (
-        <React.Fragment>
-            <div
-                className="cistrome-hgw-child"
-                style={{
-                    top: `${top}px`,
-                    left: `${left}px`, 
-                    width: `${width}px`,
-                    height: `${height}px`
-                }}
-            >
-                <div className="col-tools">
-                    <button 
-                        onClick={onButtonClick}
-                        style={{
-                            position: 'absolute',
-                            top: (isTop ? (2*height/3) : 2),
-                        }}
-                    >Select interval</button>
-                </div>
+        <div
+            className="cistrome-hgw-child"
+            style={{
+                top: `${top}px`,
+                left: `${left}px`, 
+                width: `${width}px`,
+                height: `${height}px`
+            }}
+        >
+            <div className="col-tools">
+                <button 
+                    onClick={onButtonClick}
+                    style={{
+                        position: 'absolute',
+                        top: (isTop ? (2*height/3) : 2),
+                    }}
+                >Select interval</button>
             </div>
-            {colSelect ? colSelect.map((interval, i) => (
-                <TrackColSelection
-                    key={i}
-                    viewY={viewY}
-                    viewHeight={viewHeight}
-                    interval={interval}
-                />
-            )) : null}
-        </React.Fragment>
+        </div>
     );
-};
+}

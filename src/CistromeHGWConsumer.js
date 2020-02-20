@@ -178,13 +178,12 @@ export default function CistromeHGWConsumer(props) {
         setOptions(newOptions);
     });
 
-    // Callback function for searching.
+    // Callback function for selecting a genomic interval.
     const onSelectGenomicInterval = useCallback((viewId, trackId, intervalCoordinates) => {
         const newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, intervalCoordinates, "colSelect", { isReplace: false });
-        console.log(newOptionsRaw);
         const newOptions = processWrapperOptions(newOptionsRaw);
 
-        // Highlighting options are specified only in the wrapper options.
+        // Interval selections are specified only in the wrapper options.
         setOptionsRaw(newOptionsRaw);
         setOptions(newOptions);
     });

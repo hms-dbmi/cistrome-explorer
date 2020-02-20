@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
-import range from 'lodash/range';
 
 import { InfoContext, ACTION } from "./utils/contexts.js";
+import TrackColSelections from './TrackColSelections.js';
 import TrackColTools from './TrackColTools.js';
+import TrackRowHighlights from './TrackRowHighlights.js';
 import TrackRowInfo from './TrackRowInfo.js';
-import TrackRowHighlight from './TrackRowHighlight.js';
 
 // TODO: remove the below fakedata import.
 //       see https://github.com/hms-dbmi/cistrome-higlass-wrapper/issues/26
@@ -58,14 +58,11 @@ export default function TrackWrapper(props) {
     const viewY = viewLocation ? viewLocation.yRange[0] : 0;
     const viewHeight = viewLocation ? (viewLocation.yRange[1] - viewLocation.yRange[0]) : 0;
 
-    console.log(viewY, viewHeight);
-
     const trackX = multivecTrack.position[0];
     const trackY = multivecTrack.position[1];
     const trackWidth = multivecTrack.dimensions[0];
     const trackHeight = multivecTrack.dimensions[1];
     const totalNumRows = multivecTrack.tilesetInfo.shape[1];
-
 
 
     // Attempt to obtain metadata values from the `tilesetInfo` field of the track.
@@ -144,21 +141,16 @@ export default function TrackWrapper(props) {
                 />) : null}
             {options.colToolsPosition !== "hidden" ? 
                 (<TrackColTools
-                    viewY={viewY}
-                    viewHeight={viewHeight}
                     trackX={trackX}
                     trackY={trackY}
                     trackHeight={trackHeight}
                     trackWidth={trackWidth}
                     trackAssembly={trackAssembly}
-                    combinedTrack={combinedTrack}
-                    siblingTracks={siblingTracks}
                     colToolsPosition={options.colToolsPosition}
-                    colSelect={options.colSelect}
                     onSelectGenomicInterval={onSelectGenomicInterval}
                     drawRegister={drawRegister}
                 />) : null}
-            <TrackRowHighlight 
+            <TrackRowHighlights
                 trackX={trackX}
                 trackY={trackY}
                 trackHeight={trackHeight}
@@ -166,6 +158,17 @@ export default function TrackWrapper(props) {
                 totalNumRows={totalNumRows}
                 selectedRows={selectedRows}
                 highlitRows={highlitRows}
+                drawRegister={drawRegister}
+            />
+            <TrackColSelections
+                viewY={viewY}
+                viewHeight={viewHeight}
+                trackX={trackX}
+                trackY={trackY}
+                trackWidth={trackWidth}
+                trackHeight={trackHeight}
+                trackAssembly={trackAssembly}
+                colSelect={options.colSelect}
                 drawRegister={drawRegister}
             />
         </div>

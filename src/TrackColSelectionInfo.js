@@ -181,4 +181,4 @@ export default function TrackColSelectionInfo(props) {
             </div>
         </div>
     );
-};
+}

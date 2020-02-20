@@ -7,7 +7,7 @@ toc:
 - TrackColSelectionInfo
 - TrackColTools
 - TrackRowInfoControl
-- TrackRowHighlight
+- TrackRowHighlights
 - TrackRowInfo
 - TrackRowInfoVisBar
 - TrackRowInfoVisDendrogram
