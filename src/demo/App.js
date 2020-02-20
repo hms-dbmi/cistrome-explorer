@@ -36,6 +36,7 @@ const demos = {
             colToolsPosition: "bottom",
             rowInfoAttributes: [
                 {field: "Random 2", type: "quantitative", position: "left"},
+                {field: ["Random 1", "Random 2"], type: "quantitative", position: "left"},
                 {field: "url", type: "url", position: "left", title: "Cell Type"},
                 {field: "Hierarchical Clustering", type: "tree", position: "right"},
                 {field: "Cell Type", type: "nominal", position: "right"},

@@ -57,8 +57,8 @@ const baseSchema = {
             "required": ["field", "type"],
             "properties": {
                 "field": {
-                    "type": "string",
-                    "description": "The name of a data field"
+                    "type": ["string", "array"],
+                    "description": "The data field name(s)"
                 },
                 "type": {
                     "type": "string",
@@ -190,7 +190,7 @@ export function processWrapperOptions(optionsRaw) {
     // Validate the raw options:
     const valid = validateWrapperOptions(optionsRaw);
     if(!valid) {
-        console.log("Invalid Wrapper Options.");
+        console.log("WARNING: Invalid Wrapper Options.");
         return options;
     }
 
