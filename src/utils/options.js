@@ -246,7 +246,7 @@ export function processWrapperOptions(optionsRaw) {
  * @param {boolean} isReplace Replace a suboption with new one or add to array
  * @returns {(object|object[])} The new options object or array.
  */
-export function updateGlobalOptionsWithKey(options, subOption, key, isReplace) {
+export function updateGlobalOptionsWithKey(options, subOption, key, { isReplace }) {
     let newOptions;
 
     if(Array.isArray(options)){

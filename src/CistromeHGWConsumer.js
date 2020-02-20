@@ -124,7 +124,7 @@ export default function CistromeHGWConsumer(props) {
     // Callback function for sorting.
     const onSortRows = useCallback((viewId, trackId, field, type, order) => {
         const newRowSort = [ { field, type, order } ];
-        const newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, newRowSort, "rowSort", true);
+        const newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, newRowSort, "rowSort", { isReplace: true });
         const newOptions = processWrapperOptions(newOptionsRaw);
         
         const trackOptions = getTrackWrapperOptions(newOptions, viewId, trackId);
@@ -138,8 +138,8 @@ export default function CistromeHGWConsumer(props) {
     // Callback function for filtering.
     const onFilter = useCallback((viewId, trackId, field, type, contains) => {
         const newRowFilter = { field, type, contains };
-        let newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, newRowFilter, "rowFilter", false);
-        newOptionsRaw = updateGlobalOptionsWithKey(newOptionsRaw, undefined, "rowHighlight", true);    // Reset highlight.
+        let newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, newRowFilter, "rowFilter", { isReplace: false });
+        newOptionsRaw = updateGlobalOptionsWithKey(newOptionsRaw, undefined, "rowHighlight", { isReplace: true });    // Reset highlight.
         const newOptions = processWrapperOptions(newOptionsRaw);
 
         const trackOptions = getTrackWrapperOptions(newOptions, viewId, trackId);
@@ -154,7 +154,7 @@ export default function CistromeHGWConsumer(props) {
     // Callback function for searching.
     const onSearchRows = useCallback((viewId, trackId, field, type, contains) => {
         const newRowHighlight = { field, type, contains };
-        const newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, newRowHighlight, "rowHighlight", true);
+        const newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, newRowHighlight, "rowHighlight", { isReplace: true });
         const newOptions = processWrapperOptions(newOptionsRaw);
 
         // Highlighting options are specified only in the wrapper options.
@@ -164,11 +164,12 @@ export default function CistromeHGWConsumer(props) {
         setOptions(newOptions);
     });
 
+    // Do initial processing of the options prop.
     useEffect(() => {
         setOptionsRaw(initOptionsRaw);
         setOptions(processWrapperOptions(initOptionsRaw));
     }, [initOptionsRaw]);
-    
+
     // Listen for higlass view config changes.
     useEffect(() => {
         hgRef.current.api.on('viewConfig', (newViewConfigString) => {
