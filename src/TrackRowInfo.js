@@ -79,11 +79,11 @@ export default function TrackRowInfo(props) {
         let titleSuffix = "";
         const sortInfo = rowSort ? rowSort.find(d => d.field === fieldInfo.field) : undefined;
         if(sortInfo) {
-            titleSuffix += ` | sort (${sortInfo.order})`;
+            titleSuffix += ` | sorted (${sortInfo.order})`;
         }
         const filterInfo = rowFilter ? rowFilter.filter(d => d.field === fieldInfo.field) : undefined;
         if(filterInfo && filterInfo.length > 0) {
-            titleSuffix += ` | filter (${filterInfo.map(d => `"${d.contains}"`).join(', ')})`;
+            titleSuffix += ` | filtered by ${filterInfo.map(d => `"${d.contains}"`).join(', ')}`;
         }
 
         trackProps.push({
