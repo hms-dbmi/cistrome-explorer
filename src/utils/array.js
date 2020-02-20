@@ -5,6 +5,7 @@
  * @prop {any} item Item to be inserted.
  */
 export function insertItemToArray(array, index, item) {
+    if(!array) array = [];
     return [
         ...array.slice(0, index),
         item,

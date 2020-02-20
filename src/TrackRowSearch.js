@@ -1,7 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import PubSub from 'pubsub-js';
-import { EVENT } from './utils/constants.js';
-import { CLOSE } from './utils/icons.js';
+import React, { useEffect, useRef, useState } from "react";
+import { CLOSE, FILTER, UNDO } from './utils/icons.js';
 import './TrackRowSearch.scss';
 
 /**
@@ -17,11 +15,14 @@ export default function TrackRowSearch(props) {
 
     const {
         top, left,
+        field, type,
         onChange,
+        onFilter,
         onClose
     } = props;
 
     const inputRef = useRef();
+    const [keyword, setKeyword] = useState("");
 
     // Styles
     const width = 180;
@@ -33,13 +34,26 @@ export default function TrackRowSearch(props) {
     });
 
     function onKeywordChange(e) {
-        const keyword = e.target.value;
-        onChange(keyword);
+        const newKeyword = e.target.value;
+        setKeyword(newKeyword);
+        onChange(newKeyword);
+    }
+
+    function onFilterClick() {
+        const contains = keyword.toString();
+        onFilter(field, type, contains);
+        setKeyword("");
+    }
+
+    function onUndoClick() {
+        onFilter();
+        setKeyword("");
     }
 
     function onSearchClose() {
         onChange("");
         onClose();
+        setKeyword("");
     }
 
     return (
@@ -48,12 +62,13 @@ export default function TrackRowSearch(props) {
             style={{
                 display: ((left !== null && top !== null) ? 'flex' : 'none'),
                 left: left - (width + padding * 2) / 2,
-                top: top - (height + padding * 2) - 60,
+                top: top - (height + padding * 2) - 80,
                 padding
             }}
         >
             <input
                 ref={inputRef}
+                className="cistrome-hgw-searchinput"
                 type="text"
                 name="default name"
                 placeholder="keyword"
@@ -61,7 +76,17 @@ export default function TrackRowSearch(props) {
                 style={{ width, height }}
             />
             
-            <svg className="chgw-button-sm chgw-search-close-button"
+            <svg className="chgw-button-sm chgw-search-button"
+                onClick={onFilterClick} viewBox={FILTER.viewBox}>
+                <title>Filter rows using the keyword.</title>
+                <path d={FILTER.path} fill="currentColor"/>
+            </svg>
+            <svg className="chgw-button-sm chgw-search-button"
+                onClick={onUndoClick} viewBox={UNDO.viewBox}>
+                <title>Remove highlights and filters.</title>
+                <path d={UNDO.path} fill="currentColor"/>
+            </svg>
+            <svg className="chgw-button-sm chgw-search-button"
                 onClick={onSearchClose} viewBox={CLOSE.viewBox}>
                 <title>Close search box</title>
                 <path d={CLOSE.path} fill="currentColor"/>

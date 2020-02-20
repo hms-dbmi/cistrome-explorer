@@ -34,12 +34,13 @@ export default function TrackRowInfo(props) {
         viewId, trackId,
         trackX, trackY,
         trackWidth, trackHeight, 
-        rowInfo, 
+        transformedRowInfo, 
         rowInfoAttributes,
         rowInfoPosition,
         rowSort,
         onSortRows,
         onSearchRows,
+        onFilter,
         drawRegister
     } = props;
 
@@ -153,13 +154,14 @@ export default function TrackRowInfo(props) {
                     height: d.height,
                     isLeft: d.isLeft,
                     fieldInfo: d.fieldInfo,
-                    viewId: viewId,
-                    trackId: trackId,
-                    rowInfo: rowInfo,
+                    viewId,
+                    trackId,
+                    transformedRowInfo,
                     sortOrder: d.sortOrder,
-                    onSortRows: onSortRows,
-                    onSearchRows: onSearchRows,
-                    drawRegister: drawRegister,
+                    onSortRows,
+                    onSearchRows,
+                    onFilter,
+                    drawRegister,
                 }
             ))}
             {resizers}

@@ -18,7 +18,7 @@ import TrackRowInfoControl from './TrackRowInfoControl.js';
  * @prop {number} top The top position of this view.
  * @prop {number} width The width of this view.
  * @prop {number} height The height of this view.
- * @prop {object[]} rowInfo Array of JSON objects, one object for each row.
+ * @prop {object[]} transformedRowInfo Array of JSON objects, one object for each row.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  * @prop {string} viewId The viewId for the horizontal-multivec track.
@@ -32,8 +32,9 @@ export default function TrackRowInfoVisDendrogram(props) {
         isLeft,
         viewId,
         trackId,
-        rowInfo,
+        transformedRowInfo,
         onSortRows,
+        onFilter,
         drawRegister,
     } = props;
     
@@ -47,12 +48,12 @@ export default function TrackRowInfoVisDendrogram(props) {
     const isNominal = false;
 
     const yScale = d3.scaleBand()
-        .domain(range(rowInfo.length))
+        .domain(range(transformedRowInfo.length))
         .range([0, height]);
 
     // Process the hierarchy data. Result will be null if the tree leaves
     // cannot be aligned based on the current rowInfo ordering.
-    const hierarchyData = matrixToTree(rowInfo.map(d => d[field]));
+    const hierarchyData = matrixToTree(transformedRowInfo.map(d => d[field]));
     const root = d3.hierarchy(hierarchyData);
     const leaves = root.leaves().map(l => l.data);
 
@@ -182,6 +183,7 @@ export default function TrackRowInfoVisDendrogram(props) {
                 searchTop={null}
                 searchLeft={null}
                 onSortRows={onSortRows}
+                onFilter={null}
                 onSearchRows={null}
             />
             {cannotAlign ? 
