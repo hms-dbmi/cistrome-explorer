@@ -18,6 +18,7 @@ const demos = {
                 {field: "Hierarchical Clustering (Average)", type: "tree", position: "left"},
                 {field: "Random 1", type: "quantitative", position: "left"},
                 {field: "Random 3", type: "quantitative", position: "left"},
+                {field: ["Random 1", "Random 2", "Random 3", "Random 4"], type: "quantitative", position: "left"},
                 {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right"},
                 {field: "Cell Type", type: "nominal", position: "right"},
                 {field: "Tissue Type", type: "nominal", position: "right"},
@@ -36,7 +37,6 @@ const demos = {
             colToolsPosition: "bottom",
             rowInfoAttributes: [
                 {field: "Random 2", type: "quantitative", position: "left"},
-                {field: ["Random 1", "Random 2"], type: "quantitative", position: "left"},
                 {field: "url", type: "url", position: "left", title: "Cell Type"},
                 {field: "Hierarchical Clustering", type: "tree", position: "right"},
                 {field: "Cell Type", type: "nominal", position: "right"},

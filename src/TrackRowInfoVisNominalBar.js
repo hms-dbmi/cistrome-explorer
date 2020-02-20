@@ -28,7 +28,7 @@ export const margin = 5;
  * @prop {function} onSearchRows The function to call upon a search interaction.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
-export default function TrackRowInfoVisBar(props) {
+export default function TrackRowInfoVisNominalBar(props) {
     const {
         left, top, width, height,
         fieldInfo,
@@ -48,8 +48,7 @@ export default function TrackRowInfoVisBar(props) {
     const [mouseX, setMouseX] = useState(null);
 
     // Data, layouts and styles
-    const { field, type } = fieldInfo;
-    const isNominal = type === "nominal";
+    const { field } = fieldInfo;
 
     const yScale = d3.scaleBand()
         .domain(range(transformedRowInfo.length))
@@ -63,9 +62,10 @@ export default function TrackRowInfoVisBar(props) {
             domElement
         });
 
-        drawVisTitle(field, { two, isLeft, isNominal, width, titleSuffix });
+        const titleText = Array.isArray(field) ? field.join(" + ") : field;
+        drawVisTitle(titleText, { two, isLeft, isNominal: true, width, titleSuffix });
 
-        const textAreaWidth = isNominal ? width - 20 : 20;
+        const textAreaWidth = width - 20;
         const barAreaWidth = width - textAreaWidth;
         const minTrackWidth = 40;
         const isTextLabel = width > minTrackWidth;
@@ -78,13 +78,9 @@ export default function TrackRowInfoVisBar(props) {
             .domain(valueExtent)
             .range([0, barAreaWidth]);
 
-        const colorScale = isNominal ? 
-            d3.scaleOrdinal()
+        const colorScale = d3.scaleOrdinal()
                 .domain(Array.from(new Set(transformedRowInfo.map(d => d[field]))).sort()) 
-                .range(d3.schemeSet3) : 
-            d3.scaleLinear()
-                .domain(valueExtent)
-                .range([0, 1]);
+                .range(d3.schemeSet3);
     
 
         // Render visual components for each row (i.e., bars and texts).
@@ -93,7 +89,7 @@ export default function TrackRowInfoVisBar(props) {
 
         transformedRowInfo.forEach((d, i) => {
             // To aggregate bars, check if there is a same category on the next row.
-            if(type === "nominal" && i + 1 < transformedRowInfo.length && d[field] === transformedRowInfo[i+1][field]) {
+            if(i + 1 < transformedRowInfo.length && d[field] === transformedRowInfo[i+1][field]) {
                 if(aggregateStartIdx === -1) {
                     aggregateStartIdx = i;
                 }
@@ -103,11 +99,10 @@ export default function TrackRowInfoVisBar(props) {
 
             const barTop = aggregateStartIdx !== -1 ? yScale(aggregateStartIdx) : yScale(i);
             const barHeight = rowHeight * sameCategoriesNearby;
-            const barWidth = isNominal ? barAreaWidth : xScale(d[field]);        
+            const barWidth = barAreaWidth;
             const barLeft = (isLeft ? width - barWidth : 0);
             const textLeft = (isLeft ? width - barWidth - margin : barWidth + margin);
-            const color = isNominal ? colorScale(d[field]) : 
-                d3.interpolateViridis(colorScale(d[field]));
+            const color = colorScale(d[field]);
 
             const rect = two.makeRect(barLeft, barTop, barWidth, barHeight);
             rect.fill = color;
@@ -130,7 +125,7 @@ export default function TrackRowInfoVisBar(props) {
         return two.teardown;
     });
     
-    drawRegister("TrackRowInfoVisBar", draw);
+    drawRegister("TrackRowInfoVisNominalBar", draw);
 
     useEffect(() => {
         const canvas = canvasRef.current;

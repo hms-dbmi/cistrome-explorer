@@ -1,14 +1,15 @@
 import React, { useRef, createRef, useState, useEffect} from 'react';
 import d3 from './utils/d3.js';
 import { modifyItemInArray } from './utils/array.js';
-import TrackRowInfoVisBar from './TrackRowInfoVisBar.js';
+import TrackRowInfoVisNominalBar from './TrackRowInfoVisNominalBar.js';
+import TrackRowInfoVisQuantitativeBar from './TrackRowInfoVisQuantitativeBar.js';
 import TrackRowInfoVisLink from './TrackRowInfoVisLink.js';
 import TrackRowInfoVisDendrogram from './TrackRowInfoVisDendrogram.js';
 import './TrackResizer.scss';
 
 const fieldTypeToVisComponent = {
-    "nominal": TrackRowInfoVisBar,
-    "quantitative": TrackRowInfoVisBar,
+    "nominal": TrackRowInfoVisNominalBar,
+    "quantitative": TrackRowInfoVisQuantitativeBar,
     "url": TrackRowInfoVisLink,
     "tree": TrackRowInfoVisDendrogram
 };
