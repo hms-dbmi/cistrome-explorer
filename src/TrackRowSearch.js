@@ -39,6 +39,18 @@ export default function TrackRowSearch(props) {
         onChange(newKeyword);
     }
 
+    function onKeyDown(e) {
+        switch(e.key){
+            case 'Enter':
+                onFilterClick(); 
+                break;
+            case 'Esc':
+            case 'Escape':
+                onSearchClose(); 
+                break;
+        }
+    }
+
     function onFilterClick() {
         const contains = keyword.toString();
         onFilter(field, type, contains);
@@ -73,6 +85,7 @@ export default function TrackRowSearch(props) {
                 name="default name"
                 placeholder="keyword"
                 onChange={onKeywordChange}
+                onKeyDown={onKeyDown}
                 style={{ width, height }}
             />
             
