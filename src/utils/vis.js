@@ -8,16 +8,17 @@
  * @param {boolean} options.isLeft In this view placed on the left side of the track?
  * @param {boolean} options.isNominal Is this view visualizes a nominal value?
  * @param {number} options.width Width of this view.
+ * @param {string} options.titleSuffix The suffix of a title, information about sorting and filtering status.
  */
 export function drawVisTitle(text, options) {
-    const { two, isLeft, isNominal, width, sortOrder } = options;
+    const { two, isLeft, isNominal, width, titleSuffix } = options;
     
     const margin = 5;
     const barAreaWidth = isNominal ? 20 : width - 20;
     const titleFontSize = 12;
     const titleLeft = (isLeft ? margin : width - margin);
     const titleRotate = isLeft ? -Math.PI/2 : Math.PI/2;
-    const fullText = sortOrder ? `${text} | sorted (${sortOrder})` : text;
+    const fullText = text + titleSuffix;
 
     const title = two.makeText(titleLeft, 0, 12, barAreaWidth, fullText);
     title.fill = "#9A9A9A";
