@@ -21,7 +21,7 @@ export const margin = 5;
  * @prop {object[]} transformedRowInfo Array of JSON objects, one object for each row.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
- * @prop {string} sortOrder The order of sort applied in this track. If sort is not applied, then null.
+ * @prop {string} titleSuffix The suffix of a title, information about sorting and filtering status.
  * @prop {string} viewId The viewId for the horizontal-multivec track.
  * @prop {string} trackId The trackId for the horizontal-multivec track.
  * @prop {function} onSortRows The function to call upon a sort interaction.
