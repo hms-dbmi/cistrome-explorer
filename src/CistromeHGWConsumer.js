@@ -103,8 +103,8 @@ export default function CistromeHGWConsumer(props) {
             // once the hgc.api.getLocation() function has been updated to return them.
             return {
                 ...location,
-                xRange: [0, 100],
-                yRange: [0, 100]
+                xRange: [0, 1762],
+                yRange: [0, 791]
             };
         } catch(e) {
             return null;

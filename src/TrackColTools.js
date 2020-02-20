@@ -7,6 +7,8 @@ import './TrackColTools.scss';
 
 /**
  * Component for rendering genome interval selection tools.
+ * @prop {number} viewY
+ * @prop {number} viewHeight
  * @prop {number} trackX The track horizontal offset.
  * @prop {number} trackY The track vertical offset.
  * @prop {number} trackWidth The track width.
