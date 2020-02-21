@@ -169,7 +169,13 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             let fieldVal;
             if(y !== undefined){
                 setMouseX(true);
-                fieldVal = transformedRowInfo[y][field];
+                if(Array.isArray(field)){
+                    fieldVal = 0;
+                    field.forEach(f => fieldVal += transformedRowInfo[y][f]);
+
+                } else {
+                    fieldVal = transformedRowInfo[y][field];
+                }
             } else {
                 setMouseX(null);
                 destroyTooltip();
@@ -182,7 +188,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             PubSub.publish(EVENT.TOOLTIP, {
                 x: mouseViewportX,
                 y: mouseViewportY,
-                content: `${field}: ${fieldVal}`
+                content: Array.isArray(field) ? `${field.join(' + ')}: ${fieldVal}` : `${field}: ${fieldVal}`
             });
         });
 
