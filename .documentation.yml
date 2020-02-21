@@ -9,7 +9,8 @@ toc:
 - TrackRowInfoControl
 - TrackRowHighlight
 - TrackRowInfo
-- TrackRowInfoVisBar
+- TrackRowInfoVisNominalBar
+- TrackRowInfoVisQuantitativeBar
 - TrackRowInfoVisDendrogram
 - TrackRowInfoVisLink
 - TrackRowSearch

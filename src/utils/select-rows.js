@@ -15,12 +15,17 @@ export function selectRows(rowInfo, options) {
             const filterInfos = options.rowFilter;
             filterInfos.forEach(info => {
                 const { field, type, contains } = info;
+                const isMultipleFields = Array.isArray(field);
                 if(type === "nominal") {
                     filteredRowInfo = filteredRowInfo.filter(d => d[1][field].toUpperCase().includes(contains.toUpperCase()));                
                 } else if(type === "quantitative") {
                     // TODO: Better deal with quantitative data. Need to update Wrapper options for this.
                     // refer vega filter, such as lt: https://vega.github.io/vega-lite/docs/filter.html
-                    filteredRowInfo = filteredRowInfo.filter(d => d[1][field].toString().includes(contains));
+                    if(isMultipleFields) {
+                        //...
+                    } else {
+                        filteredRowInfo = filteredRowInfo.filter(d => d[1][field].toString().includes(contains));
+                    }
                 }
             });
         }
@@ -30,13 +35,23 @@ export function selectRows(rowInfo, options) {
             let sortOptions = options.rowSort.slice().reverse();
             sortOptions.forEach((d) => {
                 const { field, type, order } = d;
+                const isMultipleFields = Array.isArray(field);
                 if(type === "tree") {
                     const hierarchyData = matrixToTree(filteredRowInfo.map(d => d[1][field]));
                     const root = d3.hierarchy(hierarchyData);
                     const leaves = root.leaves().map(l => l.data.i);
                     transformedRowInfo = leaves.map((i) => transformedRowInfo[i]);
                 } else if(type === "quantitative") {
-                    transformedRowInfo.sort((a, b) => (a[1][field] - b[1][field]) * (order === "ascending" ? 1 : -1));
+                    transformedRowInfo.sort((a, b) => {
+                        if(isMultipleFields) {
+                            let sumA = 0, sumB = 0;
+                            field.forEach(f => sumA += a[1][f]);
+                            field.forEach(f => sumB += b[1][f]);
+                            return (sumA - sumB) * (order === "ascending" ? 1 : -1);
+                        } else {
+                            return (a[1][field] - b[1][field]) * (order === "ascending" ? 1 : -1);
+                        }
+                    });
                 } else if(type === "nominal") {
                     transformedRowInfo.sort(function(a, b) {
                         let compared = 0, categoryA = a[1][field].toUpperCase(), categoryB = b[1][field].toUpperCase();
@@ -67,6 +82,7 @@ export function selectRows(rowInfo, options) {
  */
 export function highlightRowsFromSearch(rowInfo, field, type, contains) {
     let newHighlitRows = [];
+    if(Array.isArray(field)) return newHighlitRows;
     if(contains === "") {
         newHighlitRows = [];
     } else if(type === "nominal") {

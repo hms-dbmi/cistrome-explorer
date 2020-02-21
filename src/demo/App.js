@@ -18,10 +18,12 @@ const demos = {
                 {field: "Hierarchical Clustering (Average)", type: "tree", position: "left"},
                 {field: "Random 1", type: "quantitative", position: "left"},
                 {field: "Random 3", type: "quantitative", position: "left"},
+                {field: ["Random 1", "Random 2", "Random 3", "Random 4"], type: "quantitative", position: "left"},
                 {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right"},
                 {field: "Cell Type", type: "nominal", position: "right"},
                 {field: "Tissue Type", type: "nominal", position: "right"},
                 {field: "Species", type: "nominal", position: "right"},
+                {field: ["Random 1", "Random 2", "Random 3", "Random 4"], type: "quantitative", position: "right"},
             ],
             rowSort: [
                 // {field: "Species", type: "nominal", order: "ascending"},
@@ -81,7 +83,7 @@ const demos = {
 
 export default function App() {
     
-    const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[1]);
+    const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[0]);
 
     return (
         <div className="app">

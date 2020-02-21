@@ -17,6 +17,8 @@
 - Added a mechanism to sort rows of a HiGrass `horizontal-multivec` track and vertical tracks on the left and right sides which is activated when users click on sorting buttons.
 - Added a feature to interactively highlight rows by typing keywords on a text field which appears when a search button is clicked.
 - Added a feature to interactively resize the width of each vertical track by dragging resizers.
+- Added a feature to interactively filter rows by keywords and reset all filters.
+- Added an option to specify multiple data fields in a single vertical track and implemented stacked bar charts for this case.
 
 ### Changed
 - Moved to rendering the row info categorical metadata on a single `<canvas/>` element, rather than colored HTML elements for each row.

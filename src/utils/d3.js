@@ -6,7 +6,7 @@
 
 import { select } from "d3-selection";
 import { format } from "d3-format";
-import { schemeSet3, interpolateViridis } from "d3-scale-chromatic";
+import { schemeSet3, schemeTableau10, interpolateViridis } from "d3-scale-chromatic";
 import { mouse, event as d3_event } from "d3-selection";
 import { scaleLinear, scaleOrdinal, scaleThreshold } from "d3-scale";
 import { scale as vega_scale } from "vega-scale";
@@ -27,6 +27,7 @@ export default {
     select,
     format,
     schemeSet3,
+    schemeTableau10,
     interpolateViridis,
     mouse,
     scaleLinear,

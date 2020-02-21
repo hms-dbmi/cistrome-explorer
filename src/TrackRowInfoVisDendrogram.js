@@ -191,8 +191,8 @@ export default function TrackRowInfoVisDendrogram(props) {
                     style={{
                         position: "absolute",
                         pointerEvents: "none",
-                        top: `${height / 2.0 - 25}px`,
-                        left: `${width / 2.0 - 25}px`,
+                        top: `${height / 2.0 - 17}px`,
+                        left: `${width / 2.0 - 17}px`,
                     }}
                 >
                     <svg 

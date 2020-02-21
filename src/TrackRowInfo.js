@@ -1,14 +1,15 @@
 import React, { useRef, createRef, useState, useEffect} from 'react';
 import d3 from './utils/d3.js';
 import { modifyItemInArray } from './utils/array.js';
-import TrackRowInfoVisBar from './TrackRowInfoVisBar.js';
+import TrackRowInfoVisNominalBar from './TrackRowInfoVisNominalBar.js';
+import TrackRowInfoVisQuantitativeBar from './TrackRowInfoVisQuantitativeBar.js';
 import TrackRowInfoVisLink from './TrackRowInfoVisLink.js';
 import TrackRowInfoVisDendrogram from './TrackRowInfoVisDendrogram.js';
 import './TrackResizer.scss';
 
 const fieldTypeToVisComponent = {
-    "nominal": TrackRowInfoVisBar,
-    "quantitative": TrackRowInfoVisBar,
+    "nominal": TrackRowInfoVisNominalBar,
+    "quantitative": TrackRowInfoVisQuantitativeBar,
     "url": TrackRowInfoVisLink,
     "tree": TrackRowInfoVisDendrogram
 };
@@ -73,7 +74,13 @@ export default function TrackRowInfo(props) {
     let trackProps = [], currentLeft = 0;
     rowInfoAttributes.forEach((attribute, i) => {
         const fieldInfo = isLeft ? rowInfoAttributes[rowInfoAttributes.length - i - 1] : attribute;
-        const width = widths.find(d => d.field === fieldInfo.field && d.type === fieldInfo.type).width;
+        const width = widths.find(d => {
+            if(Array.isArray(d.field) && Array.isArray(fieldInfo.field)) {
+                return d.field.join() === fieldInfo.field.join() && d.type === fieldInfo.type;
+            } else {
+                return d.field === fieldInfo.field && d.type === fieldInfo.type;
+            }
+        }).width;
         
         // Title suffix.
         let titleSuffix = "";
@@ -131,7 +138,13 @@ export default function TrackRowInfo(props) {
                 if(newWidth < minWidth) {
                     newWidth = minWidth;
                 }
-                const mIdx = widths.indexOf(widths.find(d => d.field === field && d.type === type));
+                const mIdx = widths.indexOf(widths.find(d => {
+                    if(Array.isArray(d.field) && Array.isArray(field)) {
+                        return d.field.join() === field.join() && d.type === type;
+                    } else {
+                        return d.field === field && d.type === type;
+                    }
+                }));
                 if(mIdx !== -1){
                     setWidths(modifyItemInArray(widths, mIdx, {
                         field, type,
