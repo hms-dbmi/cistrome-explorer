@@ -45,6 +45,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
 
     const divRef = useRef();
     const canvasRef = useRef();
+    const hiddenCanvasRef = useRef();
     const [mouseX, setMouseX] = useState(null);
 
     // Data, layouts and styles
@@ -56,7 +57,33 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
         .range([0, height]);
     const rowHeight = yScale.bandwidth();
 
-    const draw = useCallback((domElement) => {
+    // Array to store information for mouse events, such as unique color.
+    let colorToInfo = [];
+    let cnt = 0, fields = isStackedBar ? field : [field];
+    transformedRowInfo.forEach((d, i) => {
+        fields.forEach(f => {
+            const uniqueColor = generateNexUniqueColor(cnt++);
+            colorToInfo.push({
+                color: uniqueColor,
+                field: f,
+                value: d[f],
+                rowIndex: i
+            });
+        });
+    });
+
+    // Unique color generation
+    // https://stackoverflow.com/questions/15804149/rgb-color-permutation/15804183#15804183
+    function generateNexUniqueColor(i) {
+        if(i < 16777215) {
+            return rgbToHex([i & 0xff, (i & 0xff00) >> 8, (i & 0xff0000) >> 16]);
+        } else {
+            console.log("WARNING: unique colors out of range.");
+            return "white";
+        }
+    }
+
+    const draw = useCallback((domElement, isHidden) => {
         const two = new Two({
             width,
             height,
@@ -92,10 +119,10 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                 const barTop = yScale(i);
                 let currentBarLeft = (isLeft ? width : 0);
 
-                field.forEach((f, i) => {
-                    const barWidth = xScale(d[f]);    
-                    const color = colorScale(f);
-
+                field.forEach((f, j) => {
+                    const barWidth = xScale(d[f]);
+                    const color = isHidden ? colorToInfo.find(d => d.field === f).color : colorScale(f);
+                    
                     currentBarLeft += (isLeft ? -barWidth : 0);
 
                     const rect = two.makeRect(currentBarLeft, barTop, barWidth, rowHeight);
@@ -159,8 +186,10 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
 
     useEffect(() => {
         const canvas = canvasRef.current;
+        const hiddenCanvas = hiddenCanvasRef.current;
         const div = divRef.current;
         const teardown = draw(canvas);
+        const teardownH = draw(hiddenCanvas, true);
 
         d3.select(canvas).on("mousemove", () => {
             const [mouseX, mouseY] = d3.mouse(canvas);
@@ -198,6 +227,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
         // Clean up.
         return () => {
             teardown();
+            teardownH();
             d3.select(div).on("mouseleave", null);
         };
     }, [top, left, width, height, transformedRowInfo]);
@@ -220,7 +250,18 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                     left: 0, 
                     width: `${width}px`,
                     height: `${height}px`,
-                    position: 'relative'
+                    position: 'absolute'
+                }}
+            />
+            <canvas
+                ref={hiddenCanvasRef}
+                className="chw-hidden-canvas"
+                style={{
+                    top: 0,
+                    left: 0, 
+                    width: `${width}px`,
+                    height: `${height}px`,
+                    position: 'absolute'
                 }}
             />
             <TrackRowInfoControl
