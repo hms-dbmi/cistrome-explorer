@@ -80,7 +80,7 @@ export default function TrackRowInfoVisNominalBar(props) {
 
         const colorScale = d3.scaleOrdinal()
                 .domain(Array.from(new Set(transformedRowInfo.map(d => d[field]))).sort()) 
-                .range(d3.schemeSet3);
+                .range(d3.schemeTableau10);
     
 
         // Render visual components for each row (i.e., bars and texts).
