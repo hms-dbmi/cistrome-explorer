@@ -172,7 +172,6 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                 if(Array.isArray(field)){
                     fieldVal = 0;
                     field.forEach(f => fieldVal += transformedRowInfo[y][f]);
-
                 } else {
                     fieldVal = transformedRowInfo[y][field];
                 }
