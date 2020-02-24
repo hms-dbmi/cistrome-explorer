@@ -9,7 +9,7 @@ import { destroyTooltip } from "./utils/tooltip.js";
 import { drawVisTitle } from "./utils/vis.js";
 
 import TrackRowInfoControl from './TrackRowInfoControl.js';
-import { rgbToHex, generateNexUniqueColor } from "./utils/color.js";
+import { rgbToHex, generateNextUniqueColor } from "./utils/color.js";
 import { getRetinaRatio } from './utils/canvas.js';
 
 export const margin = 5;
@@ -65,7 +65,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
     
     fields.forEach(f => {
         transformedRowInfo.forEach((d, i) => {
-            const uniqueColor = generateNexUniqueColor(cnt++);
+            const uniqueColor = generateNextUniqueColor(cnt++);
             colorToInfo.push({
                 color: uniqueColor,
                 field: f,
@@ -112,7 +112,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                 const barTop = yScale(i);
                 let currentBarLeft = (isLeft ? width : 0);
 
-                field.forEach((f, j) => {
+                field.forEach(f => {
                     const barWidth = xScale(d[f]);
                     const color = isHidden ? colorToInfo.find(d => d.field === f && d.rowIndex === i).color : colorScale(f);
                     
