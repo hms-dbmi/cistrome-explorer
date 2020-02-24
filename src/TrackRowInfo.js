@@ -43,6 +43,7 @@ export default function TrackRowInfo(props) {
         rowInfoPosition,
         rowSort,
         rowFilter,
+        rowHighlight,
         onSortRows,
         onSearchRows,
         onFilterRows,
@@ -92,6 +93,9 @@ export default function TrackRowInfo(props) {
         const filterInfo = rowFilter ? rowFilter.filter(d => d.field === fieldInfo.field) : undefined;
         if(filterInfo && filterInfo.length > 0) {
             titleSuffix += ` | filtered by ${filterInfo.map(d => `"${d.contains}"`).join(', ')}`;
+        }
+        if(rowHighlight && rowHighlight.field === fieldInfo.field) {
+            titleSuffix += ` | highlighted by "${rowHighlight.contains}"`;
         }
 
         trackProps.push({

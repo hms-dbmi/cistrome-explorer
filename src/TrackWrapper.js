@@ -113,6 +113,7 @@ export default function TrackWrapper(props) {
                     rowInfoAttributes={leftAttrs}
                     rowSort={options.rowSort}
                     rowFilter={options.rowFilter}
+                    rowHighlight={options.rowHighlight}
                     rowInfoPosition="left"
                     onSortRows={onSortRows}
                     onSearchRows={onSearchRows}
@@ -131,6 +132,7 @@ export default function TrackWrapper(props) {
                     rowInfoAttributes={rightAttrs}
                     rowSort={options.rowSort}
                     rowFilter={options.rowFilter}
+                    rowHighlight={options.rowHighlight}
                     rowInfoPosition="right"
                     onSortRows={onSortRows}
                     onSearchRows={onSearchRows}
