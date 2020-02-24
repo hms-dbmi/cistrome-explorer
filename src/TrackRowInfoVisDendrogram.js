@@ -187,6 +187,9 @@ export default function TrackRowInfoVisDendrogram(props) {
                 }
                 subtree.reverse();
                 onFilterRows(field, "tree", subtree);
+
+                setHighlightNodeX(null);
+                setHighlightNodeY(null);
             }
         });
 
