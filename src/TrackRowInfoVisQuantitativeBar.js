@@ -6,11 +6,13 @@ import d3 from "./utils/d3.js";
 import Two from "./utils/two.js";
 import { EVENT } from "./utils/constants.js";
 import { destroyTooltip } from "./utils/tooltip.js";
+import { getTooltipContent } from "./Tooltip.js";
 import { drawVisTitle } from "./utils/vis.js";
 
 import TrackRowInfoControl from './TrackRowInfoControl.js';
 import { rgbToHex, generateNextUniqueColor } from "./utils/color.js";
 import { getRetinaRatio } from './utils/canvas.js';
+import { modifyItemInArray } from "./utils/array.js";
 
 export const margin = 5;
 
@@ -63,14 +65,15 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
     let colorToInfo = [];
     let cnt = 1, fields = isStackedBar ? field : [field];
     
-    fields.forEach(f => {
+    fields.forEach(field => {
         transformedRowInfo.forEach((d, i) => {
             const uniqueColor = generateNextUniqueColor(cnt++);
             colorToInfo.push({
-                color: uniqueColor,
-                field: f,
-                value: d[f],
-                rowIndex: i
+                uniqueColor,
+                field,
+                value: d[field],
+                rowIndex: i,
+                color: null // This property is determined when first rendered.
             });
             cnt += 1;
         });
@@ -114,7 +117,8 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
 
                 field.forEach(f => {
                     const barWidth = xScale(d[f]);
-                    const color = isHidden ? colorToInfo.find(d => d.field === f && d.rowIndex === i).color : colorScale(f);
+                    const infoForMouseEvent = colorToInfo.find(d => d.field === f && d.rowIndex === i);
+                    const color = isHidden ? infoForMouseEvent.uniqueColor : colorScale(f);
                     
                     currentBarLeft += (isLeft ? -barWidth : 0);
 
@@ -122,6 +126,14 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                     rect.fill = color;
 
                     currentBarLeft += (isLeft ? 0 : barWidth);
+
+                    // Add other vis properties to colorToInfo for mouse events.
+                    if(!isHidden) {
+                        colorToInfo = modifyItemInArray(colorToInfo, colorToInfo.indexOf(infoForMouseEvent), {
+                            ...infoForMouseEvent, 
+                            color
+                        });
+                    }
                 });
 
                 // Render text labels when the space is enough.
@@ -154,7 +166,8 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                 const barWidth = xScale(d[field]);        
                 const barLeft = (isLeft ? width - barWidth : 0);
                 const textLeft = (isLeft ? width - barWidth - margin : barWidth + margin);
-                const color = isHidden ? colorToInfo.find(d => d.rowIndex === i).color : d3.interpolateViridis(colorScale(d[field]));;
+                const infoForMouseEvent = colorToInfo.find(d => d.field === field && d.rowIndex === i);
+                const color = isHidden ? infoForMouseEvent.uniqueColor : d3.interpolateViridis(colorScale(d[field]));;
 
                 const rect = two.makeRect(barLeft, barTop, barWidth, rowHeight);
                 rect.fill = color;
@@ -167,6 +180,14 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                     text.align = textAlign;
                     text.baseline = "middle";
                     text.overflow = "ellipsis";
+                }
+
+                // Add other vis properties to colorToInfo for mouse events.
+                if(!isHidden) {
+                    colorToInfo = modifyItemInArray(colorToInfo, colorToInfo.indexOf(infoForMouseEvent), {
+                        ...infoForMouseEvent, 
+                        color
+                    });
                 }
             });
         }
@@ -190,7 +211,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             const hiddenContext = hiddenCanvasRef.current.getContext('2d');
             const ratio = getRetinaRatio(hiddenContext);
             const uniqueColor = rgbToHex(hiddenContext.getImageData(mouseX * ratio, mouseY * ratio, 1, 1).data);
-            const hoveredInfo = colorToInfo.find(d => d.color === uniqueColor);
+            const hoveredInfo = colorToInfo.find(d => d.uniqueColor === uniqueColor);
 
             const mouseViewportX = d3.event.clientX;
             const mouseViewportY = d3.event.clientY;
@@ -199,7 +220,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                 PubSub.publish(EVENT.TOOLTIP, {
                     x: mouseViewportX,
                     y: mouseViewportY,
-                    content: `${hoveredInfo.field}: ${hoveredInfo.value}`
+                    content: getTooltipContent({ title: hoveredInfo.field, value: hoveredInfo.value, color: hoveredInfo.color })
                 });
             } else {
                 destroyTooltip();
