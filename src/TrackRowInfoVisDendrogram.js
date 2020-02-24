@@ -1,5 +1,4 @@
 import React, { useRef, useCallback, useEffect, useState } from "react";
-import range from "lodash/range";
 import PubSub from "pubsub-js";
 
 import d3 from "./utils/d3.js";
