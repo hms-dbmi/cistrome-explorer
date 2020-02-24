@@ -8,6 +8,7 @@ import hgDemoViewConfig3 from '../viewconfigs/horizontal-multivec-4.json';
 
 
 import './App.scss';
+import { getAllViewAndTrackPairs } from '../utils/viewconf.js';
 
 const demos = {
     "Demo 1": {
@@ -27,7 +28,11 @@ const demos = {
             ],
             rowSort: [
                 {field: "Cell Type", type: "nominal", order: "ascending"}
-            ]
+            ],
+            rowFilter: [
+                {field: "Cell Type", type: "nominal", contains: "cell"}
+            ],
+            rowHighlight: {field: "Cell Type", type: "nominal", contains: "Stem"}
         }
     },
     "Demo 2": {

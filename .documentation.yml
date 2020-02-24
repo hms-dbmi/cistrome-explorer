@@ -28,6 +28,7 @@ toc:
 - updateViewConfigOnSelectGenomicInterval
 - updateViewConfigOnSelectRowsByTrack
 - getHMSelectedRowsFromViewConfig
+- getAllViewAndTrackPairs
 - resolveIntervalCoordinates
 - selectRows
 - highlightRowsFromSearch

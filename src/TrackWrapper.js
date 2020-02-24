@@ -39,6 +39,7 @@ export default function TrackWrapper(props) {
         onSortRows,
         onSearchRows,
         onFilterRows,
+        onMetadataLoad,
         drawRegister
     } = props;
 
@@ -58,8 +59,6 @@ export default function TrackWrapper(props) {
     const trackWidth = multivecTrack.dimensions[0];
     const trackHeight = multivecTrack.dimensions[1];
     const totalNumRows = multivecTrack.tilesetInfo.shape[1];
-
-
 
     // Attempt to obtain metadata values from the `tilesetInfo` field of the track.
     let rowInfo = [];
@@ -81,6 +80,7 @@ export default function TrackWrapper(props) {
                 trackId: multivecTrackTrackId,
                 rowInfo: rowInfo
             });
+            onMetadataLoad();
         }
     } catch(e) {
         console.log(e);

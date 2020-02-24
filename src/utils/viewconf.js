@@ -231,3 +231,27 @@ export function getHMSelectedRowsFromViewConfig(viewConfig, targetViewId, target
     });
     return selectedRows;
 }
+
+/**
+ * Get all view and track pairs.
+ * @param {object} viewConfig A valid higlass view config object.
+ * @returns {array} An array of objects of {traciId, viewId}.
+ */
+export function getAllViewAndTrackPairs(viewConfig) {
+    let pairs = [];
+    traverseViewConfig(viewConfig, (d) => {
+        // The horizontal-multivec track could be standalone, or within a "combined" track.
+        if(d.trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC) {
+            pairs.push({
+                viewId: d.viewId,
+                trackId: d.trackId
+            });
+        } else if(d.trackType === TRACK_TYPE.COMBINED && d.innerTrackType === TRACK_TYPE.HORIZONTAL_MULTIVEC) {
+            pairs.push({
+                viewId: d.viewId,
+                trackId: d.innerTrackId
+            });
+        }
+    });
+    return pairs;
+}

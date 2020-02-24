@@ -57,6 +57,23 @@ export default function CistromeHGWConsumer(props) {
     
     const context = useContext(InfoContext);
 
+    // Set initial sorting, filtering, and highlighting
+    const onMetadataLoad = useCallback((viewId, trackId) => {
+        const trackOptions = getTrackWrapperOptions(options, viewId, trackId);
+        const rowInfo = context.state[viewId][trackId].rowInfo;
+        
+        // Filter and sort.
+        const newSelectedRows = selectRows(rowInfo, trackOptions);
+        setTrackSelectedRows(viewId, trackId, newSelectedRows);
+        
+        // Highlight.
+        if(trackOptions.rowHighlight) {
+            const { field, type, contains } = trackOptions.rowHighlight;
+            const newHighlitRows = highlightRowsFromSearch(rowInfo, field, type, contains);
+            setHighlitRows(viewId, trackId, newHighlitRows);
+        }
+    });
+
     /*
      * Function to call when the view config has changed.
      * Updates the array of `horizontal-multivec` track IDs.
@@ -224,6 +241,9 @@ export default function CistromeHGWConsumer(props) {
                     }}
                     onFilterRows={(field, type, contains) => {
                         onFilterRows(viewId, trackId, field, type, contains);
+                    }}
+                    onMetadataLoad={() => {
+                        onMetadataLoad(viewId, trackId);
                     }}
                     drawRegister={drawRegister}
                 />
