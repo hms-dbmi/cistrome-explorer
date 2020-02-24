@@ -9,7 +9,7 @@ import { destroyTooltip } from "./utils/tooltip.js";
 import { drawVisTitle } from "./utils/vis.js";
 
 import TrackRowInfoControl from './TrackRowInfoControl.js';
-import { getTooltipContent } from "./Tooltip.js";
+import { TooltipContent } from "./Tooltip.js";
 
 export const margin = 5;
 
@@ -151,7 +151,11 @@ export default function TrackRowInfoVisNominalBar(props) {
             PubSub.publish(EVENT.TOOLTIP, {
                 x: mouseViewportX,
                 y: mouseViewportY,
-                content: getTooltipContent({ title: field, value: fieldVal, color: colorScale(fieldVal) })
+                content: <TooltipContent 
+                    title={field}
+                    value={fieldVal}
+                    color={colorScale(fieldVal)}
+                />
             });
         });
 

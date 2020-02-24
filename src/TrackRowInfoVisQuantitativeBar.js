@@ -6,7 +6,7 @@ import d3 from "./utils/d3.js";
 import Two from "./utils/two.js";
 import { EVENT } from "./utils/constants.js";
 import { destroyTooltip } from "./utils/tooltip.js";
-import { getTooltipContent } from "./Tooltip.js";
+import { TooltipContent } from "./Tooltip.js";
 import { drawVisTitle } from "./utils/vis.js";
 
 import TrackRowInfoControl from './TrackRowInfoControl.js';
@@ -220,7 +220,11 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                 PubSub.publish(EVENT.TOOLTIP, {
                     x: mouseViewportX,
                     y: mouseViewportY,
-                    content: getTooltipContent({ title: hoveredInfo.field, value: hoveredInfo.value, color: hoveredInfo.color })
+                    content: <TooltipContent 
+                        title={hoveredInfo.field}
+                        value={hoveredInfo.value}
+                        color={hoveredInfo.color}
+                    />
                 });
             } else {
                 destroyTooltip();

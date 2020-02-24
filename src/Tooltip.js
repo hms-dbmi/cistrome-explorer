@@ -11,7 +11,7 @@ import './Tooltip.scss';
  * @prop {number} value A value to show in tooltip.
  * @prop {string} color A color related to the value/title.
  */
-export function getTooltipContent(props) {
+export function TooltipContent(props) {
     const { title, value, color: background } = props;   
     return (
         <div className="chw-tooltip-content">
@@ -21,7 +21,10 @@ export function getTooltipContent(props) {
                     <div className="chw-tooltip-color-container"><div className="chw-tooltip-color" style={{ background }}/></div>
                     : null
                 }
-                <div>{value}</div>
+                {value ? 
+                    <div>{value}</div>
+                    : null
+                }
             </div>
         </div>
     );
