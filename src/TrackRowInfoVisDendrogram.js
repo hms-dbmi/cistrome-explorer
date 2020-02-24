@@ -21,8 +21,8 @@ import TrackRowInfoControl from './TrackRowInfoControl.js';
  * @prop {object[]} transformedRowInfo Array of JSON objects, one object for each row.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
- * @prop {string} viewId The viewId for the horizontal-multivec track.
- * @prop {string} trackId The trackId for the horizontal-multivec track.
+ * @prop {function} onSortRows
+ * @prop {function} onFilterRows
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function TrackRowInfoVisDendrogram(props) {
@@ -30,26 +30,25 @@ export default function TrackRowInfoVisDendrogram(props) {
         left, top, width, height,
         fieldInfo,
         isLeft,
-        viewId,
-        trackId,
         transformedRowInfo,
         onSortRows,
-        onFilter,
+        onFilterRows,
         drawRegister,
     } = props;
     
+    // DOM refs.
     const divRef = useRef();
     const canvasRef = useRef();
+
+    // Data refs.
+    const descendantsRef = useRef();
+    const delaunayRef = useRef();
 
     const [mouseX, setMouseX] = useState(null);
 
     // Data, layouts and styles
     const { field } = fieldInfo;
     const isNominal = false;
-
-    const yScale = d3.scaleBand()
-        .domain(range(transformedRowInfo.length))
-        .range([0, height]);
 
     // Process the hierarchy data. Result will be null if the tree leaves
     // cannot be aligned based on the current rowInfo ordering.
@@ -109,14 +108,22 @@ export default function TrackRowInfoVisDendrogram(props) {
                 path.linewidth = 1.5;
             }
         });
+        
 
-        if(cannotAlign){
+        if(cannotAlign) {
             const rect = two.makeRect(0, 0, width, height);
             rect.fill = "white";
             rect.opacity = 0.8;
         }
 
         drawVisTitle(field, { two, isLeft, isNominal, width });
+
+        const points = descendants.map(d => [ (isLeft ? d.y : width - d.y), d.x ]);
+        const delaunay = d3.delaunay.from(points);
+        
+        // Store delaunay object and descendants node array to references.
+        descendantsRef.current = descendants;
+        delaunayRef.current = delaunay;
 
         two.update();
         return two.teardown;
@@ -144,8 +151,29 @@ export default function TrackRowInfoVisDendrogram(props) {
             } else {
                 // The dendrogram is visible, so no tooltip should be shown on hover.
                 destroyTooltip();
+
+                // TODO: show hover indicator.
             }
         });
+
+        d3.select(canvas).on("click", () => {
+            if(!cannotAlign && delaunayRef.current && descendantsRef.current) {
+                // Filter to select a subtree based on clicking near its root node.
+                const [mouseX, mouseY] = d3.mouse(canvas);
+
+                const i = delaunayRef.current.find(mouseX, mouseY);
+
+                const subtree = [];
+                let node = descendantsRef.current[i];
+                while(node.parent) {
+                    subtree.push(node.data.name);
+                    node = node.parent;
+                }
+                subtree.reverse();
+                onFilterRows(field, "tree", subtree);
+            }
+        });
+
         d3.select(canvas).on("mouseout", destroyTooltip);
         d3.select(div).on("mouseleave", () => setMouseX(null));
 
@@ -183,7 +211,7 @@ export default function TrackRowInfoVisDendrogram(props) {
                 searchTop={null}
                 searchLeft={null}
                 onSortRows={onSortRows}
-                onFilter={null}
+                onFilterRows={null}
                 onSearchRows={null}
             />
             {cannotAlign ? 

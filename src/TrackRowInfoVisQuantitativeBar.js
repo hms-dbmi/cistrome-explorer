@@ -26,6 +26,7 @@ export const margin = 5;
  * @prop {string} trackId The trackId for the horizontal-multivec track.
  * @prop {function} onSortRows The function to call upon a sort interaction.
  * @prop {function} onSearchRows The function to call upon a search interaction.
+ * @prop {function} onFilterRows The function to call upon a filter interaction.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function TrackRowInfoVisQuantitativeBar(props) {
@@ -39,7 +40,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
         titleSuffix,
         onSortRows,
         onSearchRows,
-        onFilter,
+        onFilterRows,
         drawRegister,
     } = props;
 
@@ -231,7 +232,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                 searchLeft={left}
                 onSortRows={onSortRows}
                 onSearchRows={onSearchRows}
-                onFilter={onFilter}
+                onFilterRows={onFilterRows}
             />
         </div>
     );
