@@ -12,8 +12,8 @@ import Tooltip from './Tooltip.js';
 
 import { 
     processWrapperOptions, 
-    getTrackWrapperOptions, 
-    updateGlobalOptionsWithKey 
+    getTrackWrapperOptions,
+    updateWrapperOptions
 } from './utils/options.js';
 import { 
     getHMTrackIdsFromViewConfig, 
@@ -46,13 +46,12 @@ const hgOptionsBase = {
  */
 export default function CistromeHGWConsumer(props) {
 
-    const { viewConfig, options: initOptionsRaw } = props;
+    const { viewConfig, options: optionsRaw } = props;
 
     const hgRef = useRef();
     const drawRef = useRef({});
 
-    const [optionsRaw, setOptionsRaw] = useState(initOptionsRaw);
-    const [options, setOptions] = useState(processWrapperOptions(initOptionsRaw));
+    const [options, setOptions] = useState(processWrapperOptions(optionsRaw));
     const [trackInfos, setTrackInfos] = useState([]);
     const [siblingTrackInfos, setSiblingTrackInfos] = useState({});
     
@@ -124,55 +123,47 @@ export default function CistromeHGWConsumer(props) {
     // Callback function for sorting.
     const onSortRows = useCallback((viewId, trackId, field, type, order) => {
         const newRowSort = [ { field, type, order } ];
-        const newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, newRowSort, "rowSort", { isReplace: true });
-        const newOptions = processWrapperOptions(newOptionsRaw);
+        const newOptions = updateWrapperOptions(options, newRowSort, "rowSort", viewId, trackId, { isReplace: true });
         
         const trackOptions = getTrackWrapperOptions(newOptions, viewId, trackId);
         const newSelectedRows = selectRows(context.state[viewId][trackId].rowInfo, trackOptions);
 
         setTrackSelectedRows(viewId, trackId, newSelectedRows);
-        setOptionsRaw(newOptionsRaw);
         setOptions(newOptions);
     });
 
-    // Callback function for filtering.
+    // Callback function for searching and highlighting.
+    const onSearchRows = useCallback((viewId, trackId, field, type, contains) => {
+        // TODO: Better handle with multiple fields & quantitative fields.
+        if(Array.isArray(field)) return;
+        const newRowHighlight = { field, type, contains };
+        const newOptions = updateWrapperOptions(options, newRowHighlight, "rowHighlight", viewId, trackId, { isReplace: true });
+
+        // Highlighting options are specified only in the wrapper options.
+        const newHighlitRows = highlightRowsFromSearch(context.state[viewId][trackId].rowInfo, field, type, contains);
+        setHighlitRows(viewId, trackId, newHighlitRows);
+        setOptions(newOptions);
+    });
+
+    // Callback function for filtering. This remove highlightings.
     const onFilter = useCallback((viewId, trackId, field, type, contains) => {
         const isResetFilter = field === undefined;
         const newRowFilter = isResetFilter ? [] : { field, type, contains };
-        let newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, newRowFilter, "rowFilter", { isReplace: isResetFilter });
-        // Reset highlight as well.
-        newOptionsRaw = updateGlobalOptionsWithKey(newOptionsRaw, undefined, "rowHighlight", { isReplace: true });
-        const newOptions = processWrapperOptions(newOptionsRaw);
+        let newOptions = updateWrapperOptions(options, newRowFilter, "rowFilter", viewId, trackId, { isReplace: isResetFilter });
+        newOptions = updateWrapperOptions(newOptions, undefined, "rowHighlight", viewId, trackId, { isReplace: true });
 
         const trackOptions = getTrackWrapperOptions(newOptions, viewId, trackId);
         const newSelectedRows = selectRows(context.state[viewId][trackId].rowInfo, trackOptions);
 
         setHighlitRows(viewId, trackId, undefined);
         setTrackSelectedRows(viewId, trackId, newSelectedRows);
-        setOptionsRaw(newOptionsRaw);
-        setOptions(newOptions);
-    });
-
-    // Callback function for searching.
-    const onSearchRows = useCallback((viewId, trackId, field, type, contains) => {
-        // TODO: Better handle with multiple fields & quantitative fields.
-        if(Array.isArray(field)) return;
-        const newRowHighlight = { field, type, contains };
-        const newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, newRowHighlight, "rowHighlight", { isReplace: true });
-        const newOptions = processWrapperOptions(newOptionsRaw);
-
-        // Highlighting options are specified only in the wrapper options.
-        const newHighlitRows = highlightRowsFromSearch(context.state[viewId][trackId].rowInfo, field, type, contains);
-        setHighlitRows(viewId, trackId, newHighlitRows);
-        setOptionsRaw(newOptionsRaw);
         setOptions(newOptions);
     });
 
     // Do initial processing of the options prop.
     useEffect(() => {
-        setOptionsRaw(initOptionsRaw);
-        setOptions(processWrapperOptions(initOptionsRaw));
-    }, [initOptionsRaw]);
+        setOptions(processWrapperOptions(optionsRaw));
+    }, [optionsRaw]);
 
     // Listen for higlass view config changes.
     useEffect(() => {

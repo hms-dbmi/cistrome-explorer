@@ -181,12 +181,13 @@ export function validateWrapperOptions(optionsRaw) {
 export function processWrapperOptions(optionsRaw) {
 
     // Important Descriptions about Wrapper Options (i.e., optionsRaw):
-    // * Single 'view' can contain multiple 'tracks,' but not vice versa.
-    // * Unlike HiGlass View Config, individual options for each combination of {viewId, trackId} are stored in an 1D array of JSON objects,
-    //   instead of using a nested format.
-    // * Both the viewId and trackId or only a viewId can be DEAULT_OPTIONS_KEY (i.e., only the trackId cannot be DEFAULT_OPTIONS_KEY).
-    // * Options of both viewId and trackId being DEFAULT_OPTIONS_KEY is a global option, which affects to any other tracks in any views.
-    // * Options of only a viewId being DEFAULT_OPTIONS_KEY is a track-global option, which affects to any tracks in a certain view.
+    //  * Single 'view' can contain multiple 'tracks,' but not vice versa.
+    //  * Unlike HiGlass View Config, individual options for each combination of {viewId, trackId} are stored in an 1D array of JSON objects,
+    //    instead of using a nested format.
+    //  * Both the viewId and trackId or only a trackId can be DEAULT_OPTIONS_KEY (i.e., only the viewId cannot be DEFAULT_OPTIONS_KEY).
+    //  * An option of both viewId and trackId being DEFAULT_OPTIONS_KEY is a global option, which affects to any other tracks in any views.
+    //  * An option of only a trackId being DEFAULT_OPTIONS_KEY is a track-global option, which affects to any tracks in a certain view.
+    //  * Wrapper options may or may not contain options for all of the individual {viewId, trackId} combinations.
 
     // Set up the default options:
     const options = {
@@ -303,6 +304,39 @@ export function getTrackWrapperOptions(options, viewId, trackId) {
     return options[DEFAULT_OPTIONS_KEY];
 }
 
-export function updateWrapperOptions(options, newSubOptions, viewId, trackId) {
-    
+/**
+ * Update options for a specific track, using its viewId and trackId.
+ * @param {object} options A _processed_ options object to update.
+ * @param {object} subOptions A sub-options object to replace or insert.
+ * @param {string} key The key of sub-options object.
+ * @param {string} viewId The viewId for the track of interest.
+ * @param {string} trackId The trackId for the track of interest.
+ * @param {boolean} isReplace Determine to replace or insert the subOptions.
+ * @returns {object} The options object for the track, or the default options object.
+ */
+export function updateWrapperOptions(options, subOptions, key, viewId, trackId, { isReplace }) {
+    const _viewId = options[viewId] ? viewId : DEFAULT_OPTIONS_KEY;
+    if(_viewId === DEFAULT_OPTIONS_KEY) {
+        // Global defaults (1D array).
+        return {
+            ...options,
+            [_viewId]: {
+                ...options[_viewId],
+                [key]: isReplace ? subOptions : insertItemToArray(options[_viewId][key], 0, subOptions)
+            }
+        };
+    } else {
+        // 2D array.
+        const _trackId = options[_viewId][trackId] ? trackId : DEFAULT_OPTIONS_KEY;
+        return {
+            ...options,
+            [_viewId]: {
+                ...options[_viewId],
+                [_trackId]: {
+                    ...options[_viewId][_trackId],
+                    [key]: isReplace ? subOptions : insertItemToArray(options[_viewId][_trackId][key], 0, subOptions)
+                }
+            }
+        };
+    }
 }
