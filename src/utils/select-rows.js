@@ -26,11 +26,14 @@ export function selectRows(rowInfo, options) {
                     } else {
                         filteredRowInfo = filteredRowInfo.filter(d => d[1][field].toString().includes(contains));
                     }
+                } else if(type === "tree") {
+                    filteredRowInfo = filteredRowInfo.filter(d => d[1][field].reduce((a, h, i) => a && (i >= contains.length || h === contains[i]), true));
                 }
             });
         }
+
         // Sort
-        let transformedRowInfo = Array.from(filteredRowInfo);
+        let transformedRowInfo = filteredRowInfo;
         if(options.rowSort && options.rowSort.length > 0) {
             let sortOptions = options.rowSort.slice().reverse();
             sortOptions.forEach((d) => {

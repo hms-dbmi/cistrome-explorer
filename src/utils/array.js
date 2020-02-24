@@ -3,6 +3,7 @@
  * @prop {array} array Array to be updated.
  * @prop {number} index Index of array to insert new item.
  * @prop {any} item Item to be inserted.
+ * @returns Updated array.
  */
 export function insertItemToArray(array, index, item) {
     if(!array) array = [];
@@ -18,6 +19,7 @@ export function insertItemToArray(array, index, item) {
  * @prop {array} array Array to be updated.
  * @prop {number} index Index of array to change item.
  * @prop {any} item Item to be inserted.
+ * @returns Updated array.
  */
 export function modifyItemInArray(array, index, item) {
     return [
@@ -31,6 +33,7 @@ export function modifyItemInArray(array, index, item) {
  * Remove item from an array stored in a certain index.
  * @prop {array} array Array to be updated.
  * @prop {number} index Index of an item to be removed.
+ * @returns Updated array.
  */
 export function removeItemFromArray(array, index) {
     return {

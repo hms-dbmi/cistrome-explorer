@@ -24,7 +24,7 @@ import fakedata from './demo/fakedata/index.js';
  *                                          Passed down to the `TrackColTools` component.
  * @prop {function} onSortRows The function to call upon a sort interaction.
  * @prop {function} onSearchRows The function to call upon a search interaction.
- * @prop {function} onFilter The function to call upon a filer interaction.
+ * @prop {function} onFilterRows The function to call upon a filer interaction.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function TrackWrapper(props) {
@@ -38,7 +38,7 @@ export default function TrackWrapper(props) {
         onSelectGenomicInterval,
         onSortRows,
         onSearchRows,
-        onFilter,
+        onFilterRows,
         drawRegister
     } = props;
 
@@ -116,7 +116,7 @@ export default function TrackWrapper(props) {
                     rowInfoPosition="left"
                     onSortRows={onSortRows}
                     onSearchRows={onSearchRows}
-                    onFilter={onFilter}
+                    onFilterRows={onFilterRows}
                     drawRegister={drawRegister}
                 />) : null}
             {rightAttrs.length !== 0 ? 
@@ -134,7 +134,7 @@ export default function TrackWrapper(props) {
                     rowInfoPosition="right"
                     onSortRows={onSortRows}
                     onSearchRows={onSearchRows}
-                    onFilter={onFilter}
+                    onFilterRows={onFilterRows}
                     drawRegister={drawRegister}
                 />) : null}
             {options.colToolsPosition !== "hidden" ? 

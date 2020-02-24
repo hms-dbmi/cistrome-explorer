@@ -145,8 +145,8 @@ export default function CistromeHGWConsumer(props) {
         setOptions(newOptions);
     });
 
-    // Callback function for filtering. This remove highlightings.
-    const onFilter = useCallback((viewId, trackId, field, type, contains) => {
+    // Callback function for filtering.
+    const onFilterRows = useCallback((viewId, trackId, field, type, contains) => {
         const isResetFilter = field === undefined;
         const newRowFilter = isResetFilter ? [] : { field, type, contains };
         let newOptions = updateWrapperOptions(options, newRowFilter, "rowFilter", viewId, trackId, { isReplace: isResetFilter });
@@ -222,8 +222,8 @@ export default function CistromeHGWConsumer(props) {
                     onSearchRows={(field, type, contains) => {
                         onSearchRows(viewId, trackId, field, type, contains);
                     }}
-                    onFilter={(field, type, contains) => {
-                        onFilter(viewId, trackId, field, type, contains);
+                    onFilterRows={(field, type, contains) => {
+                        onFilterRows(viewId, trackId, field, type, contains);
                     }}
                     drawRegister={drawRegister}
                 />

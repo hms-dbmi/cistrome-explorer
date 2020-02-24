@@ -15,6 +15,7 @@ const LOCAL_EVENT_SEARCH_OPEN = "search-open";
  * @prop {object} fieldInfo JSON object of the name and type of an attribute.
  * @prop {function} onSortRows The function to call upon a sort interaction.
  * @prop {function} onSearchRows The function to call upon a search interaction.
+ * @prop {function} onFilterRows The function to call upon a filter interaction.
  */
 export default function TrackRowInfoControl(props){
     const {
@@ -22,7 +23,7 @@ export default function TrackRowInfoControl(props){
         fieldInfo,
         onSortRows,
         onSearchRows,
-        onFilter
+        onFilterRows
     } = props;
 
     const divRef = useRef();
@@ -132,7 +133,7 @@ export default function TrackRowInfoControl(props){
                     field={controlField}
                     type={controlType}
                     onChange={onSearchChange}
-                    onFilter={onFilter}
+                    onFilter={onFilterRows}
                     onClose={onSearchClose}
                 />
             ) : null}
