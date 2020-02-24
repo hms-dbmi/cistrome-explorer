@@ -9,7 +9,7 @@ import { destroyTooltip } from "./utils/tooltip.js";
 import { drawVisTitle } from "./utils/vis.js";
 
 import TrackRowInfoControl from './TrackRowInfoControl.js';
-import { rgbToHex } from "./utils/color.js";
+import { rgbToHex, generateNexUniqueColor } from "./utils/color.js";
 import { getRetinaRatio } from './utils/canvas.js';
 
 export const margin = 5;
@@ -75,17 +75,6 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             cnt += 1;
         });
     });
-
-    // Unique color generation
-    // https://stackoverflow.com/questions/15804149/rgb-color-permutation/15804183#15804183
-    function generateNexUniqueColor(i) {
-        if(i < 16777215) {
-            return rgbToHex([i & 0xff, (i & 0xff00) >> 8, (i & 0xff0000) >> 16]);
-        } else {
-            console.log("WARNING: unique colors out of range.");
-            return "white";
-        }
-    }
 
     const draw = useCallback((domElement, isHidden) => {
         const two = new Two({
