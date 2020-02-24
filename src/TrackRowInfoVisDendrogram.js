@@ -44,7 +44,9 @@ export default function TrackRowInfoVisDendrogram(props) {
     const descendantsRef = useRef();
     const delaunayRef = useRef();
 
-    const [mouseX, setMouseX] = useState(null);
+    const [isMouseHover, setIsMouseHover] = useState(null);
+    const [highlightNodeX, setHighlightNodeX] = useState(null);
+    const [highlightNodeY, setHighlightNodeY] = useState(null);
 
     // Data, layouts and styles
     const { field } = fieldInfo;
@@ -68,6 +70,10 @@ export default function TrackRowInfoVisDendrogram(props) {
         .size([height, width])
         .separation(() => 1);
     treeLayout(root);
+
+    function pointFromNode(d) {
+        return [ (isLeft ? d.y : width - d.y), d.x ];
+    }
 
     const draw = useCallback((domElement) => {
         const two = new Two({
@@ -118,7 +124,7 @@ export default function TrackRowInfoVisDendrogram(props) {
 
         drawVisTitle(field, { two, isLeft, isNominal, width });
 
-        const points = descendants.map(d => [ (isLeft ? d.y : width - d.y), d.x ]);
+        const points = descendants.map(pointFromNode);
         const delaunay = d3.delaunay.from(points);
         
         // Store delaunay object and descendants node array to references.
@@ -137,7 +143,7 @@ export default function TrackRowInfoVisDendrogram(props) {
         const teardown = draw(canvas);
 
         d3.select(canvas).on("mousemove", () => {
-            setMouseX(true);
+            setIsMouseHover(true);
 
             if(cannotAlign) {
                 // Show a tooltip indicating that the dendrogram has been hidden.
@@ -148,11 +154,21 @@ export default function TrackRowInfoVisDendrogram(props) {
                     y: mouseViewportY,
                     content: `Dendrogram is inaccurate due to the current row ordering.`
                 });
+
+                setHighlightNodeX(null);
+                setHighlightNodeY(null);
             } else {
                 // The dendrogram is visible, so no tooltip should be shown on hover.
                 destroyTooltip();
 
-                // TODO: show hover indicator.
+                // Show hover indicator.
+                const [mouseX, mouseY] = d3.mouse(canvas);
+                const i = delaunayRef.current.find(mouseX, mouseY);
+                const d = descendantsRef.current[i];
+                const [pointX, pointY] = pointFromNode(d);
+
+                setHighlightNodeX(pointX);
+                setHighlightNodeY(pointY);
             }
         });
 
@@ -175,7 +191,7 @@ export default function TrackRowInfoVisDendrogram(props) {
         });
 
         d3.select(canvas).on("mouseout", destroyTooltip);
-        d3.select(div).on("mouseleave", () => setMouseX(null));
+        d3.select(div).on("mouseleave", () => setIsMouseHover(null));
 
         return () => {
             teardown();
@@ -197,16 +213,16 @@ export default function TrackRowInfoVisDendrogram(props) {
             <canvas
                 ref={canvasRef}
                 style={{
+                    position: "absolute",
                     top: 0,
                     left: 0, 
                     width: `${width}px`,
-                    height: `${height}px`,
-                    position: 'relative'
+                    height: `${height}px`
                 }}
             />
             <TrackRowInfoControl
                 isLeft={isLeft}
-                isVisible={mouseX !== null}
+                isVisible={isMouseHover}
                 fieldInfo={fieldInfo}
                 searchTop={null}
                 searchLeft={null}
@@ -214,7 +230,7 @@ export default function TrackRowInfoVisDendrogram(props) {
                 onFilterRows={null}
                 onSearchRows={null}
             />
-            {cannotAlign ? 
+            {cannotAlign ? (
                 <div
                     style={{
                         position: "absolute",
@@ -230,7 +246,26 @@ export default function TrackRowInfoVisDendrogram(props) {
                         <path d={EXCLAMATION.path} fill="currentColor"/>
                     </svg>
                 </div>
-                : null}
+            ) : null}
+            {(isMouseHover && highlightNodeX && highlightNodeY) ? (
+                <svg style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: `${width}px`,
+                    height: `${height}px`,
+                    pointerEvents: "none"
+                }}>
+                    <circle 
+                        r="6" 
+                        fill="gray" 
+                        stroke="none" 
+                        opacity="0.6"
+                        cx={highlightNodeX} 
+                        cy={highlightNodeY}
+                    />
+                </svg>
+            ) : null}
         </div>
     );
 }
