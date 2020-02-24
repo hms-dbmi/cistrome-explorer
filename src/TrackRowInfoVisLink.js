@@ -7,7 +7,7 @@ import Two from "./utils/two.js";
 import { EVENT } from "./utils/constants.js";
 import { destroyTooltip } from "./utils/tooltip.js";
 import { drawVisTitle } from "./utils/vis.js";
-
+import { TooltipContent } from "./Tooltip.js";
 import TrackRowInfoControl from './TrackRowInfoControl.js';
 
 const margin = 5;
@@ -119,7 +119,10 @@ export default function TrackRowInfoVisLink(props) {
             PubSub.publish(EVENT.TOOLTIP, {
                 x: mouseViewportX,
                 y: mouseViewportY,
-                content: `${field}: ${fieldVal}`
+                content: <TooltipContent 
+                    title={field}
+                    value={fieldVal}
+                />
             });
         });
 

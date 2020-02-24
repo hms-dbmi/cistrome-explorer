@@ -9,6 +9,7 @@ import { destroyTooltip } from "./utils/tooltip.js";
 import { drawVisTitle } from "./utils/vis.js";
 import { matrixToTree } from './utils/tree.js';
 import { EXCLAMATION } from './utils/icons.js';
+import { TooltipContent } from './Tooltip.js';
 
 import TrackRowInfoControl from './TrackRowInfoControl.js';
 
@@ -139,7 +140,9 @@ export default function TrackRowInfoVisDendrogram(props) {
                 PubSub.publish(EVENT.TOOLTIP, {
                     x: mouseViewportX,
                     y: mouseViewportY,
-                    content: `Dendrogram is inaccurate due to the current row ordering.`
+                    content: <TooltipContent 
+                        title={`Dendrogram is inaccurate due to the current row ordering.`}
+                    />
                 });
             } else {
                 // The dendrogram is visible, so no tooltip should be shown on hover.

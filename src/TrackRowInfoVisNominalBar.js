@@ -9,6 +9,7 @@ import { destroyTooltip } from "./utils/tooltip.js";
 import { drawVisTitle } from "./utils/vis.js";
 
 import TrackRowInfoControl from './TrackRowInfoControl.js';
+import { TooltipContent } from "./Tooltip.js";
 
 export const margin = 5;
 
@@ -54,6 +55,9 @@ export default function TrackRowInfoVisNominalBar(props) {
         .domain(range(transformedRowInfo.length))
         .range([0, height]);
     const rowHeight = yScale.bandwidth();
+    const colorScale = d3.scaleOrdinal()
+        .domain(Array.from(new Set(transformedRowInfo.map(d => d[field]))).sort()) 
+        .range(d3.schemeTableau10);
 
     const draw = useCallback((domElement) => {
         const two = new Two({
@@ -76,12 +80,7 @@ export default function TrackRowInfoVisNominalBar(props) {
        
         const xScale = d3.scaleLinear()
             .domain(valueExtent)
-            .range([0, barAreaWidth]);
-
-        const colorScale = d3.scaleOrdinal()
-                .domain(Array.from(new Set(transformedRowInfo.map(d => d[field]))).sort()) 
-                .range(d3.schemeTableau10);
-    
+            .range([0, barAreaWidth]);    
 
         // Render visual components for each row (i.e., bars and texts).
         const textAlign = isLeft ? "end" : "start";
@@ -152,7 +151,11 @@ export default function TrackRowInfoVisNominalBar(props) {
             PubSub.publish(EVENT.TOOLTIP, {
                 x: mouseViewportX,
                 y: mouseViewportY,
-                content: `${field}: ${fieldVal}`
+                content: <TooltipContent 
+                    title={field}
+                    value={fieldVal}
+                    color={colorScale(fieldVal)}
+                />
             });
         });
 
