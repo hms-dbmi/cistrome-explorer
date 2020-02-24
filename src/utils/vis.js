@@ -18,7 +18,7 @@ export function drawVisTitle(text, options) {
     const titleFontSize = 12;
     const titleLeft = (isLeft ? margin : width - margin);
     const titleRotate = isLeft ? -Math.PI/2 : Math.PI/2;
-    const fullText = text + titleSuffix;
+    const fullText = text + (titleSuffix ? titleSuffix : "");
 
     const title = two.makeText(titleLeft, 0, 12, barAreaWidth, fullText);
     title.fill = "#9A9A9A";
