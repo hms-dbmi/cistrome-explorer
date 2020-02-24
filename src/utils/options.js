@@ -249,44 +249,6 @@ export function processWrapperOptions(optionsRaw) {
 }
 
 /**
- * Update a part of options, such as rowSort or rowHighlight.
- * @param {(object|object[]|null)} options The raw value of the options prop.
- * @param {object} subOption New sub-option to replace.
- * @param {string} key Key of the sub-option to replace in "options."
- * @param {boolean} isReplace Replace a suboption with new one or add to array
- * @returns {(object|object[])} The new options object or array.
- */
-export function updateGlobalOptionsWithKey(options, subOption, key, { isReplace }) {
-    let newOptions;
-
-    if(Array.isArray(options)){
-        let optionsRaw = options.slice();
-        let globalDefaults = optionsRaw.find(o => (o.viewId === DEFAULT_OPTIONS_KEY && o.trackId === DEFAULT_OPTIONS_KEY));
-        
-        // If there is no globar defaults, add one.
-        if(!globalDefaults) {
-            globalDefaults = {
-                viewId: DEFAULT_OPTIONS_KEY,
-                trackId: DEFAULT_OPTIONS_KEY
-            };
-            optionsRaw = insertItemToArray(optionsRaw, 0, globalDefaults);
-        }
-
-        const index = optionsRaw.indexOf(globalDefaults);
-        newOptions = modifyItemInArray(optionsRaw, index, {
-            ...globalDefaults,
-            [key]: isReplace ? subOption : insertItemToArray(globalDefaults[key], 0, subOption)
-        });
-    } else {
-        newOptions = {
-            ...options,
-            [key]: isReplace ? subOption : insertItemToArray(options[key], 0, subOption)
-        };
-    }
-    return newOptions;
-}
-
-/**
  * Get the options for a specific track, using its viewId and trackId.
  * @param {object} options A _processed_ options object.
  * @param {string} viewId The viewId for the track of interest.
