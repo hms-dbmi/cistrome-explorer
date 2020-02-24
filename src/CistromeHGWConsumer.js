@@ -136,7 +136,7 @@ export default function CistromeHGWConsumer(props) {
     });
 
     // Callback function for filtering.
-    const onFilter = useCallback((viewId, trackId, field, type, contains) => {
+    const onFilterRows = useCallback((viewId, trackId, field, type, contains) => {
         const isResetFilter = field === undefined;
         const newRowFilter = isResetFilter ? [] : { field, type, contains };
         let newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, newRowFilter, "rowFilter", { isReplace: isResetFilter });
@@ -230,8 +230,8 @@ export default function CistromeHGWConsumer(props) {
                     onSearchRows={(field, type, contains) => {
                         onSearchRows(viewId, trackId, field, type, contains);
                     }}
-                    onFilter={(field, type, contains) => {
-                        onFilter(viewId, trackId, field, type, contains);
+                    onFilterRows={(field, type, contains) => {
+                        onFilterRows(viewId, trackId, field, type, contains);
                     }}
                     drawRegister={drawRegister}
                 />

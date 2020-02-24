@@ -11,6 +11,7 @@
   "dependencies": {
     "ajv": "^6.11.0",
     "d3": "^5.15.0",
+    "d3-delaunay": "^5.2.1",
     "higlass-multivec": "github:higlass/higlass-multivec#es-modules-es",
     "higlass-register": "^0.1.0",
     "lodash": "^4.17.15",
