@@ -140,7 +140,8 @@ export default function CistromeHGWConsumer(props) {
         const isResetFilter = field === undefined;
         const newRowFilter = isResetFilter ? [] : { field, type, contains };
         let newOptionsRaw = updateGlobalOptionsWithKey(optionsRaw, newRowFilter, "rowFilter", { isReplace: isResetFilter });
-        newOptionsRaw = updateGlobalOptionsWithKey(newOptionsRaw, undefined, "rowHighlight", { isReplace: true });    // Reset highlight as well.
+        // Reset highlight as well.
+        newOptionsRaw = updateGlobalOptionsWithKey(newOptionsRaw, undefined, "rowHighlight", { isReplace: true });
         const newOptions = processWrapperOptions(newOptionsRaw);
 
         const trackOptions = getTrackWrapperOptions(newOptions, viewId, trackId);

@@ -179,6 +179,15 @@ export function validateWrapperOptions(optionsRaw) {
  * @returns {object} A processed options object, mapping track IDs to options objects, and merging with defaults.
  */
 export function processWrapperOptions(optionsRaw) {
+
+    // Important Descriptions about Wrapper Options (i.e., optionsRaw):
+    // * Single 'view' can contain multiple 'tracks,' but not vice versa.
+    // * Unlike HiGlass View Config, individual options for each combination of {viewId, trackId} are stored in an 1D array of JSON objects,
+    //   instead of using a nested format.
+    // * Both the viewId and trackId or only a viewId can be DEAULT_OPTIONS_KEY (i.e., only the trackId cannot be DEFAULT_OPTIONS_KEY).
+    // * Options of both viewId and trackId being DEFAULT_OPTIONS_KEY is a global option, which affects to any other tracks in any views.
+    // * Options of only a viewId being DEFAULT_OPTIONS_KEY is a track-global option, which affects to any tracks in a certain view.
+
     // Set up the default options:
     const options = {
         [DEFAULT_OPTIONS_KEY]: {
@@ -292,4 +301,8 @@ export function getTrackWrapperOptions(options, viewId, trackId) {
         }
     }
     return options[DEFAULT_OPTIONS_KEY];
+}
+
+export function updateWrapperOptions(options, newSubOptions, viewId, trackId) {
+    
 }
