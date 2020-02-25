@@ -19,6 +19,7 @@
 - Added a feature to interactively resize the width of each vertical track by dragging resizers.
 - Added a feature to interactively filter rows by keywords and reset all filters.
 - Added an option to specify multiple data fields in a single vertical track and implemented stacked bar charts for this case.
+- Added a feature to interactively filter rows by selecting a node in the dendrogram visualization.
 
 ### Changed
 - Moved to rendering the row info categorical metadata on a single `<canvas/>` element, rather than colored HTML elements for each row.
