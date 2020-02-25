@@ -7,7 +7,7 @@ _wrapper component for [HiGlass](http://higlass.io/), with features for viewing 
 
 ### Development
 
-Install dependencies with yarn ([v1](classic.yarnpkg.com)):
+Install dependencies with yarn ([v1](http://classic.yarnpkg.com)):
 
 ```sh
 yarn
