@@ -22,8 +22,7 @@ const demos = {
                 {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right"},
                 {field: "Cell Type", type: "nominal", position: "right"},
                 {field: "Tissue Type", type: "nominal", position: "right"},
-                {field: "Species", type: "nominal", position: "right"},
-                {field: ["Random 1", "Random 2", "Random 3", "Random 4"], type: "quantitative", position: "right"},
+                {field: "Species", type: "nominal", position: "right"}
             ],
             rowSort: [
                 // {field: "Cell Type", type: "nominal", order: "ascending"}
