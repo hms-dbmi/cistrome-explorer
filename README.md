@@ -1,13 +1,13 @@
 # cistrome-higlass-wrapper
 
-_wrapper component for HiGlass, with features for viewing cistrome data_
+_wrapper component for [HiGlass](http://higlass.io/), with features for viewing [CistromeDB](http://cistrome.org/db/) data_
 
 - [Demo](https://hms-dbmi.github.io/cistrome-higlass-wrapper/)
 - [Documentation](https://hms-dbmi.github.io/cistrome-higlass-wrapper/docs/)
 
 ### Development
 
-Install dependencies:
+Install dependencies with yarn ([v1](classic.yarnpkg.com)):
 
 ```sh
 yarn
