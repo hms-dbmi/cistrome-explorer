@@ -207,7 +207,6 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             .attr("width", width)
             .attr("height", axisHeight)
             .append("g")
-                .attr("class", "chw-barchart-xaxis")
                 .attr("transform", `translate(${isLeft ? textAreaWidth - 1 : 1}, ${axisHeight - margin})`)
                 .call(axis);
         
