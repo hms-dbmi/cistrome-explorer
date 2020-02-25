@@ -1,5 +1,4 @@
-import React, { useContext } from 'react';
-import range from 'lodash/range';
+import React, { useContext, useEffect, useState } from 'react';
 
 import { InfoContext, ACTION } from "./utils/contexts.js";
 import TrackColTools from './TrackColTools.js';
@@ -45,6 +44,14 @@ export default function TrackWrapper(props) {
 
     const context = useContext(InfoContext);
 
+    const [shouldCallOnMetadataLoad, setShouldCallOnMetadataLoad] = useState(false);
+
+    useEffect(() => {
+        if(shouldCallOnMetadataLoad) {
+            onMetadataLoad();
+        }
+    }, [shouldCallOnMetadataLoad, multivecTrackViewId, multivecTrackTrackId]);
+
     if(!multivecTrack || !multivecTrack.tilesetInfo || !multivecTrack.tilesetInfo.shape) {
         // The track or track tileset info has not yet loaded.
         return null;
@@ -80,7 +87,7 @@ export default function TrackWrapper(props) {
                 trackId: multivecTrackTrackId,
                 rowInfo: rowInfo
             });
-            onMetadataLoad();
+            setShouldCallOnMetadataLoad(true);
         }
     } catch(e) {
         console.log(e);
