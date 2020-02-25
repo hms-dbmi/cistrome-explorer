@@ -6,12 +6,14 @@ import {
     getSiblingVPHTrackIdsFromViewConfig,
     updateViewConfigOnSelectGenomicInterval,
     updateViewConfigOnSelectRowsByTrack,
-    getHMSelectedRowsFromViewConfig
+    getHMSelectedRowsFromViewConfig,
+    getAllViewAndTrackPairs
 } from './viewconf.js';
 
 import hgDemoViewConfig1 from '../viewconfigs/horizontal-multivec-1.json';
 import hgDemoViewConfig2 from '../viewconfigs/horizontal-multivec-2.json';
 import hgDemoViewConfig3 from '../viewconfigs/horizontal-multivec-3.json';
+import hgDemoViewConfig4 from '../viewconfigs/horizontal-multivec-4.json';
 import hgDemoViewConfig5 from '../viewconfigs/horizontal-multivec-5.json';
 
 describe('Utilities for processing higlass view config objects', () => {
@@ -62,5 +64,10 @@ describe('Utilities for processing higlass view config objects', () => {
         const selectedRows = getHMSelectedRowsFromViewConfig(hgDemoViewConfig5, "cistrome-view-5", "cistrome-track-5");
         expect(selectedRows).toEqual([5, 3, 1, 4]);
     });
-
+    
+    it('Should get viewId and trackId pairs of horizontal-multivec tracks', () => {
+        const searchedPairs = getAllViewAndTrackPairs(hgDemoViewConfig4);
+        expect(searchedPairs.length).toEqual(2);
+        expect(searchedPairs.find(d => d.viewId === "cistrome-view-4-1" && d.trackId === "cistrome-track-4-1") !== undefined).toEqual(true);
+    });
 });

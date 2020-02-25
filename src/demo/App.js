@@ -26,8 +26,12 @@ const demos = {
                 {field: ["Random 1", "Random 2", "Random 3", "Random 4"], type: "quantitative", position: "right"},
             ],
             rowSort: [
-                // {field: "Cell Type", type: "nominal", order: "ascending"}
-            ]
+                {field: "Cell Type", type: "nominal", order: "ascending"}
+            ],
+            rowFilter: [
+                {field: "Cell Type", type: "nominal", contains: "cell"}
+            ],
+            rowHighlight: {field: "Cell Type", type: "nominal", contains: "Stem"}
         }
     },
     "Demo 2": {

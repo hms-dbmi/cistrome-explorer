@@ -1,5 +1,4 @@
-import React, { useContext } from 'react';
-import range from 'lodash/range';
+import React, { useContext, useEffect, useState } from 'react';
 
 import { InfoContext, ACTION } from "./utils/contexts.js";
 import TrackColTools from './TrackColTools.js';
@@ -39,10 +38,19 @@ export default function TrackWrapper(props) {
         onSortRows,
         onSearchRows,
         onFilterRows,
+        onMetadataLoad,
         drawRegister
     } = props;
 
     const context = useContext(InfoContext);
+
+    const [shouldCallOnMetadataLoad, setShouldCallOnMetadataLoad] = useState(false);
+
+    useEffect(() => {
+        if(shouldCallOnMetadataLoad) {
+            onMetadataLoad();
+        }
+    }, [shouldCallOnMetadataLoad, multivecTrackViewId, multivecTrackTrackId]);
 
     if(!multivecTrack || !multivecTrack.tilesetInfo || !multivecTrack.tilesetInfo.shape) {
         // The track or track tileset info has not yet loaded.
@@ -58,8 +66,6 @@ export default function TrackWrapper(props) {
     const trackWidth = multivecTrack.dimensions[0];
     const trackHeight = multivecTrack.dimensions[1];
     const totalNumRows = multivecTrack.tilesetInfo.shape[1];
-
-
 
     // Attempt to obtain metadata values from the `tilesetInfo` field of the track.
     let rowInfo = [];
@@ -81,6 +87,7 @@ export default function TrackWrapper(props) {
                 trackId: multivecTrackTrackId,
                 rowInfo: rowInfo
             });
+            setShouldCallOnMetadataLoad(true);
         }
     } catch(e) {
         console.log(e);
@@ -113,6 +120,7 @@ export default function TrackWrapper(props) {
                     rowInfoAttributes={leftAttrs}
                     rowSort={options.rowSort}
                     rowFilter={options.rowFilter}
+                    rowHighlight={options.rowHighlight}
                     rowInfoPosition="left"
                     onSortRows={onSortRows}
                     onSearchRows={onSearchRows}
@@ -131,6 +139,7 @@ export default function TrackWrapper(props) {
                     rowInfoAttributes={rightAttrs}
                     rowSort={options.rowSort}
                     rowFilter={options.rowFilter}
+                    rowHighlight={options.rowHighlight}
                     rowInfoPosition="right"
                     onSortRows={onSortRows}
                     onSearchRows={onSearchRows}

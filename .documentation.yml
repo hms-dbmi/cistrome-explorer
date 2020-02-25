@@ -19,7 +19,7 @@ toc:
 - name: Functions (internal)
 - validateWrapperOptions
 - processWrapperOptions
-- updateGlobalOptionsWithKey
+- updateWrapperOptions
 - getTrackWrapperOptions
 - getRetinaRatio
 - traverseViewConfig
@@ -28,6 +28,7 @@ toc:
 - updateViewConfigOnSelectGenomicInterval
 - updateViewConfigOnSelectRowsByTrack
 - getHMSelectedRowsFromViewConfig
+- getAllViewAndTrackPairs
 - resolveIntervalCoordinates
 - selectRows
 - highlightRowsFromSearch

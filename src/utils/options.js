@@ -179,6 +179,16 @@ export function validateWrapperOptions(optionsRaw) {
  * @returns {object} A processed options object, mapping track IDs to options objects, and merging with defaults.
  */
 export function processWrapperOptions(optionsRaw) {
+
+    // Important Descriptions about Wrapper Options (i.e., optionsRaw):
+    //  * Single 'view' can contain multiple 'tracks,' but not vice versa.
+    //  * Unlike HiGlass View Config, individual options for each combination of {viewId, trackId} are stored in an 1D array of JSON objects,
+    //    instead of using a nested format.
+    //  * Both the viewId and trackId or only a trackId can be DEAULT_OPTIONS_KEY (i.e., only the viewId cannot be DEFAULT_OPTIONS_KEY).
+    //  * An option of both viewId and trackId being DEFAULT_OPTIONS_KEY is a global option, which affects to any other tracks in any views.
+    //  * An option of only a trackId being DEFAULT_OPTIONS_KEY is a track-global option, which affects to any tracks in a certain view.
+    //  * Wrapper options may or may not contain options for all of the individual {viewId, trackId} combinations.
+
     // Set up the default options:
     const options = {
         [DEFAULT_OPTIONS_KEY]: {
@@ -239,44 +249,6 @@ export function processWrapperOptions(optionsRaw) {
 }
 
 /**
- * Update a part of options, such as rowSort or rowHighlight.
- * @param {(object|object[]|null)} options The raw value of the options prop.
- * @param {object} subOption New sub-option to replace.
- * @param {string} key Key of the sub-option to replace in "options."
- * @param {boolean} isReplace Replace a suboption with new one or add to array
- * @returns {(object|object[])} The new options object or array.
- */
-export function updateGlobalOptionsWithKey(options, subOption, key, { isReplace }) {
-    let newOptions;
-
-    if(Array.isArray(options)){
-        let optionsRaw = options.slice();
-        let globalDefaults = optionsRaw.find(o => (o.viewId === DEFAULT_OPTIONS_KEY && o.trackId === DEFAULT_OPTIONS_KEY));
-        
-        // If there is no globar defaults, add one.
-        if(!globalDefaults) {
-            globalDefaults = {
-                viewId: DEFAULT_OPTIONS_KEY,
-                trackId: DEFAULT_OPTIONS_KEY
-            };
-            optionsRaw = insertItemToArray(optionsRaw, 0, globalDefaults);
-        }
-
-        const index = optionsRaw.indexOf(globalDefaults);
-        newOptions = modifyItemInArray(optionsRaw, index, {
-            ...globalDefaults,
-            [key]: isReplace ? subOption : insertItemToArray(globalDefaults[key], 0, subOption)
-        });
-    } else {
-        newOptions = {
-            ...options,
-            [key]: isReplace ? subOption : insertItemToArray(options[key], 0, subOption)
-        };
-    }
-    return newOptions;
-}
-
-/**
  * Get the options for a specific track, using its viewId and trackId.
  * @param {object} options A _processed_ options object.
  * @param {string} viewId The viewId for the track of interest.
@@ -292,4 +264,41 @@ export function getTrackWrapperOptions(options, viewId, trackId) {
         }
     }
     return options[DEFAULT_OPTIONS_KEY];
+}
+
+/**
+ * Update options for a specific track, using its viewId and trackId.
+ * @param {object} options A _processed_ options object to update.
+ * @param {object} subOptions A sub-options object to replace or insert.
+ * @param {string} key The key of sub-options object.
+ * @param {string} viewId The viewId for the track of interest.
+ * @param {string} trackId The trackId for the track of interest.
+ * @param {boolean} isReplace Determine to replace or insert the subOptions.
+ * @returns {object} The options object for the track, or the default options object.
+ */
+export function updateWrapperOptions(options, subOptions, key, viewId, trackId, { isReplace }) {
+    const _viewId = options[viewId] ? viewId : DEFAULT_OPTIONS_KEY;
+    if(_viewId === DEFAULT_OPTIONS_KEY) {
+        // Global defaults (1D array).
+        return {
+            ...options,
+            [_viewId]: {
+                ...options[_viewId],
+                [key]: isReplace ? subOptions : insertItemToArray(options[_viewId][key], 0, subOptions)
+            }
+        };
+    } else {
+        // 2D array.
+        const _trackId = options[_viewId][trackId] ? trackId : DEFAULT_OPTIONS_KEY;
+        return {
+            ...options,
+            [_viewId]: {
+                ...options[_viewId],
+                [_trackId]: {
+                    ...options[_viewId][_trackId],
+                    [key]: isReplace ? subOptions : insertItemToArray(options[_viewId][_trackId][key], 0, subOptions)
+                }
+            }
+        };
+    }
 }
