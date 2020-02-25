@@ -8,7 +8,6 @@ import hgDemoViewConfig3 from '../viewconfigs/horizontal-multivec-4.json';
 
 
 import './App.scss';
-import { getAllViewAndTrackPairs } from '../utils/viewconf.js';
 
 const demos = {
     "Demo 1": {
