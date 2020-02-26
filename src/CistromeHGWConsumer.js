@@ -43,10 +43,15 @@ const hgOptionsBase = {
  * CistromeHGW passes its props through, and wraps this component with the context provider.
  * @prop {object} viewConfig A HiGlass viewConfig object.
  * @prop {(object|object[])} options Options for the wrapper component.
+ * @prop {function} onViewConfigChange A function to call upon change of the HiGlass view config. Optional.
  */
 export default function CistromeHGWConsumer(props) {
 
-    const { viewConfig, options: optionsRaw } = props;
+    const {
+        viewConfig,
+        options: optionsRaw,
+        onViewConfigChange: onViewConfigChangeProp
+    } = props;
 
     const hgRef = useRef();
     const drawRef = useRef({});
@@ -185,10 +190,11 @@ export default function CistromeHGWConsumer(props) {
         hgRef.current.api.on('viewConfig', (newViewConfigString) => {
             const newViewConfig = JSON.parse(newViewConfigString);
             onViewConfig(newViewConfig);
+            onViewConfigChangeProp(newViewConfigString);
         });         
 
         return () => hgRef.current.api.off('viewConfig');
-    }, [hgRef]);
+    }, [hgRef, onViewConfigChangeProp]);
 
     // We only want to render HiGlass once.
     const hgComponent = useMemo(() => {

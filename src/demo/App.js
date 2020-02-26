@@ -82,6 +82,10 @@ const demos = {
     }
 };
 
+function onViewConfigChange(viewConfigString) {
+    console.log("View config changed");
+}
+
 export default function App() {
     
     const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[0]);
@@ -113,6 +117,7 @@ export default function App() {
                 <CistromeHGW 
                     viewConfig={demos[selectedDemo].viewConfig}
                     options={demos[selectedDemo].options}
+                    onViewConfigChange={onViewConfigChange}
                 />
             </div>
         </div>
