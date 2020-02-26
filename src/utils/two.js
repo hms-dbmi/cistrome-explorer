@@ -8,7 +8,7 @@ import { getRetinaRatio } from './canvas.js';
  * @param {number} width
  * @param {number} height
  */
-class TwoRectangle {
+export class TwoRectangle {
     constructor(x, y, width, height) {
         this.x = x;
         this.y = y;
@@ -36,7 +36,7 @@ class TwoRectangle {
  * @param {number} y
  * @param {number} radius
  */
-class TwoCircle {
+export class TwoCircle {
     constructor(x, y, radius) {
         this.x = x;
         this.y = y;
@@ -61,7 +61,7 @@ class TwoCircle {
  * @param {number} x2
  * @param {number} y2
  */
-class TwoLine {
+export class TwoLine {
     constructor(x1, y1, x2, y2) {
         this.x1 = x1;
         this.y1 = y1;
@@ -82,7 +82,7 @@ class TwoLine {
  * Represents a path to be rendered.
  * @param {number[]} points
  */
-class TwoPath {
+export class TwoPath {
     constructor(points) {
         this.points = points;
 
@@ -104,7 +104,7 @@ class TwoPath {
  * @param {number} height
  * @param {string} text
  */
-class TwoText {
+export class TwoText {
     constructor(x, y, width, height, text) {
         this.x = x;
         this.y = y;
@@ -136,6 +136,8 @@ class TwoText {
          * @member {string} */
         this.overflow = null;
     }
+
+
 }
 
 /**
@@ -164,11 +166,13 @@ export default class Two {
                 this.init = this.initCanvas.bind(this);
                 this.update = this.updateCanvas.bind(this);
                 this.teardown = this.teardownCanvas.bind(this);
+                this.measureText = this.measureTextCanvas.bind(this);
                 break;
             case 'svg':
                 this.init = this.initSvg.bind(this);
                 this.update = this.updateSvg.bind(this);
                 this.teardown = this.teardownSvg.bind(this);
+                this.measureText = this.measureTextSvg.bind(this);
                 break;
             default:
                 console.warn("Unknown DOM element type.");
@@ -271,6 +275,14 @@ export default class Two {
         const obj = new TwoText(x, y, width, height, text);
         this.elements.push(obj);
         return obj;
+    }
+
+    /**
+     * Append a TwoText, TwoCircle, TwoRect, TwoPath, etc. to the current list of shape elements.
+     * @param {*} obj 
+     */
+    append(obj) {
+        this.elements.push(obj);
     }
 
     /**
@@ -497,6 +509,105 @@ export default class Two {
                 }
             }
         });
+    }
+
+    /**
+     * Compute width and height for a particular text element.
+     * @param {TwoText} d The object representing the text to be measured.
+     * @returns {object} Object containing the values `width` and `height`.
+     */
+    measureText(d) {
+        return { width: 0, height: 0 };
+    }
+
+    measureTextSvg(d) {
+        const svg = d3.create("svg");
+        const g = svg.append("g");
+
+        const text = g.append("text")
+            .attr("x", d.x)
+            .attr("y", d.y)
+            .attr("text-anchor", d.align)
+            .attr("dominant-baseline", 
+                (d.baseline === "top" ? "text-before-edge" : (d.baseline === "bottom" ? "text-after-edge" : d.baseline))
+            )
+            .attr("opacity", d.opacity)
+            .attr("fill", d.fill)
+            .attr("font-size", d.fontsize)
+            .attr("font-family", d.font)
+            .text(d.text);
+        
+        let content = d.text;
+        if(d.overflow === "clip") {
+            while(content.length > 0 && text.node().getComputedTextLength() > d.width) {
+                content = content.substring(0, content.length - 1);
+                text.text("content");
+            }
+        } else if(d.overflow === "ellipsis") {
+            if(text.node().getComputedTextLength() > d.width) {
+                while(content.length > 0 && text.node().getComputedTextLength() > d.width) {
+                    content = content.substring(0, content.length - 1);
+                    text.text(content + "...");
+                }
+            }
+        }
+        
+        if(d.rotation != null) {
+            text
+                .attr("transform", `rotate(${d.rotation * 180/Math.PI},${d.x},${d.y})`);
+        }
+
+        // Measure the dimensions.
+        const dims = { width: 0, height: 0 };
+        try {
+            const { width, height } = text.node().getBBox();
+            dims.width = width;
+            dims.height = height;
+        } catch(e) {
+            console.log(e);
+        }
+
+        return dims;
+    }
+
+    measureTextCanvas(d) {
+        const context = this.context;
+        if(d.rotation !== null) {
+            context.save();
+            context.translate(d.x, d.y);
+            context.rotate(d.rotation);
+            context.translate(-d.x, -d.y);
+        }
+        context.font = `${d.fontsize}px ${d.font}`;
+        context.fillStyle = d.fill;
+        context.textAlign = (d.align === "middle" ? "center" : d.align);
+        context.textBaseline = d.baseline;
+
+        let content = d.text;
+        if(d.overflow === "clip") {
+            while(content.length > 0 && context.measureText(content).width > d.width) {
+                content = content.substring(0, content.length - 1);
+            }
+        } else if(d.overflow === "ellipsis") {
+            if(context.measureText(content).width > d.width) {
+                while(content.length > 0 && context.measureText(content + "...").width > d.width) {
+                    content = content.substring(0, content.length - 1);
+                }
+                content = content + "...";
+            }
+        }
+
+        // Measure the dimensions.
+        const dims = { width: 0, height: 0 };
+        dims.width = context.measureText(content).width;
+        // Approximation of text height (https://stackoverflow.com/a/13318387).
+        dims.height = context.measureText("M").width;
+        
+        if(d.rotation !== null) {
+            context.restore();
+        }
+
+        return dims;
     }
 
     /**

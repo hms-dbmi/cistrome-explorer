@@ -20,6 +20,9 @@
 - Added a feature to interactively filter rows by keywords and reset all filters.
 - Added an option to specify multiple data fields in a single vertical track and implemented stacked bar charts for this case.
 - Added a feature to interactively filter rows by selecting a node in the dendrogram visualization.
+- Added x-axis ticks for quantitative bar plot visualizations for row info metadata.
+- Added transparent white background for visualization title text so that it does not visually interfere with the text for plot data labels.
+- Added `measureText()` two function for computing width and height of `TwoText` objects without rendering.
 
 ### Changed
 - Moved to rendering the row info categorical metadata on a single `<canvas/>` element, rather than colored HTML elements for each row.
@@ -27,3 +30,4 @@
 - Changed rollup config `output.sourcemap` values to `true` rather than `"inline"`, which means that sourcemaps are stored in separate files, reducing the size of the `.js` files.
 - Updated the positioning of the genomic interval start and end coordinate elements, so that they are dynamically positioned based on the current genomic region in the track.
 - Added a small implementation of renderer-agnostic drawing code, based on the `two.js` JavaScript library, which enables the same code to draw to SVG and canvas elements. For example, when rendering in the browser, canvas is preferred for speed, but when rendering for export to a file, SVG is preferred for resolution.
+- Fixed bug which prevented wrapper options for sorting, filtering, highlighting from being used upon initial component render.

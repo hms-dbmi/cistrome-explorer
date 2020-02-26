@@ -22,8 +22,6 @@ const margin = 5;
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  * @prop {string} titleSuffix The suffix of a title, information about sorting and filtering status.
- * @prop {string} viewId The viewId for the horizontal-multivec track.
- * @prop {string} trackId The trackId for the horizontal-multivec track.
  * @prop {function} onSortRows The function to call upon a sort interaction.
  * @prop {function} onSearchRows The function to call upon a search interaction.
  * @prop {function} onFilterRows The function to call upon a filter interaction.
@@ -31,7 +29,6 @@ const margin = 5;
  */
 export default function TrackRowInfoVisLink(props) {
     const {
-        viewId, trackId,
         left, top, width, height,
         fieldInfo,
         isLeft,
@@ -69,25 +66,23 @@ export default function TrackRowInfoVisLink(props) {
             domElement
         });
 
-        drawVisTitle(field, { two, isLeft, isNominal, width, titleSuffix });
-
-        if(rowHeight < fontSize) {
-            // Bail out if there is not enough height per row to render links.
-            return two.teardown;
+        if(rowHeight >= fontSize) {
+            // There is enough height to render the text elements.
+            transformedRowInfo.forEach((info, i) => {
+                const textTop = yScale(i);
+                const textLeft = isLeft ? width - margin : margin;
+                const titleField = title ? title : field;
+                const diplayText = isTextLabel ? info[titleField] : "Link";
+                const text = two.makeText(textLeft, textTop + rowHeight/2, width, rowHeight, diplayText);
+                text.fill = "#23527C";
+                text.fontsize = fontSize;
+                text.align = textAlign;
+                text.baseline = "middle";
+                text.overflow = "ellipsis";
+            });
         }
 
-        transformedRowInfo.forEach((info, i) => {
-            const textTop = yScale(i);
-            const textLeft = isLeft ? width - margin : margin;
-            const titleField = title ? title : field;
-            const diplayText = isTextLabel ? info[titleField] : "Link";
-            const text = two.makeText(textLeft, textTop + rowHeight/2, width, rowHeight, diplayText);
-            text.fill = "#23527C";
-            text.fontsize = fontSize;
-            text.align = textAlign;
-            text.baseline = "middle";
-            text.overflow = "ellipsis";
-        });
+        drawVisTitle(field, { two, isLeft, width, height, titleSuffix });
         
         two.update();
         return two.teardown;

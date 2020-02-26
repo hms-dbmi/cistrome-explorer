@@ -91,7 +91,6 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
         });
 
         const titleText = isStackedBar ? field.join(" + ") : field;
-        drawVisTitle(titleText, { two, isLeft, isNominal: false, width, titleSuffix });
 
         const isTextLabel = width > minTrackWidth;
        
@@ -192,6 +191,8 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             });
         }
 
+        drawVisTitle(titleText, { two, isLeft, width, height, titleSuffix });
+
         two.update();
         return two.teardown;
     });
@@ -265,6 +266,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             teardown();
             teardownHidden();
             teardownSvg();
+            d3.select(div).on("mouseenter", null);
             d3.select(div).on("mouseleave", null);
         };
     }, [top, left, width, height, transformedRowInfo]);
