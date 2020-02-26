@@ -271,7 +271,7 @@ export default class Two {
      * @param {number} height The height for the text.
      * @returns {TwoText} Instance of new text.
      */
-    makeText(x, y, width, height, text, withRect = false) {
+    makeText(x, y, width, height, text) {
         const obj = new TwoText(x, y, width, height, text);
         this.elements.push(obj);
         return obj;
