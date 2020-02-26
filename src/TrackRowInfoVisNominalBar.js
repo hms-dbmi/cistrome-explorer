@@ -70,9 +70,6 @@ export default function TrackRowInfoVisNominalBar(props) {
         const minTrackWidth = 40;
         const isTextLabel = width > minTrackWidth;
         const fontSize = 10;
-        
-        // Scales
-
 
         // Render visual components for each row (i.e., bars and texts).
         const textAlign = isLeft ? "end" : "start";

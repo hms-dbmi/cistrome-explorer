@@ -38,7 +38,7 @@ export function drawVisTitle(text, options) {
     title.x = titleLeft;
 
     if(backgroundColor) {
-        const rect = new TwoRectangle(titleLeft - margin, 0, titleDims.height + 2*margin, titleDims.width);
+        const rect = new TwoRectangle(titleLeft - margin, 0, 10 + 2*margin, titleDims.width);
         rect.fill = backgroundColor;
         rect.stroke = null;
         rect.opacity = 0.8;

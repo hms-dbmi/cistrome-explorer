@@ -599,13 +599,9 @@ export default class Two {
 
         // Measure the dimensions.
         const dims = { width: 0, height: 0 };
-        try {
-            const metrics = context.measureText(content);
-            dims.width = metrics.width;
-            dims.height = (metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent);
-        } catch(e) {
-            console.log(e);
-        }
+        dims.width = context.measureText(content).width;
+        // Approximation of text height (https://stackoverflow.com/a/13318387).
+        dims.height = context.measureText("M").width;
         
         if(d.rotation !== null) {
             context.restore();
@@ -613,8 +609,6 @@ export default class Two {
 
         return dims;
     }
-
-    
 
     /**
      * Clean up the DOM element (remove event listeners, etc.).
