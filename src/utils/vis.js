@@ -1,4 +1,4 @@
-
+import { TwoText, TwoRectangle } from "./two.js";
 
 /**
  * Common function for rendering the title text for a vertical visualization component.
@@ -6,24 +6,45 @@
  * @param {object} options Options for drawing title.
  * @param {Two} options.two The object of Two.js class.
  * @param {boolean} options.isLeft In this view placed on the left side of the track?
- * @param {boolean} options.isNominal Is this view visualizes a nominal value?
  * @param {number} options.width Width of this view.
- * @param {string} options.titleSuffix The suffix of a title, information about sorting and filtering status.
+ * @param {string} options.titleSuffix The suffix of a title, information about sorting and filtering status. Optional.
+ * @param {string} options.backgroundColor If defined, creates a rect behind the text element. Optional. By default, "#FFF".
  */
 export function drawVisTitle(text, options) {
-    const { two, isLeft, isNominal, width, titleSuffix } = options;
+    const {
+        two,
+        isLeft,
+        width,
+        height,
+        titleSuffix = "",
+        backgroundColor = "white"
+    } = options;
     
-    const margin = 5;
-    const barAreaWidth = isNominal ? 20 : width - 20;
+    const margin = 4;
     const titleFontSize = 12;
-    const titleLeft = (isLeft ? margin : width - margin);
+    const titleLeftInitial = isLeft ? margin : (width - margin);
     const titleRotate = isLeft ? -Math.PI/2 : Math.PI/2;
-    const fullText = text + (titleSuffix ? titleSuffix : "");
+    const fullText = `${text}${titleSuffix}`;
 
-    const title = two.makeText(titleLeft, 0, 12, barAreaWidth, fullText);
+    const title = new TwoText(titleLeftInitial, 0, width, height, fullText);
     title.fill = "#9A9A9A";
     title.fontsize = titleFontSize;
     title.align = isLeft ? "end" : "start";
-    title.baseline = "top";
+    title.baseline = isLeft ? "top" : "bottom";
     title.rotation = titleRotate;
+
+    const titleDims = two.measureText(title);
+    const titleLeft = isLeft ? titleLeftInitial : titleLeftInitial - titleDims.height;
+    title.x = titleLeft;
+
+    if(backgroundColor) {
+        const rect = new TwoRectangle(titleLeft - margin, 0, titleDims.height + 2*margin, titleDims.width);
+        rect.fill = backgroundColor;
+        rect.stroke = null;
+        rect.opacity = 0.8;
+
+        two.append(rect);
+    }
+
+    two.append(title);
 }

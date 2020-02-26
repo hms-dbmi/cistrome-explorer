@@ -23,8 +23,6 @@ export const margin = 5;
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  * @prop {string} titleSuffix The suffix of a title, information about sorting and filtering status.
- * @prop {string} viewId The viewId for the horizontal-multivec track.
- * @prop {string} trackId The trackId for the horizontal-multivec track.
  * @prop {function} onSortRows The function to call upon a sort interaction.
  * @prop {function} onSearchRows The function to call upon a search interaction.
  * @prop {function} onFilterRows The function to call upon a filter interaction.
@@ -35,8 +33,6 @@ export default function TrackRowInfoVisNominalBar(props) {
         left, top, width, height,
         fieldInfo,
         isLeft,
-        viewId,
-        trackId,
         transformedRowInfo,
         titleSuffix,
         onSortRows,
@@ -68,8 +64,7 @@ export default function TrackRowInfoVisNominalBar(props) {
         });
 
         const titleText = Array.isArray(field) ? field.join(" + ") : field;
-        drawVisTitle(titleText, { two, isLeft, isNominal: true, width, titleSuffix });
-
+        
         const textAreaWidth = width - 20;
         const barAreaWidth = width - textAreaWidth;
         const minTrackWidth = 40;
@@ -77,11 +72,7 @@ export default function TrackRowInfoVisNominalBar(props) {
         const fontSize = 10;
         
         // Scales
-        const valueExtent = [0, d3.extent(transformedRowInfo.map(d => d[field]))[1]];   // Zero baseline
-       
-        const xScale = d3.scaleLinear()
-            .domain(valueExtent)
-            .range([0, barAreaWidth]);    
+
 
         // Render visual components for each row (i.e., bars and texts).
         const textAlign = isLeft ? "end" : "start";
@@ -120,6 +111,8 @@ export default function TrackRowInfoVisNominalBar(props) {
             aggregateStartIdx = -1;
             sameCategoriesNearby = 1;
         });
+
+        drawVisTitle(titleText, { two, isLeft, width, height, titleSuffix });
 
         two.update();
         return two.teardown;

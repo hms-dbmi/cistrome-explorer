@@ -122,7 +122,7 @@ export default function TrackRowInfoVisDendrogram(props) {
             rect.opacity = 0.8;
         }
 
-        drawVisTitle(field, { two, isLeft, isNominal, width });
+        drawVisTitle(field, { two, isLeft, width, height });
 
         const points = descendants.map(pointFromNode);
         const delaunay = d3.delaunay.from(points);

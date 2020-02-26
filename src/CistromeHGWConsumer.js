@@ -59,6 +59,9 @@ export default function CistromeHGWConsumer(props) {
 
     // Set initial sorting, filtering, and highlighting.
     const onMetadataLoad = useCallback((viewId, trackId) => {
+        if(!context.state[viewId] || !context.state[viewId][trackId]) {
+            return;
+        }
         const trackOptions = getTrackWrapperOptions(options, viewId, trackId);
         const rowInfo = context.state[viewId][trackId].rowInfo;
         
