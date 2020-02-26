@@ -8,6 +8,7 @@ import CistromeHGWConsumer from "./CistromeHGWConsumer.js";
  * to provide visualization features for cistrome data.
  * @prop {object} viewConfig A HiGlass viewConfig object.
  * @prop {(object|object[])} options Options for the wrapper component.
+ * @prop {function} onViewConfigChange A function to call upon change of the HiGlass view config. Optional.
  * @example
  * <CistromeHGW
  *  viewConfig={higlassViewConfig}
