@@ -6,6 +6,31 @@ import './TrackRowSearch.scss';
 const MAX_NUM_SUGGESTIONS = 40;
 
 /**
+ * Returns <span> elements in which text is highlighted based on a keyword
+ * @prop {string} text The suggested search text.
+ * @prop {string} target The keyword to highlight, uppercase.
+ */
+function SuggestionWithHighlight(props) {
+    const {
+        text,
+        target
+    } = props;
+    const i0 = text.toUpperCase().indexOf(target);
+    const i1 = i0 + target.length;
+
+    const s0 = text.substring(0, i0);
+    const s1 = text.substring(i0, i1);
+    const s2 = text.substring(i1, text.length);
+    return (
+        <span>
+            <span>{s0}</span>
+            <span style={{backgroundColor: 'yellow'}}>{s1}</span>
+            <span>{s2}</span>
+        </span>
+    );
+}
+
+/**
  * Text field to serach for keywords.
  * @prop {number} top The top coordinate.
  * @prop {number} left The left coordinate.
@@ -149,22 +174,6 @@ export default function TrackRowSearch(props) {
         }
     }
 
-    function highlightKeyword(str) {
-        const i0 = str.toUpperCase().indexOf(keywordUpperCase);
-        const i1 = i0 + keyword.length;
-
-        const s0 = str.substring(0, i0);
-        const s1 = str.substring(i0, i1);
-        const s2 = str.substring(i1, str.length);
-        return (
-            <span>
-                <span>{s0}</span>
-                <span style={{backgroundColor: 'yellow'}}>{s1}</span>
-                <span>{s2}</span>
-            </span>
-        );
-    }
-
     return (
         <div
             className="chgw-search"
@@ -228,7 +237,10 @@ export default function TrackRowSearch(props) {
                             onMouseEnter={() => setSuggestionIndex(i)}
                             onMouseLeave={() => setSuggestionIndex(undefined)}
                         >
-                            {highlightKeyword(d)}
+                            <SuggestionWithHighlight
+                                text={d}
+                                target={keywordUpperCase}
+                            />
                         </li>
                     ))}
                 </ul>
