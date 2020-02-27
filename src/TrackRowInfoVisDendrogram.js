@@ -234,6 +234,7 @@ export default function TrackRowInfoVisDendrogram(props) {
                 onSortRows={onSortRows}
                 onFilterRows={null}
                 onSearchRows={null}
+                transformedRowInfo={transformedRowInfo}
             />
             {cannotAlign ? (
                 <div

@@ -1,4 +1,20 @@
-## 0.1.0 - in progress
+## 0.2.0 - in progress
+
+### Added
+- Added a feature to interactively resize the width of each vertical track by dragging resizers.
+- Added a feature to interactively filter rows by keywords and reset all filters.
+- Added an option to specify multiple data fields in a single vertical track and implemented stacked bar charts for this case.
+- Added a feature to interactively filter rows by selecting a node in the dendrogram visualization.
+- Added x-axis ticks for quantitative bar plot visualizations for row info metadata.
+- Added transparent white background for visualization title text so that it does not visually interfere with the text for plot data labels.
+- Added `measureText()` two function for computing width and height of `TwoText` objects without rendering.
+- Added a search suggestion autocomplete feature.
+
+### Changed
+- Fixed bug which prevented wrapper options for sorting, filtering, highlighting from being used upon initial component render.
+
+
+## 0.1.0 - 02/19/20
 
 ### Added
 - Added radio buttons for selecting between two higlass viewconfig options.
@@ -16,13 +32,6 @@
 - Added a global variable that stores `rowInfo` as well as sorting & highlighting info, using `React.Context`.
 - Added a mechanism to sort rows of a HiGrass `horizontal-multivec` track and vertical tracks on the left and right sides which is activated when users click on sorting buttons.
 - Added a feature to interactively highlight rows by typing keywords on a text field which appears when a search button is clicked.
-- Added a feature to interactively resize the width of each vertical track by dragging resizers.
-- Added a feature to interactively filter rows by keywords and reset all filters.
-- Added an option to specify multiple data fields in a single vertical track and implemented stacked bar charts for this case.
-- Added a feature to interactively filter rows by selecting a node in the dendrogram visualization.
-- Added x-axis ticks for quantitative bar plot visualizations for row info metadata.
-- Added transparent white background for visualization title text so that it does not visually interfere with the text for plot data labels.
-- Added `measureText()` two function for computing width and height of `TwoText` objects without rendering.
 
 ### Changed
 - Moved to rendering the row info categorical metadata on a single `<canvas/>` element, rather than colored HTML elements for each row.
@@ -30,4 +39,3 @@
 - Changed rollup config `output.sourcemap` values to `true` rather than `"inline"`, which means that sourcemaps are stored in separate files, reducing the size of the `.js` files.
 - Updated the positioning of the genomic interval start and end coordinate elements, so that they are dynamically positioned based on the current genomic region in the track.
 - Added a small implementation of renderer-agnostic drawing code, based on the `two.js` JavaScript library, which enables the same code to draw to SVG and canvas elements. For example, when rendering in the browser, canvas is preferred for speed, but when rendering for export to a file, SVG is preferred for resolution.
-- Fixed bug which prevented wrapper options for sorting, filtering, highlighting from being used upon initial component render.

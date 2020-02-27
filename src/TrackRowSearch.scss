@@ -1,20 +1,49 @@
-.cistrome-hgw-searchbox {
+.chgw-search {
     position: absolute;
     z-index: 1;
-    width: auto;
-    height: auto;
+    flex-direction: column;
     border-radius: 6px;
     background: white;
     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 0 3px 0 rgba(0, 0, 0, 0.075), 0 0 7px 0 rgba(0, 0, 0, 0.05);
-    display: flex;
-    align-items: center;
-}
+    .chgw-search-box {
+        width: auto;
+        height: auto;
+        display: flex;
+        align-items: center;
 
-.cistrome-hgw-searchinput {
-    margin-right: 6px;
+        .chgw-search-box-input {
+            margin-right: 6px;
+        }
+    }
+
+    .chgw-search-suggestions {
+        line-height: 14px;
+        border-left: 1px solid silver;
+        border-right: 1px solid silver;
+        position: absolute;
+        background: white;
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin-bottom: 0;
+            li {
+                border-bottom: 1px solid silver;
+                padding: 2px;
+            }
+        }
+    }
 }
 
 .chgw-search-button {
     margin: 0 auto;
     display: block;
-} 
+}
+
+.chgw-search-suggestion-text {
+    cursor: pointer;
+    color: silver;
+}
+
+.chgw-search-suggestion-text.active-suggestion {
+    color: dimgray;
+}

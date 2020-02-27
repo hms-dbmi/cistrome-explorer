@@ -170,6 +170,7 @@ export default function TrackRowInfoVisLink(props) {
                 onSortRows={onSortRows}
                 onSearchRows={onSearchRows}
                 onFilterRows={onFilterRows}
+                transformedRowInfo={transformedRowInfo}
             />
         </div>
     );
