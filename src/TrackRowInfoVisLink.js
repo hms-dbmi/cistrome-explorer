@@ -46,7 +46,6 @@ export default function TrackRowInfoVisLink(props) {
 
     // Data, layouts and styles
     const { field, title } = fieldInfo;
-    const isNominal = false;
     const minTrackWidth = 40;
     const isTextLabel = width > minTrackWidth;
     
@@ -150,7 +149,7 @@ export default function TrackRowInfoVisLink(props) {
                 top: `${top}px`,
                 left: `${left}px`, 
                 width: `${width}px`,
-                height: `${height}px`,
+                height: `${height}px`
             }}
         >
             <canvas
@@ -160,7 +159,8 @@ export default function TrackRowInfoVisLink(props) {
                     left: 0, 
                     width: `${width}px`,
                     height: `${height}px`,
-                    position: 'relative'
+                    position: 'relative',
+                    cursor: 'pointer'
                 }}
             />
             <TrackRowInfoControl

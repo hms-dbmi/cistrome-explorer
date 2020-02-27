@@ -3,6 +3,8 @@ import { CLOSE, FILTER, UNDO } from './utils/icons.js';
 
 import './TrackRowSearch.scss';
 
+const MAX_NUM_SUGGESTIONS = 40;
+
 /**
  * Text field to serach for keywords.
  * @prop {number} top The top coordinate.
@@ -27,6 +29,8 @@ export default function TrackRowSearch(props) {
     const [keyword, setKeyword] = useState("");
     const [suggestionIndex, setSuggestionIndex] = useState(undefined);
 
+    const keywordUpperCase = keyword.toUpperCase();
+
     // Styles
     const width = 180;
     const height = 30;
@@ -39,11 +43,13 @@ export default function TrackRowSearch(props) {
     const suggestions = useMemo(() => {
         let result = [];
         if(keyword.length > 0) {
-            const keywordUpperCase = keyword.toUpperCase();
             if(!Array.isArray(field)) {
                 const fieldData = transformedRowInfo.map(d => d[field].toString());
                 const fieldDataByKeyword = fieldData.filter(d => d.toUpperCase().includes(keywordUpperCase));
-                result = Array.from(new Set(fieldDataByKeyword));
+                const potentialResult = Array.from(new Set(fieldDataByKeyword));
+                if(potentialResult.length < MAX_NUM_SUGGESTIONS) {
+                    result = potentialResult;
+                }
             }
             // Sort so that suggestions that _start with_ the keyword appear first.
             result.sort((a, b) => {
@@ -143,6 +149,22 @@ export default function TrackRowSearch(props) {
         }
     }
 
+    function highlightKeyword(str) {
+        const i0 = str.toUpperCase().indexOf(keywordUpperCase);
+        const i1 = i0 + keyword.length;
+
+        const s0 = str.substring(0, i0);
+        const s1 = str.substring(i0, i1);
+        const s2 = str.substring(i1, str.length);
+        return (
+            <span>
+                <span>{s0}</span>
+                <span style={{backgroundColor: 'yellow'}}>{s1}</span>
+                <span>{s2}</span>
+            </span>
+        );
+    }
+
     return (
         <div
             className="chgw-search"
@@ -206,7 +228,7 @@ export default function TrackRowSearch(props) {
                             onMouseEnter={() => setSuggestionIndex(i)}
                             onMouseLeave={() => setSuggestionIndex(undefined)}
                         >
-                            {d}
+                            {highlightKeyword(d)}
                         </li>
                     ))}
                 </ul>

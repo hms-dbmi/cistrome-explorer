@@ -25,5 +25,15 @@ export default {
         tilesetInfo: {
             rowInfo: rowInfo2
         }
-    }
+    },
+    "cistrome-track-6-1": {
+        tilesetInfo: {
+            rowInfo: rowInfo1
+        }
+    },
+    "cistrome-track-6-2": {
+        tilesetInfo: {
+            rowInfo: rowInfo1
+        }
+    },
 };

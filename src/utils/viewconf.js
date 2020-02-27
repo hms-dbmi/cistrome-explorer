@@ -131,7 +131,6 @@ export function updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, 
                     foundTrack = track;
 
                     const newView = cloneDeep(foundView);
-                    newView.uid = newView.uid + "-with-col-projection";
                     if(addView) {
                         // Need view.uid values to be unique.
                         newView.uid += uuidv4();
