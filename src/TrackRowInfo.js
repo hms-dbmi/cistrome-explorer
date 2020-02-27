@@ -16,8 +16,6 @@ const fieldTypeToVisComponent = {
 
 /**
  * Parent component for visualization of row info attribute values.
- * @prop {string} viewId The viewId for the horizontal-multivec track.
- * @prop {string} trackId The trackId for the horizontal-multivec track.
  * @prop {number} trackX The track horizontal offset.
  * @prop {number} trackY The track vertical offset.
  * @prop {number} trackWidth The track width.
@@ -35,7 +33,6 @@ const fieldTypeToVisComponent = {
 export default function TrackRowInfo(props) {
 
     const {
-        viewId, trackId,
         trackX, trackY,
         trackWidth, trackHeight, 
         transformedRowInfo, 
@@ -94,7 +91,7 @@ export default function TrackRowInfo(props) {
         if(filterInfo && filterInfo.length > 0) {
             titleSuffix += ` | filtered by ${filterInfo.map(d => `"${d.contains}"`).join(', ')}`;
         }
-        if(rowHighlight && rowHighlight.field === fieldInfo.field) {
+        if(rowHighlight && rowHighlight.field === fieldInfo.field && rowHighlight.contains.length > 0) {
             titleSuffix += ` | highlighted by "${rowHighlight.contains}"`;
         }
 
@@ -184,8 +181,6 @@ export default function TrackRowInfo(props) {
                     height: d.height,
                     isLeft: d.isLeft,
                     fieldInfo: d.fieldInfo,
-                    viewId,
-                    trackId,
                     transformedRowInfo,
                     titleSuffix: d.titleSuffix,
                     onSortRows,

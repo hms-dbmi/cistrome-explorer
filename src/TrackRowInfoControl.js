@@ -23,7 +23,8 @@ export default function TrackRowInfoControl(props){
         fieldInfo,
         onSortRows,
         onSearchRows,
-        onFilterRows
+        onFilterRows,
+        transformedRowInfo
     } = props;
 
     const divRef = useRef();
@@ -127,7 +128,7 @@ export default function TrackRowInfoControl(props){
                 })}
             </div>
             {isSearching ? (
-                <TrackRowSearch 
+                <TrackRowSearch
                     top={searchTop}
                     left={searchLeft}
                     field={controlField}
@@ -135,6 +136,7 @@ export default function TrackRowInfoControl(props){
                     onChange={onSearchChange}
                     onFilter={onFilterRows}
                     onClose={onSearchClose}
+                    transformedRowInfo={transformedRowInfo}
                 />
             ) : null}
         </div>
