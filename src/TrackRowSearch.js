@@ -3,6 +3,33 @@ import { CLOSE, FILTER, UNDO } from './utils/icons.js';
 
 import './TrackRowSearch.scss';
 
+const MAX_NUM_SUGGESTIONS = 40;
+
+/**
+ * Returns <span> elements in which text is highlighted based on a keyword
+ * @prop {string} text The suggested search text.
+ * @prop {string} target The keyword to highlight, uppercase.
+ */
+function SuggestionWithHighlight(props) {
+    const {
+        text,
+        target
+    } = props;
+    const i0 = text.toUpperCase().indexOf(target);
+    const i1 = i0 + target.length;
+
+    const s0 = text.substring(0, i0);
+    const s1 = text.substring(i0, i1);
+    const s2 = text.substring(i1, text.length);
+    return (
+        <span>
+            <span>{s0}</span>
+            <span style={{backgroundColor: 'yellow'}}>{s1}</span>
+            <span>{s2}</span>
+        </span>
+    );
+}
+
 /**
  * Text field to serach for keywords.
  * @prop {number} top The top coordinate.
@@ -27,6 +54,8 @@ export default function TrackRowSearch(props) {
     const [keyword, setKeyword] = useState("");
     const [suggestionIndex, setSuggestionIndex] = useState(undefined);
 
+    const keywordUpperCase = keyword.toUpperCase();
+
     // Styles
     const width = 180;
     const height = 30;
@@ -39,11 +68,13 @@ export default function TrackRowSearch(props) {
     const suggestions = useMemo(() => {
         let result = [];
         if(keyword.length > 0) {
-            const keywordUpperCase = keyword.toUpperCase();
             if(!Array.isArray(field)) {
                 const fieldData = transformedRowInfo.map(d => d[field].toString());
                 const fieldDataByKeyword = fieldData.filter(d => d.toUpperCase().includes(keywordUpperCase));
-                result = Array.from(new Set(fieldDataByKeyword));
+                const potentialResult = Array.from(new Set(fieldDataByKeyword));
+                if(potentialResult.length < MAX_NUM_SUGGESTIONS) {
+                    result = potentialResult;
+                }
             }
             // Sort so that suggestions that _start with_ the keyword appear first.
             result.sort((a, b) => {
@@ -206,7 +237,10 @@ export default function TrackRowSearch(props) {
                             onMouseEnter={() => setSuggestionIndex(i)}
                             onMouseLeave={() => setSuggestionIndex(undefined)}
                         >
-                            {d}
+                            <SuggestionWithHighlight
+                                text={d}
+                                target={keywordUpperCase}
+                            />
                         </li>
                     ))}
                 </ul>

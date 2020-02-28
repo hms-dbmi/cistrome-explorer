@@ -17,7 +17,7 @@ export function selectRows(rowInfo, options) {
                 const { field, type, contains } = info;
                 const isMultipleFields = Array.isArray(field);
                 if(type === "nominal") {
-                    filteredRowInfo = filteredRowInfo.filter(d => d[1][field].toUpperCase().includes(contains.toUpperCase()));                
+                    filteredRowInfo = filteredRowInfo.filter(d => d[1][field].toString().toUpperCase().includes(contains.toUpperCase()));                
                 } else if(type === "quantitative") {
                     // TODO: Better deal with quantitative data. Need to update Wrapper options for this.
                     // refer vega filter, such as lt: https://vega.github.io/vega-lite/docs/filter.html
@@ -57,7 +57,7 @@ export function selectRows(rowInfo, options) {
                     });
                 } else if(type === "nominal") {
                     transformedRowInfo.sort(function(a, b) {
-                        let compared = 0, categoryA = a[1][field].toUpperCase(), categoryB = b[1][field].toUpperCase();
+                        let compared = 0, categoryA = a[1][field].toString().toUpperCase(), categoryB = b[1][field].toString().toUpperCase();
                         if(categoryA > categoryB) {
                             compared = 1;
                         } else {
@@ -90,7 +90,7 @@ export function highlightRowsFromSearch(rowInfo, field, type, contains) {
         newHighlitRows = [];
     } else if(type === "nominal") {
         const rowsWithIndex = Array.from(rowInfo.entries());
-        const filteredRows = rowsWithIndex.filter(d => !d[1][field].toUpperCase().includes(contains.toUpperCase()));
+        const filteredRows = rowsWithIndex.filter(d => !d[1][field].toString().toUpperCase().includes(contains.toUpperCase()));
         newHighlitRows = filteredRows.map(d => d[0]);
     } else if(type === "quantitative") {
         // TODO: Better deal with quantitative data. Need to update Wrapper options for this.

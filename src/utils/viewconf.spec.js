@@ -34,7 +34,7 @@ describe('Utilities for processing higlass view config objects', () => {
 
         expect(newViewConfig.views.length).toEqual(1);
         expect(newViewConfig.views[0].tracks.center.length).toEqual(1);
-        expect(newViewConfig.views[0].uid).toEqual("cistrome-view-1-with-col-projection");
+        expect(newViewConfig.views[0].uid).toEqual("cistrome-view-1");
         expect(newViewConfig.views[0].tracks.center[0].type).toEqual("combined");
         expect(newViewConfig.views[0].tracks.center[0].contents.length).toEqual(2);
         expect(newViewConfig.views[0].tracks.center[0].contents[0].type).toEqual("horizontal-multivec");

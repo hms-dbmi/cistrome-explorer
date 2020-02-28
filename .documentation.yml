@@ -14,6 +14,7 @@ toc:
 - TrackRowInfoVisDendrogram
 - TrackRowInfoVisLink
 - TrackRowSearch
+- SuggestionWithHighlight
 - TrackWrapper
 - InfoProvider
 - name: Functions (internal)
