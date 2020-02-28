@@ -3,7 +3,7 @@ import { CLOSE, FILTER, UNDO } from './utils/icons.js';
 
 import './TrackRowSearch.scss';
 
-const MAX_NUM_SUGGESTIONS = 40;
+const MAX_NUM_SUGGESTIONS = 15;
 
 /**
  * Returns <span> elements in which text is highlighted based on a keyword
@@ -22,11 +22,16 @@ function SuggestionWithHighlight(props) {
     const s1 = text.substring(i0, i1);
     const s2 = text.substring(i1, text.length);
     return (
-        <span>
-            <span>{s0}</span>
-            <span style={{backgroundColor: 'yellow'}}>{s1}</span>
-            <span>{s2}</span>
-        </span>
+        <div 
+            style={{ display: "flex", alignItems: "center" }}>
+            <svg className="chgw-button-sm chgw-search-button chgw-button-static"
+                viewBox={FILTER.viewBox}>
+                <path d={FILTER.path} fill="gray"/>
+            </svg>
+            <span>
+                {s0}<b>{s1}</b>{s2}
+            </span>
+        </div>
     );
 }
 
@@ -74,6 +79,8 @@ export default function TrackRowSearch(props) {
                 const potentialResult = Array.from(new Set(fieldDataByKeyword));
                 if(potentialResult.length < MAX_NUM_SUGGESTIONS) {
                     result = potentialResult;
+                } else {
+                    result = potentialResult.slice(0, MAX_NUM_SUGGESTIONS);
                 }
             }
             // Sort so that suggestions that _start with_ the keyword appear first.
