@@ -20,6 +20,7 @@
         line-height: 14px;
         border-left: 1px solid silver;
         border-right: 1px solid silver;
+        border-bottom: 1px solid silver;
         position: absolute;
         background: white;
         ul {
@@ -27,23 +28,24 @@
             padding: 0;
             margin-bottom: 0;
             li {
-                border-bottom: 1px solid silver;
-                padding: 2px;
+                padding: 6px 6px 6px 0;
             }
         }
     }
 }
 
 .chgw-search-button {
-    margin: 0 auto;
-    display: block;
+    margin: 0;
+}
+
+.chgw-button-static {
+    pointer-events: none;
 }
 
 .chgw-search-suggestion-text {
     cursor: pointer;
-    color: silver;
 }
 
 .chgw-search-suggestion-text.active-suggestion {
-    color: dimgray;
+    background: rgb(225, 225, 225);
 }
