@@ -4,11 +4,12 @@ import Two from './utils/two.js';
 
 import { resolveIntervalCoordinates } from './utils/genome.js';
 import { CISTROME_DBTOOLKIT_MAX_INTERVAL_SIZE } from './utils/constants.js';
+import { SEARCH } from './utils/icons.js';
 
 import './TrackColSelectionInfo.scss';
+import './TrackRowInfoControl.scss';
 
-
-function makeDbToolkitURL(assembly, chrStartName, chrStartPos, chrEndName, chrEndPos) {
+function makeDBToolkitURL(assembly, chrStartName, chrStartPos, chrEndName, chrEndPos) {
     if(!chrStartName || !chrStartPos || !chrEndName || !chrEndPos) {
         return null;
     }
@@ -22,6 +23,22 @@ function makeDbToolkitURL(assembly, chrStartName, chrStartPos, chrEndName, chrEn
         return null;
     }
     return `http://dbtoolkit.cistrome.org/?specie=${assembly}&factor=tf&interval=${chrStartName}%3A${chrStartPos}-${chrEndPos}`;
+}
+
+function makeDBToolkitAPIURL(assembly, chrStartName, chrStartPos, chrEndName, chrEndPos) {
+    if(!chrStartName || !chrStartPos || !chrEndName || !chrEndPos) {
+        return null;
+    }
+    if(chrStartName !== chrEndName) {
+        // Bail out, interval spans across more than one chromosome.
+        return null;
+    }
+    if(chrEndPos - chrStartPos > CISTROME_DBTOOLKIT_MAX_INTERVAL_SIZE) {
+        // Bail out, interval is too large for dbtoolkit's interval search.
+        return null;
+    }
+    // Generate a URL for the cistrome DB toolkit API.
+    return `http://dbtoolkit.cistrome.org/api_interval?species=${assembly}&factor=$tf&interval=${chrStartName}%3A${chrStartPos}-${chrEndPos}`;
 }
 
 const numberFormatter = d3.format(",");
@@ -72,6 +89,10 @@ export default function TrackColSelectionInfo(props) {
 
         return (() => { didUnmount = true; });
     });
+
+    function onRequestIntervalTFs() {
+
+    }
 
     const canvasRef = useRef();
 
@@ -133,7 +154,8 @@ export default function TrackColSelectionInfo(props) {
         return teardown;
     });
 
-    const dbToolkitURL = makeDbToolkitURL(trackAssembly, chrStartName, chrStartPos, chrEndName, chrEndPos);
+    const dbToolkitURL = makeDBToolkitURL(trackAssembly, chrStartName, chrStartPos, chrEndName, chrEndPos);
+    const dbToolkitAPIURL = makeDBToolkitAPIURL(trackAssembly, chrStartName, chrStartPos, chrEndName, chrEndPos);
 
     return (
         <div
@@ -164,14 +186,16 @@ export default function TrackColSelectionInfo(props) {
                     height: `${height/6}px`
                 }}
             >
-                {(!chrStartName || !chrStartPos || !chrEndName || !chrEndPos) ? null : (
-                    dbToolkitURL ? (
-                        <a 
-                            href={dbToolkitURL}
-                            target="_blank"
-                        >
-                            Search interval on Cistrome DB Toolkit
-                        </a>
+                {(!chrStartName || !chrStartPos || !chrEndName || !chrEndPos || !["hg38", "mm10"].includes(trackAssembly)) ? null : (
+                    dbToolkitAPIURL ? (
+                        <div className="chgw-button"
+                            onClick={onRequestIntervalTFs}>
+                            <svg className="chgw-button-sm chgw-search-button chgw-button-static"
+                                viewBox={SEARCH.viewBox}>
+                                <path d={SEARCH.path} fill="gray"/>
+                            </svg>
+                            Show Bind TFs in Cistrome DB
+                        </div>
                     ) : (
                         <p className="col-selection-info-disabled">
                             Search requires interval &le; 2 Mb

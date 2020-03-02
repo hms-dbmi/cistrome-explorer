@@ -14,11 +14,11 @@ import './Tooltip.scss';
 export function TooltipContent(props) {
     const { title, value, color: background } = props;   
     return (
-        <div className="chw-tooltip-content">
-            <div className="chw-tooltip-title">{title}</div>
-            <div className="chw-tooltip-content-group">
+        <div className="chgw-tooltip-content">
+            <div className="chgw-tooltip-title">{title}</div>
+            <div className="chgw-tooltip-content-group">
                 {background ? 
-                    <div className="chw-tooltip-color-container"><div className="chw-tooltip-color" style={{ background }}/></div>
+                    <div className="chgw-tooltip-color-container"><div className="chgw-tooltip-color" style={{ background }}/></div>
                     : null
                 }
                 {value ? 

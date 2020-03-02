@@ -4,6 +4,7 @@ import { InfoContext, ACTION } from "./utils/contexts.js";
 import TrackColTools from './TrackColTools.js';
 import TrackRowInfo from './TrackRowInfo.js';
 import TrackRowHighlight from './TrackRowHighlight.js';
+import DataTable from './DataTable.js';
 
 // TODO: remove the below fakedata import.
 //       see https://github.com/hms-dbmi/cistrome-higlass-wrapper/issues/26
@@ -168,6 +169,14 @@ export default function TrackWrapper(props) {
                 selectedRows={selectedRows}
                 highlitRows={highlitRows}
                 drawRegister={drawRegister}
+            />
+            <DataTable
+                left={trackX}
+                top={trackY + trackHeight + 56}
+                width={trackWidth}
+                height={600}
+                data={rowInfo}
+                columns={ [ "Species", "attr_3", "attr_4", "Cell Type", "Tissue Type", "attr_9" ] }
             />
         </div>
     );
