@@ -82,12 +82,6 @@ export default function TrackRowInfoControl(props){
             icon: SORT_DESC,
             title: "Sort rows in descending order"
         });
-    } else {
-        buttons.push({
-            onClick: onSortAscClick,
-            icon: SORT_TREE,
-            title: "Sort rows by hierarchy leaf order"
-        })
     }
 
     if(onSearchRows) {
