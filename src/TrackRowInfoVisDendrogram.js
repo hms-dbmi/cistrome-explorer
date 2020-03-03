@@ -10,8 +10,6 @@ import { matrixToTree } from './utils/tree.js';
 import { SORT_TREE } from './utils/icons.js';
 import { TooltipContent } from './Tooltip.js';
 
-import TrackRowInfoControl from './TrackRowInfoControl.js';
-
 /**
  * Component for visualization of row info hierarchies.
  * @prop {number} left The left position of this view.
