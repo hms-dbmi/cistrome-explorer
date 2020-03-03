@@ -36,4 +36,9 @@ export default {
             rowInfo: rowInfo1
         }
     },
+    "cistrome-track-7": {
+        tilesetInfo: {
+            rowInfo: rowInfo1
+        }
+    },
 };
