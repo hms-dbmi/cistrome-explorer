@@ -167,6 +167,7 @@ export default function TrackColSelectionInfo(props) {
                 {(!chrStartName || !chrStartPos || !chrEndName || !chrEndPos) ? null : (
                     dbToolkitURL ? (
                         <a 
+                            className="col-tools-target"
                             href={dbToolkitURL}
                             target="_blank"
                         >
