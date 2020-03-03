@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useCallback } from 'react';
 
 import { InfoContext, ACTION } from "./utils/contexts.js";
 import TrackColTools from './TrackColTools.js';
@@ -106,6 +106,39 @@ export default function TrackWrapper(props) {
 
     const transformedRowInfo = (!selectedRows ? rowInfo : selectedRows.map(i => rowInfo[i]));
 
+    // States and functions related to DataTable.
+    // TODO: Move this part when we decide how to properly show the DataTable.
+    const [dataTableRows, setDataTableRows] = useState(null);
+    const [dataTableColumns, setDataTableColumns] = useState(null);
+    function requestIntervalTfs(url) {
+        // url example: "http://dbtoolkit.cistrome.org/api_interval?species=hg38&factor=tf&interval=chr6:151690496-152103274"
+        requestJSON(url, (error, data) => {
+            if(error !== null) {
+                console.log("WARNING: URL not accesible " + url)
+            }
+            else {
+                console.log(data);
+            }
+        });
+        setDataTableRows(rowInfo);
+        setDataTableColumns([ "Species", "attr_3", "attr_4", "Cell Type", "Tissue Type", "attr_9" ]);
+    }
+    function requestJSON(url, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.responseType = 'json';
+        xhr.onload = function() {
+          var status = xhr.status;
+          if (status === 200) {
+            callback(null, xhr.response);
+          } else {
+            callback(status, xhr.response);
+          }
+        };
+        xhr.send();
+    };
+    ///
+
     console.log("TrackWrapper.render");
     return (
         <div className="cistrome-hgw-track-wrapper">
@@ -158,6 +191,7 @@ export default function TrackWrapper(props) {
                     siblingTracks={siblingTracks}
                     colToolsPosition={options.colToolsPosition}
                     onSelectGenomicInterval={onSelectGenomicInterval}
+                    onRequestIntervalTFs={requestIntervalTfs}
                     drawRegister={drawRegister}
                 />) : null}
             <TrackRowHighlight 
@@ -170,14 +204,16 @@ export default function TrackWrapper(props) {
                 highlitRows={highlitRows}
                 drawRegister={drawRegister}
             />
-            <DataTable
-                left={trackX}
-                top={trackY + trackHeight + 56}
-                width={trackWidth}
-                height={600}
-                data={rowInfo}
-                columns={ [ "Species", "attr_3", "attr_4", "Cell Type", "Tissue Type", "attr_9" ] }
-            />
+            {dataTableRows ? 
+                <DataTable
+                    left={trackX}
+                    top={trackY + trackHeight + 56}
+                    width={trackWidth}
+                    height={600}
+                    rows={dataTableRows}
+                    columns={dataTableColumns}
+                />
+                : null}
         </div>
     );
 }

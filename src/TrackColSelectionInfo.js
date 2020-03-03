@@ -60,6 +60,7 @@ export default function TrackColSelectionInfo(props) {
         projectionTrack,
         trackAssembly,
         colToolsPosition,
+        onRequestIntervalTFs,
         drawRegister
     } = props;
     
@@ -89,10 +90,6 @@ export default function TrackColSelectionInfo(props) {
 
         return (() => { didUnmount = true; });
     });
-
-    function onRequestIntervalTFs() {
-
-    }
 
     const canvasRef = useRef();
 
@@ -189,7 +186,7 @@ export default function TrackColSelectionInfo(props) {
                 {(!chrStartName || !chrStartPos || !chrEndName || !chrEndPos || !["hg38", "mm10"].includes(trackAssembly)) ? null : (
                     dbToolkitAPIURL ? (
                         <div className="chgw-button"
-                            onClick={onRequestIntervalTFs}>
+                            onClick={() => onRequestIntervalTFs(dbToolkitAPIURL)}>
                             <svg className="chgw-button-sm chgw-search-button chgw-button-static"
                                 viewBox={SEARCH.viewBox}>
                                 <path d={SEARCH.path} fill="gray"/>

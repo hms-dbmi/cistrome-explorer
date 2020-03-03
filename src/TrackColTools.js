@@ -27,6 +27,7 @@ export default function TrackColTools(props) {
         siblingTracks,
         colToolsPosition,
         onSelectGenomicInterval,
+        onRequestIntervalTFs,
         drawRegister
     } = props;
 
@@ -76,6 +77,7 @@ export default function TrackColTools(props) {
                                 colToolsPosition={colToolsPosition}
                                 trackAssembly={trackAssembly}
                                 projectionTrack={siblingTrack}
+                                onRequestIntervalTFs={onRequestIntervalTFs}
                                 drawRegister={drawRegister}
                             />
                         ))}

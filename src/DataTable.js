@@ -5,24 +5,18 @@ import "./TrackRowInfoControl.scss";
 export default function DataTable(props) {
     const {
         left, top, width, height,
-        data, columns
+        rows, columns
     } = props;
 
     const head = columns.map((c, j) => {
-        return (
-            <th key={j}>{c}</th>
-        );
+        return <th key={j}>{c}</th>;
     });
-    let rows = data.map((d, i) => {
+    let tableRows = rows.map((d, i) => {
         const cells = columns.map((c, j) => {
-            return (
-                <td key={j}>{d[c]}</td>
-            );
+            return <td key={j}>{d[c]}</td>;
         });
 
-        return (
-            <tr key={i}>{cells}</tr>
-        );
+        return <tr key={i}>{cells}</tr>;
     });
 
     return (
@@ -30,21 +24,22 @@ export default function DataTable(props) {
             style={{
                 position: "absolute",
                 left, top, width, height,
+                // TODO: Remove this after implementation.
                 border: "1px dotted red"
             }}
         >
-            <h4>Data Preview (~100 rows)</h4>   
+            <h4>Data Preview</h4>   
             <div
                 style={{
                     height: height - 40,
                     overflowY: "auto"
                 }}
             >
-                {rows ? 
+                {tableRows ? 
                     <table className="chw-table">
                         <tbody>
                             <tr>{head}</tr>
-                            {rows}
+                            {tableRows}
                         </tbody>
                     </table>
                 : null}
