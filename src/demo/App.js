@@ -5,6 +5,7 @@ import { CistromeHGW } from '../index.js';
 import hgDemoViewConfig1 from '../viewconfigs/horizontal-multivec-1.json';
 import hgDemoViewConfig6 from '../viewconfigs/horizontal-multivec-6.json';
 import hgDemoViewConfig7 from '../viewconfigs/horizontal-multivec-7.json';
+import hgDemoViewConfig8 from '../viewconfigs/horizontal-multivec-8.json';
 
 import './App.scss';
 
@@ -81,6 +82,32 @@ const demos = {
             rowHighlight: {field: "Cell Type", type: "nominal", contains: "Stem"}
         }
     },
+    "H3K27ac Demo (1 View, Top and Center Tracks)": {
+        viewConfig: hgDemoViewConfig8,
+        options: [
+            {
+                viewId: "default",
+                trackId: "default",
+                colToolsPosition: "bottom"
+            },
+            {
+                viewId: "cistrome-view-8",
+                trackId: "cistrome-track-8-1",
+                rowInfoAttributes: [
+                    {field: "Hierarchical Clustering (Ward)", type: "tree", position: "left"},
+                    {field: "Cell Type", type: "nominal", position: "right"},
+                ]
+            },
+            {
+                viewId: "cistrome-view-8",
+                trackId: "cistrome-track-8-2",
+                rowInfoAttributes: [
+                    {field: "Hierarchical Clustering", type: "tree", position: "right"},
+                    {field: "Cell Type", type: "nominal", position: "left"},
+                ]
+            }
+        ]
+    },
 };
 
 function onViewConfigChange(viewConfigString) {
@@ -89,7 +116,7 @@ function onViewConfigChange(viewConfigString) {
 
 export default function App() {
     
-    const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[0]);
+    const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[3]);
 
     return (
         <div className="app">
