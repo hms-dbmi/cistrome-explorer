@@ -67,9 +67,6 @@ export default function TrackWrapper(props) {
     const trackHeight = multivecTrack.dimensions[1];
     const totalNumRows = multivecTrack.tilesetInfo.shape[1];
 
-    console.log(trackHeight);
-    console.log(multivecTrack);
-
     // Attempt to obtain metadata values from the `tilesetInfo` field of the track.
     let rowInfo = [];
     let trackAssembly = null;
