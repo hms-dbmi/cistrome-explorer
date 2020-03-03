@@ -41,4 +41,14 @@ export default {
             rowInfo: rowInfo1
         }
     },
+    "cistrome-track-8-1": {
+        tilesetInfo: {
+            rowInfo: rowInfo1
+        }
+    },
+    "cistrome-track-8-2": {
+        tilesetInfo: {
+            rowInfo: rowInfo2
+        }
+    },
 };
