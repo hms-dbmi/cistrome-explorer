@@ -7,10 +7,8 @@ import { EVENT } from "./utils/constants.js";
 import { destroyTooltip } from "./utils/tooltip.js";
 import { drawVisTitle } from "./utils/vis.js";
 import { matrixToTree } from './utils/tree.js';
-import { EXCLAMATION } from './utils/icons.js';
+import { SORT_TREE } from './utils/icons.js';
 import { TooltipContent } from './Tooltip.js';
-
-import TrackRowInfoControl from './TrackRowInfoControl.js';
 
 /**
  * Component for visualization of row info hierarchies.
@@ -114,7 +112,6 @@ export default function TrackRowInfoVisDendrogram(props) {
                 path.linewidth = 1.5;
             }
         });
-        
 
         if(cannotAlign) {
             const rect = two.makeRect(0, 0, width, height);
@@ -225,31 +222,17 @@ export default function TrackRowInfoVisDendrogram(props) {
                     height: `${height}px`
                 }}
             />
-            <TrackRowInfoControl
-                isLeft={isLeft}
-                isVisible={isMouseHover}
-                fieldInfo={fieldInfo}
-                searchTop={null}
-                searchLeft={null}
-                onSortRows={onSortRows}
-                onFilterRows={null}
-                onSearchRows={null}
-                transformedRowInfo={transformedRowInfo}
-            />
             {cannotAlign ? (
-                <div
+                <div onClick={() => onSortRows(fieldInfo.field, fieldInfo.type, "ascending")}
                     style={{
                         position: "absolute",
-                        pointerEvents: "none",
                         top: `${height / 2.0 - 17}px`,
-                        left: `${width / 2.0 - 17}px`,
-                    }}
-                >
-                    <svg 
-                        className={`chgw-button-alert`}
-                        viewBox={EXCLAMATION.viewBox}
-                    >
-                        <path d={EXCLAMATION.path} fill="currentColor"/>
+                        left: `${width / 2.0 - 17}px`
+                    }}>
+                    <svg className={`chgw-button-alert`}
+                        viewBox={SORT_TREE.viewBox}>
+                        <title>{"Sort rows by hierarchy leaf order"}</title>
+                        <path d={SORT_TREE.path} fill="currentColor"/>
                     </svg>
                 </div>
             ) : null}
