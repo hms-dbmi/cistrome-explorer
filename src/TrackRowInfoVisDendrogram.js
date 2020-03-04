@@ -25,7 +25,7 @@ import { TooltipContent } from './Tooltip.js';
  */
 export default function TrackRowInfoVisDendrogram(props) {
     const {
-        left, top, width, height,
+        left, right, top, width, height,
         fieldInfo,
         isLeft,
         transformedRowInfo,
@@ -204,10 +204,8 @@ export default function TrackRowInfoVisDendrogram(props) {
     return (
         <div
             ref={divRef}
-            className="cistrome-hgw-child"
             style={{
-                top: `${top}px`,
-                left: `${left}px`, 
+                position: 'relative',
                 width: `${width}px`,
                 height: `${height}px`,
             }}
@@ -215,9 +213,8 @@ export default function TrackRowInfoVisDendrogram(props) {
             <canvas
                 ref={canvasRef}
                 style={{
-                    position: "absolute",
+                    position: "relative",
                     top: 0,
-                    left: 0, 
                     width: `${width}px`,
                     height: `${height}px`
                 }}

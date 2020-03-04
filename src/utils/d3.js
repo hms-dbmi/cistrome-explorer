@@ -15,6 +15,7 @@ import { extent, sum } from "d3-array";
 import { hsl } from "d3-color";
 import { hierarchy, cluster } from "d3-hierarchy";
 import { Delaunay as delaunay } from "d3-delaunay";
+import { drag } from "d3-drag";
 
 /*
  * Same as `d3.scaleBand` but also supports `invert()`.
@@ -43,5 +44,6 @@ export default {
     hsl,
     hierarchy,
     cluster,
-    delaunay
+    delaunay,
+    drag
 };
