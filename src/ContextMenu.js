@@ -30,8 +30,11 @@ export default function ContextMenu() {
             setTop(data.y);
             
             let menuData = [];
+            // TODO: Add common context menu items for each type here.
             switch(data.menuType) {
                 case CONTEXT_MENU_TYPE.NOMINAL_BAR:
+                    menuData.push({ title: data.title });
+                    menuData.push({ isSeparator: true })
                     menuData.push(...data.items);
                     break;
                 default:
@@ -48,6 +51,7 @@ export default function ContextMenu() {
     // Function to make an item of ContextMenu
     function ContextMenuItem(props) {
         const {
+            isSeparator,
             key,
             icon,
             title,
@@ -55,21 +59,25 @@ export default function ContextMenu() {
         } = props;
     
         return (
-            <div className="chw-context-menu-item" key={key}
-                onClick={action}
-                 style={{ 
-                     display: "flex", 
-                     alignItems: "center" 
-                }}>
-                {icon?
-                    <svg className="chgw-button-sm chgw-search-button chgw-button-static"
-                        viewBox={icon.viewBox}>
-                        <path d={icon.path} fill="currentColor"/>
-                    </svg>
-                    : <svg className="chgw-button-sm chgw-button-static"/>
-                }
-                {title}
-            </div>
+            isSeparator ? 
+                <hr className="chw-context-menu-separator"/>
+                : <div className={action ? "chw-context-menu-item" : "chw-context-menu-item-title"} key={key}
+                    onClick={action}
+                    style={{ 
+                        display: "flex", 
+                        alignItems: "center" 
+                    }}>
+                    {icon ?
+                        <svg className="chgw-button-sm chgw-search-button chgw-button-static"
+                            viewBox={icon.viewBox}>
+                            <path d={icon.path} fill="currentColor"/>
+                        </svg>
+                        : action ? 
+                            <svg className="chgw-button-sm chgw-button-static"/>
+                            : null
+                    }
+                    {title}
+                </div>
         );
     }
 

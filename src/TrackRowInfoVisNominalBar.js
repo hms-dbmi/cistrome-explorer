@@ -135,6 +135,7 @@ export default function TrackRowInfoVisNominalBar(props) {
             x: mouseViewportX,
             y: mouseViewportY,
             menuType: CONTEXT_MENU_TYPE.NOMINAL_BAR,
+            title: `Selected category: ${hoverValue}`,
             items: [
                 { title: "Highlight rows", action: () => onSearchRows(field, "nominal", hoverValue) },
                 { title: "Filter rows", icon: FILTER, action: () => onFilterRows(field, "nominal", hoverValue) }
