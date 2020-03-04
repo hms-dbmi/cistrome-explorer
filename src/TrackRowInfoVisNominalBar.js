@@ -44,6 +44,7 @@ export default function TrackRowInfoVisNominalBar(props) {
     const divRef = useRef();
     const canvasRef = useRef();
     const [mouseX, setMouseX] = useState(null);
+    const [hoverValue, setHoverValue] = useState();
 
     // Data, layouts and styles
     const { field } = fieldInfo;
@@ -95,6 +96,12 @@ export default function TrackRowInfoVisNominalBar(props) {
             const rect = two.makeRect(barLeft, barTop, barWidth, barHeight);
             rect.fill = color;
 
+            if(hoverValue && d[field] === hoverValue) {
+                const hoverBgRectLeft = (isLeft ? barLeft - textAreaWidth : barLeft + barWidth)
+                const hoverBgRect = two.makeRect(hoverBgRectLeft, barTop, textAreaWidth, barHeight);
+                hoverBgRect.fill = "#EBEBEB";
+            }
+
             // Render text labels when the space is enough.
             if(barHeight >= fontSize && isTextLabel){
                 const text = two.makeText(textLeft, barTop + barHeight/2, textAreaWidth, barHeight, d[field]);
@@ -130,8 +137,10 @@ export default function TrackRowInfoVisNominalBar(props) {
             if(y !== undefined){
                 setMouseX(true);
                 fieldVal = transformedRowInfo[y][field];
+                setHoverValue(fieldVal);
             } else {
                 setMouseX(null);
+                setHoverValue(null);
                 destroyTooltip();
                 return;
             }
@@ -152,14 +161,17 @@ export default function TrackRowInfoVisNominalBar(props) {
 
         // Handle mouse leave.
         d3.select(canvas).on("mouseout", destroyTooltip);
-        d3.select(div).on("mouseleave", () => setMouseX(null));
+        d3.select(div).on("mouseleave", () => {
+            setMouseX(null);
+            setHoverValue(null);
+        });
 
         // Clean up.
         return () => {
             teardown();
             d3.select(div).on("mouseleave", null);
         };
-    }, [top, left, width, height, transformedRowInfo]);
+    }, [top, left, width, height, transformedRowInfo, hoverValue]);
 
     return (
         <div
