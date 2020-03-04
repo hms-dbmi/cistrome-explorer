@@ -9,6 +9,7 @@ import { InfoContext, ACTION } from './utils/contexts.js';
 import { selectRows, highlightRowsFromSearch } from './utils/select-rows.js';
 import TrackWrapper from './TrackWrapper.js';
 import Tooltip from './Tooltip.js';
+import ContextMenu, { destroyContextMenu } from './ContextMenu.js';
 
 import { 
     processWrapperOptions, 
@@ -188,6 +189,11 @@ export default function CistromeHGWConsumer(props) {
         setOptions(processWrapperOptions(optionsRaw));
     }, [optionsRaw]);
 
+    // Destroy the context menu upon any click.
+    useEffect(() => {
+        document.addEventListener("click", () => { destroyContextMenu() });
+    }, []);
+
     // Listen for higlass view config changes.
     useEffect(() => {
         hgRef.current.api.on('viewConfig', (newViewConfigString) => {
@@ -218,7 +224,7 @@ export default function CistromeHGWConsumer(props) {
             />
         );
     }, [viewConfig]);
-    
+
     console.log("CistromeHGWConsumer.render");
     return (
         <div className="cistrome-hgw">
@@ -256,6 +262,7 @@ export default function CistromeHGWConsumer(props) {
                 />
             ))}
             <Tooltip />
+            <ContextMenu/>
         </div>
     );
 }

@@ -5,9 +5,8 @@ import PubSub from "pubsub-js";
 import d3 from "./utils/d3.js";
 import Two from "./utils/two.js";
 import { EVENT } from "./utils/constants.js";
-import { destroyTooltip } from "./utils/tooltip.js";
 import { drawVisTitle } from "./utils/vis.js";
-import { TooltipContent } from "./Tooltip.js";
+import { TooltipContent, destroyTooltip } from "./Tooltip.js";
 import TrackRowInfoControl from './TrackRowInfoControl.js';
 
 const margin = 5;
