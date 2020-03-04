@@ -195,10 +195,8 @@ export default function TrackRowInfoVisNominalBar(props) {
     return (
         <div
             ref={divRef}
-            className="cistrome-hgw-child"
             style={{
-                top: `${top}px`,
-                left: `${left}px`, 
+                position: 'relative',
                 width: `${width}px`,
                 height: `${height}px`,
             }}

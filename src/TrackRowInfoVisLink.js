@@ -143,10 +143,8 @@ export default function TrackRowInfoVisLink(props) {
     return (
         <div
             ref={divRef}
-            className="cistrome-hgw-child"
             style={{
-                top: `${top}px`,
-                left: `${left}px`, 
+                position: 'relative',
                 width: `${width}px`,
                 height: `${height}px`
             }}

@@ -273,10 +273,9 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
     return (
         <div
             ref={divRef}
-            className="cistrome-hgw-child"
             style={{
                 top: `${top - axisHeight}px`,
-                left: `${left}px`, 
+                position: 'relative',
                 width: `${width}px`,
                 height: `${height + axisHeight}px`,
             }}

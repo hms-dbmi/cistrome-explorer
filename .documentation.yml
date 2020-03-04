@@ -3,21 +3,22 @@ toc:
 - CistromeHGW
 - name: React Components (internal)
 - CistromeHGWConsumer
+- InfoProvider
 - Tooltip
 - ContextMenu
 - TrackColSelectionInfo
 - TrackColTools
-- TrackRowInfoControl
 - TrackRowHighlight
 - TrackRowInfo
-- TrackRowInfoVisNominalBar
-- TrackRowInfoVisQuantitativeBar
+- TrackRowInfoControl
+- TrackRowInfoVis
 - TrackRowInfoVisDendrogram
 - TrackRowInfoVisLink
+- TrackRowInfoVisNominalBar
+- TrackRowInfoVisQuantitativeBar
 - TrackRowSearch
-- SuggestionWithHighlight
 - TrackWrapper
-- InfoProvider
+- SuggestionWithHighlight
 - name: Functions (internal)
 - validateWrapperOptions
 - processWrapperOptions
