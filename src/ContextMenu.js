@@ -48,7 +48,7 @@ export default function ContextMenu() {
         };
     });
 
-    // Function to make an item of ContextMenu
+    // Function to generate an item for ContextMenu
     function ContextMenuItem(props) {
         const {
             isSeparator,
