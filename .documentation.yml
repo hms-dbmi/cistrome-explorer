@@ -4,6 +4,7 @@ toc:
 - name: React Components (internal)
 - CistromeHGWConsumer
 - Tooltip
+- ContextMenu
 - TrackColSelectionInfo
 - TrackColTools
 - TrackRowInfoControl
