@@ -187,8 +187,12 @@ export default function CistromeHGWConsumer(props) {
     // Do initial processing of the options prop.
     useEffect(() => {
         setOptions(processWrapperOptions(optionsRaw));
-        document.addEventListener("click", () => { destroyContextMenu() });
     }, [optionsRaw]);
+
+    // Destroy the context menu upon any click.
+    useEffect(() => {
+        document.addEventListener("click", () => { destroyContextMenu() });
+    }, []);
 
     // Listen for higlass view config changes.
     useEffect(() => {
