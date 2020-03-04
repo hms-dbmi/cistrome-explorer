@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PubSub from 'pubsub-js';
 
 import { EVENT, CONTEXT_MENU_TYPE } from './utils/constants.js';
+import { FILTER } from './utils/icons.js';
 
 import './ContextMenu.scss';
 
@@ -15,11 +16,19 @@ export default function ContextMenu() {
     function ContextMenuItem(props) {
         const {
             key,
-            text
+            text,
+            icon
         } = props;
     
         return (
-            <div className="chw-context-menu-item" key={key}>
+            <div className="chw-context-menu-item" key={key}
+                 style={{ display: "flex", alignItems: "center" }}>
+                {icon?
+                    <svg className="chgw-button-sm chgw-search-button chgw-button-static"
+                        viewBox={icon.viewBox}>
+                        <path d={icon.path} fill="currentColor"/>
+                    </svg>
+                : <svg className="chgw-button-sm chgw-search-button chgw-button-static"/>}
                 {text}
             </div>
         );
@@ -38,16 +47,16 @@ export default function ContextMenu() {
     });
 
     useEffect(() => {
-        let contextMenuItemData = [];
+        let menuData = [];
         switch(menuType) {
             case CONTEXT_MENU_TYPE.NOMINAL_BAR:
-                contextMenuItemData.push({text: "Highlight rows"});
-                contextMenuItemData.push({text: "Filter rows"});
+                menuData.push({text: "Highlight rows"});
+                menuData.push({text: "Filter rows", icon: FILTER});
                 break;
             default:
                 break;
         }
-        setMenuItemData(contextMenuItemData);
+        setMenuItemData(menuData);
     }, [left, top, menuType]);
 
     return (
