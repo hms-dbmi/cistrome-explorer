@@ -134,7 +134,11 @@ export default function TrackRowInfoVisNominalBar(props) {
         PubSub.publish(EVENT.CONTEXT_MENU, {
             x: mouseViewportX,
             y: mouseViewportY,
-            menuType: CONTEXT_MENU_TYPE.NOMINAL_BAR
+            menuType: CONTEXT_MENU_TYPE.NOMINAL_BAR,
+            field,
+            value: hoverValue,
+            onFilter: (f,t,v) => onFilterRows(f,t,v),
+            onHighlight: (f,t,v) => onSearchRows(f,t,v)
         });    
     }
 

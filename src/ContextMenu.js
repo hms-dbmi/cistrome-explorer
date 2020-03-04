@@ -18,6 +18,10 @@ export default function ContextMenu() {
 
     const [left, setLeft] = useState(null);
     const [top, setTop] = useState(null);
+    const [field, setField] = useState(null);
+    const [value, setValue] = useState(null);
+    const [onFilter, setOnFilter] = useState(null);
+    const [onSearch, setOnSearch] = useState(null);
     const [menuType, setMenuType] = useState(null);
     const [menuItemData, setMenuItemData] = useState([]);
 
@@ -25,18 +29,24 @@ export default function ContextMenu() {
         const {
             key,
             text,
-            icon
+            icon,
+            action
         } = props;
     
         return (
             <div className="chw-context-menu-item" key={key}
-                 style={{ display: "flex", alignItems: "center" }}>
+                onClick={action}
+                 style={{ 
+                     display: "flex", 
+                     alignItems: "center" 
+                }}>
                 {icon?
                     <svg className="chgw-button-sm chgw-search-button chgw-button-static"
                         viewBox={icon.viewBox}>
                         <path d={icon.path} fill="currentColor"/>
                     </svg>
-                : <svg className="chgw-button-sm chgw-search-button chgw-button-static"/>}
+                    : <svg className="chgw-button-sm chgw-button-static"/>
+                }
                 {text}
             </div>
         );
@@ -47,6 +57,17 @@ export default function ContextMenu() {
             setLeft(data.x);
             setTop(data.y);
             setMenuType(data.menuType);
+            switch(menuType) {
+                case CONTEXT_MENU_TYPE.NOMINAL_BAR:
+                    setField(data.field);
+                    setValue(data.value);
+                    setOnFilter((f,t,v) => data.onFilter(f,t,v));
+                    setOnSearch((f,t,v) => data.onSearch(f,t,v));
+                    break;
+                default:
+                    break;
+            }
+            
         });
 
         return () => {
@@ -58,8 +79,8 @@ export default function ContextMenu() {
         let menuData = [];
         switch(menuType) {
             case CONTEXT_MENU_TYPE.NOMINAL_BAR:
-                menuData.push({text: "Highlight rows"});
-                menuData.push({text: "Filter rows", icon: FILTER});
+                menuData.push({text: "Highlight rows", action: () => { onFilter(field, "nominal", value) }});
+                menuData.push({text: "Filter rows", icon: FILTER, action: () => { onSearch(field, "nominal", value) }});
                 break;
             default:
                 break;

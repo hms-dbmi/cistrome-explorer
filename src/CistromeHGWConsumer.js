@@ -187,6 +187,7 @@ export default function CistromeHGWConsumer(props) {
     // Do initial processing of the options prop.
     useEffect(() => {
         setOptions(processWrapperOptions(optionsRaw));
+        document.addEventListener("click", () => { destroyContextMenu() });
     }, [optionsRaw]);
 
     // Listen for higlass view config changes.
@@ -219,10 +220,10 @@ export default function CistromeHGWConsumer(props) {
             />
         );
     }, [viewConfig]);
-    
+
     console.log("CistromeHGWConsumer.render");
     return (
-        <div className="cistrome-hgw" onClick={() => destroyContextMenu()}>
+        <div className="cistrome-hgw">
             {hgComponent}
             {trackInfos.map(({ viewId, trackId, trackTilesetId, combinedTrackId }, i) => (
                 <TrackWrapper
