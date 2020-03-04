@@ -6,6 +6,14 @@ import { FILTER } from './utils/icons.js';
 
 import './ContextMenu.scss';
 
+export function destroyContextMenu() {
+    PubSub.publish(EVENT.CONTEXT_MENU, {
+        x: null,
+        y: null,
+        menuType: null
+    });
+}
+
 export default function ContextMenu() {
 
     const [left, setLeft] = useState(null);

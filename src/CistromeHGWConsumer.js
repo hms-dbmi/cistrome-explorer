@@ -9,7 +9,7 @@ import { InfoContext, ACTION } from './utils/contexts.js';
 import { selectRows, highlightRowsFromSearch } from './utils/select-rows.js';
 import TrackWrapper from './TrackWrapper.js';
 import Tooltip from './Tooltip.js';
-import ContextMenu from './ContextMenu.js';
+import ContextMenu, { destroyContextMenu } from './ContextMenu.js';
 
 import { 
     processWrapperOptions, 
@@ -222,7 +222,7 @@ export default function CistromeHGWConsumer(props) {
     
     console.log("CistromeHGWConsumer.render");
     return (
-        <div className="cistrome-hgw">
+        <div className="cistrome-hgw" onClick={() => destroyContextMenu()}>
             {hgComponent}
             {trackInfos.map(({ viewId, trackId, trackTilesetId, combinedTrackId }, i) => (
                 <TrackWrapper

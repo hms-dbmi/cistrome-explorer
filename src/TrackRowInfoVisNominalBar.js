@@ -124,6 +124,20 @@ export default function TrackRowInfoVisNominalBar(props) {
     
     drawRegister("TrackRowInfoVisNominalBar", draw);
 
+    // Context menu.
+    function onContextMenu(e){
+        e.preventDefault();
+        
+        const mouseViewportX = e.pageX;
+        const mouseViewportY = e.pageY;
+
+        PubSub.publish(EVENT.CONTEXT_MENU, {
+            x: mouseViewportX,
+            y: mouseViewportY,
+            menuType: CONTEXT_MENU_TYPE.NOMINAL_BAR
+        });    
+    }
+
     useEffect(() => {
         const canvas = canvasRef.current;
         const div = divRef.current;
@@ -159,18 +173,6 @@ export default function TrackRowInfoVisNominalBar(props) {
             });
         });
 
-        // Context menu.
-        d3.select(canvas).on("click", () => {
-            const mouseViewportX = d3.event.clientX;
-            const mouseViewportY = d3.event.clientY;
-            
-            PubSub.publish(EVENT.CONTEXT_MENU, {
-                x: mouseViewportX,
-                y: mouseViewportY,
-                menuType: CONTEXT_MENU_TYPE.NOMINAL_BAR
-            });    
-        });
-
         // Handle mouse leave.
         d3.select(canvas).on("mouseout", destroyTooltip);
         d3.select(div).on("mouseleave", () => {
@@ -198,6 +200,7 @@ export default function TrackRowInfoVisNominalBar(props) {
         >
             <canvas
                 ref={canvasRef}
+                onContextMenu={onContextMenu}
                 style={{
                     top: 0,
                     left: 0, 
