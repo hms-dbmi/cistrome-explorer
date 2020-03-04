@@ -15,6 +15,7 @@ import TrackRowInfoVis from "./TrackRowInfoVis.js";
  * @prop {string} rowInfoPosition The value of the `rowInfoPosition` option.
  * @prop {object} rowSort The options for sorting rows.
  * @prop {object} rowFilter The options for filtering rows.
+ * @prop {object} rowHighlight The options for highlighting rows.
  * @prop {function} onSortRows The function to call upon a sort interaction.
  * @prop {function} onSearchRows The function to call upon a search interaction.
  * @prop {function} onFilterRows The function to call upon a filter interaction.
@@ -44,10 +45,9 @@ export default function TrackRowInfo(props) {
     const height = trackHeight;
     const defaultUnitWidth = 100;
     const [unitWidths, setUnitWidths] = useState(rowInfoAttributes.map(() => defaultUnitWidth));
-
-
-    const lrKey = (isLeft ? "right" : "left");
-    const lrVal = (isLeft ? trackX + trackWidth : trackX + trackWidth);
+    
+    const totalWidth = d3.sum(unitWidths);
+    const left = isLeft ? trackX - totalWidth : trackX + trackWidth;
 
     function setUnitWidthByIndex(i, val) {
         const newUnitWidths = Array.from(unitWidths);
@@ -58,28 +58,27 @@ export default function TrackRowInfo(props) {
     
     
     // Determine position of each dimension.
-    let trackProps = [], currentLr = 0;
+    let trackProps = [], currentLeft = 0;
     rowInfoAttributes.forEach((attribute, i) => {
-        const fieldInfo = attribute;
+        const fieldInfo = isLeft ? rowInfoAttributes[rowInfoAttributes.length - i - 1] : attribute;
         const width = unitWidths[i];
         trackProps.push({
             top: 0,
-            [lrKey]: currentLr, 
+            left: currentLeft, 
             width,
             height,
             fieldInfo,
         });
-        currentLr += width;
+        currentLeft += width;
     });
 
     console.log("TrackRowInfo.render");
     return (
         <div
             style={{
-                border: '1px solid green',
                 position: 'absolute',
                 top: `${top}px`,
-                [lrKey]: `${lrVal}px`,
+                left: `${left}px`,
                 height: `${height}px`
             }}
         >
@@ -88,7 +87,6 @@ export default function TrackRowInfo(props) {
                     key={i}
                     top={d.top}
                     left={d.left}
-                    right={d.right}
                     width={d.width}
                     height={d.height}
                     isLeft={isLeft}

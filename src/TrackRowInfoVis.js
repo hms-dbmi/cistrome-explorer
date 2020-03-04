@@ -24,15 +24,18 @@ const fieldTypeToVisComponent = {
  * @prop {object[]} transformedRowInfo Array of JSON objects, one object for each row.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
- * @prop {string} titleSuffix The suffix of a title, information about sorting and filtering status.
+ * @prop {object} rowSort The options for sorting rows.
+ * @prop {object} rowFilter The options for filtering rows.
+ * @prop {object} rowHighlight The options for highlighting rows.
  * @prop {function} onSortRows The function to call upon a sort interaction.
  * @prop {function} onSearchRows The function to call upon a search interaction.
  * @prop {function} onFilterRows The function to call upon a filter interaction.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
+ * @prop {function} onWidthChanged The function to call when the component resize element has been dragged.
  */
 export default function TrackRowInfoVis(props) {
     const {
-        left, right, top, width, height,
+        left, top, width, height,
         fieldInfo,
         isLeft,
         transformedRowInfo,
@@ -50,42 +53,61 @@ export default function TrackRowInfoVis(props) {
     const resizerWidth = 4
     const resizerHeight = 10
     const resizerMargin = 2;
-    const marginForMouseEvent = 20;
 
-    const lrKey = (isLeft ? "right" : "left");
-    const lrVal = (isLeft ? right : left);
 
+    const divRef = useRef();
     const resizerRef = useRef();
 
-    const [isResizing, setIsResizing] = useState(false);
+    const [isHovering, setIsHovering] = useState(false);
+    const dragX = useRef(null);
+
+    // Set up the d3-drag handler functions (started, ended, dragged).
+    const started = useCallback(() => {
+        const event = d3.event;
+        dragX.current = event.sourceEvent.clientX;
+    }, [dragX])
+
+    const ended = useCallback(() => {
+        dragX.current = null;
+    }, [dragX])
 
     const dragged = useCallback(() => {
         const event = d3.event;
-        const mouseX = (isLeft ? event.x : event.x);
-
-        let newWidth = isLeft ? width - mouseX : mouseX;
+        const diff = event.sourceEvent.clientX - dragX.current;
+        let newWidth = isLeft ? width - diff : width + diff;
         if(newWidth < minWidth) {
             newWidth = minWidth;
         }
-        console.log(event.x, event.dx)
-        console.log(newWidth);
         // Emit the new width value to the parent component.
         onWidthChanged(newWidth);
-    }, [onWidthChanged]);
+    }, [dragX, width, onWidthChanged]);
 
+    // Detect drag events for the resize element.
     useEffect(() => {
         const resizer = resizerRef.current;
 
-        console.log("effect")
-
         const drag = d3.drag()
-            .on("start", () => setIsResizing(true))
+            .on("start", started)
             .on("drag", dragged)
-            .on("end", () => setIsResizing(false));
+            .on("end", ended);
 
         d3.select(resizer).call(drag);
 
-    }, [dragged]);
+        return () => d3.select(resizer).on(".drag", null);
+    }, [resizerRef, started, dragged, ended]);
+
+    // Detect hover events to know when to show the resize element.
+    useEffect(() => {
+        const div = divRef.current;
+
+        d3.select(div).on("mouseenter", () => setIsHovering(true));
+        d3.select(div).on("mouseleave", () => setIsHovering(false));
+
+        return () => {
+            d3.select(div).on("mouseenter", null);
+            d3.select(div).on("mouseleave", null);
+        };
+    }, [divRef, setIsHovering]);
 
     // Determine the title suffix.
     let titleSuffix = "";
@@ -101,33 +123,38 @@ export default function TrackRowInfoVis(props) {
         titleSuffix += ` | highlighted by "${rowHighlight.contains}"`;
     }
 
-    const resizer = (
-        <div
-            ref={resizerRef}
-            className="visualization-resizer"
-            style={{
-                top: `${top + (height - resizerHeight) / 2.0}px`,
-                left: `${isLeft ? resizerMargin : width - resizerWidth - resizerMargin}px`,
-                height: `${resizerHeight}px`,
-                width: `${resizerWidth}px`
-            }}
-        />
-    );
+    // Create the resizer element.
+    const resizer = useMemo(() => {
+        const lrKey = (isLeft ? "left" : "right");
+        return (
+            <div
+                ref={resizerRef}
+                className="visualization-resizer"
+                style={{
+                    top: `${top + (height - resizerHeight) / 2.0}px`,
+                    [lrKey]: resizerMargin,
+                    height: `${resizerHeight}px`,
+                    width: `${resizerWidth}px`,
+                    opacity: (isHovering ? 1 : 0)
+                }}
+            />
+        );
+    }, [isLeft, top, height, isHovering]);
 
     return (
         <div 
+            ref={divRef}
             style={{
-                border: '1px solid red',
                 position: 'absolute',
                 top: `${top}px`,
-                [lrKey]: `${lrVal}px`, 
+                left: `${left}px`, 
                 height: `${height}px`,
             }}
         >
             {React.createElement(
                 fieldTypeToVisComponent[fieldInfo.type],
                 {
-                    [lrKey]: lrVal,
+                    left,
                     top: 0,
                     width,
                     height,

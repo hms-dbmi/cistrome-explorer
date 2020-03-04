@@ -25,7 +25,7 @@ import { TooltipContent } from './Tooltip.js';
  */
 export default function TrackRowInfoVisDendrogram(props) {
     const {
-        left, right, top, width, height,
+        left, top, width, height,
         fieldInfo,
         isLeft,
         transformedRowInfo,
@@ -48,7 +48,6 @@ export default function TrackRowInfoVisDendrogram(props) {
 
     // Data, layouts and styles
     const { field } = fieldInfo;
-    const isNominal = false;
 
     // Process the hierarchy data. Result will be null if the tree leaves
     // cannot be aligned based on the current rowInfo ordering.
