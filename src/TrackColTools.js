@@ -55,16 +55,17 @@ export default function TrackColTools(props) {
                 top: `${top}px`,
                 left: `${left}px`, 
                 width: `${width}px`,
-                height: `${height}px`
+                height: `${height}px`,
+                pointerEvents: 'none'
             }}
         >
             <div className="col-tools">
                 {!combinedTrack ? (
                     <button 
+                        className="col-tools-target"
                         onClick={onSelectGenomicInterval}
                         style={{
-                            position: 'absolute',
-                            top: (isTop ? (2*height/3) : 2),
+                            marginTop: (isTop ? (2*height/3) : 2)
                         }}
                     >Select current interval</button>
                 ) : (

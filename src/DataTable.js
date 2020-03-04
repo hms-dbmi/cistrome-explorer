@@ -23,9 +23,7 @@ export default function DataTable(props) {
         <div
             style={{
                 position: "absolute",
-                left, top, width, height,
-                // TODO: Remove this after implementation.
-                border: "1px dotted red"
+                left, top, width, height
             }}
         >
             <h4>Data Preview</h4>   
