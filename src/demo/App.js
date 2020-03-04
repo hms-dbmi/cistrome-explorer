@@ -124,21 +124,19 @@ export default function App() {
                 <h4>Cistrome HiGlass Wrapper</h4>
             </div>
             <div className="viewconf-options">
-                <form>
+                <select 
+                    onChange={e => setSelectedDemo(e.target.value)} 
+                    defaultValue={selectedDemo}
+                >
                     {Object.keys(demos).map(vcKey => (
-                        <span key={vcKey}>
-                            <input 
-                                type="radio" 
-                                name="viewconf"
-                                value={vcKey} 
-                                id={vcKey} 
-                                checked={selectedDemo === vcKey} 
-                                onChange={e => setSelectedDemo(e.target.value)}
-                            />
-                            <label htmlFor={vcKey}>{vcKey}</label>
-                        </span>
+                        <option 
+                            key={vcKey} 
+                            value={vcKey} 
+                        >
+                            {vcKey}
+                        </option>
                     ))}
-                </form>
+                </select>
             </div>
 
             <div className="container">
