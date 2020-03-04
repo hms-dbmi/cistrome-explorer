@@ -5,8 +5,7 @@ import PubSub from "pubsub-js";
 import d3 from "./utils/d3.js";
 import Two from "./utils/two.js";
 import { EVENT } from "./utils/constants.js";
-import { destroyTooltip } from "./utils/tooltip.js";
-import { TooltipContent } from "./Tooltip.js";
+import { TooltipContent, destroyTooltip } from "./Tooltip.js";
 import { drawVisTitle } from "./utils/vis.js";
 
 import TrackRowInfoControl from './TrackRowInfoControl.js';
@@ -274,10 +273,9 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
     return (
         <div
             ref={divRef}
-            className="cistrome-hgw-child"
             style={{
                 top: `${top - axisHeight}px`,
-                left: `${left}px`, 
+                position: 'relative',
                 width: `${width}px`,
                 height: `${height + axisHeight}px`,
             }}

@@ -5,6 +5,14 @@ import { EVENT } from './utils/constants.js';
 
 import './Tooltip.scss';
 
+export function destroyTooltip() {
+    PubSub.publish(EVENT.TOOLTIP, {
+        x: null,
+        y: null,
+        content: null
+    });
+}
+
 /**
  * Generate tooltip contents.
  * @prop {string} title The title of tooltip.

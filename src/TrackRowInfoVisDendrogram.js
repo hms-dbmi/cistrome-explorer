@@ -4,11 +4,10 @@ import PubSub from "pubsub-js";
 import d3 from "./utils/d3.js";
 import Two from "./utils/two.js";
 import { EVENT } from "./utils/constants.js";
-import { destroyTooltip } from "./utils/tooltip.js";
 import { drawVisTitle } from "./utils/vis.js";
 import { matrixToTree } from './utils/tree.js';
 import { SORT_TREE } from './utils/icons.js';
-import { TooltipContent } from './Tooltip.js';
+import { TooltipContent, destroyTooltip } from './Tooltip.js';
 
 /**
  * Component for visualization of row info hierarchies.
@@ -48,7 +47,6 @@ export default function TrackRowInfoVisDendrogram(props) {
 
     // Data, layouts and styles
     const { field } = fieldInfo;
-    const isNominal = false;
 
     // Process the hierarchy data. Result will be null if the tree leaves
     // cannot be aligned based on the current rowInfo ordering.
@@ -204,10 +202,8 @@ export default function TrackRowInfoVisDendrogram(props) {
     return (
         <div
             ref={divRef}
-            className="cistrome-hgw-child"
             style={{
-                top: `${top}px`,
-                left: `${left}px`, 
+                position: 'relative',
                 width: `${width}px`,
                 height: `${height}px`,
             }}
@@ -215,9 +211,8 @@ export default function TrackRowInfoVisDendrogram(props) {
             <canvas
                 ref={canvasRef}
                 style={{
-                    position: "absolute",
+                    position: "relative",
                     top: 0,
-                    left: 0, 
                     width: `${width}px`,
                     height: `${height}px`
                 }}

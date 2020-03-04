@@ -4,12 +4,12 @@ import PubSub from "pubsub-js";
 
 import d3 from "./utils/d3.js";
 import Two from "./utils/two.js";
-import { EVENT } from "./utils/constants.js";
-import { destroyTooltip } from "./utils/tooltip.js";
+import { EVENT, CONTEXT_MENU_TYPE } from "./utils/constants.js";
 import { drawVisTitle } from "./utils/vis.js";
 
 import TrackRowInfoControl from './TrackRowInfoControl.js';
-import { TooltipContent } from "./Tooltip.js";
+import { TooltipContent, destroyTooltip } from "./Tooltip.js";
+import { FILTER, HIGHLIGHTER } from './utils/icons.js';
 
 export const margin = 5;
 
@@ -124,6 +124,25 @@ export default function TrackRowInfoVisNominalBar(props) {
     
     drawRegister("TrackRowInfoVisNominalBar", draw);
 
+    // Context menu.
+    function onContextMenu(e){
+        e.preventDefault();
+        
+        const mouseViewportX = e.pageX;
+        const mouseViewportY = e.pageY;
+
+        PubSub.publish(EVENT.CONTEXT_MENU, {
+            x: mouseViewportX,
+            y: mouseViewportY,
+            menuType: CONTEXT_MENU_TYPE.NOMINAL_BAR,
+            title: `Selected category: ${hoverValue}`,
+            items: [
+                { title: "Highlight rows", icon: HIGHLIGHTER, action: () => onSearchRows(field, "nominal", hoverValue) },
+                { title: "Filter rows", icon: FILTER, action: () => onFilterRows(field, "nominal", hoverValue) }
+            ]
+        });    
+    }
+
     useEffect(() => {
         const canvas = canvasRef.current;
         const div = divRef.current;
@@ -176,16 +195,15 @@ export default function TrackRowInfoVisNominalBar(props) {
     return (
         <div
             ref={divRef}
-            className="cistrome-hgw-child"
             style={{
-                top: `${top}px`,
-                left: `${left}px`, 
+                position: 'relative',
                 width: `${width}px`,
                 height: `${height}px`,
             }}
         >
             <canvas
                 ref={canvasRef}
+                onContextMenu={onContextMenu}
                 style={{
                     top: 0,
                     left: 0, 
