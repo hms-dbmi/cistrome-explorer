@@ -32,12 +32,4 @@ export const CONTEXT_MENU_TYPE = Object.freeze({
     NOMINAL_BAR: "context-menu-type-nominal-bar"
 });
 
-/*
- * Types for Context Menu Item.
- */
-export const CONTEXT_MENU_ITEM_TYPE = Object.freeze({
-    NORMAL_ITEM: "context-menu-item-type-normal",
-    SEPARATOR: "context-menu-item-type-separator"
-});
-
 export const CISTROME_DBTOOLKIT_MAX_INTERVAL_SIZE = 2000000;
