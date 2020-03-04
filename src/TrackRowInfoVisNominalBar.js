@@ -4,7 +4,7 @@ import PubSub from "pubsub-js";
 
 import d3 from "./utils/d3.js";
 import Two from "./utils/two.js";
-import { EVENT } from "./utils/constants.js";
+import { EVENT, CONTEXT_MENU_TYPE } from "./utils/constants.js";
 import { destroyTooltip } from "./utils/tooltip.js";
 import { drawVisTitle } from "./utils/vis.js";
 
@@ -157,6 +157,18 @@ export default function TrackRowInfoVisNominalBar(props) {
                     color={colorScale(fieldVal)}
                 />
             });
+        });
+
+        // Context menu.
+        d3.select(canvas).on("click", () => {
+            const mouseViewportX = d3.event.clientX;
+            const mouseViewportY = d3.event.clientY;
+            
+            PubSub.publish(EVENT.CONTEXT_MENU, {
+                x: mouseViewportX,
+                y: mouseViewportY,
+                menuType: CONTEXT_MENU_TYPE.NOMINAL_BAR
+            });    
         });
 
         // Handle mouse leave.

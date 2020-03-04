@@ -9,6 +9,7 @@ import { InfoContext, ACTION } from './utils/contexts.js';
 import { selectRows, highlightRowsFromSearch } from './utils/select-rows.js';
 import TrackWrapper from './TrackWrapper.js';
 import Tooltip from './Tooltip.js';
+import ContextMenu from './ContextMenu.js';
 
 import { 
     processWrapperOptions, 
@@ -256,6 +257,7 @@ export default function CistromeHGWConsumer(props) {
                 />
             ))}
             <Tooltip />
+            <ContextMenu/>
         </div>
     );
 }
