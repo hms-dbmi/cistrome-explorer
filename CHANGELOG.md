@@ -9,6 +9,7 @@
 - Added transparent white background for visualization title text so that it does not visually interfere with the text for plot data labels.
 - Added `measureText()` two function for computing width and height of `TwoText` objects without rendering.
 - Added a search suggestion autocomplete feature.
+- Added a feature to request for bind TFs in a certain interval using Cistrome DB API and render the result in a simple data table.
 
 ### Changed
 - Fixed bug which prevented wrapper options for sorting, filtering, highlighting from being used upon initial component render.

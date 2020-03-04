@@ -28,6 +28,7 @@ export default function TrackColTools(props) {
         colToolsPosition,
         onSelectGenomicInterval,
         onRequestIntervalTFs,
+        APIRequestStatus,
         drawRegister
     } = props;
 
@@ -65,7 +66,7 @@ export default function TrackColTools(props) {
                         className="col-tools-target"
                         onClick={onSelectGenomicInterval}
                         style={{
-                            marginTop: (isTop ? (2*height/3) : 2)
+                            marginTop: (isTop ? (2 * height / 3) : 2)
                         }}
                     >Select current interval</button>
                 ) : (
@@ -79,6 +80,7 @@ export default function TrackColTools(props) {
                                 trackAssembly={trackAssembly}
                                 projectionTrack={siblingTrack}
                                 onRequestIntervalTFs={onRequestIntervalTFs}
+                                APIRequestStatus={APIRequestStatus}
                                 drawRegister={drawRegister}
                             />
                         ))}

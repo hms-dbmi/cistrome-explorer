@@ -38,7 +38,7 @@ function makeDBToolkitAPIURL(assembly, chrStartName, chrStartPos, chrEndName, ch
         return null;
     }
     // Generate a URL for the cistrome DB toolkit API.
-    return `http://dbtoolkit.cistrome.org/api_interval?species=${assembly}&factor=$tf&interval=${chrStartName}%3A${chrStartPos}-${chrEndPos}`;
+    return `http://dbtoolkit.cistrome.org/api_interval?species=${assembly}&factor=tf&interval=${chrStartName}:${chrStartPos}-${chrEndPos}`;
 }
 
 const numberFormatter = d3.format(",");
@@ -61,6 +61,7 @@ export default function TrackColSelectionInfo(props) {
         trackAssembly,
         colToolsPosition,
         onRequestIntervalTFs,
+        APIRequestStatus,
         drawRegister
     } = props;
     
@@ -185,13 +186,26 @@ export default function TrackColSelectionInfo(props) {
             >
                 {(!chrStartName || !chrStartPos || !chrEndName || !chrEndPos || !["hg38", "mm10"].includes(trackAssembly)) ? null : (
                     dbToolkitAPIURL ? (
-                        <div className="chgw-button"
-                            onClick={() => onRequestIntervalTFs(dbToolkitAPIURL)}>
-                            <svg className="chgw-button-sm chgw-search-button chgw-button-static"
-                                viewBox={SEARCH.viewBox}>
-                                <path d={SEARCH.path} fill="gray"/>
-                            </svg>
-                            Show Bind TFs in Cistrome DB
+                        <div>
+                            <div className="chgw-button"
+                                onClick={() => onRequestIntervalTFs(dbToolkitAPIURL)}>
+                                <svg className="chgw-button-sm chgw-search-button chgw-button-static"
+                                    style={{ verticalAlign: "bottom", padding: "4px" }}
+                                    viewBox={SEARCH.viewBox}>
+                                    <path d={SEARCH.path} fill="currentColor"/>
+                                </svg>
+                                Search bind TFs from Cistrome DB
+                            </div>
+                            {APIRequestStatus && APIRequestStatus.msg ? 
+                                <div style={{ color: "gray", marginTop: "10px" }}>
+                                    <b>{APIRequestStatus.msg}</b>
+                                </div>
+                                : null}
+                            {APIRequestStatus && APIRequestStatus.isLoading ? 
+                                <div className="chw-progress-ring" 
+                                    style={{ marginTop: "10px" }}
+                                /> 
+                                : null}
                         </div>
                     ) : (
                         <p className="col-selection-info-disabled">

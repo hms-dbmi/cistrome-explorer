@@ -18,6 +18,7 @@
     width: 100%;
     border-collapse: collapse;
     border: none;
+    padding-bottom: 10px;
     tr:nth-child(even) {
         background: #eeeeee;
     }
@@ -26,6 +27,7 @@
     }
     th {
         height: 30px;
+        padding: 0px 4px;
     }
     tr, td {
         padding: 0px 4px;
@@ -37,6 +39,9 @@
     padding: 4px;
     cursor: pointer;
     border-radius: 2.5px;
+    pointer-events: all;
+    border: 1px solid rgba(0,0,0,0.5);
+    box-shadow: 0 0 0 1px rgba(0,0,0,.05),0 0 3px 0 rgba(0,0,0,.1);
 }
 
 .chgw-button:hover {
@@ -90,4 +95,24 @@
 .chgw-button-disabled:hover {
     color: black;
     background: gray !important;
+}
+
+.chw-progress-ring {
+    left: calc(50% - 10px);
+    position: relative;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid gray;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { 
+        transform: rotate(0deg); 
+    }
+    100% { 
+        transform: rotate(360deg); 
+    }
 }

@@ -106,40 +106,51 @@ export default function TrackWrapper(props) {
 
     const transformedRowInfo = (!selectedRows ? rowInfo : selectedRows.map(i => rowInfo[i]));
 
+    /* TODO: Move the code below to a better place when we decide how to properly show DataTable */ 
     // States and functions related to DataTable.
-    // TODO: Move this part when we decide how to properly show the DataTable.
-    const [dataTableRows, setDataTableRows] = useState(null);
-    const [dataTableColumns, setDataTableColumns] = useState(null);
+    const [dataTableRows, setDataTableRows] = useState([]);
+    const [dataTableColumns, setDataTableColumns] = useState([]);
+    const [APIRequestStatus, setAPIRequestStatus] = useState({ msg: "", isLoading: false });
+    
     function requestIntervalTfs(url) {
-        // url example: "http://dbtoolkit.cistrome.org/api_interval?species=hg38&factor=tf&interval=chr6:151690496-152103274"
-        const _url = "http://dbtoolkit.cistrome.org/api_interval?species=hg38&factor=tf&interval=chr6:151690496-152103274";
-        console.log(_url)
-        requestJSON(_url, (error, data) => {
-            if(error !== null) {
-                console.log("WARNING: URL not accesible " + _url)
+        setAPIRequestStatus({msg: "Receiving Cistrome DB API response...", isLoading: true});
+
+        requestJSON(url, (error, data) => {
+            const keys = Object.keys(data);
+
+            // Not accesible or there is no result.
+            if(error !== null || keys.length === 0) {
+                setAPIRequestStatus({msg: "No TFs are found in this interval", isLoading: false});
+                setDataTableRows([]);
+                setDataTableColumns([]);
+                return;
             }
-            else {
-                console.log(data);
-            }
+
+            // Generate data for table.
+            const rows = keys.map(k => data[k]);
+            const filtered_rows = rows.slice(0, rows.length < 100 ? rows.length : 100);
+            const columns = Object.keys(data[keys[0]]);
+
+            setDataTableRows(filtered_rows);
+            setDataTableColumns(columns);
+            setAPIRequestStatus({msg: "Successfully loaded", isLoading: false});
         });
-        setDataTableRows(rowInfo);
-        setDataTableColumns([ "Species", "attr_3", "attr_4", "Cell Type", "Tissue Type", "attr_9" ]);
     }
     function requestJSON(url, callback) {
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);
-        xhr.responseType = 'json';
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET", url, true);
+        xhr.responseType = "json";
         xhr.onload = function() {
-          var status = xhr.status;
-          if (status === 200) {
-            callback(null, xhr.response);
-          } else {
-            callback(status, xhr.response);
-          }
+            let status = xhr.status;
+            if (status === 200) {
+                callback(null, xhr.response);
+            } else {
+                callback(status, xhr.response);
+            }
         };
         xhr.send();
     };
-    ///
+    /////
 
     console.log("TrackWrapper.render");
     return (
@@ -194,6 +205,7 @@ export default function TrackWrapper(props) {
                     colToolsPosition={options.colToolsPosition}
                     onSelectGenomicInterval={onSelectGenomicInterval}
                     onRequestIntervalTFs={requestIntervalTfs}
+                    APIRequestStatus={APIRequestStatus}
                     drawRegister={drawRegister}
                 />) : null}
             <TrackRowHighlight 
@@ -206,7 +218,7 @@ export default function TrackWrapper(props) {
                 highlitRows={highlitRows}
                 drawRegister={drawRegister}
             />
-            {dataTableRows ? 
+            {dataTableRows.length !== 0 && dataTableColumns.length !== 0? 
                 <DataTable
                     left={trackX}
                     top={trackY + trackHeight + 56}
