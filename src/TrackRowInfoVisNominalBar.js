@@ -5,11 +5,11 @@ import PubSub from "pubsub-js";
 import d3 from "./utils/d3.js";
 import Two from "./utils/two.js";
 import { EVENT, CONTEXT_MENU_TYPE } from "./utils/constants.js";
-import { destroyTooltip } from "./utils/tooltip.js";
 import { drawVisTitle } from "./utils/vis.js";
 
 import TrackRowInfoControl from './TrackRowInfoControl.js';
-import { TooltipContent } from "./Tooltip.js";
+import { TooltipContent, destroyTooltip } from "./Tooltip.js";
+import { FILTER } from './utils/icons.js';
 
 export const margin = 5;
 
@@ -135,10 +135,10 @@ export default function TrackRowInfoVisNominalBar(props) {
             x: mouseViewportX,
             y: mouseViewportY,
             menuType: CONTEXT_MENU_TYPE.NOMINAL_BAR,
-            field,
-            value: hoverValue,
-            onFilter: (f,t,v) => onFilterRows(f,t,v),
-            onHighlight: (f,t,v) => onSearchRows(f,t,v)
+            items: [
+                { title: "Highlight rows", action: () => onSearchRows(field, "nominal", hoverValue) },
+                { title: "Filter rows", icon: FILTER, action: () => onFilterRows(field, "nominal", hoverValue) }
+            ]
         });    
     }
 

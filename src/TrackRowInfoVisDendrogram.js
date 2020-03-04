@@ -4,11 +4,10 @@ import PubSub from "pubsub-js";
 import d3 from "./utils/d3.js";
 import Two from "./utils/two.js";
 import { EVENT } from "./utils/constants.js";
-import { destroyTooltip } from "./utils/tooltip.js";
 import { drawVisTitle } from "./utils/vis.js";
 import { matrixToTree } from './utils/tree.js';
 import { SORT_TREE } from './utils/icons.js';
-import { TooltipContent } from './Tooltip.js';
+import { TooltipContent, destroyTooltip } from './Tooltip.js';
 
 /**
  * Component for visualization of row info hierarchies.
