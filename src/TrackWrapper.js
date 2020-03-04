@@ -112,9 +112,11 @@ export default function TrackWrapper(props) {
     const [dataTableColumns, setDataTableColumns] = useState(null);
     function requestIntervalTfs(url) {
         // url example: "http://dbtoolkit.cistrome.org/api_interval?species=hg38&factor=tf&interval=chr6:151690496-152103274"
-        requestJSON(url, (error, data) => {
+        const _url = "http://dbtoolkit.cistrome.org/api_interval?species=hg38&factor=tf&interval=chr6:151690496-152103274";
+        console.log(_url)
+        requestJSON(_url, (error, data) => {
             if(error !== null) {
-                console.log("WARNING: URL not accesible " + url)
+                console.log("WARNING: URL not accesible " + _url)
             }
             else {
                 console.log(data);
