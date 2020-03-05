@@ -4,7 +4,7 @@ import { InfoContext, ACTION } from "./utils/contexts.js";
 import TrackColTools from './TrackColTools.js';
 import TrackRowInfo from './TrackRowInfo.js';
 import TrackRowHighlight from './TrackRowHighlight.js';
-import DataTable from './DataTable.js';
+import DataTableForIntervalTFs from './DataTableForIntervalTFs.js';
 
 // TODO: remove the below fakedata import.
 //       see https://github.com/hms-dbmi/cistrome-higlass-wrapper/issues/26
@@ -46,13 +46,17 @@ export default function TrackWrapper(props) {
     const context = useContext(InfoContext);
 
     const [shouldCallOnMetadataLoad, setShouldCallOnMetadataLoad] = useState(false);
+    const [requestedIntervalParams, setRequestedIntervalParams] = useState(null);
 
     useEffect(() => {
         if(shouldCallOnMetadataLoad) {
             onMetadataLoad();
+            setRequestedIntervalParams(null);
         }
     }, [shouldCallOnMetadataLoad, multivecTrackViewId, multivecTrackTrackId]);
+    
 
+    // All hooks must be above this return statement, since they need to be executed in the same order.
     if(!multivecTrack || !multivecTrack.tilesetInfo || !multivecTrack.tilesetInfo.shape) {
         // The track or track tileset info has not yet loaded.
         return null;
@@ -106,52 +110,6 @@ export default function TrackWrapper(props) {
 
     const transformedRowInfo = (!selectedRows ? rowInfo : selectedRows.map(i => rowInfo[i]));
 
-    /* TODO: Move the code below to a better place when we decide how to properly show DataTable */ 
-    // States and functions related to DataTable.
-    const [dataTableRows, setDataTableRows] = useState([]);
-    const [dataTableColumns, setDataTableColumns] = useState([]);
-    const [APIRequestStatus, setAPIRequestStatus] = useState({ msg: "", isLoading: false });
-    
-    function requestIntervalTfs(url) {
-        setAPIRequestStatus({msg: "Receiving Cistrome DB API response...", isLoading: true});
-
-        requestJSON(url, (error, data) => {
-            const keys = Object.keys(data);
-
-            // Not accesible or there is no result.
-            if(error !== null || keys.length === 0) {
-                setAPIRequestStatus({msg: "No TFs are found in this interval", isLoading: false});
-                setDataTableRows([]);
-                setDataTableColumns([]);
-                return;
-            }
-
-            // Generate data for table.
-            const rows = keys.map(k => data[k]);
-            const filtered_rows = rows.slice(0, rows.length < 100 ? rows.length : 100);
-            const columns = Object.keys(data[keys[0]]);
-
-            setDataTableRows(filtered_rows);
-            setDataTableColumns(columns);
-            setAPIRequestStatus({msg: "Successfully loaded", isLoading: false});
-        });
-    }
-    function requestJSON(url, callback) {
-        let xhr = new XMLHttpRequest();
-        xhr.open("GET", url, true);
-        xhr.responseType = "json";
-        xhr.onload = function() {
-            let status = xhr.status;
-            if (status === 200) {
-                callback(null, xhr.response);
-            } else {
-                callback(status, xhr.response);
-            }
-        };
-        xhr.send();
-    };
-    /////
-
     console.log("TrackWrapper.render");
     return (
         <div className="cistrome-hgw-track-wrapper">
@@ -204,8 +162,9 @@ export default function TrackWrapper(props) {
                     siblingTracks={siblingTracks}
                     colToolsPosition={options.colToolsPosition}
                     onSelectGenomicInterval={onSelectGenomicInterval}
-                    onRequestIntervalTFs={requestIntervalTfs}
-                    APIRequestStatus={APIRequestStatus}
+                    onRequestIntervalTFs={(intervalParams) => {
+                        setRequestedIntervalParams(intervalParams);
+                    }}
                     drawRegister={drawRegister}
                 />) : null}
             <TrackRowHighlight 
@@ -218,14 +177,13 @@ export default function TrackWrapper(props) {
                 highlitRows={highlitRows}
                 drawRegister={drawRegister}
             />
-            {dataTableRows.length !== 0 && dataTableColumns.length !== 0? 
-                <DataTable
+            {requestedIntervalParams ? 
+                <DataTableForIntervalTFs
                     left={trackX}
                     top={trackY + trackHeight + 56}
                     width={trackWidth}
                     height={600}
-                    rows={dataTableRows}
-                    columns={dataTableColumns}
+                    intervalParams={requestedIntervalParams}
                 />
                 : null}
         </div>

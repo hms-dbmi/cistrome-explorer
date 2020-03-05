@@ -4,9 +4,10 @@ toc:
 - name: React Components (internal)
 - CistromeHGWConsumer
 - InfoProvider
-- Tooltip
 - DataTable
+- DataTableForIntervalTFs
 - ContextMenu
+- Tooltip
 - TrackColSelectionInfo
 - TrackColTools
 - TrackRowHighlight
@@ -42,6 +43,9 @@ toc:
 - drawVisTitle
 - matrixToTree
 - createReducer
+- validateIntervalParams
+- makeDBToolkitIntervalAPIURL
+- requestIntervalTFs
 - name: Classes (internal)
 - Two
 - TwoRectangle
