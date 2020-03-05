@@ -15,6 +15,7 @@ import './TrackColTools.scss';
  *                                are siblings of `multivecTrack` (children of the same `combined` track).
  * @prop {string} colToolsPosition The value of the `colToolsPosition` option.
  * @prop {function} onSelectGenomicInterval The function to call upon selection of a genomic interval.
+ * @prop {function} onRequestIntervalTFs The function to call upon making a request for further interval transcription factor data.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function TrackColTools(props) {
@@ -27,6 +28,7 @@ export default function TrackColTools(props) {
         siblingTracks,
         colToolsPosition,
         onSelectGenomicInterval,
+        onRequestIntervalTFs,
         drawRegister
     } = props;
 
@@ -64,7 +66,7 @@ export default function TrackColTools(props) {
                         className="col-tools-target"
                         onClick={onSelectGenomicInterval}
                         style={{
-                            marginTop: (isTop ? (2*height/3) : 2)
+                            marginTop: (isTop ? (2 * height / 3) : 2)
                         }}
                     >Select current interval</button>
                 ) : (
@@ -77,6 +79,7 @@ export default function TrackColTools(props) {
                                 colToolsPosition={colToolsPosition}
                                 trackAssembly={trackAssembly}
                                 projectionTrack={siblingTrack}
+                                onRequestIntervalTFs={onRequestIntervalTFs}
                                 drawRegister={drawRegister}
                             />
                         ))}

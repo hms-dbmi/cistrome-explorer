@@ -31,5 +31,3 @@ export const POSITION = Object.freeze({
 export const CONTEXT_MENU_TYPE = Object.freeze({
     NOMINAL_BAR: "context-menu-type-nominal-bar"
 });
-
-export const CISTROME_DBTOOLKIT_MAX_INTERVAL_SIZE = 2000000;
