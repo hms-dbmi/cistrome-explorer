@@ -1,6 +1,7 @@
 import React from 'react';
 
 import "./TrackRowInfoControl.scss";
+import "./DataTable.scss";
 
 /**
  * Component for data table.
@@ -10,11 +11,17 @@ import "./TrackRowInfoControl.scss";
  * @prop {number} height The height of this view.
  * @prop {array} rows Array of rows to render data table.
  * @prop {array} columns Array of column names in data table.
+ * @prop {string} title A title for the table. Optional.
+ * @prop {string} subtitle A subtitle for the table. Optional.
+ * @prop {boolean} isLoading Whether the data is still loading, in which case show a spinner.
  */
 export default function DataTable(props) {
     const {
         left, top, width, height,
-        rows, columns
+        rows = [], columns = [],
+        title = "Data Preview",
+        subtitle,
+        isLoading = false
     } = props;
 
     const head = columns.map((c, j) => {
@@ -35,7 +42,14 @@ export default function DataTable(props) {
                 left, top, width, height
             }}
         >
-            <h4>Data Preview</h4>   
+            <h4 className="chw-table-title">{title}</h4>
+            <span className="chw-table-subtitle">
+                {isLoading ? (
+                    <span className="chw-progress-ring" />
+                ) : (subtitle ? (
+                    <b>{subtitle}</b>
+                ) : null)}
+            </span>
             <div
                 style={{
                     height: height - 40,

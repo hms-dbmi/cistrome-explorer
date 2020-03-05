@@ -14,25 +14,6 @@
     opacity: 1;
 }
 
-.chw-table {
-    width: 100%;
-    border-collapse: collapse;
-    border: none;
-    padding-bottom: 10px;
-    tr:nth-child(even) {
-        background: #eeeeee;
-    }
-    tr:hover {
-        background: #e6f3ff80;
-    }
-    th {
-        height: 30px;
-        padding: 0px 4px;
-    }
-    tr, td {
-        padding: 0px 4px;
-    }
-}
 
 .chgw-button {
     display: inline;
