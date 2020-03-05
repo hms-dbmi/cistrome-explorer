@@ -1,11 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
 import PubSub from 'pubsub-js';
 
-import { SEARCH, SORT_ASC, SORT_DESC, SORT_TREE } from './utils/icons.js';
-
+import { SEARCH, SORT_ASC, SORT_DESC } from './utils/icons.js';
 import TrackRowSearch from './TrackRowSearch.js';
-
-import './TrackRowInfoControl.scss';
 
 const LOCAL_EVENT_SEARCH_OPEN = "search-open";
 
@@ -95,23 +92,23 @@ export default function TrackRowInfoControl(props){
     return (
         <div>
             <div ref={divRef}
-                className={"chgw-control"}
+                className={"chw-button-sm-container"}
                 style={{
                     visibility: isVisible ? "visible" : "hidden"
                 }}>
                 {buttons.map((button, i) => {
-                    let positionClass = "chgw-button-middle";
+                    let positionClass = "chw-button-middle";
                     if(buttons.length > 1) {
                         if(i === 0) {
-                            positionClass = "chgw-button-top"
+                            positionClass = "chw-button-top"
                         } else if(i === buttons.length - 1) {
-                            positionClass = "chgw-button-bottom"
+                            positionClass = "chw-button-bottom"
                         }
                     }
                     return (
                         <svg 
                             key={button.title}
-                            className={`chgw-button-sm ${positionClass}`}
+                            className={`chw-button-sm ${positionClass}`}
                             onClick={button.onClick} 
                             viewBox={button.icon.viewBox}
                         >

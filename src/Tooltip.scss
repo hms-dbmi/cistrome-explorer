@@ -1,4 +1,4 @@
-.cistrome-hgw-tooltip {
+.chw-tooltip {
     position: fixed;
     z-index: 1;
     margin: 17px 0 0 9px;
@@ -20,13 +20,11 @@
     display: table-row;
 }
 
-.chw-tooltip-content-group div {
+.chw-tooltip-color-container {
+    padding-right: 6px;
     display: table-cell;
 }
 
-.chw-tooltip-color-container {
-    padding-right: 6px;
-}
 .chw-tooltip-color {
     border: 1px solid black;
     width: 12px;

@@ -49,7 +49,7 @@ export default function TrackColTools(props) {
     
     return (
         <div
-            className="cistrome-hgw-child"
+            className="chw-child"
             style={{
                 top: `${top}px`,
                 left: `${left}px`, 

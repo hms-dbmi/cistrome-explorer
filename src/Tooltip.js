@@ -26,7 +26,9 @@ export function TooltipContent(props) {
             <div className="chw-tooltip-title">{title}</div>
             <div className="chw-tooltip-content-group">
                 {background ? 
-                    <div className="chw-tooltip-color-container"><div className="chw-tooltip-color" style={{ background }}/></div>
+                    <div className="chw-tooltip-color-container">
+                        <div className="chw-tooltip-color" style={{ background }}/>
+                    </div>
                     : null
                 }
                 {value ? 
@@ -62,17 +64,15 @@ export default function Tooltip() {
     });
 
     return (
-        <div>
-            <div
-                className="cistrome-hgw-tooltip"
-                style={{
-                    display: ((left !== null && top !== null) ? 'inline-block' : 'none'),
-                    top: `${top}px`,
-                    left: `${left}px`,
-                }}
-            >
-                {content}
-            </div>
+        <div
+            className="chw-tooltip"
+            style={{
+                display: ((left !== null && top !== null) ? 'inline-block' : 'none'),
+                top: `${top}px`,
+                left: `${left}px`,
+            }}
+        >
+            {content}
         </div>
     );
 };
