@@ -9,7 +9,7 @@ import { drawVisTitle } from "./utils/vis.js";
 
 import TrackRowInfoControl from './TrackRowInfoControl.js';
 import { TooltipContent, destroyTooltip } from "./Tooltip.js";
-import { FILTER, HIGHLIGHTER } from './utils/icons.js';
+import { FILTER, HIGHLIGHTER, ARROW_UP, ARROW_DOWN } from './utils/icons.js';
 
 export const margin = 5;
 
@@ -138,7 +138,9 @@ export default function TrackRowInfoVisNominalBar(props) {
             title: `Selected category: ${hoverValue}`,
             items: [
                 { title: "Highlight rows", icon: HIGHLIGHTER, action: () => onSearchRows(field, "nominal", hoverValue) },
-                { title: "Filter rows", icon: FILTER, action: () => onFilterRows(field, "nominal", hoverValue) }
+                { title: "Filter rows", icon: FILTER, action: () => onFilterRows(field, "nominal", hoverValue) },
+                { title: "Add rows as a top track", icon: ARROW_UP, action: () => {} },
+                { title: "Add rows as a bottom track", icon: ARROW_DOWN, action: () => {} }
             ]
         });    
     }
