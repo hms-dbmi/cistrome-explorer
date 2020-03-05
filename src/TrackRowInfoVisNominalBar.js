@@ -139,6 +139,7 @@ export default function TrackRowInfoVisNominalBar(props) {
             items: [
                 { title: "Highlight rows", icon: HIGHLIGHTER, action: () => onSearchRows(field, "nominal", hoverValue) },
                 { title: "Filter rows", icon: FILTER, action: () => onFilterRows(field, "nominal", hoverValue) },
+                // TODO: Add same config option to top/bottom track but with different selectedRows and smaller `Height`
                 { title: "Add rows as a top track", icon: ARROW_UP, action: () => {} },
                 { title: "Add rows as a bottom track", icon: ARROW_DOWN, action: () => {} }
             ]

@@ -54,8 +54,6 @@ export default function TrackRowInfo(props) {
         newUnitWidths[i] = val;
         setUnitWidths(newUnitWidths);
     }
-
-    
     
     // Determine position of each dimension.
     let trackProps = [], currentLeft = 0;

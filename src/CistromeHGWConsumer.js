@@ -184,6 +184,19 @@ export default function CistromeHGWConsumer(props) {
         setOptions(newOptions);
     }, [options]);
 
+    // Callback function for adding a track.
+    const onAddTrack = useCallback((viewId, trackId, field, type, contains) => {
+        const newRowFilter = [ { field, type, contains } ];
+        const newTrackId = trackId; // TODO: Get new trackId with no duplicates
+        const newOptions = updateWrapperOptions(options, newRowFilter, "rowFilter", viewId, newTrackId, { isReplace: true });
+        
+        const trackOptions = getTrackWrapperOptions(newOptions, viewId, trackId);
+        const newSelectedRows = selectRows(context.state[viewId][trackId].rowInfo, trackOptions);
+
+        setTrackSelectedRows(viewId, trackId, newRowFilter);
+        setOptions(newOptions);
+    }, [options]);
+
     // Do initial processing of the options prop.
     useEffect(() => {
         setOptions(processWrapperOptions(optionsRaw));
