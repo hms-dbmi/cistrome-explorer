@@ -1,9 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useCallback } from 'react';
 
 import { InfoContext, ACTION } from "./utils/contexts.js";
 import TrackColTools from './TrackColTools.js';
 import TrackRowInfo from './TrackRowInfo.js';
 import TrackRowHighlight from './TrackRowHighlight.js';
+import DataTableForIntervalTFs from './DataTableForIntervalTFs.js';
 
 // TODO: remove the below fakedata import.
 //       see https://github.com/hms-dbmi/cistrome-higlass-wrapper/issues/26
@@ -45,13 +46,17 @@ export default function TrackWrapper(props) {
     const context = useContext(InfoContext);
 
     const [shouldCallOnMetadataLoad, setShouldCallOnMetadataLoad] = useState(false);
+    const [requestedIntervalParams, setRequestedIntervalParams] = useState(null);
 
     useEffect(() => {
         if(shouldCallOnMetadataLoad) {
             onMetadataLoad();
+            setRequestedIntervalParams(null);
         }
     }, [shouldCallOnMetadataLoad, multivecTrackViewId, multivecTrackTrackId]);
+    
 
+    // All hooks must be above this return statement, since they need to be executed in the same order.
     if(!multivecTrack || !multivecTrack.tilesetInfo || !multivecTrack.tilesetInfo.shape) {
         // The track or track tileset info has not yet loaded.
         return null;
@@ -157,6 +162,9 @@ export default function TrackWrapper(props) {
                     siblingTracks={siblingTracks}
                     colToolsPosition={options.colToolsPosition}
                     onSelectGenomicInterval={onSelectGenomicInterval}
+                    onRequestIntervalTFs={(intervalParams) => {
+                        setRequestedIntervalParams(intervalParams);
+                    }}
                     drawRegister={drawRegister}
                 />) : null}
             <TrackRowHighlight 
@@ -169,6 +177,15 @@ export default function TrackWrapper(props) {
                 highlitRows={highlitRows}
                 drawRegister={drawRegister}
             />
+            {requestedIntervalParams ? 
+                <DataTableForIntervalTFs
+                    left={trackX}
+                    top={trackY + trackHeight + 56}
+                    width={trackWidth}
+                    height={600}
+                    intervalParams={requestedIntervalParams}
+                />
+                : null}
         </div>
     );
 }

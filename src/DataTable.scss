@@ -1,0 +1,37 @@
+.chw-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: none;
+    padding-bottom: 10px;
+    tr:nth-child(even) {
+        background: #eeeeee;
+    }
+    tr:hover {
+        background: #e6f3ff80;
+    }
+    th {
+        height: 30px;
+        padding: 0px 4px;
+    }
+    tr, td {
+        padding: 0px 4px;
+    }
+}
+
+.chw-table-title {
+    display: inline-block;
+}
+
+.chw-table-subtitle {
+    display: inline-block;
+    color: gray;
+    margin-left: 15px;
+    position: relative;
+
+    .chw-progress-ring {
+        display: inline-block;
+        left: auto;
+        margin-left: 0px;
+        top: 4px;
+    }
+}
