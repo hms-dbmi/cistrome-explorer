@@ -185,15 +185,17 @@ export default function CistromeHGWConsumer(props) {
     }, [options]);
 
     // Callback function for adding a track.
-    const onAddTrack = useCallback((viewId, trackId, field, type, contains) => {
+    const onAddTrack = useCallback((viewId, trackId, field, type, contains, position) => {
         const newRowFilter = [ { field, type, contains } ];
-        const newTrackId = trackId; // TODO: Get new trackId with no duplicates
+        const newTrackId = trackId + "-cp"; // TODO: Get new trackId with no duplicates
+        
+        // TODO: Copy options of specific viewid and trackId, and set trackId as newTrackId
         const newOptions = updateWrapperOptions(options, newRowFilter, "rowFilter", viewId, newTrackId, { isReplace: true });
         
-        const trackOptions = getTrackWrapperOptions(newOptions, viewId, trackId);
-        const newSelectedRows = selectRows(context.state[viewId][trackId].rowInfo, trackOptions);
+        const trackOptions = getTrackWrapperOptions(newOptions, viewId, newTrackId);
+        const newSelectedRows = selectRows(context.state[viewId][newTrackId].rowInfo, trackOptions);
 
-        setTrackSelectedRows(viewId, trackId, newRowFilter);
+        setTrackSelectedRows(viewId, newTrackId, newRowFilter); // TODO: add new config to higlass settings
         setOptions(newOptions);
     }, [options]);
 
