@@ -45,8 +45,7 @@ export default function TrackRowInfoVisNominalBar(props) {
 
     const divRef = useRef();
     const canvasRef = useRef();
-    const [mouseX, setMouseX] = useState(null);
-    const [hoverValue, setHoverValue] = useState();
+    const [hoverValue, setHoverValue] = useState(null);
 
     // Data, layouts and styles
     const { field } = fieldInfo;
@@ -159,11 +158,9 @@ export default function TrackRowInfoVisNominalBar(props) {
             const y = yScale.invert(mouseY);
             let fieldVal;
             if(y !== undefined){
-                setMouseX(true);
                 fieldVal = transformedRowInfo[y][field];
                 setHoverValue(fieldVal);
             } else {
-                setMouseX(null);
                 setHoverValue(null);
                 destroyTooltip();
                 return;
@@ -185,10 +182,7 @@ export default function TrackRowInfoVisNominalBar(props) {
 
         // Handle mouse leave.
         d3.select(canvas).on("mouseout", destroyTooltip);
-        d3.select(div).on("mouseleave", () => {
-            setMouseX(null);
-            setHoverValue(null);
-        });
+        d3.select(div).on("mouseleave", () => setHoverValue(null));
 
         // Clean up.
         return () => {
@@ -219,7 +213,7 @@ export default function TrackRowInfoVisNominalBar(props) {
             />
             <TrackRowInfoControl
                 isLeft={isLeft}
-                isVisible={mouseX !== null}
+                isVisible={hoverValue !== null}
                 fieldInfo={fieldInfo}
                 searchTop={top}
                 searchLeft={left}
