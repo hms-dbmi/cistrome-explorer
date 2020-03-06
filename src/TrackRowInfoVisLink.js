@@ -41,7 +41,7 @@ export default function TrackRowInfoVisLink(props) {
 
     const divRef = useRef();
     const canvasRef = useRef();
-    const [mouseX, setMouseX] = useState(null);
+    const [hoverIndex, setHoverIndex] = useState(null);
 
     // Data, layouts and styles
     const { field, title } = fieldInfo;
@@ -64,7 +64,15 @@ export default function TrackRowInfoVisLink(props) {
             domElement
         });
 
-        if(rowHeight >= fontSize) {
+        const shouldRenderText = (rowHeight >= fontSize);
+
+        if(hoverIndex !== null) {
+            // There is currently a hovered element, so render a background rect.
+            const bgRect = two.makeRect(0, yScale(hoverIndex), width, rowHeight);
+            bgRect.fill = "#EBEBEB";
+        }
+
+        if(shouldRenderText) {
             // There is enough height to render the text elements.
             transformedRowInfo.forEach((info, i) => {
                 const textTop = yScale(i);
@@ -77,8 +85,19 @@ export default function TrackRowInfoVisLink(props) {
                 text.align = textAlign;
                 text.baseline = "middle";
                 text.overflow = "ellipsis";
+
+                if(hoverIndex !== null && hoverIndex === i) {
+                    // There is both a hovered link and enough height to render text, so also render an underline for the hovered link.
+                    const textDimensions = two.measureText(text);
+                    const textUnderlineLeft = isLeft ? textLeft - textDimensions.width : textLeft;
+                    const textUnderlineTop = textTop + (rowHeight / 2) + (textDimensions.height / 2);
+                    const textUnderline = two.makeLine(textUnderlineLeft, textUnderlineTop, textUnderlineLeft + textDimensions.width, textUnderlineTop);
+                    textUnderline.stroke = "#23527C";
+                    textUnderline.linewidth = 1;
+                }
             });
         }
+        
 
         drawVisTitle(field, { two, isLeft, width, height, titleSuffix });
         
@@ -98,11 +117,11 @@ export default function TrackRowInfoVisLink(props) {
 
             const y = yScale.invert(mouseY);
             let fieldVal;
-            if(y !== undefined){
-                setMouseX(true);
+            if(y !== undefined) {
                 fieldVal = transformedRowInfo[y][field];
+                setHoverIndex(y);
             } else {
-                setMouseX(null);
+                setHoverIndex(null);
                 destroyTooltip();
                 return;
             }
@@ -132,13 +151,13 @@ export default function TrackRowInfoVisLink(props) {
 
         // Handle mouse leave.
         d3.select(canvas).on("mouseout", destroyTooltip);
-        d3.select(div).on("mouseleave", () => setMouseX(null));
+        d3.select(div).on("mouseleave", () => setHoverIndex(null));
 
         return () => {
             teardown();
             d3.select(div).on("mouseleave", null);
         };
-    }, [top, left, width, height, transformedRowInfo]);
+    }, [top, left, width, height, transformedRowInfo, hoverIndex]);
 
     return (
         <div
@@ -162,7 +181,7 @@ export default function TrackRowInfoVisLink(props) {
             />
             <TrackRowInfoControl
                 isLeft={isLeft}
-                isVisible={mouseX !== null}
+                isVisible={hoverIndex !== null}
                 fieldInfo={fieldInfo}
                 onSortRows={onSortRows}
                 onSearchRows={onSearchRows}

@@ -11,6 +11,7 @@
 - Added a search suggestion autocomplete feature.
 - Added a feature to request for bind TFs in a certain interval using Cistrome DB API and render the result in a simple data table.
 - Added a context menu for filtering or highlighting rows based on a nomival value in categorical bar charts.
+- Added hover styles for the `TrackRowInfoVisLink` visualization component, so that when a link area is hovered, a gray background rect and a text underline are also rendered.
 
 ### Changed
 - Fixed bug which prevented wrapper options for sorting, filtering, highlighting from being used upon initial component render.
