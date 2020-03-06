@@ -15,6 +15,7 @@
 ### Changed
 - Fixed bug which prevented wrapper options for sorting, filtering, highlighting from being used upon initial component render.
 - Added resizer elements to their containers and used `d3-drag` for the mouse events.
+- Compute color scale for the `TrackRowInfoVisNominalBar` categorical value visualization based on the full `rowInfo` rather than `transformedRowInfo` so that the original color mapping is kept after row filtering events.
 
 
 ## 0.1.0 - 02/19/20
