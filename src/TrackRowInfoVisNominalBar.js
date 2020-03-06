@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useEffect, useState } from "react";
+import React, { useRef, useCallback, useEffect, useState, useMemo } from "react";
 import range from "lodash/range";
 import PubSub from "pubsub-js";
 
@@ -19,7 +19,8 @@ export const margin = 5;
  * @prop {number} top The top position of this view.
  * @prop {number} width The width of this view.
  * @prop {number} height The height of this view.
- * @prop {object[]} transformedRowInfo Array of JSON objects, one object for each row.
+ * @prop {object[]} rowInfo Array of JSON objects, one object for each sample, without filtering/sorting based on selected rows.
+ * @prop {object[]} transformedRowInfo The `rowInfo` array after transforming by filtering and sorting according to the selected rows.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  * @prop {string} titleSuffix The suffix of a title, information about sorting and filtering status.
@@ -33,6 +34,7 @@ export default function TrackRowInfoVisNominalBar(props) {
         left, top, width, height,
         fieldInfo,
         isLeft,
+        rowInfo,
         transformedRowInfo,
         titleSuffix,
         onSortRows,
@@ -53,9 +55,12 @@ export default function TrackRowInfoVisNominalBar(props) {
         .domain(range(transformedRowInfo.length))
         .range([0, height]);
     const rowHeight = yScale.bandwidth();
-    const colorScale = d3.scaleOrdinal()
-        .domain(Array.from(new Set(transformedRowInfo.map(d => d[field]))).sort()) 
-        .range(d3.schemeTableau10);
+
+    const colorScale = useMemo(() => 
+        d3.scaleOrdinal()
+            .domain(Array.from(new Set(rowInfo.map(d => d[field]))).sort())
+            .range(d3.schemeTableau10),
+    [rowInfo]);
 
     const draw = useCallback((domElement) => {
         const two = new Two({
