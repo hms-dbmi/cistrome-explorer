@@ -232,6 +232,43 @@ export function getHMSelectedRowsFromViewConfig(viewConfig, targetViewId, target
 }
 
 /**
+ * Get a unique viewId and trackId by referring a viewConfig.
+ * @param {object} viewConfig A valid higlass view config object.
+ * @param {(string|null)} baseId The base Id to make a new unique ID.
+ * @param {(string|null)} idKey Either "viewId" or "trackId".
+ * @param {(string|null)} interfix A prefered interfix to use for the new IDs.
+ * @return {string} A new unique Id, formated as "{basedId}[-{interfix}]-{number}" or 
+ *                  just a random string when baseId is not provided.
+ */
+export function getUniqueViewOrTrackId(viewConfig, { baseId, idKey, interfix }) {
+    let newId = baseId;
+    
+    if(!baseId) {
+        // TODO: Generate UID with a random string.
+        //
+    } else {
+        if(interfix) {
+            // Append suffix.
+            newId = `${newId}-${interfix}`;
+        }
+        let isNotUnique = true, suffixNum = 1;
+        const MAX_ITER = 100;
+        while(isNotUnique || suffixNum > MAX_ITER) {
+            // Search until we find a unique id.
+            isNotUnique = false;
+            traverseViewConfig(viewConfig, (d) => {
+                if(d[idKey] === `${newId}-${suffixNum}`) {
+                    isNotUnique = true;
+                }
+            })
+            suffixNum++;
+        }
+        newId += `-${(suffixNum - 1)}`;
+    }
+    return newId;
+}
+
+/**
  * Get all view and track pairs.
  * @param {object} viewConfig A valid higlass view config object.
  * @returns {array} An array of objects of {traciId, viewId}.

@@ -21,7 +21,8 @@ import {
     getSiblingVPHTrackIdsFromViewConfig,
     updateViewConfigOnSelectGenomicInterval,
     updateViewConfigOnSelectRowsByTrack,
-    getHMSelectedRowsFromViewConfig
+    getHMSelectedRowsFromViewConfig,
+    getUniqueViewOrTrackId
 } from './utils/viewconf.js';
 
 import './CistromeHGWConsumer.scss';
@@ -187,9 +188,13 @@ export default function CistromeHGWConsumer(props) {
     // Callback function for adding a track.
     const onAddTrack = useCallback((viewId, trackId, field, type, contains, position) => {
         const newRowFilter = [ { field, type, contains } ];
-        const newTrackId = trackId + "-cp"; // TODO: Get new trackId with no duplicates
+        const newTrackId = getUniqueViewOrTrackId(hgRef.current.api.getViewConfig(), { 
+            baseId: trackId, 
+            idKey: "trackId", 
+            interfix: "detail-view" 
+        });
         
-        // TODO: Copy options of specific viewid and trackId, and set trackId as newTrackId
+        // TODO: Copy options of specific viewid and trackId, and set trackId as newTrackId but with smaller height.
         const newOptions = updateWrapperOptions(options, newRowFilter, "rowFilter", viewId, newTrackId, { isReplace: true });
         
         const trackOptions = getTrackWrapperOptions(newOptions, viewId, newTrackId);
