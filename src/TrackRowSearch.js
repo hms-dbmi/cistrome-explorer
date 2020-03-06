@@ -24,7 +24,7 @@ function SuggestionWithHighlight(props) {
     return (
         <div 
             style={{ display: "flex", alignItems: "center" }}>
-            <svg className="chgw-button-sm chgw-search-button chgw-button-static"
+            <svg className="chw-button-sm chw-button-static"
                 viewBox={FILTER.viewBox}>
                 <path d={FILTER.path} fill="gray"/>
             </svg>
@@ -183,7 +183,7 @@ export default function TrackRowSearch(props) {
 
     return (
         <div
-            className="chgw-search"
+            className="chw-search"
             style={{
                 display: ((left !== null && top !== null) ? 'flex' : 'none'),
                 left: left - (width + padding * 2) / 2,
@@ -191,14 +191,14 @@ export default function TrackRowSearch(props) {
             }}
         >
             <div
-                className="chgw-search-box"
+                className="chw-search-box"
                 style={{
                     padding: padding
                 }}
             >
                 <input
                     ref={inputRef}
-                    className="chgw-search-box-input"
+                    className="chw-search-box-input"
                     type="text"
                     name="default name"
                     placeholder="keyword"
@@ -210,17 +210,17 @@ export default function TrackRowSearch(props) {
                     }}
                 />
                 
-                <svg className="chgw-button-sm chgw-search-button"
+                <svg className="chw-button-sm"
                     onClick={onFilterClick} viewBox={FILTER.viewBox}>
                     <title>Filter rows using the keyword.</title>
                     <path d={FILTER.path} fill="currentColor"/>
                 </svg>
-                <svg className="chgw-button-sm chgw-search-button"
+                <svg className="chw-button-sm"
                     onClick={onUndoClick} viewBox={UNDO.viewBox}>
                     <title>Remove highlights and filters.</title>
                     <path d={UNDO.path} fill="currentColor"/>
                 </svg>
-                <svg className="chgw-button-sm chgw-search-button"
+                <svg className="chw-button-sm"
                     onClick={onSearchClose} viewBox={CLOSE.viewBox}>
                     <title>Close search box</title>
                     <path d={CLOSE.path} fill="currentColor"/>
@@ -228,7 +228,7 @@ export default function TrackRowSearch(props) {
             </div>
 
             <div 
-                className="chgw-search-suggestions"
+                className="chw-search-suggestions"
                 style={{
                     top: (padding + height),
                     left: padding,
@@ -239,7 +239,7 @@ export default function TrackRowSearch(props) {
                     {suggestions.map((d, i) => (
                         <li
                             key={d}
-                            className={"chgw-search-suggestion-text " + (i === suggestionIndex ? "active-suggestion" : "")}
+                            className={"chw-search-suggestion-text " + (i === suggestionIndex ? "active-suggestion" : "")}
                             onClick={() => onSuggestionEnter(d)}
                             onMouseEnter={() => setSuggestionIndex(i)}
                             onMouseLeave={() => setSuggestionIndex(undefined)}

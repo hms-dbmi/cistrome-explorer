@@ -51,13 +51,13 @@ export default function TrackColTools(props) {
     
     return (
         <div
-            className="cistrome-hgw-child"
             style={{
                 top: `${top}px`,
                 left: `${left}px`, 
                 width: `${width}px`,
                 height: `${height}px`,
-                pointerEvents: 'none'
+                pointerEvents: 'none',
+                position: "absolute"
             }}
         >
             <div className="col-tools">
