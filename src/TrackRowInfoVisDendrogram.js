@@ -224,7 +224,7 @@ export default function TrackRowInfoVisDendrogram(props) {
                         top: `${height / 2.0 - 17}px`,
                         left: `${width / 2.0 - 17}px`
                     }}>
-                    <svg className={`chgw-button-alert`}
+                    <svg className={`chw-button-alert`}
                         viewBox={SORT_TREE.viewBox}>
                         <title>{"Sort rows by hierarchy leaf order"}</title>
                         <path d={SORT_TREE.path} fill="currentColor"/>

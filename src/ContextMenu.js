@@ -60,7 +60,7 @@ export default function ContextMenu() {
     
         return (
             isSeparator ? 
-                <hr className="chw-context-menu-separator"/>
+                <hr className="chw-context-menu-separator" key={key}/>
                 : <div className={action ? "chw-context-menu-item" : "chw-context-menu-item-title"} key={key}
                     onClick={action}
                     style={{ 
@@ -68,12 +68,12 @@ export default function ContextMenu() {
                         alignItems: "center" 
                     }}>
                     {icon ?
-                        <svg className="chgw-button-sm chgw-search-button chgw-button-static"
+                        <svg className="chw-button-sm chw-button-static"
                             viewBox={icon.viewBox}>
                             <path d={icon.path} fill="currentColor"/>
                         </svg>
                         : action ? 
-                            <svg className="chgw-button-sm chgw-button-static"/>
+                            <svg className="chw-button-sm chw-button-static"/>
                             : null
                     }
                     {title}
