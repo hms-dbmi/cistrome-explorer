@@ -187,19 +187,28 @@ export default function CistromeHGWConsumer(props) {
 
     // Callback function for adding a track.
     const onAddTrack = useCallback((viewId, trackId, field, type, contains, position) => {
+        
         const newRowFilter = [ { field, type, contains } ];
-        const newTrackId = getUniqueViewOrTrackId(hgRef.current.api.getViewConfig(), { 
+        const currViewConfig = hgRef.current.api.getViewConfig();
+        const newTrackId = getUniqueViewOrTrackId(currViewConfig, { 
             baseId: trackId, 
             idKey: "trackId", 
             interfix: "detail-view" 
         });
         
-        // TODO: Copy options of specific viewid and trackId, and set trackId as newTrackId but with smaller height.
-        const newOptions = updateWrapperOptions(options, newRowFilter, "rowFilter", viewId, newTrackId, { isReplace: true });
+        const newTrackHeight = 200;
+        let newViewConfig = {
+            ...getViewConfigOfSpecificTrack(currViewConfig, viewId, trackId),
+            height: newTrackHeight,
+            trackId: newTrackId
+        }
+        console.log("newViewConfig:", newViewConfig);
         
+        // TODO: Make new selectedRows for the new viewConfig.
         const trackOptions = getTrackWrapperOptions(newOptions, viewId, newTrackId);
         const newSelectedRows = selectRows(context.state[viewId][newTrackId].rowInfo, trackOptions);
-
+        // TODO: Add new viewConfig to the current one.
+        // TODO: Add new options for wrapper as well.
         setTrackSelectedRows(viewId, newTrackId, newRowFilter); // TODO: add new config to higlass settings
         setOptions(newOptions);
     }, [options]);

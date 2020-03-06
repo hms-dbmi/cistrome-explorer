@@ -57,6 +57,21 @@ export function traverseViewConfig(viewConf, callback) {
 }
 
 /**
+ * Get a HiGlass viewConfig object for a specific track.
+ * @param {object} viewConf A valid HiGlass viewConfig object.
+ * @param {string} viewId The uid of view containing the `horizontal-multivec` track that was the target of the action.
+ * @param {string} trackId The uid of the `horizontal-multivec` track that was the target of the action. 
+ * @return {object} A part of HiGlass viewConfig object for a specific track.
+ */
+export function getViewConfigOfSpecificTrack(viewConfig, viewId, trackId) {
+    return traverseViewConfig(viewConfig, (d) => {
+        if(d.viewId === viewId && d.trackId === trackId) {
+            return trackOptions;
+        }
+    })
+}
+
+/**
  * This function finds the horizontal-multivec tracks in the view config.
  * @param {object} viewConf A valid HiGlass viewConfig object.
  * @returns {array} Array containing `{ viewId, trackId, ... }` for each horizontal-multivec track.
@@ -242,7 +257,6 @@ export function getHMSelectedRowsFromViewConfig(viewConfig, targetViewId, target
  */
 export function getUniqueViewOrTrackId(viewConfig, { baseId, idKey, interfix }) {
     let newId = baseId;
-    
     if(!baseId) {
         // TODO: Generate UID with a random string.
         //
