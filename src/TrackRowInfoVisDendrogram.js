@@ -15,7 +15,7 @@ import { TooltipContent, destroyTooltip } from './Tooltip.js';
  * @prop {number} top The top position of this view.
  * @prop {number} width The width of this view.
  * @prop {number} height The height of this view.
- * @prop {object[]} transformedRowInfo Array of JSON objects, one object for each row.
+ * @prop {object[]} transformedRowInfo The `rowInfo` array after transforming by filtering and sorting according to the selected rows.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  * @prop {function} onSortRows
@@ -25,9 +25,9 @@ import { TooltipContent, destroyTooltip } from './Tooltip.js';
 export default function TrackRowInfoVisDendrogram(props) {
     const {
         left, top, width, height,
+        transformedRowInfo,
         fieldInfo,
         isLeft,
-        transformedRowInfo,
         onSortRows,
         onFilterRows,
         drawRegister,

@@ -8,6 +8,7 @@ toc:
 - DataTableForIntervalTFs
 - ContextMenu
 - Tooltip
+- TooltipContent
 - TrackColSelectionInfo
 - TrackColTools
 - TrackRowHighlight
@@ -46,6 +47,9 @@ toc:
 - validateIntervalParams
 - makeDBToolkitIntervalAPIURL
 - requestIntervalTFs
+- componentToHex
+- rgbToHex
+- generateNextUniqueColor
 - name: Classes (internal)
 - Two
 - TwoRectangle
