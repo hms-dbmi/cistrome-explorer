@@ -292,7 +292,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             />
             <canvas
                 ref={hiddenCanvasRef}
-                className="chgw-hidden-canvas"
+                className="chw-hidden"
                 style={{
                     top: axisHeight,
                     left: 0, 

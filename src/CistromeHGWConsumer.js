@@ -227,7 +227,7 @@ export default function CistromeHGWConsumer(props) {
 
     console.log("CistromeHGWConsumer.render");
     return (
-        <div className="cistrome-hgw">
+        <div className="chw-root">
             {hgComponent}
             {trackInfos.map(({ viewId, trackId, trackTilesetId, combinedTrackId }, i) => (
                 <TrackWrapper
