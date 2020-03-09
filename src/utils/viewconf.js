@@ -211,7 +211,7 @@ export function updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, 
 /**
  * Add a config object of a new track in a higlass view config object.
  * @param {object} currViewConfig A valid higlass view config object.
- * @param {object} viewConfigToAdd A valid higlass view config object.
+ * @param {object} viewConfigToAdd A valid config object of a new track.
  * @param {string} targetViewId The view ID for the track of interest.
  * @param {string} position The target position of the track, such as "top" or "bottom".
  * @returns {object} The new view config. 
