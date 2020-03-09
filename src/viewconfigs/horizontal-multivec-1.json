@@ -112,7 +112,8 @@
                 "labelBottomMargin": 0,
                 "labelShowResolution": true,
                 "minHeight": 100,
-                "colorbarPosition": "bottomLeft"
+                "colorbarPosition": "bottomLeft",
+                "zeroValueColor": "dimgray"
               },
               "width": 1607,
               "height": 682

@@ -93,7 +93,7 @@ export default function CistromeHGWConsumer(props) {
         const newTrackInfos = getHMTrackIdsFromViewConfig(newViewConfig);
         const newSiblingTrackInfos = {};
         for(let trackInfo of newTrackInfos) {
-            newSiblingTrackInfos[trackInfo.trackId] = getSiblingVPHTrackIdsFromViewConfig(newViewConfig, trackInfo.trackId);
+            newSiblingTrackInfos[trackInfo.trackId] = getSiblingVPHTrackIdsFromViewConfig(newViewConfig, trackInfo.viewId);
 
             const newSelectedRows = getHMSelectedRowsFromViewConfig(newViewConfig, trackInfo.viewId, trackInfo.trackId);
             if(
