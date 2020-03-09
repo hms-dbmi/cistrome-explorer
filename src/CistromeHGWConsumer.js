@@ -199,7 +199,6 @@ export default function CistromeHGWConsumer(props) {
     }, [options]);
 
     // Callback function for adding a track.
-    // TODO: deal with position.
     const onAddTrack = useCallback((viewId, trackId, field, type, contains, position) => {
         if(viewId === DEFAULT_OPTIONS_KEY || trackId === DEFAULT_OPTIONS_KEY) {
             console.log("A view or track ID is a default ID.");

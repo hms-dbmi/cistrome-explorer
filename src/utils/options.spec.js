@@ -159,6 +159,38 @@ describe('Utilities for processing wrapper component options', () => {
         expect(globalDefaultOptions.rowSort[0].order).toBe("ascending");
     });
 
+    it('Should add sorting options to global default when there is no track-specific options', () => {
+        const processedOptions = processWrapperOptions([
+            {
+                viewId: DEFAULT_OPTIONS_KEY,
+                trackId: DEFAULT_OPTIONS_KEY,
+                colToolsPosition: "bottom"
+            },
+            {
+                viewId: "viewA",
+                trackId: DEFAULT_OPTIONS_KEY,
+                colToolsPosition: "top"
+            }
+        ]);
+        const updatedOptions = updateWrapperOptions(
+            processedOptions,
+            [{
+                field: "groupA",
+                type: "nominal",
+                order: "ascending"
+            }],
+            "rowSort",
+            "viewA",
+            "trackA",
+            { isReplace: true }
+        );
+        const globalDefaultOptions = updatedOptions[DEFAULT_OPTIONS_KEY];
+        expect(globalDefaultOptions.rowSort.length).toBe(1);
+        expect(globalDefaultOptions.rowSort[0].field).toBe("groupA");
+        expect(globalDefaultOptions.rowSort[0].type).toBe("nominal");
+        expect(globalDefaultOptions.rowSort[0].order).toBe("ascending");
+    });
+
     it('Should update sorting options in global default', () => {
         const processedOptions = processWrapperOptions([
             {

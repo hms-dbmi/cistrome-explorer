@@ -7,7 +7,10 @@ import {
     updateViewConfigOnSelectGenomicInterval,
     updateViewConfigOnSelectRowsByTrack,
     getHMSelectedRowsFromViewConfig,
-    getAllViewAndTrackPairs
+    getAllViewAndTrackPairs,
+    addViewConfigForNewTrack,
+    getViewConfigOfSpecificTrack,
+    getUniqueViewOrTrackId
 } from './viewconf.js';
 
 import hgDemoViewConfig1 from '../viewconfigs/horizontal-multivec-1.json';
@@ -27,6 +30,29 @@ describe('Utilities for processing higlass view config objects', () => {
         expect(trackIds2.length).toEqual(1);
         expect(trackIds2[0].viewId).toEqual("cistrome-view-2");
         expect(trackIds2[0].trackId).toEqual("cistrome-track-2");
+    });
+
+    it('Should get a view config of a specific track', () => {
+        const viewConfig = getViewConfigOfSpecificTrack(hgDemoViewConfig1, "cistrome-view-1", "cistrome-track-1");
+        expect(viewConfig.tilesetUid == "UvVPeLHuRDiYA3qwFlm7xQ").toEqual(true);
+        expect(viewConfig.options.name == "my_file_genome_wide.multires.mv5").toEqual(true);
+    });
+
+    it('Should add a view config of a specific track in top position', () => {
+        const viewConfigToAdd = getViewConfigOfSpecificTrack(hgDemoViewConfig1, "cistrome-view-1", "cistrome-track-1");
+        const newViewConfig = addViewConfigForNewTrack(hgDemoViewConfig1, viewConfigToAdd, "cistrome-view-1", "top");
+        expect(newViewConfig.views[0].tracks.top.length - hgDemoViewConfig1.views[0].tracks.top.length).toEqual(1);
+    });
+
+    it('Should get a unique track id', () => {
+        const newTrackId = getUniqueViewOrTrackId(hgDemoViewConfig1, { 
+            baseId: "cistrome-track-1", 
+            idKey: "trackId", 
+            interfix: "detail-view"
+        });
+        expect(newTrackId.includes("detail-view")).toEqual(true);
+        expect(newTrackId.includes("cistrome-track-1")).toEqual(true);
+        expect(getAllViewAndTrackPairs(hgDemoViewConfig1).filter(d => d.trackId === newTrackId).length).toEqual(0);
     });
 
     it('Should update the view config to create a genomic interval selection', () => {
