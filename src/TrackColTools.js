@@ -61,15 +61,14 @@ export default function TrackColTools(props) {
             }}
         >
             <div className="col-tools">
-                {!combinedTrack ? (
-                    <button 
-                        className="col-tools-target"
-                        onClick={onSelectGenomicInterval}
-                        style={{
-                            marginTop: (isTop ? (2 * height / 3) : 2)
-                        }}
-                    >Select current interval</button>
-                ) : (
+                <button 
+                    className="col-tools-target"
+                    onClick={onSelectGenomicInterval}
+                    style={{
+                        marginTop: (isTop ? (2 * height / 3) : 2)
+                    }}
+                >Select current interval</button>
+                {siblingTracks ? (
                     <div className="col-tools-selection-info">
                         {siblingTracks.map((siblingTrack, i) => (
                             <TrackColSelectionInfo
@@ -84,7 +83,7 @@ export default function TrackColTools(props) {
                             />
                         ))}
                     </div>
-                )}
+                ) : null}
             </div>
         </div>
     );
