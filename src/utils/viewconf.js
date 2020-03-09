@@ -2,7 +2,6 @@ import cloneDeep from 'lodash/cloneDeep';
 import uuidv4 from 'uuid/v4';
 
 import { TRACK_TYPE } from './constants.js';
-import { DEFAULT_OPTIONS_KEY } from './options.js';
 
 /**
  * Execute a callback function for every view, track, and innerTrack in a view config object.
