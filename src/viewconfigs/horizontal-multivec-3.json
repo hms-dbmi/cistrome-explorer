@@ -152,18 +152,6 @@
                   },
                   "width": 1607,
                   "height": 482
-                },
-                {
-                  "uid": "cistrome-track-1-col-projection",
-                  "type": "viewport-projection-horizontal",
-                  "fromViewUid": "cistrome-view-1",
-                  "options": {
-                    "projectionFillColor": "#777",
-                    "projectionStrokeColor": "#777",
-                    "projectionFillOpacity": 0.3,
-                    "projectionStrokeOpacity": 0.7,
-                    "strokeWidth": 1
-                  }
                 }
               ],
               "options": {}
@@ -171,7 +159,24 @@
           ],
           "bottom": [],
           "right": [],
-          "whole": [],
+          "whole": [
+            {
+              "uid": "cistrome-view-1-projection-track-1",
+              "type": "viewport-projection-horizontal",
+              "fromViewUid": null,
+              "projectionXDomain": [
+                223802565.63927206,
+                230164009.71560466
+              ],
+              "options": {
+                "projectionFillColor": "#777",
+                "projectionStrokeColor": "#777",
+                "projectionFillOpacity": 0.3,
+                "projectionStrokeOpacity": 0.7,
+                "strokeWidth": 1
+              }
+            }
+          ],
           "gallery": []
         },
         "layout": {
@@ -182,7 +187,7 @@
           "moved": false,
           "static": false
         },
-        "uid": "cistrome-view-1-with-col-projection"
+        "uid": "cistrome-view-1"
       }
     ],
     "zoomLocks": {
