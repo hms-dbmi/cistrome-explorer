@@ -81,7 +81,7 @@ export function getViewConfigOfSpecificTrack(viewConfig, viewId, trackId) {
             && d.viewId === viewId 
             && d.innerTrackId === trackId
         ) {
-            newViewConfig = cloneDd.innerTrack;
+            newViewConfig = d.innerTrack;
             return;
         }
     });
