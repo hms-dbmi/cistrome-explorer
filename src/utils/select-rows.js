@@ -8,7 +8,6 @@ import d3 from './d3.js';
  * @returns {(number[]|null)} The array of selected indices.
  */
 export function selectRows(rowInfo, options) {
-    console.log(rowInfo, options);
     if(options) {
         // Filter
         let filteredRowInfo = Array.from(rowInfo.entries());
@@ -17,7 +16,6 @@ export function selectRows(rowInfo, options) {
             filterInfos.forEach(info => {
                 const { field, type, contains } = info;
                 const isMultipleFields = Array.isArray(field);
-                console.log("filteredRowInfo", info);
                 if(type === "nominal") {
                     filteredRowInfo = filteredRowInfo.filter(d => d[1][field].toString().toUpperCase().includes(contains.toUpperCase()));
                 } else if(type === "quantitative") {

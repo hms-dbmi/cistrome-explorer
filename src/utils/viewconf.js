@@ -216,7 +216,7 @@ export function updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, 
  * @param {string} neighborViewId The view ID for the track of interest.
  * @returns {object} The new view config. 
  */
-export function addViewConfigForNewTrack(currViewConfig, viewConfigToAdd, neighborViewId) {
+export function addViewConfigForNewTrack(currViewConfig, viewConfigToAdd, neighborViewId, position) {
     const newViewConfig = cloneDeep(currViewConfig);
     let viewIndex = -1;
     // Get view index.
@@ -232,7 +232,7 @@ export function addViewConfigForNewTrack(currViewConfig, viewConfigToAdd, neighb
         }
     });
     if(viewIndex !== -1) {
-        newViewConfig.views[viewIndex].tracks["top"].push(viewConfigToAdd);
+        newViewConfig.views[viewIndex].tracks[position].push(viewConfigToAdd);
     } else {
         console.log(`WARNING: The following track is not found (${neighborViewId}, ${neighborTrackId}).`);
     }

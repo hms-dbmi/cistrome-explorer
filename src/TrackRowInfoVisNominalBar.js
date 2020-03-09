@@ -134,8 +134,8 @@ export default function TrackRowInfoVisNominalBar(props) {
     function onContextMenu(e){
         e.preventDefault();
         
-        const mouseViewportX = e.pageX;
-        const mouseViewportY = e.pageY;
+        const mouseViewportX = e.clientX;
+        const mouseViewportY = e.clientY;
 
         PubSub.publish(EVENT.CONTEXT_MENU, {
             x: mouseViewportX,

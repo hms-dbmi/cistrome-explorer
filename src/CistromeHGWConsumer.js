@@ -128,9 +128,9 @@ export default function CistromeHGWConsumer(props) {
         }
     }, [hgRef]);
 
-    const addNewTrack = useCallback((viewId, viewConfigToAdd) => {
+    const addNewTrack = useCallback((viewConfigToAdd, viewId, position) => {
         const currViewConfig = hgRef.current.api.getViewConfig();
-        const newViewConfig = addViewConfigForNewTrack(currViewConfig, viewConfigToAdd, viewId);
+        const newViewConfig = addViewConfigForNewTrack(currViewConfig, viewConfigToAdd, viewId, position);
         hgRef.current.api.setViewConfig(newViewConfig).then(() => {
             onViewConfig(newViewConfig);
         });
@@ -165,7 +165,7 @@ export default function CistromeHGWConsumer(props) {
         
         const trackOptions = getTrackWrapperOptions(newOptions, viewId, trackId);
         const newSelectedRows = selectRows(context.state[viewId][trackId].rowInfo, trackOptions);
-
+        
         setTrackSelectedRows(viewId, trackId, newSelectedRows);
         setOptions(newOptions);
     }, [options]);
@@ -219,13 +219,10 @@ export default function CistromeHGWConsumer(props) {
 
         // Add filter options.
         newOptions = updateWrapperOptions(newOptions, newRowFilter, "rowFilter", viewId, newTrackId, { isReplace: false });
-        console.log("updated newOptions", newOptions);
 
         // Get new selectedRows for the new viewConfig.
         const newTrackOptions = getTrackWrapperOptions(newOptions, viewId, newTrackId);
-        console.log("updated newTrackOptions", newTrackOptions);
         const newSelectedRows = selectRows(context.state[viewId][trackId].rowInfo, newTrackOptions);   // Use original rowInfo.
-        console.log("updated newSelectedRows", newSelectedRows);
 
         // Get new viewConfig with new selectedRows.
         let newViewConfig = getViewConfigOfSpecificTrack(currViewConfig, viewId, trackId);
@@ -238,9 +235,7 @@ export default function CistromeHGWConsumer(props) {
                 selectRows: newSelectedRows
             }
         }
-        console.log("newViewConfig:", newViewConfig);
-        
-        addNewTrack(viewId, newViewConfig);
+        addNewTrack(newViewConfig, viewId, position);
         setOptions(newOptions);
     }, [options]);
 
