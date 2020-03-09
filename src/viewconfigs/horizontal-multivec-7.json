@@ -58,25 +58,7 @@
                 "axisLabelFormatting": "scientific"
               },
               "width": 568,
-              "height": 42,
-              "aggregationModes": {
-                "mean": {
-                  "name": "Mean",
-                  "value": "mean"
-                },
-                "min": {
-                  "name": "Min",
-                  "value": "min"
-                },
-                "max": {
-                  "name": "Max",
-                  "value": "max"
-                },
-                "std": {
-                  "name": "Standard Deviation",
-                  "value": "std"
-                }
-              }
+              "height": 42
             },
             {
               "type": "horizontal-stacked-bar",

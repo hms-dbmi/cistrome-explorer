@@ -89,44 +89,6 @@
               },
               "width": 568,
               "height": 42
-            },
-            {
-              "type": "horizontal-stacked-bar",
-              "uid": "dEHMyN28RFSG1f-cPS6V2w",
-              "tilesetUid": "HMSJyvLCSgGmrDJctdIz3w",
-              "server": "https://resgen.io/api/v1",
-              "options": {
-                "labelPosition": "topLeft",
-                "labelColor": "black",
-                "labelTextOpacity": 0.4,
-                "valueScaling": "exponential",
-                "trackBorderWidth": 0,
-                "trackBorderColor": "black",
-                "backgroundColor": "white",
-                "barBorder": false,
-                "scaledHeight": false,
-                "sortLargestOnTop": true,
-                "colorScale": [
-                  "#FF0000",
-                  "#FF4500",
-                  "#32CD32",
-                  "#008000",
-                  "#006400",
-                  "#C2E105",
-                  "#FFFF00",
-                  "#66CDAA",
-                  "#8A91D0",
-                  "#CD5C5C",
-                  "#E9967A",
-                  "#BDB76B",
-                  "#808080",
-                  "#C0C0C0",
-                  "#FFFFFF"
-                ],
-                "name": "all.KL.bed.hg38.multires.mv5"
-              },
-              "width": 1308,
-              "height": 116
             }
           ],
           "left": [],
