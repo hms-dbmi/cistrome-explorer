@@ -18,8 +18,9 @@ import { TooltipContent, destroyTooltip } from './Tooltip.js';
  * @prop {object[]} transformedRowInfo The `rowInfo` array after transforming by filtering and sorting according to the selected rows.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
- * @prop {function} onSortRows
- * @prop {function} onFilterRows
+ * @prop {function} onAddTrack The function to call upon a track insertion.
+ * @prop {function} onSortRows The function to call upon a sort interaction.
+ * @prop {function} onSearchRows The function to call upon a search interaction.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function TrackRowInfoVisDendrogram(props) {
@@ -28,6 +29,7 @@ export default function TrackRowInfoVisDendrogram(props) {
         transformedRowInfo,
         fieldInfo,
         isLeft,
+        onAddTrack,
         onSortRows,
         onFilterRows,
         drawRegister,

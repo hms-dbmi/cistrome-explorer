@@ -22,6 +22,7 @@ import fakedata from './demo/fakedata/index.js';
  *                                are siblings of `multivecTrack` (children of the same `combined` track).
  * @prop {function} onSelectGenomicInterval The function to call upon selection of a genomic interval.
  *                                          Passed down to the `TrackColTools` component.
+ * @prop {function} onAddTrack The function to call upon a track insertion.
  * @prop {function} onSortRows The function to call upon a sort interaction.
  * @prop {function} onSearchRows The function to call upon a search interaction.
  * @prop {function} onFilterRows The function to call upon a filer interaction.
@@ -36,6 +37,7 @@ export default function TrackWrapper(props) {
         combinedTrack,
         siblingTracks,
         onSelectGenomicInterval,
+        onAddTrack,
         onSortRows,
         onSearchRows,
         onFilterRows,
@@ -128,6 +130,7 @@ export default function TrackWrapper(props) {
                     rowFilter={options.rowFilter}
                     rowHighlight={options.rowHighlight}
                     rowInfoPosition="left"
+                    onAddTrack={onAddTrack}
                     onSortRows={onSortRows}
                     onSearchRows={onSearchRows}
                     onFilterRows={onFilterRows}
@@ -148,6 +151,7 @@ export default function TrackWrapper(props) {
                     rowFilter={options.rowFilter}
                     rowHighlight={options.rowHighlight}
                     rowInfoPosition="right"
+                    onAddTrack={onAddTrack}
                     onSortRows={onSortRows}
                     onSearchRows={onSearchRows}
                     onFilterRows={onFilterRows}

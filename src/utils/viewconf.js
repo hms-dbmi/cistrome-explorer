@@ -2,6 +2,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import uuidv4 from 'uuid/v4';
 
 import { TRACK_TYPE } from './constants.js';
+import { DEFAULT_OPTIONS_KEY } from './options.js';
 
 /**
  * Execute a callback function for every view, track, and innerTrack in a view config object.
@@ -65,8 +66,17 @@ export function traverseViewConfig(viewConf, callback) {
  */
 export function getViewConfigOfSpecificTrack(viewConfig, viewId, trackId) {
     return traverseViewConfig(viewConfig, (d) => {
-        if(d.viewId === viewId && d.trackId === trackId) {
-            return trackOptions;
+        if((d.trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC 
+            && d.viewId === viewId 
+            && d.trackId === trackId
+            && d.trackOptions) || 
+            (d.trackType === TRACK_TYPE.COMBINED 
+            && d.innerTrackType === TRACK_TYPE.HORIZONTAL_MULTIVEC 
+            && d.viewId === viewId 
+            && d.innerTrackId === trackId
+            && d.trackOptions)
+        ) {
+            return d.trackOptions;
         }
     })
 }
@@ -188,6 +198,38 @@ export function updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, 
         }
     }
 
+    return newViewConfig;
+}
+
+/**
+ * Set the `selectRows` option for a particular track, and return the updated view config object.
+ * @param {object} currViewConfig A valid higlass view config object.
+ * @param {number[]} selectedRows The array of row indices, which will become the value of the track option.
+ * @param {string} neighborViewId The view ID for the track of interest.
+ * @param {string} neighborTrackId The track ID for the track of interest.
+ * @returns {object} The new view config. 
+ */
+export function addViewConfigForNewTrack(currViewConfig, viewConfigToAdd, neighborViewId, neighborTrackId) {
+    const newViewConfig = cloneDeep(currViewConfig);
+    let viewIndex = -1;
+    traverseViewConfig(currViewConfig, (d) => {
+        // The horizontal-multivec track could be standalone, or within a "combined" track.
+        if((d.trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC 
+            && d.viewId === neighborViewId 
+            && d.trackId === neighborTrackId) || 
+            (d.trackType === TRACK_TYPE.COMBINED 
+            && d.innerTrackType === TRACK_TYPE.HORIZONTAL_MULTIVEC 
+            && d.viewId === neighborViewId 
+            && d.innerTrackId === neighborTrackId)
+        ) {
+            viewIndex = d.viewI;
+        }
+    });
+    if(viewIndex !== -1) {
+        newViewConfig.views[d.viewI].tracks["top"].push(viewConfigToAdd);
+    } else {
+        console.log(`WARNING: The following track is not found (${neighborViewId}, ${neighborTrackId}).`);
+    }
     return newViewConfig;
 }
 

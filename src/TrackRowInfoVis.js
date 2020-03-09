@@ -28,6 +28,7 @@ const fieldTypeToVisComponent = {
  * @prop {object} rowSort The options for sorting rows.
  * @prop {object} rowFilter The options for filtering rows.
  * @prop {object} rowHighlight The options for highlighting rows.
+ * @prop {function} onAddTrack The function to call upon a track insertion.
  * @prop {function} onSortRows The function to call upon a sort interaction.
  * @prop {function} onSearchRows The function to call upon a search interaction.
  * @prop {function} onFilterRows The function to call upon a filter interaction.
@@ -44,6 +45,7 @@ export default function TrackRowInfoVis(props) {
         rowSort,
         rowFilter,
         rowHighlight,
+        onAddTrack,
         onSortRows,
         onSearchRows,
         onFilterRows,
@@ -165,6 +167,7 @@ export default function TrackRowInfoVis(props) {
                     rowInfo,
                     transformedRowInfo,
                     titleSuffix,
+                    onAddTrack,
                     onSortRows,
                     onSearchRows,
                     onFilterRows,

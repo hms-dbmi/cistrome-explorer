@@ -2,7 +2,7 @@ import merge from 'lodash/merge';
 import cloneDeep from 'lodash/cloneDeep';
 import omit from 'lodash/omit';
 import Ajv from 'ajv';
-import { insertItemToArray, modifyItemInArray } from './array.js'
+import { insertItemToArray } from './array.js'
 
 export const DEFAULT_OPTIONS_KEY = "default";
 
@@ -264,6 +264,32 @@ export function getTrackWrapperOptions(options, viewId, trackId) {
         }
     }
     return options[DEFAULT_OPTIONS_KEY];
+}
+
+/**
+ * Add options for a specific track, using its viewId and trackId.
+ * @param {object} options A _processed_ options object.
+ * @param {object} optionsToAdd Options for a specific track.
+ * @param {string} viewId The viewId for the track of interest.
+ * @param {string} trackId The trackId for the track of interest.
+ */
+export function addTrackWrapperOptions(options, optionsToAdd, viewId, trackId) {
+    if(!options[viewId]) {
+        return {
+            ...options,
+            [viewId]: { 
+                [trackId]: optionsToAdd 
+            }
+        }
+    } else {
+        return {
+            ...options,
+            [viewId]: {
+                ...options[viewId], 
+                [trackId]: optionsToAdd
+            }
+        }
+    }
 }
 
 /**

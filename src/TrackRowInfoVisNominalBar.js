@@ -24,6 +24,7 @@ export const margin = 5;
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  * @prop {string} titleSuffix The suffix of a title, information about sorting and filtering status.
+ * @prop {function} onAddTrack The function to call upon a track insertion.
  * @prop {function} onSortRows The function to call upon a sort interaction.
  * @prop {function} onSearchRows The function to call upon a search interaction.
  * @prop {function} onFilterRows The function to call upon a filter interaction.
@@ -37,6 +38,7 @@ export default function TrackRowInfoVisNominalBar(props) {
         rowInfo,
         transformedRowInfo,
         titleSuffix,
+        onAddTrack,
         onSortRows,
         onSearchRows,
         onFilterRows,
@@ -143,9 +145,8 @@ export default function TrackRowInfoVisNominalBar(props) {
             items: [
                 { title: "Highlight rows", icon: HIGHLIGHTER, action: () => onSearchRows(field, "nominal", hoverValue) },
                 { title: "Filter rows", icon: FILTER, action: () => onFilterRows(field, "nominal", hoverValue) },
-                // TODO: Add same config option to top/bottom track but with different selectedRows and smaller `Height`
-                { title: "Add rows as a top track", icon: ARROW_UP, action: () => {} },
-                { title: "Add rows as a bottom track", icon: ARROW_DOWN, action: () => {} }
+                { title: "Add rows as a top track", icon: ARROW_UP, action: () => onAddTrack(field, "nominal", hoverValue, "top") },
+                { title: "Add rows as a bottom track", icon: ARROW_DOWN, action: () => onAddTrack(field, "nominal", hoverValue, "bottom") }
             ]
         });    
     }
