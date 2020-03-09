@@ -209,23 +209,24 @@ export function updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, 
 }
 
 /**
- * Set the `selectRows` option for a particular track, and return the updated view config object.
+ * Add a config object of a new track in a higlass view config object.
  * @param {object} currViewConfig A valid higlass view config object.
- * @param {number[]} selectedRows The array of row indices, which will become the value of the track option.
- * @param {string} neighborViewId The view ID for the track of interest.
+ * @param {object} viewConfigToAdd A valid higlass view config object.
+ * @param {string} targetViewId The view ID for the track of interest.
+ * @param {string} position The target position of the track, such as "top" or "bottom".
  * @returns {object} The new view config. 
  */
-export function addViewConfigForNewTrack(currViewConfig, viewConfigToAdd, neighborViewId, position) {
+export function addViewConfigForNewTrack(currViewConfig, viewConfigToAdd, targetViewId, position) {
     const newViewConfig = cloneDeep(currViewConfig);
     let viewIndex = -1;
     // Get view index.
     traverseViewConfig(currViewConfig, (d) => {
         // The horizontal-multivec track could be standalone, or within a "combined" track.
         if((d.trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC 
-            && d.viewId === neighborViewId) || 
+            && d.viewId === targetViewId) || 
             (d.trackType === TRACK_TYPE.COMBINED 
             && d.innerTrackType === TRACK_TYPE.HORIZONTAL_MULTIVEC 
-            && d.viewId === neighborViewId)
+            && d.viewId === targetViewId)
         ) {
             viewIndex = d.viewI;
         }
@@ -233,7 +234,7 @@ export function addViewConfigForNewTrack(currViewConfig, viewConfigToAdd, neighb
     if(viewIndex !== -1) {
         newViewConfig.views[viewIndex].tracks[position].push(viewConfigToAdd);
     } else {
-        console.log(`WARNING: The following track is not found (${neighborViewId}, ${neighborTrackId}).`);
+        console.log(`WARNING: The following track is not found (${targetViewId}, ${neighborTrackId}).`);
     }
     return newViewConfig;
 }
