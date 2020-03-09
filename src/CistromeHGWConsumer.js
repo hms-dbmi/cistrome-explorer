@@ -128,9 +128,9 @@ export default function CistromeHGWConsumer(props) {
         }
     }, [hgRef]);
 
-    const addNewTrack = useCallback((viewId, trackId, viewConfigToAdd) => {
+    const addNewTrack = useCallback((viewId, viewConfigToAdd) => {
         const currViewConfig = hgRef.current.api.getViewConfig();
-        const newViewConfig = addViewConfigForNewTrack(currViewConfig, viewConfigToAdd, viewId, trackId);
+        const newViewConfig = addViewConfigForNewTrack(currViewConfig, viewConfigToAdd, viewId);
         hgRef.current.api.setViewConfig(newViewConfig).then(() => {
             onViewConfig(newViewConfig);
         });
@@ -205,7 +205,7 @@ export default function CistromeHGWConsumer(props) {
             console.log("A view or track ID is a default ID.");
             return;
         }
-        const newRowFilter = [ { field, type, contains } ];
+        const newRowFilter = { field, type, contains };
         const currViewConfig = hgRef.current.api.getViewConfig();
         const newTrackId = getUniqueViewOrTrackId(currViewConfig, { 
             baseId: trackId, 
@@ -219,21 +219,28 @@ export default function CistromeHGWConsumer(props) {
 
         // Add filter options.
         newOptions = updateWrapperOptions(newOptions, newRowFilter, "rowFilter", viewId, newTrackId, { isReplace: false });
+        console.log("updated newOptions", newOptions);
 
         // Get new selectedRows for the new viewConfig.
         const newTrackOptions = getTrackWrapperOptions(newOptions, viewId, newTrackId);
+        console.log("updated newTrackOptions", newTrackOptions);
         const newSelectedRows = selectRows(context.state[viewId][trackId].rowInfo, newTrackOptions);   // Use original rowInfo.
+        console.log("updated newSelectedRows", newSelectedRows);
 
         // Get new viewConfig with new selectedRows.
-        let newViewConfig = {
-            ...getViewConfigOfSpecificTrack(currViewConfig, viewId, trackId),
+        let newViewConfig = getViewConfigOfSpecificTrack(currViewConfig, viewId, trackId);
+        newViewConfig = {
+            ...newViewConfig,
             height: 200,
-            trackId: newTrackId,
-            selectedRows: newSelectedRows
+            uid: newTrackId,
+            options: {
+                ...newViewConfig.options,
+                selectRows: newSelectedRows
+            }
         }
         console.log("newViewConfig:", newViewConfig);
         
-        addNewTrack(viewId, newTrackId, newViewConfig);
+        addNewTrack(viewId, newViewConfig);
         setOptions(newOptions);
     }, [options]);
 

@@ -24,6 +24,7 @@ export function traverseViewConfig(viewConf, callback) {
                         for(let [trackI, track] of tracks.entries()) {
                             callback({
                                 viewI,
+                                track,
                                 viewId: view.uid,
                                 trackPos: tracksPos,
                                 trackI,
@@ -37,10 +38,12 @@ export function traverseViewConfig(viewConf, callback) {
                                     callback({ 
                                         viewI,
                                         viewId: view.uid,
+                                        track,
                                         trackPos: tracksPos,
                                         trackI,
                                         trackType: track.type, 
                                         trackId: track.uid, 
+                                        innerTrack,
                                         innerTrackI,
                                         innerTrackType: innerTrack.type, 
                                         innerTrackId: innerTrack.uid,
@@ -65,20 +68,25 @@ export function traverseViewConfig(viewConf, callback) {
  * @return {object} A part of HiGlass viewConfig object for a specific track.
  */
 export function getViewConfigOfSpecificTrack(viewConfig, viewId, trackId) {
-    return traverseViewConfig(viewConfig, (d) => {
-        if((d.trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC 
+    let newViewConfig = {};
+    traverseViewConfig(cloneDeep(viewConfig), (d) => {
+        // The horizontal-multivec track could be standalone, or within a "combined" track.
+        if(d.trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC 
             && d.viewId === viewId 
             && d.trackId === trackId
-            && d.trackOptions) || 
-            (d.trackType === TRACK_TYPE.COMBINED 
+        ) {
+            newViewConfig = d.track;
+            return;
+        } else if(d.trackType === TRACK_TYPE.COMBINED 
             && d.innerTrackType === TRACK_TYPE.HORIZONTAL_MULTIVEC 
             && d.viewId === viewId 
             && d.innerTrackId === trackId
-            && d.trackOptions)
         ) {
-            return d.trackOptions;
+            newViewConfig = cloneDd.innerTrack;
+            return;
         }
-    })
+    });
+    return newViewConfig;
 }
 
 /**
@@ -206,27 +214,25 @@ export function updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, 
  * @param {object} currViewConfig A valid higlass view config object.
  * @param {number[]} selectedRows The array of row indices, which will become the value of the track option.
  * @param {string} neighborViewId The view ID for the track of interest.
- * @param {string} neighborTrackId The track ID for the track of interest.
  * @returns {object} The new view config. 
  */
-export function addViewConfigForNewTrack(currViewConfig, viewConfigToAdd, neighborViewId, neighborTrackId) {
+export function addViewConfigForNewTrack(currViewConfig, viewConfigToAdd, neighborViewId) {
     const newViewConfig = cloneDeep(currViewConfig);
     let viewIndex = -1;
+    // Get view index.
     traverseViewConfig(currViewConfig, (d) => {
         // The horizontal-multivec track could be standalone, or within a "combined" track.
         if((d.trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC 
-            && d.viewId === neighborViewId 
-            && d.trackId === neighborTrackId) || 
+            && d.viewId === neighborViewId) || 
             (d.trackType === TRACK_TYPE.COMBINED 
             && d.innerTrackType === TRACK_TYPE.HORIZONTAL_MULTIVEC 
-            && d.viewId === neighborViewId 
-            && d.innerTrackId === neighborTrackId)
+            && d.viewId === neighborViewId)
         ) {
             viewIndex = d.viewI;
         }
     });
     if(viewIndex !== -1) {
-        newViewConfig.views[d.viewI].tracks["top"].push(viewConfigToAdd);
+        newViewConfig.views[viewIndex].tracks["top"].push(viewConfigToAdd);
     } else {
         console.log(`WARNING: The following track is not found (${neighborViewId}, ${neighborTrackId}).`);
     }
