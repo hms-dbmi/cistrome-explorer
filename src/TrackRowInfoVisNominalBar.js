@@ -9,7 +9,7 @@ import { drawVisTitle } from "./utils/vis.js";
 
 import TrackRowInfoControl from './TrackRowInfoControl.js';
 import { TooltipContent, destroyTooltip } from "./Tooltip.js";
-import { FILTER, HIGHLIGHTER } from './utils/icons.js';
+import { FILTER, HIGHLIGHTER, ARROW_UP, ARROW_DOWN } from './utils/icons.js';
 
 export const margin = 5;
 
@@ -24,6 +24,7 @@ export const margin = 5;
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  * @prop {string} titleSuffix The suffix of a title, information about sorting and filtering status.
+ * @prop {function} onAddTrack The function to call upon a track insertion.
  * @prop {function} onSortRows The function to call upon a sort interaction.
  * @prop {function} onSearchRows The function to call upon a search interaction.
  * @prop {function} onFilterRows The function to call upon a filter interaction.
@@ -37,6 +38,7 @@ export default function TrackRowInfoVisNominalBar(props) {
         rowInfo,
         transformedRowInfo,
         titleSuffix,
+        onAddTrack,
         onSortRows,
         onSearchRows,
         onFilterRows,
@@ -132,8 +134,8 @@ export default function TrackRowInfoVisNominalBar(props) {
     function onContextMenu(e){
         e.preventDefault();
         
-        const mouseViewportX = e.pageX;
-        const mouseViewportY = e.pageY;
+        const mouseViewportX = e.clientX;
+        const mouseViewportY = e.clientY;
 
         PubSub.publish(EVENT.CONTEXT_MENU, {
             x: mouseViewportX,
@@ -141,8 +143,10 @@ export default function TrackRowInfoVisNominalBar(props) {
             menuType: CONTEXT_MENU_TYPE.NOMINAL_BAR,
             title: `Selected category: ${hoverValue}`,
             items: [
-                { title: "Highlight rows", icon: HIGHLIGHTER, action: () => onSearchRows(field, "nominal", hoverValue) },
-                { title: "Filter rows", icon: FILTER, action: () => onFilterRows(field, "nominal", hoverValue) }
+                { title: "Highlight Rows", icon: HIGHLIGHTER, action: () => onSearchRows(field, "nominal", hoverValue) },
+                { title: "Filter Rows", icon: FILTER, action: () => onFilterRows(field, "nominal", hoverValue) },
+                { title: "Add Top Track with Selected Rows", icon: ARROW_UP, action: () => onAddTrack(field, "nominal", hoverValue, "top") },
+                { title: "Add Bottom Track with Selected Rows", icon: ARROW_DOWN, action: () => onAddTrack(field, "nominal", hoverValue, "bottom") }
             ]
         });    
     }

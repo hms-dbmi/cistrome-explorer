@@ -2,7 +2,7 @@ import merge from 'lodash/merge';
 import cloneDeep from 'lodash/cloneDeep';
 import omit from 'lodash/omit';
 import Ajv from 'ajv';
-import { insertItemToArray, modifyItemInArray } from './array.js'
+import { insertItemToArray } from './array.js'
 
 export const DEFAULT_OPTIONS_KEY = "default";
 
@@ -267,6 +267,32 @@ export function getTrackWrapperOptions(options, viewId, trackId) {
 }
 
 /**
+ * Add options for a specific track, using its viewId and trackId.
+ * @param {object} options A _processed_ options object.
+ * @param {object} optionsToAdd Options for a specific track.
+ * @param {string} viewId The viewId for the track of interest.
+ * @param {string} trackId The trackId for the track of interest.
+ */
+export function addTrackWrapperOptions(options, optionsToAdd, viewId, trackId) {
+    if(!options[viewId]) {
+        return {
+            ...options,
+            [viewId]: { 
+                [trackId]: optionsToAdd 
+            }
+        }
+    } else {
+        return {
+            ...options,
+            [viewId]: {
+                ...options[viewId], 
+                [trackId]: optionsToAdd
+            }
+        }
+    }
+}
+
+/**
  * Update options for a specific track, using its viewId and trackId.
  * @param {object} options A _processed_ options object to update.
  * @param {object} subOptions A sub-options object to replace or insert.
@@ -277,26 +303,24 @@ export function getTrackWrapperOptions(options, viewId, trackId) {
  * @returns {object} The options object for the track, or the default options object.
  */
 export function updateWrapperOptions(options, subOptions, key, viewId, trackId, { isReplace }) {
-    const _viewId = options[viewId] ? viewId : DEFAULT_OPTIONS_KEY;
-    if(_viewId === DEFAULT_OPTIONS_KEY) {
-        // Global defaults (1D array).
+    if(!options[viewId] || (options[viewId] && !options[viewId][trackId])) {
+        // Update global defaults if there is no track specific options.
         return {
             ...options,
-            [_viewId]: {
-                ...options[_viewId],
-                [key]: isReplace ? subOptions : insertItemToArray(options[_viewId][key], 0, subOptions)
+            [DEFAULT_OPTIONS_KEY]: {
+                ...options[DEFAULT_OPTIONS_KEY],
+                [key]: isReplace ? subOptions : insertItemToArray(options[viewId][key], 0, subOptions)
             }
         };
     } else {
-        // 2D array.
-        const _trackId = options[_viewId][trackId] ? trackId : DEFAULT_OPTIONS_KEY;
+        // Update track specific options.
         return {
             ...options,
-            [_viewId]: {
-                ...options[_viewId],
-                [_trackId]: {
-                    ...options[_viewId][_trackId],
-                    [key]: isReplace ? subOptions : insertItemToArray(options[_viewId][_trackId][key], 0, subOptions)
+            [viewId]: {
+                ...options[viewId],
+                [trackId]: {
+                    ...options[viewId][trackId],
+                    [key]: isReplace ? subOptions : insertItemToArray(options[viewId][trackId][key], 0, subOptions)
                 }
             }
         };

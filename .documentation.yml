@@ -29,11 +29,14 @@ toc:
 - getTrackWrapperOptions
 - getRetinaRatio
 - traverseViewConfig
+- getViewConfigOfSpecificTrack
 - getHMTrackIdsFromViewConfig
 - getSiblingVPHTrackIdsFromViewConfig
 - updateViewConfigOnSelectGenomicInterval
+- addViewConfigForNewTrack
 - updateViewConfigOnSelectRowsByTrack
 - getHMSelectedRowsFromViewConfig
+- getUniqueViewOrTrackId
 - getAllViewAndTrackPairs
 - resolveIntervalCoordinates
 - selectRows

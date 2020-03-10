@@ -14,17 +14,23 @@ import ContextMenu, { destroyContextMenu } from './ContextMenu.js';
 import { 
     processWrapperOptions, 
     getTrackWrapperOptions,
-    updateWrapperOptions
+    updateWrapperOptions,
+    DEFAULT_OPTIONS_KEY,
+    addTrackWrapperOptions
 } from './utils/options.js';
 import { 
     getHMTrackIdsFromViewConfig, 
     getSiblingVPHTrackIdsFromViewConfig,
     updateViewConfigOnSelectGenomicInterval,
     updateViewConfigOnSelectRowsByTrack,
-    getHMSelectedRowsFromViewConfig
+    getHMSelectedRowsFromViewConfig,
+    getUniqueViewOrTrackId,
+    getTrackDefFromViewConfig,
+    addTrackDefToViewConfig
 } from './utils/viewconf.js';
 
 import './CistromeHGWConsumer.scss';
+import cloneDeep from 'lodash/cloneDeep';
 
 higlassRegister({
     name: 'StackedBarTrack',
@@ -122,6 +128,14 @@ export default function CistromeHGWConsumer(props) {
         }
     }, [hgRef]);
 
+    const addNewTrack = useCallback((trackDef, viewId, position) => {
+        const currViewConfig = hgRef.current.api.getViewConfig();
+        const newViewConfig = addTrackDefToViewConfig(currViewConfig, trackDef, viewId, position);
+        hgRef.current.api.setViewConfig(newViewConfig).then(() => {
+            onViewConfig(newViewConfig);
+        });
+    }, [hgRef]);
+
     const setTrackSelectedRows = useCallback((viewId, trackId, selectedRows) => {
         const currViewConfig = hgRef.current.api.getViewConfig();
         const newViewConfig = updateViewConfigOnSelectRowsByTrack(currViewConfig, selectedRows, viewId, trackId);
@@ -151,7 +165,7 @@ export default function CistromeHGWConsumer(props) {
         
         const trackOptions = getTrackWrapperOptions(newOptions, viewId, trackId);
         const newSelectedRows = selectRows(context.state[viewId][trackId].rowInfo, trackOptions);
-
+        
         setTrackSelectedRows(viewId, trackId, newSelectedRows);
         setOptions(newOptions);
     }, [options]);
@@ -181,6 +195,46 @@ export default function CistromeHGWConsumer(props) {
 
         setHighlitRows(viewId, trackId, undefined);
         setTrackSelectedRows(viewId, trackId, newSelectedRows);
+        setOptions(newOptions);
+    }, [options]);
+
+    // Callback function for adding a track.
+    const onAddTrack = useCallback((viewId, trackId, field, type, contains, position) => {
+        if(viewId === DEFAULT_OPTIONS_KEY || trackId === DEFAULT_OPTIONS_KEY) {
+            console.log("A view or track ID is a default ID.");
+            return;
+        }
+        const newRowFilter = { field, type, contains };
+        const currViewConfig = hgRef.current.api.getViewConfig();
+        const newTrackId = getUniqueViewOrTrackId(currViewConfig, { 
+            baseId: trackId, 
+            idKey: "trackId", 
+            interfix: "detail-view"
+        });
+        
+        // Add options for the new track.
+        const trackOptionsCopy = cloneDeep(getTrackWrapperOptions(options, viewId, trackId));
+        let newOptions = addTrackWrapperOptions(options, trackOptionsCopy, viewId, newTrackId);
+
+        // Add filter options.
+        newOptions = updateWrapperOptions(newOptions, newRowFilter, "rowFilter", viewId, newTrackId, { isReplace: false });
+
+        // Get new selectedRows for the new viewConfig.
+        const newTrackOptions = getTrackWrapperOptions(newOptions, viewId, newTrackId);
+        const newSelectedRows = selectRows(context.state[viewId][trackId].rowInfo, newTrackOptions);   // Use original rowInfo.
+
+        // Get new viewConfig with new selectedRows.
+        let newTrackDef = getTrackDefFromViewConfig(currViewConfig, viewId, trackId);
+        newTrackDef = {
+            ...newTrackDef,
+            height: 200,
+            uid: newTrackId,
+            options: {
+                ...newTrackDef.options,
+                selectRows: newSelectedRows
+            }
+        }
+        addNewTrack(newTrackDef, viewId, position);
         setOptions(newOptions);
     }, [options]);
 
@@ -246,6 +300,9 @@ export default function CistromeHGWConsumer(props) {
                             onViewConfig(newViewConfig);
                         });
                     }}
+                    onAddTrack={(field, type, contains, position) => {
+                        onAddTrack(viewId, trackId, field, type, contains, position);
+                    }} 
                     onSortRows={(field, type, order) => {
                         onSortRows(viewId, trackId, field, type, order);
                     }}

@@ -23,6 +23,7 @@ export function traverseViewConfig(viewConf, callback) {
                         for(let [trackI, track] of tracks.entries()) {
                             callback({
                                 viewI,
+                                track,
                                 viewId: view.uid,
                                 trackPos: tracksPos,
                                 trackI,
@@ -36,10 +37,12 @@ export function traverseViewConfig(viewConf, callback) {
                                     callback({ 
                                         viewI,
                                         viewId: view.uid,
+                                        track,
                                         trackPos: tracksPos,
                                         trackI,
                                         trackType: track.type, 
                                         trackId: track.uid, 
+                                        innerTrack,
                                         innerTrackI,
                                         innerTrackType: innerTrack.type, 
                                         innerTrackId: innerTrack.uid,
@@ -54,6 +57,35 @@ export function traverseViewConfig(viewConf, callback) {
             }
         }
     }
+}
+
+/**
+ * Get a track definition from a higlass viewConfig object.
+ * @param {object} viewConf A valid HiGlass viewConfig object.
+ * @param {string} viewId The uid of view containing the `horizontal-multivec` track that was the target of the action.
+ * @param {string} trackId The uid of the `horizontal-multivec` track that was the target of the action. 
+ * @return {object} A part of HiGlass viewConfig object for a specific track.
+ */
+export function getTrackDefFromViewConfig(viewConfig, viewId, trackId) {
+    let newViewConfig = {};
+    traverseViewConfig(cloneDeep(viewConfig), (d) => {
+        // The horizontal-multivec track could be standalone, or within a "combined" track.
+        if(d.trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC 
+            && d.viewId === viewId 
+            && d.trackId === trackId
+        ) {
+            newViewConfig = d.track;
+            return;
+        } else if(d.trackType === TRACK_TYPE.COMBINED 
+            && d.innerTrackType === TRACK_TYPE.HORIZONTAL_MULTIVEC 
+            && d.viewId === viewId 
+            && d.innerTrackId === trackId
+        ) {
+            newViewConfig = d.innerTrack;
+            return;
+        }
+    });
+    return newViewConfig;
 }
 
 /**
@@ -144,6 +176,37 @@ export function updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, 
 }
 
 /**
+ * Add a track definitaion object to a higlass view config object.
+ * @param {object} currViewConfig A valid higlass view config object.
+ * @param {object} trackDef A track definition object.
+ * @param {string} targetViewId The view ID for the track of interest.
+ * @param {string} position The target position of the track, such as "top" or "bottom".
+ * @returns {object} The new view config. 
+ */
+export function addTrackDefToViewConfig(currViewConfig, trackDef, targetViewId, position) {
+    const newViewConfig = cloneDeep(currViewConfig);
+    let viewIndex = -1;
+    // Get view index.
+    traverseViewConfig(currViewConfig, (d) => {
+        // The horizontal-multivec track could be standalone, or within a "combined" track.
+        if((d.trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC 
+            && d.viewId === targetViewId) || 
+            (d.trackType === TRACK_TYPE.COMBINED 
+            && d.innerTrackType === TRACK_TYPE.HORIZONTAL_MULTIVEC 
+            && d.viewId === targetViewId)
+        ) {
+            viewIndex = d.viewI;
+        }
+    });
+    if(viewIndex !== -1) {
+        newViewConfig.views[viewIndex].tracks[position].push(trackDef);
+    } else {
+        console.log(`WARNING: The following track is not found (${targetViewId}, ${neighborTrackId}).`);
+    }
+    return newViewConfig;
+}
+
+/**
  * Set the `selectRows` option for a particular track, and return the updated view config object.
  * @param {object} currViewConfig A valid higlass view config object.
  * @param {number[]} selectedRows The array of row indices, which will become the value of the track option.
@@ -196,6 +259,42 @@ export function getHMSelectedRowsFromViewConfig(viewConfig, targetViewId, target
         }
     });
     return selectedRows;
+}
+
+/**
+ * Get a unique viewId and trackId by referring a viewConfig.
+ * @param {object} viewConfig A valid higlass view config object.
+ * @param {(string|null)} baseId The base Id to make a new unique ID.
+ * @param {(string|null)} idKey Either "viewId" or "trackId".
+ * @param {(string|null)} interfix A prefered interfix to use for the new IDs.
+ * @return {string} A new unique Id, formated as "{basedId}[-{interfix}]-{number}" or 
+ *                  just a random string when baseId is not provided.
+ */
+export function getUniqueViewOrTrackId(viewConfig, { baseId, idKey, interfix }) {
+    let newId = baseId;
+    if(!baseId) {
+        // TODO: Generate UID with a random string.
+        //
+    } else {
+        if(interfix) {
+            // Append suffix.
+            newId = `${newId}-${interfix}`;
+        }
+        let isNotUnique = true, suffixNum = 1;
+        const MAX_ITER = 100;
+        while(isNotUnique || suffixNum > MAX_ITER) {
+            // Search until we find a unique id.
+            isNotUnique = false;
+            traverseViewConfig(viewConfig, (d) => {
+                if(d[idKey] === `${newId}-${suffixNum}`) {
+                    isNotUnique = true;
+                }
+            })
+            suffixNum++;
+        }
+        newId += `-${(suffixNum - 1)}`;
+    }
+    return newId;
 }
 
 /**

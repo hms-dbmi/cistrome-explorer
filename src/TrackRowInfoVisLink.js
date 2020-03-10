@@ -21,6 +21,7 @@ const margin = 5;
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  * @prop {string} titleSuffix The suffix of a title, information about sorting and filtering status.
+ * @prop {function} onAddTrack The function to call upon a track insertion.
  * @prop {function} onSortRows The function to call upon a sort interaction.
  * @prop {function} onSearchRows The function to call upon a search interaction.
  * @prop {function} onFilterRows The function to call upon a filter interaction.
@@ -33,6 +34,7 @@ export default function TrackRowInfoVisLink(props) {
         isLeft,
         transformedRowInfo,
         titleSuffix,
+        onAddTrack,
         onSortRows,
         onSearchRows,
         onFilterRows,

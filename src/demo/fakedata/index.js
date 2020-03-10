@@ -5,7 +5,12 @@
 import rowInfo1 from './cistrome-track-1/rowInfo.json';
 import rowInfo2 from './cistrome-track-2/rowInfo.json';
 
-export default {
+const _fakedata = {
+    "default": {
+        tilesetInfo: {
+            rowInfo: rowInfo1
+        }
+    },
     "cistrome-track-1": {
         tilesetInfo: {
             rowInfo: rowInfo1
@@ -52,3 +57,10 @@ export default {
         }
     },
 };
+
+export default new Proxy(_fakedata, {
+    get: function(data, key) {
+        // Get default data when key is not provided.
+        return data.hasOwnProperty(key) ? data[key] : data["default"];
+    }
+});
