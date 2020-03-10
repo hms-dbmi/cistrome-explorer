@@ -20,7 +20,7 @@
           "autocompleteServer": "http://higlass.io/api/v1",
           "chromInfoServer": "http://higlass.io/api/v1",
           "visible": true,
-          "chromInfoId": "hg19"
+          "chromInfoId": "hg38"
         },
         "tracks": {
           "top": [
