@@ -60,13 +60,13 @@ export function traverseViewConfig(viewConf, callback) {
 }
 
 /**
- * Get a HiGlass viewConfig object for a specific track.
+ * Get a track definition from a higlass viewConfig object.
  * @param {object} viewConf A valid HiGlass viewConfig object.
  * @param {string} viewId The uid of view containing the `horizontal-multivec` track that was the target of the action.
  * @param {string} trackId The uid of the `horizontal-multivec` track that was the target of the action. 
  * @return {object} A part of HiGlass viewConfig object for a specific track.
  */
-export function getViewConfigOfSpecificTrack(viewConfig, viewId, trackId) {
+export function getTrackDefFromViewConfig(viewConfig, viewId, trackId) {
     let newViewConfig = {};
     traverseViewConfig(cloneDeep(viewConfig), (d) => {
         // The horizontal-multivec track could be standalone, or within a "combined" track.
@@ -209,14 +209,14 @@ export function updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, 
 }
 
 /**
- * Add a config object of a new track in a higlass view config object.
+ * Add a track definitaion object to a higlass view config object.
  * @param {object} currViewConfig A valid higlass view config object.
- * @param {object} viewConfigToAdd A valid config object of a new track.
+ * @param {object} trackDef A track definition object.
  * @param {string} targetViewId The view ID for the track of interest.
  * @param {string} position The target position of the track, such as "top" or "bottom".
  * @returns {object} The new view config. 
  */
-export function addViewConfigForNewTrack(currViewConfig, viewConfigToAdd, targetViewId, position) {
+export function addTrackDefToViewConfig(currViewConfig, trackDef, targetViewId, position) {
     const newViewConfig = cloneDeep(currViewConfig);
     let viewIndex = -1;
     // Get view index.
@@ -232,7 +232,7 @@ export function addViewConfigForNewTrack(currViewConfig, viewConfigToAdd, target
         }
     });
     if(viewIndex !== -1) {
-        newViewConfig.views[viewIndex].tracks[position].push(viewConfigToAdd);
+        newViewConfig.views[viewIndex].tracks[position].push(trackDef);
     } else {
         console.log(`WARNING: The following track is not found (${targetViewId}, ${neighborTrackId}).`);
     }

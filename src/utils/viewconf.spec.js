@@ -8,8 +8,8 @@ import {
     updateViewConfigOnSelectRowsByTrack,
     getHMSelectedRowsFromViewConfig,
     getAllViewAndTrackPairs,
-    addViewConfigForNewTrack,
-    getViewConfigOfSpecificTrack,
+    addTrackDefToViewConfig,
+    getTrackDefFromViewConfig,
     getUniqueViewOrTrackId
 } from './viewconf.js';
 
@@ -33,14 +33,14 @@ describe('Utilities for processing higlass view config objects', () => {
     });
 
     it('Should get a view config of a specific track', () => {
-        const viewConfig = getViewConfigOfSpecificTrack(hgDemoViewConfig1, "cistrome-view-1", "cistrome-track-1");
+        const viewConfig = getTrackDefFromViewConfig(hgDemoViewConfig1, "cistrome-view-1", "cistrome-track-1");
         expect(viewConfig.tilesetUid == "UvVPeLHuRDiYA3qwFlm7xQ").toEqual(true);
         expect(viewConfig.options.name == "my_file_genome_wide.multires.mv5").toEqual(true);
     });
 
     it('Should add a view config of a specific track in top position', () => {
-        const viewConfigToAdd = getViewConfigOfSpecificTrack(hgDemoViewConfig1, "cistrome-view-1", "cistrome-track-1");
-        const newViewConfig = addViewConfigForNewTrack(hgDemoViewConfig1, viewConfigToAdd, "cistrome-view-1", "top");
+        const viewConfigToAdd = getTrackDefFromViewConfig(hgDemoViewConfig1, "cistrome-view-1", "cistrome-track-1");
+        const newViewConfig = addTrackDefToViewConfig(hgDemoViewConfig1, viewConfigToAdd, "cistrome-view-1", "top");
         expect(newViewConfig.views[0].tracks.top.length - hgDemoViewConfig1.views[0].tracks.top.length).toEqual(1);
     });
 

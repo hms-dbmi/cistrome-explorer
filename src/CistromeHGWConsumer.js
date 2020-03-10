@@ -25,8 +25,8 @@ import {
     updateViewConfigOnSelectRowsByTrack,
     getHMSelectedRowsFromViewConfig,
     getUniqueViewOrTrackId,
-    getViewConfigOfSpecificTrack,
-    addViewConfigForNewTrack
+    getTrackDefFromViewConfig,
+    addTrackDefToViewConfig
 } from './utils/viewconf.js';
 
 import './CistromeHGWConsumer.scss';
@@ -128,9 +128,9 @@ export default function CistromeHGWConsumer(props) {
         }
     }, [hgRef]);
 
-    const addNewTrack = useCallback((viewConfigToAdd, viewId, position) => {
+    const addNewTrack = useCallback((trackDef, viewId, position) => {
         const currViewConfig = hgRef.current.api.getViewConfig();
-        const newViewConfig = addViewConfigForNewTrack(currViewConfig, viewConfigToAdd, viewId, position);
+        const newViewConfig = addTrackDefToViewConfig(currViewConfig, trackDef, viewId, position);
         hgRef.current.api.setViewConfig(newViewConfig).then(() => {
             onViewConfig(newViewConfig);
         });
@@ -224,17 +224,17 @@ export default function CistromeHGWConsumer(props) {
         const newSelectedRows = selectRows(context.state[viewId][trackId].rowInfo, newTrackOptions);   // Use original rowInfo.
 
         // Get new viewConfig with new selectedRows.
-        let newViewConfig = getViewConfigOfSpecificTrack(currViewConfig, viewId, trackId);
-        newViewConfig = {
-            ...newViewConfig,
+        let newTrackDef = getTrackDefFromViewConfig(currViewConfig, viewId, trackId);
+        newTrackDef = {
+            ...newTrackDef,
             height: 200,
             uid: newTrackId,
             options: {
-                ...newViewConfig.options,
+                ...newTrackDef.options,
                 selectRows: newSelectedRows
             }
         }
-        addNewTrack(newViewConfig, viewId, position);
+        addNewTrack(newTrackDef, viewId, position);
         setOptions(newOptions);
     }, [options]);
 
