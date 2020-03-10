@@ -109,30 +109,17 @@ export function getHMTrackIdsFromViewConfig(viewConf) {
 /**
  * This function finds the `viewport-projection-horizontal` tracks that are siblings of a particular target track.
  * @param {object} viewConf A valid HiGlass viewConfig object.
- * @param {string} targetTrackId The `uid` of the track to target.
- * @returns {object[]} Array containing `{ viewId, trackId, ... }` for each sibling `viewport-projection-horizontal` track.
+ * @param {string} targetViewId The `uid` of the view that is the parent of the track to target.
+ * @returns {object[]} Array containing `{ viewId, trackId }` for each sibling `viewport-projection-horizontal` track.
  */
-export function getSiblingVPHTrackIdsFromViewConfig(viewConf, targetTrackId) {
-    const potentialMatches = {};
-    traverseViewConfig(viewConf, ({ viewId, trackType, trackId, innerTrackType, innerTrackId }) => {
-        if(trackType === TRACK_TYPE.COMBINED) {
-            if(!innerTrackType) {
-                potentialMatches[trackId] = {
-                    match: false,
-                    siblingIds: []
-                };
-            } else if(innerTrackType === TRACK_TYPE.VIEWPORT_PROJECTION_HORIZONTAL) {
-                potentialMatches[trackId].siblingIds.push({ viewId, trackId: innerTrackId, combinedTrackId: trackId });
-            } else if(innerTrackId === targetTrackId) {
-                potentialMatches[trackId].match = true;
-            }
+export function getSiblingVPHTrackIdsFromViewConfig(viewConf, targetViewId) {
+    const matches = [];
+    traverseViewConfig(viewConf, ({ viewId, trackPos, trackType, trackId }) => {
+        if(viewId === targetViewId && trackPos === 'whole' && trackType === TRACK_TYPE.VIEWPORT_PROJECTION_HORIZONTAL) {
+            matches.push({ viewId, trackId });
         }
     });
-    const matchObj = Object.values(potentialMatches).find(d => d.match);
-    if(matchObj) {
-        return matchObj.siblingIds;
-    }
-    return [];
+    return matches;
 }
 
 /**
@@ -140,66 +127,46 @@ export function getSiblingVPHTrackIdsFromViewConfig(viewConf, targetTrackId) {
  * @param {object} currViewConfig The current HiGlass view config.
  * @param {string} viewId The uid of view containing the `horizontal-multivec` track that was the target of the action.
  * @param {string} trackId The uid of the `horizontal-multivec` track that was the target of the action.
- * @param {boolean} [addView=false] Whether or not to add the projection as a new view. If true, also updates view widths and x-offsets.
  * @returns {object} The updated HiGlass view config.
  */
-export function updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, trackId, addView = false) {
+export function updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, trackId) {
     const newViewConfig = cloneDeep(currViewConfig);
 
     // Find the view associated with this viewId.
     const foundViewIndex = newViewConfig.views.findIndex(v => v.uid === viewId);
     const foundView = newViewConfig.views[foundViewIndex];
-
-    if(addView) {
-        foundView.layout.w = Math.max(1, (foundView.layout.w / 2) - 1);
-    }
     
     // Find the track object.
-    let foundTrack;
     for(let [tracksPos, tracks] of Object.entries(foundView.tracks)) {
         if(Array.isArray(tracks)) {
             for(let [i, track] of tracks.entries()) {
-                if(track.type === TRACK_TYPE.HORIZONTAL_MULTIVEC && track.uid === trackId) {
-                    foundTrack = track;
+                if(track.uid === trackId) {
+                    const newView = foundView;
 
-                    const newView = cloneDeep(foundView);
-                    if(addView) {
-                        // Need view.uid values to be unique.
-                        newView.uid += uuidv4();
+                    const xRange = newView.initialXDomain[1] - newView.initialXDomain[0];
+                    const xDomain = [
+                        newView.initialXDomain[0] + xRange/4,
+                        newView.initialXDomain[1] - xRange/4
+                    ];
+
+                    const newProjectionTrackDef = {
+                        type: TRACK_TYPE.VIEWPORT_PROJECTION_HORIZONTAL,
+                        uid: newView.uid + uuidv4(),
+                        fromViewUid: null,
+                        projectionXDomain: xDomain,
+                        options: {
+                            projectionFillColor: "#777",
+                            projectionStrokeColor: "#777",
+                            projectionFillOpacity: 0.3,
+                            projectionStrokeOpacity: 0.7,
+                            strokeWidth: 1
+                        }
                     }
-                    const newTrackInner = cloneDeep(foundTrack);
-
-                    newView.tracks[tracksPos][i] = {
-                        type: TRACK_TYPE.COMBINED,
-                        uid: newTrackInner.uid + "-combined",
-                        height: newTrackInner.height,
-                        width: newTrackInner.width,
-                        contents: [
-                            newTrackInner,
-                            {
-                                uid: newTrackInner.uid + "-col-projection",
-                                type: TRACK_TYPE.VIEWPORT_PROJECTION_HORIZONTAL,
-                                fromViewUid: viewId,
-                                options: {
-                                    projectionFillColor: "#777",
-                                    projectionStrokeColor: "#777",
-                                    projectionFillOpacity: 0.3,
-                                    projectionStrokeOpacity: 0.7,
-                                    strokeWidth: 1
-                                }
-                            }
-                        ]
-                    };
-
+                    if(!newView.tracks['whole']) {
+                        newView.tracks['whole'] = [];
+                    }
+                    newView.tracks['whole'].push(newProjectionTrackDef);
                     newViewConfig.views[foundViewIndex] = newView;
-
-                    if(addView) {
-                        foundView.layout.x = newView.layout.w + 1;
-                        newViewConfig.views.push(foundView);
-                    }
-                } else if(track.type === TRACK_TYPE.COMBINED) {
-                    // We currently do not need to handle this case, but may want to in the future, 
-                    // to allow multiple interval selections per `horizontal-multivec` track.
                 }
             }
         }

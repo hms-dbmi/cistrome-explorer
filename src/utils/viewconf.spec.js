@@ -60,23 +60,18 @@ describe('Utilities for processing higlass view config objects', () => {
 
         expect(newViewConfig.views.length).toEqual(1);
         expect(newViewConfig.views[0].tracks.center.length).toEqual(1);
-        expect(newViewConfig.views[0].uid).toEqual("cistrome-view-1");
-        expect(newViewConfig.views[0].tracks.center[0].type).toEqual("combined");
-        expect(newViewConfig.views[0].tracks.center[0].contents.length).toEqual(2);
-        expect(newViewConfig.views[0].tracks.center[0].contents[0].type).toEqual("horizontal-multivec");
-        expect(newViewConfig.views[0].tracks.center[0].contents[0].uid).toEqual("cistrome-track-1");
-        expect(newViewConfig.views[0].tracks.center[0].contents[1].type).toEqual("viewport-projection-horizontal");
-        expect(newViewConfig.views[0].tracks.center[0].contents[1].uid).toEqual("cistrome-track-1-col-projection");
+        expect(newViewConfig.views[0].tracks.whole.length).toEqual(1);
+        expect(newViewConfig.views[0].tracks.whole[0].type).toEqual("viewport-projection-horizontal");
+        expect(newViewConfig.views[0].tracks.whole[0].fromViewUid).toEqual(null);
     });
 
     it('Should find all viewport-projection-horizontal track siblings of a particular horizontal-multivec track', () => {
-        const siblingTrackIds = getSiblingVPHTrackIdsFromViewConfig(hgDemoViewConfig3, "cistrome-track-1");
+        const siblingTrackIds = getSiblingVPHTrackIdsFromViewConfig(hgDemoViewConfig3, "cistrome-view-1");
         expect(siblingTrackIds.length).toEqual(1);
-        expect(siblingTrackIds[0].viewId).toEqual("cistrome-view-1-with-col-projection");
-        expect(siblingTrackIds[0].trackId).toEqual("cistrome-track-1-col-projection");
-        expect(siblingTrackIds[0].combinedTrackId).toEqual("cistrome-track-1-combined");
+        expect(siblingTrackIds[0].viewId).toEqual("cistrome-view-1");
+        expect(siblingTrackIds[0].trackId).toEqual("cistrome-view-1-projection-track-1");
 
-        const siblingTrackIdsEmpty = getSiblingVPHTrackIdsFromViewConfig(hgDemoViewConfig3, "some-unknown-track");
+        const siblingTrackIdsEmpty = getSiblingVPHTrackIdsFromViewConfig(hgDemoViewConfig3, "some-unknown-view");
         expect(siblingTrackIdsEmpty.length).toEqual(0);
     });
 

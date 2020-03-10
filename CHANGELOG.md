@@ -18,6 +18,9 @@
 - Fixed bug which prevented wrapper options for sorting, filtering, highlighting from being used upon initial component render.
 - Added resizer elements to their containers and used `d3-drag` for the mouse events.
 - Compute color scale for the `TrackRowInfoVisNominalBar` categorical value visualization based on the full `rowInfo` rather than `transformedRowInfo` so that the original color mapping is kept after row filtering events.
+- Fixed the genomic interval selection behavior to reflect the support for `fromViewUid: null` for `viewport-projection-horizontal` tracks (new in HiGlass 1.9.0).
+- Set the `horizontal-multivec` track `zeroValueColor` option to demonstrate the feature (new in HiGlass 1.9.0).
+- Enabled multiple genomic interval selections for a view.
 
 
 ## 0.1.0 - 02/19/20
