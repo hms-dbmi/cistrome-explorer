@@ -15,12 +15,12 @@
           2669832509.996859,
           2672092117.9606247
         ],
+        "genomePositionSearchBoxVisible": true,
         "genomePositionSearchBox": {
-          "autocompleteServer": "//higlass.io/api/v1",
-          "autocompleteId": "OHJakQICQD6gTD7skx4EWA",
-          "chromInfoServer": "//higlass.io/api/v1",
-          "chromInfoId": "hg19",
-          "visible": true
+          "autocompleteServer": "http://higlass.io/api/v1",
+          "chromInfoServer": "http://higlass.io/api/v1",
+          "visible": true,
+          "chromInfoId": "hg38"
         },
         "tracks": {
           "top": [
