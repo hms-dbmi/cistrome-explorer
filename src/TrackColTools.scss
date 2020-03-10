@@ -1,13 +1,22 @@
 .col-tools {
+    cursor: ew-resize;
+    margin-top: 4px;
+    pointer-events: all;
+    background: #e5e5e5;
+    border-radius: 2px;
     display: block;
+    position: absolute;
     box-sizing: border-box;
-    border: 0px solid gray;
     height: 100%;
     width: 100%;
-    text-align: center;
-    pointer-events: none;
-}
-
-.col-tools-target {
-    pointer-events: auto;
+    .col-tools-column-info {
+        border-left: 1px solid #686868;
+        height: 100%;
+        width: 1px;
+        display: block;
+        position: absolute;
+    }
+    .col-tools-chr-info {
+        position: absolute;
+    }
 }

@@ -1,5 +1,5 @@
-import React from 'react';
-
+import React, { useRef, useState, useEffect } from 'react';
+import d3 from './utils/d3.js';
 import TrackColSelectionInfo from './TrackColSelectionInfo.js';
 
 import './TrackColTools.scss';
@@ -21,6 +21,7 @@ import './TrackColTools.scss';
 export default function TrackColTools(props) {
 
     const {
+        multivecTrack,
         trackX, trackY, 
         trackWidth, trackHeight,
         trackAssembly,
@@ -37,10 +38,14 @@ export default function TrackColTools(props) {
         return null;
     }
 
+    const ref = useRef();
+    const [mouseX, setMouseX] = useState(null);
+    const [mouseChrX, setMouseChrX] = useState(null);
+
     const isTop = (colToolsPosition === "top");
     const left = trackX;
     const width = trackWidth;
-    const height = 70;
+    const height = 30;
 
     let top;
     if(colToolsPosition === "top") {
@@ -49,6 +54,28 @@ export default function TrackColTools(props) {
         top = trackY + trackHeight;
     }
     
+    useEffect(() => {
+        const div = ref.current;
+
+        d3.select(div).on("mousemove", () => {
+            const [mouseX, mouseY] = d3.mouse(div);
+
+            // TODO: Remove this.
+            console.log(multivecTrack);
+
+            // TODO: Change this to the actual chr position.
+            const xAbsPos = multivecTrack._xScale.invert(mouseX);
+
+            setMouseX(mouseX);
+            setMouseChrX(xAbsPos);
+        });
+        // TODO: uncomment when ready to release
+        // d3.select(div).on("mouseleave", () => {
+        //     setMouseX(null);
+        //     setMouseChrX(null);
+        // });
+    });
+
     return (
         <div
             style={{
@@ -60,7 +87,21 @@ export default function TrackColTools(props) {
                 position: "absolute"
             }}
         >
-            <div className="col-tools">
+            <div className="col-tools" ref={ref}>
+                {mouseX ? 
+                    <div className="col-tools-column-info" style={{
+                        left: `${mouseX}px`
+                    }}/>
+                    : null}
+                {mouseChrX ? 
+                    <div className="col-tools-chr-info" style={{
+                        left: `${mouseX + 16}px`,
+                        lineHeight: `${height}px`
+                    }}>
+                        {(+mouseChrX.toFixed()).toLocaleString("en")}
+                    </div>
+                    : null}
+                {/* TODO: Remove Code Below when ready to release */}
                 <button 
                     className="col-tools-target"
                     onClick={onSelectGenomicInterval}

@@ -27,8 +27,7 @@ const demos = {
             rowSort: [
                 {field: "Cell Type", type: "nominal", order: "ascending"}
             ],
-            rowFilter: [],
-            rowHighlight: {field: "Cell Type", type: "nominal", contains: "Stem"}
+            rowFilter: []
         }
     },
     "H3K27ac Demo (2 Views, Center Tracks)": {

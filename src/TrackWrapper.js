@@ -159,6 +159,8 @@ export default function TrackWrapper(props) {
                 />) : null}
             {options.colToolsPosition !== "hidden" ? 
                 (<TrackColTools
+                    // TODO: Ultimately, remove this and add only the required variables.
+                    multivecTrack={multivecTrack}
                     trackX={trackX}
                     trackY={trackY}
                     trackHeight={trackHeight}
