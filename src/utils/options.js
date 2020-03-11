@@ -309,7 +309,7 @@ export function updateWrapperOptions(options, subOptions, key, viewId, trackId, 
             ...options,
             [DEFAULT_OPTIONS_KEY]: {
                 ...options[DEFAULT_OPTIONS_KEY],
-                [key]: isReplace ? subOptions : insertItemToArray(options[viewId][key], 0, subOptions)
+                [key]: isReplace ? subOptions : insertItemToArray(options[DEFAULT_OPTIONS_KEY][key], 0, subOptions)
             }
         };
     } else {

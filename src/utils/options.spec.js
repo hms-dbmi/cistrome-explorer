@@ -3,6 +3,7 @@
 import { 
     validateWrapperOptions, 
     processWrapperOptions,
+    addTrackWrapperOptions,
     updateWrapperOptions,
     getTrackWrapperOptions,
     DEFAULT_OPTIONS_KEY 
@@ -127,61 +128,60 @@ describe('Utilities for processing wrapper component options', () => {
         expect(processedOptions.viewB.default.colToolsPosition).toEqual("hidden");
     });
 
-    it('Should add sorting options to global default', () => {
-        const processedOptions = processWrapperOptions([
+    it('Should add track options in wrapper options', () => {
+        const updatedOptionsAC = addTrackWrapperOptions(
             {
-                viewId: DEFAULT_OPTIONS_KEY,
-                trackId: DEFAULT_OPTIONS_KEY,
-                colToolsPosition: "bottom"
+                [DEFAULT_OPTIONS_KEY]: { colToolsPosition: "top" },
+                viewA: { trackA: { colToolsPosition: "top" } },
+                viewC: { [DEFAULT_OPTIONS_KEY]: { colToolsPosition: "top" } }
             },
-            {
-                viewId: "viewA",
-                trackId: DEFAULT_OPTIONS_KEY,
-                colToolsPosition: "top"
-            }
-        ]);
-        const updatedOptions = updateWrapperOptions(
-            processedOptions,
-            [{
-                field: "groupA",
-                type: "nominal",
-                order: "ascending"
-            }],
-            "rowSort",
-            DEFAULT_OPTIONS_KEY,
-            DEFAULT_OPTIONS_KEY,
-            { isReplace: true }
-        );
-        const globalDefaultOptions = updatedOptions[DEFAULT_OPTIONS_KEY];
-        expect(globalDefaultOptions.rowSort.length).toBe(1);
-        expect(globalDefaultOptions.rowSort[0].field).toBe("groupA");
-        expect(globalDefaultOptions.rowSort[0].type).toBe("nominal");
-        expect(globalDefaultOptions.rowSort[0].order).toBe("ascending");
-    });
-
-    it('Should add sorting options to global default when there is no track-specific options', () => {
-        const processedOptions = processWrapperOptions([
-            {
-                viewId: DEFAULT_OPTIONS_KEY,
-                trackId: DEFAULT_OPTIONS_KEY,
-                colToolsPosition: "bottom"
-            },
-            {
-                viewId: "viewA",
-                trackId: DEFAULT_OPTIONS_KEY,
-                colToolsPosition: "top"
-            }
-        ]);
-        const updatedOptions = updateWrapperOptions(
-            processedOptions,
-            [{
-                field: "groupA",
-                type: "nominal",
-                order: "ascending"
-            }],
-            "rowSort",
+            { colToolsPosition: "hidden" },
             "viewA",
-            "trackA",
+            "trackC"
+        );
+        expect(updatedOptionsAC.viewA.trackC.colToolsPosition).toBe("hidden");
+        const updatedOptionsZZ = addTrackWrapperOptions(
+            {
+                [DEFAULT_OPTIONS_KEY]: { colToolsPosition: "top" },
+                viewA: { trackA: { colToolsPosition: "top" } },
+                viewC: { [DEFAULT_OPTIONS_KEY]: { colToolsPosition: "top" } }
+            },
+            { colToolsPosition: "hidden" },
+            "viewZ",
+            "trackZ"
+        );
+        expect(updatedOptionsZZ.viewZ.trackZ.colToolsPosition).toBe("hidden");
+        const updatedOptionsAA = addTrackWrapperOptions(
+            {
+                [DEFAULT_OPTIONS_KEY]: { colToolsPosition: "top" },
+                viewA: { trackA: { colToolsPosition: "top" } },
+                viewC: { [DEFAULT_OPTIONS_KEY]: { colToolsPosition: "top" } }
+            },
+            { colToolsPosition: "hidden" },
+            "viewA",
+            "trackA"
+        );
+        expect(updatedOptionsAA.viewA.trackA.colToolsPosition).toBe("hidden");
+    });
+
+    it('Should make global default options and add sort options', () => {
+        const options = processWrapperOptions([
+            {
+                viewId: "viewA",
+                trackId: "trackA",
+                colToolsPosition: "top"
+            }
+        ]);
+        const updatedOptions = updateWrapperOptions(
+            options,
+            [{
+                field: "groupA",
+                type: "nominal",
+                order: "ascending"
+            }],
+            "rowSort",
+            DEFAULT_OPTIONS_KEY,
+            DEFAULT_OPTIONS_KEY,
             { isReplace: true }
         );
         const globalDefaultOptions = updatedOptions[DEFAULT_OPTIONS_KEY];
@@ -191,7 +191,71 @@ describe('Utilities for processing wrapper component options', () => {
         expect(globalDefaultOptions.rowSort[0].order).toBe("ascending");
     });
 
-    it('Should update sorting options in global default', () => {
+    it('Should replace sort options in global default options', () => {
+        const options = processWrapperOptions([
+            {
+                viewId: DEFAULT_OPTIONS_KEY,
+                trackId: DEFAULT_OPTIONS_KEY,
+                colToolsPosition: "bottom"
+            },
+            {
+                viewId: "viewA",
+                trackId: DEFAULT_OPTIONS_KEY,
+                colToolsPosition: "top"
+            }
+        ]);
+        const updatedOptions = updateWrapperOptions(
+            options,
+            [{
+                field: "groupA",
+                type: "nominal",
+                order: "ascending"
+            }],
+            "rowSort",
+            DEFAULT_OPTIONS_KEY,
+            DEFAULT_OPTIONS_KEY,
+            { isReplace: true }
+        );
+        const globalDefaultOptions = updatedOptions[DEFAULT_OPTIONS_KEY];
+        expect(globalDefaultOptions.rowSort.length).toBe(1);
+        expect(globalDefaultOptions.rowSort[0].field).toBe("groupA");
+        expect(globalDefaultOptions.rowSort[0].type).toBe("nominal");
+        expect(globalDefaultOptions.rowSort[0].order).toBe("ascending");
+    });
+
+    it('Should add sort options in global default options when sort options were missing', () => {
+        const options = processWrapperOptions([
+            {
+                viewId: DEFAULT_OPTIONS_KEY,
+                trackId: DEFAULT_OPTIONS_KEY,
+                colToolsPosition: "bottom"
+            },
+            {
+                viewId: "viewA",
+                trackId: DEFAULT_OPTIONS_KEY,
+                colToolsPosition: "top"
+            }
+        ]);
+        const updatedOptions = updateWrapperOptions(
+            options,
+            {
+                field: "groupA",
+                type: "nominal",
+                order: "ascending"
+            },
+            "rowSort",
+            DEFAULT_OPTIONS_KEY,
+            DEFAULT_OPTIONS_KEY,
+            { isReplace: false }
+        );
+        const globalDefaultOptions = updatedOptions[DEFAULT_OPTIONS_KEY];
+        expect(globalDefaultOptions.rowSort.length).toBe(1);
+        expect(globalDefaultOptions.rowSort[0].field).toBe("groupA");
+        expect(globalDefaultOptions.rowSort[0].type).toBe("nominal");
+        expect(globalDefaultOptions.rowSort[0].order).toBe("ascending");
+    });
+
+    it('Should update sorting options in global default options', () => {
         const processedOptions = processWrapperOptions([
             {
                 viewId: DEFAULT_OPTIONS_KEY,
@@ -233,7 +297,7 @@ describe('Utilities for processing wrapper component options', () => {
         expect(globalDefaultOptions.rowSort[0].order).toBe("ascending");
     });
 
-    it('Should add filtering options in the list to track-global default', () => {
+    it('Should add filtering options in track-global default options', () => {
         const processedOptions = processWrapperOptions([
             {
                 viewId: DEFAULT_OPTIONS_KEY,
@@ -275,8 +339,45 @@ describe('Utilities for processing wrapper component options', () => {
         expect(trackGlobalOptions.rowFilter.filter(d => d.contains === "substringC").length).toBe(1);
     });
 
-    it('Should add sorting info to non-global options', () => {
+    it('Should replace sorting options in global default options if there is no track-specific options', () => {
         const processedOptions = processWrapperOptions([
+            {
+                viewId: DEFAULT_OPTIONS_KEY,
+                trackId: DEFAULT_OPTIONS_KEY,
+                colToolsPosition: "bottom"
+            },
+            {
+                viewId: "viewA",
+                trackId: DEFAULT_OPTIONS_KEY,
+                colToolsPosition: "top"
+            }
+        ]);
+        const updatedOptions = updateWrapperOptions(
+            processedOptions,
+            [{
+                field: "groupA",
+                type: "nominal",
+                order: "ascending"
+            }],
+            "rowSort",
+            "viewA",
+            "trackA",
+            { isReplace: true }
+        );
+        const globalDefaultOptions = updatedOptions[DEFAULT_OPTIONS_KEY];
+        expect(globalDefaultOptions.rowSort.length).toBe(1);
+        expect(globalDefaultOptions.rowSort[0].field).toBe("groupA");
+        expect(globalDefaultOptions.rowSort[0].type).toBe("nominal");
+        expect(globalDefaultOptions.rowSort[0].order).toBe("ascending");
+    });
+
+    it('Should add sorting options in track-specific options', () => {
+        const processedOptions = processWrapperOptions([
+            {
+                viewId: DEFAULT_OPTIONS_KEY,
+                trackId: DEFAULT_OPTIONS_KEY,
+                colToolsPosition: "bottom"
+            },
             {
                 viewId: "viewA",
                 trackId: "trackA",
@@ -303,30 +404,46 @@ describe('Utilities for processing wrapper component options', () => {
         expect(nonGlobalOptions.rowSort[0].order).toBe("ascending");
     });
 
-    it('Should return the processed options object for a particular track', () => {
-        const trackOptionsAA = getTrackWrapperOptions({
-            viewA: { trackA: { colToolsPosition: "top" } },
-            [DEFAULT_OPTIONS_KEY]: { colToolsPosition: "bottom" }
-        }, "viewA", "trackA");
+    it('Should return a trackDefinition from the processed options', () => {
+        const trackOptionsAA = getTrackWrapperOptions(
+            {
+                [DEFAULT_OPTIONS_KEY]: { colToolsPosition: "bottom" },
+                viewA: { trackA: { colToolsPosition: "top" } }
+            }, 
+            "viewA", 
+            "trackA"
+        );
         expect(trackOptionsAA.colToolsPosition).toEqual("top");
 
-        const trackOptionsAB = getTrackWrapperOptions({
-            viewA: { trackA: { colToolsPosition: "top" } },
-            [DEFAULT_OPTIONS_KEY]: { colToolsPosition: "bottom" }
-        }, "viewA", "trackB");
+        const trackOptionsAB = getTrackWrapperOptions(
+            {
+                [DEFAULT_OPTIONS_KEY]: { colToolsPosition: "bottom" },
+                viewA: { trackA: { colToolsPosition: "top" } }
+            }, 
+            "viewA", 
+            "trackB"
+        );
         expect(trackOptionsAB.colToolsPosition).toEqual("bottom");
 
-        const trackOptionsBA = getTrackWrapperOptions({
-            viewA: { trackA: { colToolsPosition: "top" } },
-            [DEFAULT_OPTIONS_KEY]: { colToolsPosition: "bottom" }
-        }, "viewB", "trackA");
+        const trackOptionsBA = getTrackWrapperOptions(
+            {
+                [DEFAULT_OPTIONS_KEY]: { colToolsPosition: "bottom" },
+                viewA: { trackA: { colToolsPosition: "top" } }
+            }, 
+            "viewB", 
+            "trackA"
+        );
         expect(trackOptionsBA.colToolsPosition).toEqual("bottom");
 
-        const trackOptionsCA = getTrackWrapperOptions({
-            viewA: { trackA: { colToolsPosition: "top" } },
-            viewC: { [DEFAULT_OPTIONS_KEY]: { colToolsPosition: "hidden" } },
-            [DEFAULT_OPTIONS_KEY]: { colToolsPosition: "bottom" }
-        }, "viewC", "trackA");
+        const trackOptionsCA = getTrackWrapperOptions(
+            {
+                [DEFAULT_OPTIONS_KEY]: { colToolsPosition: "bottom" },
+                viewA: { trackA: { colToolsPosition: "top" } },
+                viewC: { [DEFAULT_OPTIONS_KEY]: { colToolsPosition: "hidden" } }
+            }, 
+            "viewC", 
+            "trackA"
+        );
         expect(trackOptionsCA.colToolsPosition).toEqual("hidden");
     });
 });
