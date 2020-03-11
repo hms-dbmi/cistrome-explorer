@@ -303,7 +303,6 @@ export function addTrackWrapperOptions(options, optionsToAdd, viewId, trackId) {
  * @returns {object} The options object for the track, or the default options object.
  */
 export function updateWrapperOptions(options, subOptions, key, viewId, trackId, { isReplace }) {
-    console.log(options, key, viewId, trackId)
     if(!options[viewId] || (options[viewId] && !options[viewId][trackId])) {
         // Update global defaults if there is no track specific options.
         return {
