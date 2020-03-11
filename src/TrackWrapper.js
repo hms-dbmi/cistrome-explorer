@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 
 import { InfoContext, ACTION } from "./utils/contexts.js";
-import TrackColTools from './TrackColTools.js';
 import TrackRowInfo from './TrackRowInfo.js';
 import TrackRowHighlight from './TrackRowHighlight.js';
 import DataTableForIntervalTFs from './DataTableForIntervalTFs.js';
@@ -155,24 +154,6 @@ export default function TrackWrapper(props) {
                     onSortRows={onSortRows}
                     onSearchRows={onSearchRows}
                     onFilterRows={onFilterRows}
-                    drawRegister={drawRegister}
-                />) : null}
-            {options.colToolsPosition !== "hidden" ? 
-                (<TrackColTools
-                    // TODO: Ultimately, remove this and add only the required variables.
-                    multivecTrack={multivecTrack}
-                    trackX={trackX}
-                    trackY={trackY}
-                    trackHeight={trackHeight}
-                    trackWidth={trackWidth}
-                    trackAssembly={trackAssembly}
-                    combinedTrack={combinedTrack}
-                    siblingTracks={siblingTracks}
-                    colToolsPosition={options.colToolsPosition}
-                    onSelectGenomicInterval={onSelectGenomicInterval}
-                    onRequestIntervalTFs={(intervalParams) => {
-                        setRequestedIntervalParams(intervalParams);
-                    }}
                     drawRegister={drawRegister}
                 />) : null}
             <TrackRowHighlight 

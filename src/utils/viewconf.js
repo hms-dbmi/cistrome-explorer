@@ -298,24 +298,45 @@ export function getUniqueViewOrTrackId(viewConfig, { baseId, idKey, interfix }) 
 }
 
 /**
- * Get all view and track pairs.
+ * Get all view ID and track ID pairs of HiGlass tracks.
  * @param {object} viewConfig A valid higlass view config object.
+ * @param {boolean} onlyHorizontalMultivec Only search for HiGlass `horizontal multivec tracks` (default: true).
+ * @param {boolean} notSide Exclude tracks on the left or right positions (default: false).
  * @returns {array} An array of objects of {traciId, viewId}.
  */
-export function getAllViewAndTrackPairs(viewConfig) {
+// TODO: Add more tests.
+export function getAllViewAndTrackPairs(viewConfig, options={}) {
+    const {
+        onlyHorizontalMultivec=true,
+        notSide=false
+    } = options;
+
     let pairs = [];
     traverseViewConfig(viewConfig, (d) => {
-        // The horizontal-multivec track could be standalone, or within a "combined" track.
-        if(d.trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC) {
+        // Screening tracks.
+        if(!d.trackId) {
+            return;
+        } else if(notSide && (d.trackPos === "left" || d.trackPos === "right")) {
+            return;
+        }
+        if(!onlyHorizontalMultivec) {
             pairs.push({
                 viewId: d.viewId,
                 trackId: d.trackId
             });
-        } else if(d.trackType === TRACK_TYPE.COMBINED && d.innerTrackType === TRACK_TYPE.HORIZONTAL_MULTIVEC) {
-            pairs.push({
-                viewId: d.viewId,
-                trackId: d.innerTrackId
-            });
+        } else {
+            // The horizontal-multivec track could be standalone, or within a "combined" track.
+            if(d.trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC) {
+                pairs.push({
+                    viewId: d.viewId,
+                    trackId: d.trackId
+                });
+            } else if(d.trackType === TRACK_TYPE.COMBINED && d.innerTrackType === TRACK_TYPE.HORIZONTAL_MULTIVEC) {
+                pairs.push({
+                    viewId: d.viewId,
+                    trackId: d.innerTrackId
+                });
+            }
         }
     });
     return pairs;
