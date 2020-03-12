@@ -12,7 +12,7 @@ import './ViewColumnBrushTools.scss';
  * @prop {number} trackWidth The track width.
  * @prop {number} trackHeight The track height.
  * @prop {(object|null)} combinedTrack The `combined` track, parent of the `horizontal-multivec` track.
- * @prop {object[]} siblingTracks An array of `viewport-projection-horizontal` track objects, which
+ * @prop {object[]} viewportTracks An array of `viewport-projection-horizontal` track objects, which
  *                                are siblings of `multivecTrack` (children of the same `combined` track).
  * @prop {string} colToolsPosition The value of the `colToolsPosition` option.
  * @prop {function} onSelectGenomicInterval The function to call upon selection of a genomic interval.
@@ -26,7 +26,7 @@ export default function ViewColumnBrushTools(props) {
         viewBoundingBox,
         // trackAssembly,
         combinedTrack,
-        siblingTracks,
+        viewportTracks,
         colToolsPosition,
         onSelectGenomicInterval,
         onRequestIntervalTFs,
@@ -67,14 +67,20 @@ export default function ViewColumnBrushTools(props) {
         const [mouseX, mouseY] = d3.mouse(divRef.current);
         const bWidth = mouseX - dragX.current;
 
-        setBrushWidth(bWidth);
+        setBrushStartX(bWidth < 0 ? mouseX : dragX.current);
+        setBrushWidth(bWidth < 0 ? -bWidth : bWidth);
     }, [dragX]);
 
     const ended = useCallback(() => {
         const [mouseX, mouseY] = d3.mouse(divRef.current);
 
-        const startProp = dragX.current / viewBoundingBox.width;
-        const endProp = mouseX / viewBoundingBox.width;
+        let startProp = dragX.current / viewBoundingBox.width;
+        let endProp = mouseX / viewBoundingBox.width;
+        if(startProp > endProp) {
+            const temp = startProp;
+            startProp = endProp;
+            endProp = temp;
+        }
         onSelectGenomicInterval(startProp, endProp, brushUid.current);
 
         dragX.current = null;
@@ -142,16 +148,16 @@ export default function ViewColumnBrushTools(props) {
                     height: `${brushBarHeight}px`,
                 }}>
                 {mouseHoverX ? 
-                <div className="col-tools-hover-line" style={{
-                    left: `${mouseHoverX}px`
-                }}/>
+                    <div className="col-tools-hover-line" style={{
+                        left: `${mouseHoverX}px`
+                    }}/>
                 : null}
                 {brushStartX && brushWidth !== 0 ?
                     <div className="col-tools-brush" style={{
                         left: brushStartX,
                         width: brushWidth
                     }}/>
-                    : null}
+                : null}
                 {mouseChrX ? 
                     <div className="col-tools-chr-info" style={{
                         left: `${mouseHoverX + 16}px`,
@@ -159,7 +165,24 @@ export default function ViewColumnBrushTools(props) {
                     }}>
                         {(+mouseChrX.toFixed()).toLocaleString("en")}
                     </div>
-                    : null}
+                : null}
+                
+                {/* brushes for viewport-projection-horizontal tracks */}
+                {viewportTracks ? 
+                    (viewportTracks.map((viewportTrack, i) => {
+                        const absDomain = viewportTrack.viewportXDomain;
+                        const startX = viewportTrack._xScale(absDomain[0]);
+                        const endX = viewportTrack._xScale(absDomain[1]);
+                        return (
+                            <div className="col-tools-brush" key={i}
+                                style={{
+                                    left: startX,
+                                    width: endX - startX
+                                }}/>
+                            );
+                    }))
+                : null}
+
                 {/* TODO: Remove Code Below when ready to release */}
                 {/* <button 
                     className="col-tools-target"
@@ -168,9 +191,9 @@ export default function ViewColumnBrushTools(props) {
                         marginTop: (isTop ? (2 * brushBarHeight / 3) : 2)
                     }}
                 >Select current interval</button>
-                {siblingTracks ? (
+                {viewportTracks ? (
                     <div className="col-tools-selection-info">
-                        {siblingTracks.map((siblingTrack, i) => (
+                        {viewportTracks.map((viewportTrack, i) => (
                             <TrackColSelectionInfo
                                 key={i}
                                 width={width}
@@ -191,13 +214,13 @@ export default function ViewColumnBrushTools(props) {
                     <div className="col-tools-hover-line" style={{
                         left: `${mouseHoverX}px`
                     }}/>
-                    : null}
+                : null}
                 {brushStartX && brushWidth !== 0 ?
                     <div className="col-tools-brush" style={{
                         left: brushStartX,
                         width: brushWidth
                     }}/>
-                    : null}
+                : null}
             </div>
         </div>
     );

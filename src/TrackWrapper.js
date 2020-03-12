@@ -34,7 +34,8 @@ export default function TrackWrapper(props) {
         multivecTrackViewId,
         multivecTrackTrackId,
         combinedTrack,
-        siblingTracks,
+        // TODO: remove
+        viewportTracks,
         onSelectGenomicInterval,
         onAddTrack,
         onSortRows,

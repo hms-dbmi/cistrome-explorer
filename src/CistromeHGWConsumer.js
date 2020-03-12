@@ -67,7 +67,7 @@ export default function CistromeHGWConsumer(props) {
 
     const [options, setOptions] = useState({});
     const [trackIds, setTrackIds] = useState([]);
-    const [siblingTrackIds, setSiblingTrackIds] = useState({});
+    const [viewportTrackIds, setViewportTrackIds] = useState({});
     
     const context = useContext(InfoContext);
 
@@ -99,10 +99,14 @@ export default function CistromeHGWConsumer(props) {
      */
     const onViewConfig = useCallback((newViewConfig) => {
         const newTrackIds = getHMTrackIdsFromViewConfig(newViewConfig);
-        const newSiblingTrackIds = {};
-        for(let trackIds of newTrackIds) {
-            newSiblingTrackIds[trackIds.trackId] = getSiblingVPHTrackIdsFromViewConfig(newViewConfig, trackIds.viewId);
+        
+        // Add viewport projection horizontal track IDs for each view.
+        const newViewportTrackIds = {};
+        Array.from(new Set(newTrackIds.map(d => d.viewId))).map((viewId, i) => {    
+            newViewportTrackIds[viewId] = getSiblingVPHTrackIdsFromViewConfig(newViewConfig, viewId);
+        });
 
+        for(let trackIds of newTrackIds) {
             const newSelectedRows = getHMSelectedRowsFromViewConfig(newViewConfig, trackIds.viewId, trackIds.trackId);
             if(
                 !context.state[trackIds.viewId] 
@@ -118,7 +122,7 @@ export default function CistromeHGWConsumer(props) {
             }
         }
         setTrackIds(newTrackIds);
-        setSiblingTrackIds(newSiblingTrackIds);
+        setViewportTrackIds(newViewportTrackIds);
     }, []);
 
     // Function to get a track object from the higlass API.
@@ -319,8 +323,8 @@ export default function CistromeHGWConsumer(props) {
                     multivecTrackViewId={viewId}
                     multivecTrackTrackId={trackId}
                     multivecTrackTilesetId={trackTilesetId}
+                    // TODO: Remove below
                     combinedTrack={(combinedTrackId ? getTrackObject(viewId, combinedTrackId) : null)}
-                    siblingTracks={siblingTrackIds[trackId] ? siblingTrackIds[trackId].map(d => getTrackObject(viewId, d.trackId)) : []}
                     onAddTrack={(field, type, contains, position) => {
                         onAddTrack(viewId, trackId, field, type, contains, position);
                     }} 
@@ -345,6 +349,7 @@ export default function CistromeHGWConsumer(props) {
                     key={i}
                     viewBoundingBox={getViewObject(viewId)}
                     // trackAssembly={trackAssembly}
+                    viewportTracks={viewportTrackIds[viewId] ? viewportTrackIds[viewId].map(d => getTrackObject(viewId, d.trackId)) : []}
                     colToolsPosition={options.colToolsPosition} // TODO: Remove this options
                     onSelectGenomicInterval={(startProp, endProp, uid) => {
                         const currViewConfig = hgRef.current.api.getViewConfig();
