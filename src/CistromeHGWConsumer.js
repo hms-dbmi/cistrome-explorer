@@ -130,7 +130,7 @@ export default function CistromeHGWConsumer(props) {
         }
     }, [hgRef]);
 
-    // Custom function to get positioning information of views in higlass,
+    // Custom function to get the boundingbox of a view in higlass,
     // i.e., { left, top, width, height }
     const getViewObject = useCallback((viewId) => {
         try {
@@ -321,13 +321,6 @@ export default function CistromeHGWConsumer(props) {
                     multivecTrackTilesetId={trackTilesetId}
                     combinedTrack={(combinedTrackId ? getTrackObject(viewId, combinedTrackId) : null)}
                     siblingTracks={siblingTrackIds[trackId] ? siblingTrackIds[trackId].map(d => getTrackObject(viewId, d.trackId)) : []}
-                    onSelectGenomicInterval={() => {
-                        const currViewConfig = hgRef.current.api.getViewConfig();
-                        const newViewConfig = updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, trackId);
-                        hgRef.current.api.setViewConfig(newViewConfig).then(() => {
-                            onViewConfig(newViewConfig);
-                        });
-                    }}
                     onAddTrack={(field, type, contains, position) => {
                         onAddTrack(viewId, trackId, field, type, contains, position);
                     }} 
@@ -352,9 +345,14 @@ export default function CistromeHGWConsumer(props) {
                     key={i}
                     viewBoundingBox={getViewObject(viewId)}
                     // trackAssembly={trackAssembly}
-                    // TODO: Remove this options
-                    colToolsPosition={options.colToolsPosition}
-                    // onSelectGenomicInterval={onSelectGenomicInterval}
+                    colToolsPosition={options.colToolsPosition} // TODO: Remove this options
+                    onSelectGenomicInterval={(startProp, endProp, uid) => {
+                        const currViewConfig = hgRef.current.api.getViewConfig();
+                        const newViewConfig = updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, startProp, endProp, uid);
+                        hgRef.current.api.setViewConfig(newViewConfig).then(() => {
+                            onViewConfig(newViewConfig);
+                        });
+                    }}
                     onRequestIntervalTFs={(intervalParams) => {
                         setRequestedIntervalParams(intervalParams);
                     }}

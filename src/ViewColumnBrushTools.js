@@ -1,6 +1,7 @@
+// TODO: Remove unused.
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import d3 from './utils/d3.js';
-import TrackColSelectionInfo from './TrackColSelectionInfo.js';
+import uuidv4 from 'uuid/v4';
 
 import './ViewColumnBrushTools.scss';
 
@@ -32,55 +33,55 @@ export default function ViewColumnBrushTools(props) {
         drawRegister
     } = props;
 
-    // TODO: All hooks must be above this return statement, since they need to be executed in the same order.
-    if(!viewBoundingBox) {
-        // The view info has not yet loaded.
-        return null;
-    }
-
+    const divRef = useRef();
+    const dragX = useRef(null);
+    const brushUid = useRef(null);
+    const [mouseHoverX, setMouseHoverX] = useState(null);
+    const [brushStartX, setBrushStartX] = useState(null);
+    const [brushWidth, setBrushWidth] = useState(0);
+    const [mouseChrX, setMouseChrX] = useState(null);
+    
     // if(!trackAssembly) {
     //     console.warn("trackAssembly is null");
     //     return null;
     // }
 
-    const divRef = useRef();
-    const [mouseX, setMouseX] = useState(null);
-    const [mouseChrX, setMouseChrX] = useState(null);
-    const [brushStartX, setBrushStartX] = useState(null);
-    const [brushWidth, setBrushWidth] = useState(0);
-    const dragX = useRef(null);
-
     // TODO: Remove this.
     const isTop = (colToolsPosition === "top");
-    
-    const { top, left, width, height } = viewBoundingBox;
 
-    const brushBarTop = height + 4;
-    const brushBarHeight = 30;
-    
+    const brushBarHeight = 24;
+
     // Set up the d3-drag handler functions (started, ended, dragged).
     const started = useCallback(() => {
         const div = divRef.current;
-        const event = d3.event;
-        dragX.current = event.sourceEvent.clientX;
-
         const [mouseX, mouseY] = d3.mouse(div);
+
+        dragX.current = mouseX;
+        brushUid.current = uuidv4();
+        
         setBrushStartX(mouseX);
-        setBrushWidth(0);
-    }, [dragX])
+        setMouseHoverX(null);
+    }, [dragX]);
 
     const dragged = useCallback(() => {
-        const event = d3.event;
-        const diff = event.sourceEvent.clientX - dragX.current;
-        let newWidth = brushWidth + diff;
-        setBrushWidth(newWidth);
+        const [mouseX, mouseY] = d3.mouse(divRef.current);
+        const bWidth = mouseX - dragX.current;
+
+        setBrushWidth(bWidth);
     }, [dragX]);
 
     const ended = useCallback(() => {
-        dragX.current = null;
-    }, [dragX])
+        const [mouseX, mouseY] = d3.mouse(divRef.current);
 
-    // Detect drag events for the resize element.
+        const startProp = dragX.current / viewBoundingBox.width;
+        const endProp = mouseX / viewBoundingBox.width;
+        onSelectGenomicInterval(startProp, endProp, brushUid.current);
+
+        dragX.current = null;
+        setBrushWidth(0);
+        setBrushStartX(null);
+    }, [dragX, brushStartX, brushWidth, viewBoundingBox]);
+
     useEffect(() => {
         const div = divRef.current;
 
@@ -88,11 +89,11 @@ export default function ViewColumnBrushTools(props) {
             .on("start", started)
             .on("drag", dragged)
             .on("end", ended);
-
+        
         d3.select(div).call(drag);
 
-        return () => d3.select(resizer).on(".drag", null);
-    }, [divRef, started, dragged, ended]);
+        return () => d3.select(div).on(".drag", null);
+    }, [dragX, divRef]);
 
     useEffect(() => {
         const div = divRef.current;
@@ -100,21 +101,31 @@ export default function ViewColumnBrushTools(props) {
         d3.select(div).on("mousemove", () => {
             const [mouseX, mouseY] = d3.mouse(div);
 
-            // TODO: Remove this.
-            // console.log(multivecTrack);
-
             // TODO: Change this to the actual chr position.
             // const xAbsPos = multivecTrack._xScale.invert(mouseX);
 
-            setMouseX(mouseX);
+            setMouseHoverX(mouseX);
             // setMouseChrX(xAbsPos);
         });
-        // TODO: uncomment when ready to release
-        // d3.select(div).on("mouseleave", () => {
-        //     setMouseX(null);
-        //     setMouseChrX(null);
-        // });
-    }, [divRef]);
+        
+        d3.select(div).on("mouseleave", () => {
+            setMouseHoverX(null);
+        });
+
+        return () => {
+            d3.select(div).on("mousemove", null);
+            d3.select(div).on("mouseleave", null);
+        };
+    }, [dragX, divRef, mouseHoverX]);
+
+    // All hooks must be above this return statement, since they need to be executed in the same order.
+    if(!viewBoundingBox) {
+        // The view info has not yet loaded.
+        return null;
+    }
+
+    const { top, left, width, height } = viewBoundingBox;
+    const brushBarTop = height + 4;
 
     return (
         <div style={{
@@ -122,25 +133,37 @@ export default function ViewColumnBrushTools(props) {
             top: `${top}px`,
             left: `${left}px`,
             width: `${width}px`, 
-            height: `${height}px`
+            height: `${height}px`,
+            pointerEvents: "none"
         }}>
-            <div className="col-tools" ref={divRef}
+            <div className="col-tools-brush-bar" ref={divRef}
                 style={{
                     top: `${brushBarTop}px`,
                     height: `${brushBarHeight}px`,
                 }}>
+                {mouseHoverX ? 
+                <div className="col-tools-hover-line" style={{
+                    left: `${mouseHoverX}px`
+                }}/>
+                : null}
+                {brushStartX && brushWidth !== 0 ?
+                    <div className="col-tools-brush" style={{
+                        left: brushStartX,
+                        width: brushWidth
+                    }}/>
+                    : null}
                 {mouseChrX ? 
                     <div className="col-tools-chr-info" style={{
-                        left: `${mouseX + 16}px`,
+                        left: `${mouseHoverX + 16}px`,
                         lineHeight: `${brushBarHeight}px`
                     }}>
                         {(+mouseChrX.toFixed()).toLocaleString("en")}
                     </div>
                     : null}
                 {/* TODO: Remove Code Below when ready to release */}
-                <button 
+                {/* <button 
                     className="col-tools-target"
-                    onClick={onSelectGenomicInterval}
+                    onClick={() => onSelectGenomicInterval(0.25, 0.75)}
                     style={{
                         marginTop: (isTop ? (2 * brushBarHeight / 3) : 2)
                     }}
@@ -160,16 +183,16 @@ export default function ViewColumnBrushTools(props) {
                             />
                         ))}
                     </div>
-                ) : null}
+                ) : null} */}
                 {/* TODO: remove above. */}
             </div>
-            <div className="col-tools-hg-wrapper">
-                {mouseX ? 
-                    <div className="col-tools-column-info" style={{
-                        left: `${mouseX}px`
+            <div className="col-tools-hg-overlay">
+                {mouseHoverX ? 
+                    <div className="col-tools-hover-line" style={{
+                        left: `${mouseHoverX}px`
                     }}/>
                     : null}
-                {brushWidth !== 0 ?
+                {brushStartX && brushWidth !== 0 ?
                     <div className="col-tools-brush" style={{
                         left: brushStartX,
                         width: brushWidth
