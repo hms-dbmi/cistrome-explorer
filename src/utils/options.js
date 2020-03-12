@@ -15,6 +15,7 @@ const baseSchema = {
             "properties": {
                 "viewId": { "type": "string" },
                 "trackId": { "type": "string" },
+                // TODO: REMOVE THIS.
                 "colToolsPosition": {
                     "type": "string",
                     "enum": ["hidden", "bottom", "top"]

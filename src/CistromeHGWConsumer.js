@@ -8,15 +8,15 @@ import StackedBarTrack from 'higlass-multivec/es/StackedBarTrack.js';
 import { InfoContext, ACTION } from './utils/contexts.js';
 import { selectRows, highlightRowsFromSearch } from './utils/select-rows.js';
 import TrackWrapper from './TrackWrapper.js';
-import ViewColumnBrushTools from './ViewColumnBrushTools.js';
+import ViewWrapper from './ViewWrapper.js';
 import Tooltip from './Tooltip.js';
 import ContextMenu, { destroyContextMenu } from './ContextMenu.js';
 
 import { 
+    DEFAULT_OPTIONS_KEY,
     processWrapperOptions, 
     getTrackWrapperOptions,
     updateWrapperOptions,
-    DEFAULT_OPTIONS_KEY,
     addTrackWrapperOptions
 } from './utils/options.js';
 import { 
@@ -67,7 +67,7 @@ export default function CistromeHGWConsumer(props) {
     const drawRef = useRef({});
 
     const [options, setOptions] = useState({});
-    const [trackIds, setTrackIds] = useState([]);
+    const [muiltivecTrackIds, setMultivecTrackIds] = useState([]);
     const [viewportTrackIds, setViewportTrackIds] = useState({});
     
     const context = useContext(InfoContext);
@@ -122,7 +122,7 @@ export default function CistromeHGWConsumer(props) {
                 });
             }
         }
-        setTrackIds(newTrackIds);
+        setMultivecTrackIds(newTrackIds);
         setViewportTrackIds(newViewportTrackIds);
     }, []);
 
@@ -138,7 +138,7 @@ export default function CistromeHGWConsumer(props) {
 
     // Custom function to get the boundingbox of a view in higlass,
     // i.e., { left, top, width, height }
-    const getViewObject = useCallback((viewId) => {
+    const getViewBoundingBox = useCallback((viewId) => {
         try {
             const viewConfig = hgRef.current.api.getViewConfig();
             const trackIds = getAllViewAndTrackPairs(viewConfig, { onlyHorizontalMultivec: false }).filter(d => d.viewId === viewId);
@@ -317,7 +317,7 @@ export default function CistromeHGWConsumer(props) {
     return (
         <div className="chw-root">
             {hgComponent}
-            {trackIds.map(({ viewId, trackId, trackTilesetId, combinedTrackId }, i) => (
+            {muiltivecTrackIds.map(({ viewId, trackId, trackTilesetId }, i) => (
                 <TrackWrapper
                     key={i}
                     options={getTrackWrapperOptions(options, viewId, trackId)}
@@ -325,8 +325,6 @@ export default function CistromeHGWConsumer(props) {
                     multivecTrackViewId={viewId}
                     multivecTrackTrackId={trackId}
                     multivecTrackTilesetId={trackTilesetId}
-                    // TODO: Remove below
-                    combinedTrack={(combinedTrackId ? getTrackObject(viewId, combinedTrackId) : null)}
                     onAddTrack={(field, type, contains, position) => {
                         onAddTrack(viewId, trackId, field, type, contains, position);
                     }} 
@@ -345,13 +343,12 @@ export default function CistromeHGWConsumer(props) {
                     drawRegister={drawRegister}
                 />
             ))}
-            {Array.from(new Set(trackIds.map(d => d.viewId))).map((viewId, i) => {
-                // TODO: get this only when there is hori multivec track in this view.
-                return <ViewColumnBrushTools
+            {Array.from(new Set(muiltivecTrackIds.map(d => d.viewId))).map((viewId, i) => {
+                return <ViewWrapper
                     key={i}
-                    viewBoundingBox={getViewObject(viewId)}
+                    viewBoundingBox={getViewBoundingBox(viewId)}
                     viewportTracks={viewportTrackIds[viewId] ? viewportTrackIds[viewId].map(d => getTrackObject(viewId, d.trackId)) : []}
-                    colToolsPosition={options.colToolsPosition} // TODO: Remove this options
+                    multivecTrack={getTrackObject(viewId, muiltivecTrackIds.filter(d => d.viewId)[0].trackId)}
                     onSelectGenomicInterval={(startProp, endProp, uid) => {
                         const currViewConfig = hgRef.current.api.getViewConfig();
                         const newViewConfig = updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, startProp, endProp, uid);
@@ -365,9 +362,6 @@ export default function CistromeHGWConsumer(props) {
                         hgRef.current.api.setViewConfig(newViewConfig).then(() => {
                             onViewConfig(newViewConfig);
                         });
-                    }}
-                    onRequestIntervalTFs={(intervalParams) => {
-                        setRequestedIntervalParams(intervalParams);
                     }}
                     drawRegister={drawRegister}
                 />;

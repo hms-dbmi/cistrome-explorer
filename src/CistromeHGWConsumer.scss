@@ -30,8 +30,8 @@
     opacity: 1;
 }
 
-.chw-button-sm-no-hover,
-.chw-button-sm {
+.chw-button-sm,
+.chw-button-sm-black {
     height: 20px;
     width: 20px;
     padding: 4px;
@@ -52,9 +52,9 @@
     background: #337ab7;
     opacity: 1;
 }
-// TODO: change name
-.chw-button-sm-no-hover:hover {
+.chw-button-sm-black:hover {
     color: black;
+    opacity: 1;
 }
 
 .chw-button-static {

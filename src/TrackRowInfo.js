@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState } from 'react';
 import d3 from './utils/d3.js';
-import { modifyItemInArray } from './utils/array.js';
 
 import TrackRowInfoVis from "./TrackRowInfoVis.js";
 

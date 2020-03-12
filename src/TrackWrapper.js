@@ -3,7 +3,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { InfoContext, ACTION } from "./utils/contexts.js";
 import TrackRowInfo from './TrackRowInfo.js';
 import TrackRowHighlight from './TrackRowHighlight.js';
-import DataTableForIntervalTFs from './DataTableForIntervalTFs.js';
 
 // TODO: remove the below fakedata import.
 //       see https://github.com/hms-dbmi/cistrome-higlass-wrapper/issues/26
@@ -15,16 +14,11 @@ import fakedata from './demo/fakedata/index.js';
  * @prop {object} multivecTrack A `horizontal-multivec` track object returned by `hgc.api.getTrackObject()`.
  * @prop {string} multivecTrackViewId The viewId for the multivecTrack.
  * @prop {string} multivecTrackTrackId The trackId for the multivecTrack.
- * @prop {(object|null)} combinedTrack A `combined` track object returned by `hgc.api.getTrackObject()`.
- *                              If not null, it is the parent track of the `multivecTrack`.
- * @prop {object[]} siblingTracks An array of `viewport-projection-horizontal` track objects, which
- *                                are siblings of `multivecTrack` (children of the same `combined` track).
- * @prop {function} onSelectGenomicInterval The function to call upon selection of a genomic interval.
- *                                          Passed down to the `TrackColTools` component.
  * @prop {function} onAddTrack The function to call upon a track insertion.
  * @prop {function} onSortRows The function to call upon a sort interaction.
  * @prop {function} onSearchRows The function to call upon a search interaction.
  * @prop {function} onFilterRows The function to call upon a filer interaction.
+ * @prop {function} onMetadataLoad The function to call upon rowInfo is set to Context.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function TrackWrapper(props) {
@@ -33,10 +27,6 @@ export default function TrackWrapper(props) {
         multivecTrack,
         multivecTrackViewId,
         multivecTrackTrackId,
-        combinedTrack,
-        // TODO: remove
-        viewportTracks,
-        onSelectGenomicInterval,
         onAddTrack,
         onSortRows,
         onSearchRows,
@@ -48,12 +38,10 @@ export default function TrackWrapper(props) {
     const context = useContext(InfoContext);
 
     const [shouldCallOnMetadataLoad, setShouldCallOnMetadataLoad] = useState(false);
-    const [requestedIntervalParams, setRequestedIntervalParams] = useState(null);
 
     useEffect(() => {
         if(shouldCallOnMetadataLoad) {
             onMetadataLoad();
-            setRequestedIntervalParams(null);
         }
     }, [shouldCallOnMetadataLoad, multivecTrackViewId, multivecTrackTrackId]);
     
@@ -76,9 +64,7 @@ export default function TrackWrapper(props) {
 
     // Attempt to obtain metadata values from the `tilesetInfo` field of the track.
     let rowInfo = [];
-    let trackAssembly = null;
     try {
-        trackAssembly = multivecTrack.tilesetInfo.coordSystem;
         // TODO: uncomment the below line to use the real metadata coming from the HiGlass Server.
         //       see https://github.com/hms-dbmi/cistrome-higlass-wrapper/issues/26
         // rowInfo = multivecTrack.tilesetInfo.row_infos.map(JSON.parse);
@@ -167,15 +153,6 @@ export default function TrackWrapper(props) {
                 highlitRows={highlitRows}
                 drawRegister={drawRegister}
             />
-            {requestedIntervalParams ? 
-                <DataTableForIntervalTFs
-                    left={trackX}
-                    top={trackY + trackHeight + 56}
-                    width={trackWidth}
-                    height={600}
-                    intervalParams={requestedIntervalParams}
-                />
-                : null}
         </div>
     );
 }
