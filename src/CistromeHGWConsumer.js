@@ -131,7 +131,6 @@ export default function CistromeHGWConsumer(props) {
         try {
             return hgRef.current.api.getTrackObject(viewId, trackId);
         } catch(e) {
-            console.log("x");
             return null;
         }
     }, [hgRef]);
@@ -157,7 +156,6 @@ export default function CistromeHGWConsumer(props) {
             });
             return { left: viewLeft, top: viewTop, width: viewWidth, height: viewBottom - viewTop };
         } catch(e) {
-            console.log(e);
             return null;
         }
     }, [hgRef]);

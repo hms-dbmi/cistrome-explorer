@@ -32,9 +32,11 @@ toc:
 - getRetinaRatio
 - traverseViewConfig
 - getViewConfigOfSpecificTrack
+- addTrackDefToViewConfig
 - getHMTrackIdsFromViewConfig
 - getSiblingVPHTrackIdsFromViewConfig
 - updateViewConfigOnSelectGenomicInterval
+- removeViewportFromViewConfig
 - addViewConfigForNewTrack
 - updateViewConfigOnSelectRowsByTrack
 - getHMSelectedRowsFromViewConfig

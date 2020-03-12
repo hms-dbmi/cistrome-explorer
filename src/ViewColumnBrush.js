@@ -17,7 +17,6 @@ import './ViewColumnBrush.scss';
  * @prop {function} onViewportRemove The function to call upon removing a viewport track.
  * @prop {function} onRequestIntervalTFs The function to call upon making a request for further interval transcription factor data.
  */
-// TODO: documents
 export default function ViewColumnBrush(props) {
     
     const {
@@ -71,6 +70,7 @@ export default function ViewColumnBrush(props) {
         return null;
     }
 
+    console.log("ViewColumnBrush.render");
     return (
         <div className="col-tools-brush"
             style={{

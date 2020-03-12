@@ -117,6 +117,7 @@ export default function ViewWrapper(props) {
     const { top, left, width, height } = viewBoundingBox;
     const brushBarTop = height + 4;
 
+    console.log("ViewWrapper.render");
     return (
         <div className="cistrome-hgw-view-wrapper"
             style={{

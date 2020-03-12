@@ -154,7 +154,14 @@ export function getSiblingVPHTrackIdsFromViewConfig(viewConf, targetViewId) {
     return matches;
 }
 
-// TODO: parameters, and tests.
+// TODO: tests.
+/**
+ * This function removes a viewport horizontal track from a view config.
+ * @param {object} viewConfig The current HiGlass view config.
+ * @param {string} viewId The uid of view containing the `viewport-horizontal` track that was the target of the action.
+ * @param {number} trackId The uid of the `viewport-horizontal` track that was the target of the action.
+ * @returns {object} The updated HiGlass view config.
+ */
 export function removeViewportFromViewConfig(viewConfig, viewId, trackId) {
     const newViewConfig = cloneDeep(viewConfig);
 
@@ -169,9 +176,7 @@ export function removeViewportFromViewConfig(viewConfig, viewId, trackId) {
     }
     if(foundView.tracks['whole'].find(d => d.uid === trackId)) {
         const viewportIndex = foundView.tracks['whole'].findIndex(d => d.uid === trackId);
-        console.log(foundView.tracks['whole'], viewportIndex);
         foundView.tracks['whole'] = removeItemFromArray(foundView.tracks['whole'], viewportIndex);
-        console.log(foundView.tracks['whole'], viewportIndex);
         newViewConfig.views[foundViewIndex] = foundView;
     }
     return newViewConfig;
@@ -181,9 +186,11 @@ export function removeViewportFromViewConfig(viewConfig, viewId, trackId) {
  * This function updates the view config when the user would like to create a genomic interval selection.
  * @param {object} viewConfig The current HiGlass view config.
  * @param {string} viewId The uid of view containing the `horizontal-multivec` track that was the target of the action.
+ * @param {number} startProp The relative starting position (0 ~ 1) of the genomic interval selection from the screen.
+ * @param {number} endProp The relative ending position (0 ~ 1) of the genomic interval selection from the screen.
+ * @param {string} uid The uid of the parent view.
  * @returns {object} The updated HiGlass view config.
  */
-// TODO: update parameter
 export function updateViewConfigOnSelectGenomicInterval(viewConfig, viewId, startProp, endProp, uid) {
     const newViewConfig = cloneDeep(viewConfig);
 
