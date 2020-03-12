@@ -36,11 +36,8 @@ export function modifyItemInArray(array, index, item) {
  * @returns Updated array.
  */
 export function removeItemFromArray(array, index) {
-    return {
-      item: array[index],
-      array: [
+    return [
         ...array.slice(0, index),
         ...array.slice(index + 1)
-      ]
-    };
+    ];
 }

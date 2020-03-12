@@ -2,7 +2,7 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import d3 from './utils/d3.js';
 import uuidv4 from 'uuid/v4';
-
+import { CLOSE, SEARCH } from './utils/icons.js';
 import './ViewColumnBrushTools.scss';
 
 /**
@@ -29,22 +29,17 @@ export default function ViewColumnBrushTools(props) {
         viewportTracks,
         colToolsPosition,
         onSelectGenomicInterval,
+        onViewportRemove,
         onRequestIntervalTFs,
         drawRegister
     } = props;
-
+    
     const divRef = useRef();
     const dragX = useRef(null);
     const brushUid = useRef(null);
     const [mouseHoverX, setMouseHoverX] = useState(null);
     const [brushStartX, setBrushStartX] = useState(null);
     const [brushWidth, setBrushWidth] = useState(0);
-    const [mouseChrX, setMouseChrX] = useState(null);
-    
-    // if(!trackAssembly) {
-    //     console.warn("trackAssembly is null");
-    //     return null;
-    // }
 
     // TODO: Remove this.
     const isTop = (colToolsPosition === "top");
@@ -67,6 +62,7 @@ export default function ViewColumnBrushTools(props) {
         const [mouseX, mouseY] = d3.mouse(divRef.current);
         const bWidth = mouseX - dragX.current;
 
+        // Handle the oposite direction of dragging along x-axis.
         setBrushStartX(bWidth < 0 ? mouseX : dragX.current);
         setBrushWidth(bWidth < 0 ? -bWidth : bWidth);
     }, [dragX]);
@@ -81,7 +77,9 @@ export default function ViewColumnBrushTools(props) {
             startProp = endProp;
             endProp = temp;
         }
-        onSelectGenomicInterval(startProp, endProp, brushUid.current);
+        if(startProp !== endProp) {
+            onSelectGenomicInterval(startProp, endProp, brushUid.current);
+        }
 
         dragX.current = null;
         setBrushWidth(0);
@@ -106,12 +104,7 @@ export default function ViewColumnBrushTools(props) {
 
         d3.select(div).on("mousemove", () => {
             const [mouseX, mouseY] = d3.mouse(div);
-
-            // TODO: Change this to the actual chr position.
-            // const xAbsPos = multivecTrack._xScale.invert(mouseX);
-
             setMouseHoverX(mouseX);
-            // setMouseChrX(xAbsPos);
         });
         
         d3.select(div).on("mouseleave", () => {
@@ -158,56 +151,65 @@ export default function ViewColumnBrushTools(props) {
                         width: brushWidth
                     }}/>
                 : null}
-                {mouseChrX ? 
-                    <div className="col-tools-chr-info" style={{
-                        left: `${mouseHoverX + 16}px`,
-                        lineHeight: `${brushBarHeight}px`
-                    }}>
-                        {(+mouseChrX.toFixed()).toLocaleString("en")}
-                    </div>
-                : null}
                 
                 {/* brushes for viewport-projection-horizontal tracks */}
                 {viewportTracks ? 
                     (viewportTracks.map((viewportTrack, i) => {
+                        if(!viewportTrack) return null;
+
                         const absDomain = viewportTrack.viewportXDomain;
                         const startX = viewportTrack._xScale(absDomain[0]);
                         const endX = viewportTrack._xScale(absDomain[1]);
+
+                        let assembly = null;
+                        try{
+                            console.log(viewportTrack);
+                            assembly = viewportTrack.tilesetInfo.coordSystem;
+                            console.log(viewportTrack.tilesetInfo.coordSystem);
+                        } catch(e) {
+
+                        }
+                        if(!assembly) return;
+
                         return (
                             <div className="col-tools-brush" key={i}
                                 style={{
+                                    // TODO: bar going out of the reange.
                                     left: startX,
                                     width: endX - startX
-                                }}/>
-                            );
+                                }}>
+                                <div className={"chw-button-sm-container-horizontal"}
+                                    style={{
+                                        right: "4px",
+                                        top: "2px",
+                                        opacity: 1,
+                                        background: "none",
+                                        boxShadow: "none",
+                                        color: "gray"
+                                    }}>
+                                    <svg className={`chw-button-sm-no-hover`}
+                                        onClick={() => onRequestIntervalTFs({
+                                            assembly,
+                                            chrStartName,
+                                            chrStartPos,
+                                            chrEndName,
+                                            chrEndPos
+                                        })}
+                                        viewBox={SEARCH.viewBox}>
+                                        <title>Search bind TFs from Cistrome DB</title>
+                                        <path d={SEARCH.path} fill="currentColor"/>
+                                    </svg>
+                                    <svg className={`chw-button-sm-no-hover`}
+                                        onClick={() => onViewportRemove(viewportTrack.id)} 
+                                        viewBox={CLOSE.viewBox}>
+                                        <title>Remove viewport projection track</title>
+                                        <path d={CLOSE.path} fill="currentColor"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        );
                     }))
                 : null}
-
-                {/* TODO: Remove Code Below when ready to release */}
-                {/* <button 
-                    className="col-tools-target"
-                    onClick={() => onSelectGenomicInterval(0.25, 0.75)}
-                    style={{
-                        marginTop: (isTop ? (2 * brushBarHeight / 3) : 2)
-                    }}
-                >Select current interval</button>
-                {viewportTracks ? (
-                    <div className="col-tools-selection-info">
-                        {viewportTracks.map((viewportTrack, i) => (
-                            <TrackColSelectionInfo
-                                key={i}
-                                width={width}
-                                height={brushBarHeight}
-                                colToolsPosition={colToolsPosition}
-                                // trackAssembly={trackAssembly}
-                                projectionTrack={siblingTrack}
-                                onRequestIntervalTFs={onRequestIntervalTFs}
-                                drawRegister={drawRegister}
-                            />
-                        ))}
-                    </div>
-                ) : null} */}
-                {/* TODO: remove above. */}
             </div>
             <div className="col-tools-hg-overlay">
                 {mouseHoverX ? 

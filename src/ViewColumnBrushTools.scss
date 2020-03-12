@@ -31,11 +31,10 @@
         position: absolute;
     }
     .col-tools-brush {
-        cursor: grab;
+        cursor: default;
         height: 100%;
         position: absolute;
         background: rgba(119, 119, 119, 0.3);
-        // border: 1px solid rgba(119, 119, 119, 0.7);
     }
     .col-tools-chr-info {
         position: absolute;

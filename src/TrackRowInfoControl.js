@@ -92,8 +92,10 @@ export default function TrackRowInfoControl(props){
     return (
         <div>
             <div ref={divRef}
-                className={"chw-button-sm-container"}
+                className={"chw-button-sm-container-vertical"}
                 style={{
+                    top: "4px",
+                    left: "4px",
                     visibility: isVisible ? "visible" : "hidden"
                 }}>
                 {buttons.map((button, i) => {

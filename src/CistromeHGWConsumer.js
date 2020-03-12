@@ -28,7 +28,8 @@ import {
     getUniqueViewOrTrackId,
     getTrackDefFromViewConfig,
     addTrackDefToViewConfig,
-    getAllViewAndTrackPairs
+    getAllViewAndTrackPairs,
+    removeViewportFromViewConfig
 } from './utils/viewconf.js';
 
 import './CistromeHGWConsumer.scss';
@@ -130,6 +131,7 @@ export default function CistromeHGWConsumer(props) {
         try {
             return hgRef.current.api.getTrackObject(viewId, trackId);
         } catch(e) {
+            console.log("x");
             return null;
         }
     }, [hgRef]);
@@ -348,12 +350,18 @@ export default function CistromeHGWConsumer(props) {
                 return <ViewColumnBrushTools
                     key={i}
                     viewBoundingBox={getViewObject(viewId)}
-                    // trackAssembly={trackAssembly}
                     viewportTracks={viewportTrackIds[viewId] ? viewportTrackIds[viewId].map(d => getTrackObject(viewId, d.trackId)) : []}
                     colToolsPosition={options.colToolsPosition} // TODO: Remove this options
                     onSelectGenomicInterval={(startProp, endProp, uid) => {
                         const currViewConfig = hgRef.current.api.getViewConfig();
                         const newViewConfig = updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, startProp, endProp, uid);
+                        hgRef.current.api.setViewConfig(newViewConfig).then(() => {
+                            onViewConfig(newViewConfig);
+                        });
+                    }}
+                    onViewportRemove={(viewportId) => {
+                        const currViewConfig = hgRef.current.api.getViewConfig();
+                        const newViewConfig = removeViewportFromViewConfig(currViewConfig, viewId, viewportId);
                         hgRef.current.api.setViewConfig(newViewConfig).then(() => {
                             onViewConfig(newViewConfig);
                         });

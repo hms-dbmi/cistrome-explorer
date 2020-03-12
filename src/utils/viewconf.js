@@ -2,6 +2,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import uuidv4 from 'uuid/v4';
 
 import { TRACK_TYPE } from './constants.js';
+import { removeItemFromArray } from './array.js';
 
 /**
  * Execute a callback function for every view, track, and innerTrack in a view config object.
@@ -153,15 +154,38 @@ export function getSiblingVPHTrackIdsFromViewConfig(viewConf, targetViewId) {
     return matches;
 }
 
+// TODO: parameters, and tests.
+export function removeViewportFromViewConfig(viewConfig, viewId, trackId) {
+    const newViewConfig = cloneDeep(viewConfig);
+
+    // Find the view associated with this viewId.
+    const foundViewIndex = newViewConfig.views.findIndex(v => v.uid === viewId);
+    const foundView = newViewConfig.views[foundViewIndex];
+
+    if(!foundView.tracks['whole']) {
+        // There is no viewport projection horizontal track in this view.
+        console.log(`There is no ${TRACK_TYPE.VIEWPORT_PROJECTION_HORIZONTAL} in a HiGlass view.`);
+        return newViewConfig;
+    }
+    if(foundView.tracks['whole'].find(d => d.uid === trackId)) {
+        const viewportIndex = foundView.tracks['whole'].findIndex(d => d.uid === trackId);
+        console.log(foundView.tracks['whole'], viewportIndex);
+        foundView.tracks['whole'] = removeItemFromArray(foundView.tracks['whole'], viewportIndex);
+        console.log(foundView.tracks['whole'], viewportIndex);
+        newViewConfig.views[foundViewIndex] = foundView;
+    }
+    return newViewConfig;
+}
+
 /**
  * This function updates the view config when the user would like to create a genomic interval selection.
- * @param {object} currViewConfig The current HiGlass view config.
+ * @param {object} viewConfig The current HiGlass view config.
  * @param {string} viewId The uid of view containing the `horizontal-multivec` track that was the target of the action.
  * @returns {object} The updated HiGlass view config.
  */
 // TODO: update parameter
-export function updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, startProp, endProp, uid) {
-    const newViewConfig = cloneDeep(currViewConfig);
+export function updateViewConfigOnSelectGenomicInterval(viewConfig, viewId, startProp, endProp, uid) {
+    const newViewConfig = cloneDeep(viewConfig);
 
     // Find the view associated with this viewId.
     const foundViewIndex = newViewConfig.views.findIndex(v => v.uid === viewId);
