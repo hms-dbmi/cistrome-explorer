@@ -16,27 +16,3 @@
         border: 1px solid rgba(119, 119, 119, 0.7);
     }
 }
-.col-tools-brush-bar {
-    cursor: ew-resize;
-    pointer-events: all;
-    background: #e5e5e5;
-    border-radius: 2px;
-    position: absolute;
-    box-sizing: border-box;
-    width: 100%;
-    .col-tools-hover-line {
-        border-left: 1px solid rgb(77, 77, 77);
-        height: 100%;
-        width: 1px;
-        position: absolute;
-    }
-    .col-tools-brush {
-        cursor: default;
-        height: 100%;
-        position: absolute;
-        background: rgba(119, 119, 119, 0.3);
-    }
-    .col-tools-chr-info {
-        position: absolute;
-    }
-}

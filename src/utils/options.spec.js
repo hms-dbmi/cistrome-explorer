@@ -12,7 +12,7 @@ describe('Utilities for processing wrapper component options', () => {
     it('Should validate options object when incorrect', () => {
         const valid = validateWrapperOptions(
             {
-                colToolsPosition: "left"
+                viewId: 12
             }
         );
         expect(valid).toBe(false);
@@ -21,7 +21,7 @@ describe('Utilities for processing wrapper component options', () => {
     it('Should validate options object when correct', () => {
         const valid = validateWrapperOptions(
             {
-                colToolsPosition: "bottom"
+                viewId: "uid"
             }
         );
         expect(valid).toBe(true);
@@ -30,7 +30,7 @@ describe('Utilities for processing wrapper component options', () => {
     it('Should validate options array when incorrect', () => {
         const valid = validateWrapperOptions([
             {
-                colToolsPosition: "left"
+                viewId: ["uid1", "uid2"]
             }
         ]);
         expect(valid).toBe(false);
@@ -40,8 +40,7 @@ describe('Utilities for processing wrapper component options', () => {
         const valid = validateWrapperOptions([
             {
                 viewId: "viewA",
-                trackId: "trackA",
-                colToolsPosition: "bottom"
+                trackId: "trackA"
             }
         ]);
         expect(valid).toBe(true);
@@ -50,12 +49,12 @@ describe('Utilities for processing wrapper component options', () => {
     it('Should process options object', () => {
         const processedOptions = processWrapperOptions(
             {
-                colToolsPosition: "bottom"
+                rowHighlight: {field: "fieldA", type: "nominal", contains: "abc"}
             }
         );
 
         expect(Object.keys(processedOptions)).toEqual(['default']);
-        expect(processedOptions.default.colToolsPosition).toEqual("bottom");
+        expect(processedOptions.default.rowHighlight.field).toEqual("fieldA");
     });
 
     it('Should process options array with global default', () => {
@@ -63,12 +62,12 @@ describe('Utilities for processing wrapper component options', () => {
             {
                 viewId: "default",
                 trackId: "default",
-                colToolsPosition: "bottom"
+                rowHighlight: {field: "fieldA", type: "nominal", contains: "abc"}
             }
         ]);
 
         expect(Object.keys(processedOptions)).toEqual(['default']);
-        expect(processedOptions.default.colToolsPosition).toEqual("bottom");
+        expect(processedOptions.default.rowHighlight.field).toEqual("fieldA");
     });
 
     it('Should process options array with view default', () => {
@@ -76,18 +75,18 @@ describe('Utilities for processing wrapper component options', () => {
             {
                 viewId: "default",
                 trackId: "default",
-                colToolsPosition: "bottom"
+                rowHighlight: {field: "fieldA", type: "nominal", contains: "abc"}
             },
             {
                 viewId: "viewA",
                 trackId: "default",
-                colToolsPosition: "top"
+                rowHighlight: {field: "fieldB", type: "nominal", contains: "abc"}
             }
         ]);
 
         expect(Object.keys(processedOptions)).toEqual(['default', 'viewA']);
-        expect(processedOptions.default.colToolsPosition).toEqual("bottom");
-        expect(processedOptions.viewA.default.colToolsPosition).toEqual("top");
+        expect(processedOptions.default.rowHighlight.field).toEqual("fieldA");
+        expect(processedOptions.viewA.default.rowHighlight.field).toEqual("fieldB");
     });
 
     it('Should process options array with view and track defaults', () => {
@@ -95,36 +94,36 @@ describe('Utilities for processing wrapper component options', () => {
             {
                 viewId: "default",
                 trackId: "default",
-                colToolsPosition: "top"
+                rowHighlight: {field: "fieldDD", type: "nominal", contains: "abc"}
             },
             {
                 viewId: "viewA",
                 trackId: "default",
-                colToolsPosition: "bottom"
+                rowHighlight: {field: "fieldAD", type: "nominal", contains: "abc"}
             },
             {
                 viewId: "viewA",
                 trackId: "trackA",
-                colToolsPosition: "hidden"
+                rowHighlight: {field: "fieldAA", type: "nominal", contains: "abc"}
             },
             {
                 viewId: "viewA",
                 trackId: "trackB",
-                colToolsPosition: "top"
+                rowHighlight: {field: "fieldAB", type: "nominal", contains: "abc"}
             },
             {
                 viewId: "viewB",
                 trackId: "default",
-                colToolsPosition: "hidden"
+                rowHighlight: {field: "fieldBD", type: "nominal", contains: "abc"}
             },
         ]);
 
         expect(Object.keys(processedOptions)).toEqual(['default', 'viewA', 'viewB']);
-        expect(processedOptions.default.colToolsPosition).toEqual("top");
-        expect(processedOptions.viewA.default.colToolsPosition).toEqual("bottom");
-        expect(processedOptions.viewA.trackA.colToolsPosition).toEqual("hidden");
-        expect(processedOptions.viewA.trackB.colToolsPosition).toEqual("top");
-        expect(processedOptions.viewB.default.colToolsPosition).toEqual("hidden");
+        expect(processedOptions.default.rowHighlight.field).toEqual("fieldDD");
+        expect(processedOptions.viewA.default.rowHighlight.field).toEqual("fieldAD");
+        expect(processedOptions.viewA.trackA.rowHighlight.field).toEqual("fieldAA");
+        expect(processedOptions.viewA.trackB.rowHighlight.field).toEqual("fieldAB");
+        expect(processedOptions.viewB.default.rowHighlight.field).toEqual("fieldBD");
     });
 
     it('Should add sorting options to global default', () => {
@@ -132,12 +131,12 @@ describe('Utilities for processing wrapper component options', () => {
             {
                 viewId: DEFAULT_OPTIONS_KEY,
                 trackId: DEFAULT_OPTIONS_KEY,
-                colToolsPosition: "bottom"
+                rowHighlight: {field: "fieldDD", type: "nominal", contains: "abc"}
             },
             {
                 viewId: "viewA",
                 trackId: DEFAULT_OPTIONS_KEY,
-                colToolsPosition: "top"
+                rowHighlight: {field: "fieldAD", type: "nominal", contains: "abc"}
             }
         ]);
         const updatedOptions = updateWrapperOptions(
@@ -164,12 +163,12 @@ describe('Utilities for processing wrapper component options', () => {
             {
                 viewId: DEFAULT_OPTIONS_KEY,
                 trackId: DEFAULT_OPTIONS_KEY,
-                colToolsPosition: "bottom"
+                rowHighlight: {field: "fieldDD", type: "nominal", contains: "abc"}
             },
             {
                 viewId: "viewA",
                 trackId: DEFAULT_OPTIONS_KEY,
-                colToolsPosition: "top"
+                rowHighlight: {field: "fieldAD", type: "nominal", contains: "abc"}
             }
         ]);
         const updatedOptions = updateWrapperOptions(
@@ -196,7 +195,6 @@ describe('Utilities for processing wrapper component options', () => {
             {
                 viewId: DEFAULT_OPTIONS_KEY,
                 trackId: DEFAULT_OPTIONS_KEY,
-                colToolsPosition: "bottom",
                 rowSort: [{
                     field: "groupB",
                     type: "quantitative",
@@ -211,7 +209,7 @@ describe('Utilities for processing wrapper component options', () => {
             {
                 viewId: "viewA",
                 trackId: DEFAULT_OPTIONS_KEY,
-                colToolsPosition: "top"
+                rowHighlight: {field: "fieldAD", type: "nominal", contains: "abc"}
             }
         ]);
         const updatedOptions = updateWrapperOptions(
@@ -238,7 +236,6 @@ describe('Utilities for processing wrapper component options', () => {
             {
                 viewId: DEFAULT_OPTIONS_KEY,
                 trackId: DEFAULT_OPTIONS_KEY,
-                colToolsPosition: "bottom",
                 rowSort: [{
                     field: "groupA",
                     type: "quantitative",
@@ -253,7 +250,7 @@ describe('Utilities for processing wrapper component options', () => {
             {
                 viewId: "viewA",
                 trackId: DEFAULT_OPTIONS_KEY,
-                colToolsPosition: "top"
+                rowHighlight: {field: "fieldAD", type: "nominal", contains: "abc"}
             }
         ]);
         const updatedOptions = updateWrapperOptions(
@@ -280,7 +277,7 @@ describe('Utilities for processing wrapper component options', () => {
             {
                 viewId: "viewA",
                 trackId: "trackA",
-                colToolsPosition: "top"
+                rowHighlight: {field: "fieldAA", type: "nominal", contains: "abc"}
             }
         ]);
         const updatedOptions = updateWrapperOptions(
@@ -305,28 +302,28 @@ describe('Utilities for processing wrapper component options', () => {
 
     it('Should return the processed options object for a particular track', () => {
         const trackOptionsAA = getTrackWrapperOptions({
-            viewA: { trackA: { colToolsPosition: "top" } },
-            [DEFAULT_OPTIONS_KEY]: { colToolsPosition: "bottom" }
+            viewA: { trackA: { rowHighlight: {field: "fieldAA", type: "nominal", contains: "abc"} } },
+            [DEFAULT_OPTIONS_KEY]: { rowHighlight: {field: "fieldDD", type: "nominal", contains: "abc"} }
         }, "viewA", "trackA");
-        expect(trackOptionsAA.colToolsPosition).toEqual("top");
+        expect(trackOptionsAA.rowHighlight.field).toEqual("fieldAA");
 
         const trackOptionsAB = getTrackWrapperOptions({
-            viewA: { trackA: { colToolsPosition: "top" } },
-            [DEFAULT_OPTIONS_KEY]: { colToolsPosition: "bottom" }
+            viewA: { trackA: { rowHighlight: {field: "fieldAA", type: "nominal", contains: "abc"} } },
+            [DEFAULT_OPTIONS_KEY]: { rowHighlight: {field: "fieldDD", type: "nominal", contains: "abc"} }
         }, "viewA", "trackB");
-        expect(trackOptionsAB.colToolsPosition).toEqual("bottom");
+        expect(trackOptionsAB.rowHighlight.field).toEqual("fieldDD");
 
         const trackOptionsBA = getTrackWrapperOptions({
-            viewA: { trackA: { colToolsPosition: "top" } },
-            [DEFAULT_OPTIONS_KEY]: { colToolsPosition: "bottom" }
+            viewA: { trackA: { rowHighlight: {field: "fieldAA", type: "nominal", contains: "abc"} } },
+            [DEFAULT_OPTIONS_KEY]: { rowHighlight: {field: "fieldDD", type: "nominal", contains: "abc"} }
         }, "viewB", "trackA");
-        expect(trackOptionsBA.colToolsPosition).toEqual("bottom");
+        expect(trackOptionsBA.rowHighlight.field).toEqual("fieldDD");
 
         const trackOptionsCA = getTrackWrapperOptions({
-            viewA: { trackA: { colToolsPosition: "top" } },
-            viewC: { [DEFAULT_OPTIONS_KEY]: { colToolsPosition: "hidden" } },
-            [DEFAULT_OPTIONS_KEY]: { colToolsPosition: "bottom" }
+            viewA: { trackA: { rowHighlight: {field: "fieldAA", type: "nominal", contains: "abc"} } },
+            viewC: { [DEFAULT_OPTIONS_KEY]: { rowHighlight: {field: "fieldCD", type: "nominal", contains: "abc"} } },
+            [DEFAULT_OPTIONS_KEY]: { rowHighlight: {field: "fieldDD", type: "nominal", contains: "abc"} }
         }, "viewC", "trackA");
-        expect(trackOptionsCA.colToolsPosition).toEqual("hidden");
+        expect(trackOptionsCA.rowHighlight.field).toEqual("fieldCD");
     });
 });

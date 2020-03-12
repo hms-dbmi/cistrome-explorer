@@ -22,7 +22,7 @@ const numberFormatter = d3.format(",");
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function TrackColSelectionInfo(props) {
-    // TODO: Remove this comopnent when we completely replace this with `viewWrapper`.
+    // TODO: Remove this comopnent when we completely replace this to `viewWrapper`.
     const {
         width,
         height,

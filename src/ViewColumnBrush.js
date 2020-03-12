@@ -7,7 +7,7 @@ import { TooltipContent, destroyTooltip } from "./Tooltip.js";
 import { getRange } from './utils/viewport.js';
 import { CLOSE, SEARCH } from './utils/icons.js';
 import { EVENT } from "./utils/constants.js";
-import './ViewWrapper.scss';
+import './ViewColumnBrush.scss';
 
 /**
  * Component for rendering genome interval selection tools.
@@ -86,6 +86,7 @@ export default function ViewColumnBrush(props) {
                     boxShadow: "none",
                     color: "gray"
                 }}>
+                {/* Cistrome DB API Button */}
                 <svg className={"chw-button-sm-black"}
                     onMouseOver={(e) => {
                         PubSub.publish(EVENT.TOOLTIP, {
@@ -113,6 +114,7 @@ export default function ViewColumnBrush(props) {
                     viewBox={SEARCH.viewBox}>
                     <path d={SEARCH.path} fill="currentColor"/>
                 </svg>
+                {/* Close Button */}
                 <svg className={"chw-button-sm-black"}
                     onClick={() => onViewportRemove(viewportTrack.id)} 
                     viewBox={CLOSE.viewBox}>

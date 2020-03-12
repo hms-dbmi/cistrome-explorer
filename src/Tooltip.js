@@ -4,7 +4,6 @@ import PubSub from 'pubsub-js';
 import { EVENT } from './utils/constants.js';
 
 import './Tooltip.scss';
-import { EXCLAMATION } from './utils/icons.js';
 
 export function destroyTooltip() {
     PubSub.publish(EVENT.TOOLTIP, {
