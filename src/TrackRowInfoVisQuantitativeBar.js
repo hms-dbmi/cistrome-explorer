@@ -209,7 +209,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             .attr("width", width)
             .attr("height", axisHeight)
             .append("g")
-                .attr("transform", `translate(${isLeft ? textAreaWidth - 1 : 1}, ${0})`)
+                .attr("transform", `translate(${isLeft ? textAreaWidth - 1 : 1}, 0)`)
                 .call(axis);
         
         d3.select(domElement)
