@@ -24,7 +24,6 @@ export default function ViewWrapper(props) {
         multivecTrack,
         onSelectGenomicInterval,
         onViewportRemove,
-        onRequestIntervalTFs,
         drawRegister
     } = props;
     
