@@ -70,58 +70,59 @@ export default function ViewColumnBrush(props) {
         return null;
     }
 
-    console.log("ViewColumnBrush.render");
     return (
         <div className="col-tools-brush"
             style={{
                 left: start,
                 width: end - start
             }}>
-            <div className={"chw-button-sm-container-horizontal"}
-                style={{
-                    right: "4px",
-                    top: "2px",
-                    opacity: 1,
-                    background: "none",
-                    boxShadow: "none",
-                    color: "gray"
-                }}>
-                {/* Cistrome DB API Button */}
-                <svg className={"chw-button-sm-black"}
-                    onMouseOver={(e) => {
-                        PubSub.publish(EVENT.TOOLTIP, {
-                            x: e.clientX,
-                            y: e.clientY,
-                            content: <TooltipContent 
-                                title="Search bind TFs from Cistrome DB"
-                                value={!intervalValid ? intervalInvalidMsg : undefined}
-                                warning={!intervalValid}
-                            />
-                        });
-                    }}
-                    onMouseLeave={() => destroyTooltip()}
-                    onClick={() => {
-                        if(intervalValid) {
-                            onRequestIntervalTFs({
-                                assembly,
-                                chrStartName,
-                                chrStartPos,
-                                chrEndName,
-                                chrEndPos
+            {end - start > 50 ? 
+                <div className={"chw-button-sm-container-horizontal"}
+                    style={{
+                        right: "4px",
+                        top: "2px",
+                        opacity: 1,
+                        background: "none",
+                        boxShadow: "none",
+                        color: "gray"
+                    }}>
+                    {/* Cistrome DB API Button */}
+                    <svg className={"chw-button-sm-black"}
+                        onMouseOver={(e) => {
+                            PubSub.publish(EVENT.TOOLTIP, {
+                                x: e.clientX,
+                                y: e.clientY,
+                                content: <TooltipContent 
+                                    title="Search bind TFs from Cistrome DB"
+                                    value={!intervalValid ? intervalInvalidMsg : undefined}
+                                    warning={!intervalValid}
+                                />
                             });
-                        }
-                    }}
-                    viewBox={SEARCH.viewBox}>
-                    <path d={SEARCH.path} fill="currentColor"/>
-                </svg>
-                {/* Close Button */}
-                <svg className={"chw-button-sm-black"}
-                    onClick={() => onViewportRemove(viewportTrack.id)} 
-                    viewBox={CLOSE.viewBox}>
-                    <title>Remove viewport projection track</title>
-                    <path d={CLOSE.path} fill="currentColor"/>
-                </svg>
-            </div>
+                        }}
+                        onMouseLeave={() => destroyTooltip()}
+                        onClick={() => {
+                            if(intervalValid) {
+                                onRequestIntervalTFs({
+                                    assembly,
+                                    chrStartName,
+                                    chrStartPos,
+                                    chrEndName,
+                                    chrEndPos
+                                });
+                            }
+                        }}
+                        viewBox={SEARCH.viewBox}>
+                        <path d={SEARCH.path} fill="currentColor"/>
+                    </svg>
+                    {/* Close Button */}
+                    <svg className={"chw-button-sm-black"}
+                        onClick={() => onViewportRemove(viewportTrack.id)} 
+                        viewBox={CLOSE.viewBox}>
+                        <title>Remove viewport projection track</title>
+                        <path d={CLOSE.path} fill="currentColor"/>
+                    </svg>
+                </div>
+            : null}
         </div>
     );
 }
