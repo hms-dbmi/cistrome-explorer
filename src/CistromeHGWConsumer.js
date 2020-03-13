@@ -103,7 +103,7 @@ export default function CistromeHGWConsumer(props) {
         
         // Add viewport projection horizontal track IDs for each view.
         const newViewportTrackIds = {};
-        Array.from(new Set(newTrackIds.map(d => d.viewId))).map((viewId, i) => {    
+        Array.from(new Set(newTrackIds.map(d => d.viewId))).forEach((viewId) => {    
             newViewportTrackIds[viewId] = getSiblingVPHTrackIdsFromViewConfig(newViewConfig, viewId);
         });
 
