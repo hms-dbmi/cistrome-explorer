@@ -78,15 +78,17 @@ export default function DataTable(props) {
             }}
         >
             <h4 className="chw-table-title">{title}</h4>
-            <svg
-                className={`chw-button-sm-black`}
-                style={{ verticalAlign: "sub" }}
-                onClick={() => onClose()} 
-                viewBox={CLOSE.viewBox}
-            >
-                <title>Close data table</title>
-                <path d={CLOSE.path} fill="currentColor"/>
-            </svg>
+            <span style={{ verticalAlign: "middle" }}>
+                <svg
+                    className={`chw-button-black`}
+                    style={{ color: "gray" }}
+                    onClick={() => onClose()} 
+                    viewBox={CLOSE.viewBox}
+                >
+                    <title>Close data table</title>
+                    <path d={CLOSE.path} fill="currentColor"/>
+                </svg>
+            </span>
             <span className="chw-table-subtitle">
                 {isLoading ? (
                     <span className="chw-progress-ring" />
