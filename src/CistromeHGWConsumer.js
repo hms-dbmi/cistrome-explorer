@@ -341,12 +341,12 @@ export default function CistromeHGWConsumer(props) {
                     drawRegister={drawRegister}
                 />
             ))}
-            {Array.from(new Set(muiltivecTrackIds.map(d => d.viewId))).map((viewId, i) => {
-                return <ViewWrapper
+            {Array.from(new Set(muiltivecTrackIds.map(d => d.viewId))).map((viewId, i) => (
+                <ViewWrapper
                     key={i}
                     viewBoundingBox={getViewBoundingBox(viewId)}
                     viewportTracks={viewportTrackIds[viewId] ? viewportTrackIds[viewId].map(d => getTrackObject(viewId, d.trackId)) : []}
-                    multivecTrack={getTrackObject(viewId, muiltivecTrackIds.filter(d => d.viewId)[0].trackId)}
+                    multivecTrack={getTrackObject(viewId, muiltivecTrackIds.filter(d => d.viewId === viewId)[0].trackId)}
                     onSelectGenomicInterval={(startProp, endProp, uid) => {
                         const currViewConfig = hgRef.current.api.getViewConfig();
                         const newViewConfig = updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, startProp, endProp, uid);
@@ -362,8 +362,8 @@ export default function CistromeHGWConsumer(props) {
                         });
                     }}
                     drawRegister={drawRegister}
-                />;
-            })}
+                />
+            ))}
             <Tooltip />
             <ContextMenu/>
         </div>

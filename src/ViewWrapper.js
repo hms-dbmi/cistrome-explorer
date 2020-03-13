@@ -88,7 +88,7 @@ export default function ViewWrapper(props) {
         d3.select(div).call(drag);
 
         return () => d3.select(div).on(".drag", null);
-    }, [dragX, divRef]);
+    });
 
     useEffect(() => {
         const div = divRef.current;
@@ -106,7 +106,7 @@ export default function ViewWrapper(props) {
             d3.select(div).on("mousemove", null);
             d3.select(div).on("mouseleave", null);
         };
-    }, [dragX, divRef, mouseHoverX]);
+    });
 
     // All hooks must be above this return statement, since they need to be executed in the same order.
     if(!viewBoundingBox || !multivecTrack || !multivecTrack.tilesetInfo) {
