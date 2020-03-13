@@ -36,6 +36,7 @@
     padding: 4px;
     cursor: pointer;
     border-radius: 2.5px;
+    transition: background .15s ease, color .15s ease;
 }
 .chw-button {
     height: 25px;

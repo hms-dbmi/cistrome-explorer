@@ -3,6 +3,7 @@ import uuidv4 from 'uuid/v4';
 
 import { TRACK_TYPE } from './constants.js';
 import { removeItemFromArray } from './array.js';
+import { VIEWPORT_OPTIONS } from './viewport.js';
 
 /**
  * Execute a callback function for every view, track, and innerTrack in a view config object.
@@ -220,13 +221,7 @@ export function updateViewConfigOnSelectGenomicInterval(viewConfig, viewId, star
             uid: newUid,
             fromViewUid: null,
             projectionXDomain: xDomain,
-            options: {
-                projectionFillColor: "#777",
-                projectionStrokeColor: "#777",
-                projectionFillOpacity: 0.3,
-                projectionStrokeOpacity: 0.7,
-                strokeWidth: 1
-            }
+            options: VIEWPORT_OPTIONS["black"]
         }
         foundView.tracks['whole'].push(newProjectionTrackDef);
         newViewConfig.views[foundViewIndex] = foundView;

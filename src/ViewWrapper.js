@@ -3,9 +3,10 @@ import d3 from './utils/d3.js';
 import uuidv4 from 'uuid/v4';
 import ViewColumnBrush from './ViewColumnBrush.js';
 import DataTableForIntervalTFs from './DataTableForIntervalTFs.js';
-import './ViewWrapper.scss';
+import { resolveIntervalCoordinates } from './utils/genome.js';
 import { getRange } from './utils/viewport.js';
 import { ARROW_H } from './utils/icons.js';
+import './ViewWrapper.scss';
 
 /**
  * Component for rendering genome interval selection tools.
@@ -33,6 +34,8 @@ export default function ViewWrapper(props) {
     const [mouseHoverX, setMouseHoverX] = useState(null);
     const [brushStartX, setBrushStartX] = useState(null);
     const [brushEndX, setBrushEndX] = useState(null);
+    const [chrName, setChrName] = useState("");
+    const [chrPos, setChrPos] = useState("");
     
     const [requestedIntervalParams, setRequestedIntervalParams] = useState(null);
 
@@ -47,7 +50,7 @@ export default function ViewWrapper(props) {
         newViewportId.current = uuidv4();
         
         setBrushStartX(mouseX);
-        setMouseHoverX(null);
+        setMouseHoverX(mouseX);
     }, [dragX]);
 
     const dragged = useCallback(() => {
@@ -56,6 +59,7 @@ export default function ViewWrapper(props) {
         const {start, end} = getRange(dragX.current, mouseX, 0, viewBoundingBox.width);
         
         setBrushStartX(start);
+        setMouseHoverX(mouseX);
         setBrushEndX(end);
     }, [dragX]);
 
@@ -107,6 +111,24 @@ export default function ViewWrapper(props) {
         };
     });
 
+    let assembly;
+    try{
+        assembly = multivecTrack.tilesetInfo.coordSystem;
+    } catch(e) {
+        console.log(e);   
+    }
+
+    useEffect(() => {
+        if(assembly) {
+            const domainX = multivecTrack._xScale.invert(mouseHoverX);
+            resolveIntervalCoordinates(assembly, domainX)
+                .then(result => {
+                    setChrName(result[0][0]);
+                    setChrPos(result[0][1].toLocaleString("en"));
+                });
+        }
+    }, [mouseHoverX]);
+
     // All hooks must be above this return statement, since they need to be executed in the same order.
     if(!viewBoundingBox || !multivecTrack || !multivecTrack.tilesetInfo) {
         // The view info has not yet loaded.
@@ -128,43 +150,44 @@ export default function ViewWrapper(props) {
                     pointerEvents: "none"
                 }}
             >
-            <div className="col-tools-brush-bar" ref={divRef}
-                style={{
-                    top: `${brushBarTop}px`,
-                    height: `${brushBarHeight}px`,
-                }}>
-                {mouseHoverX ? 
-                    <div className="col-tools-hover-line" style={{
-                        left: `${mouseHoverX}px`
-                    }}/>
-                : null}
-                {brushStartX !== null && brushEndX !== null ?
-                    <div className="col-tools-brush" style={{
-                        left: brushStartX,
-                        width: brushEndX - brushStartX
-                    }}/>
-                : null}
-                
-                {viewportTracks ? 
-                    (viewportTracks.map((viewportTrack, i) => {
-                        if(!viewportTrack) {
-                            return null;
-                        }
-                        return (
-                            <ViewColumnBrush
-                                key={i}
-                                viewBoundingBox={viewBoundingBox}
-                                viewportTrack={viewportTrack}
-                                multivecTrack={multivecTrack}
-                                onViewportRemove={onViewportRemove}
-                                onRequestIntervalTFs={(intervalParams) => {
-                                    setRequestedIntervalParams(intervalParams);
-                                }}
-                            />
-                        );
-                    }))
-                : null}
-                {true ?
+                <div className="col-tools-brush-bar" ref={divRef}
+                    style={{
+                        top: `${brushBarTop}px`,
+                        height: `${brushBarHeight}px`,
+                    }}
+                >
+                    {mouseHoverX && !brushStartX ? 
+                        // Short vertical line.
+                        <div className="col-tools-hover-line" 
+                            style={{ left: `${mouseHoverX}px` }}
+                        />
+                    : null}
+                    {brushStartX !== null && brushEndX !== null ?
+                        // New narrow brushing rectangle.
+                        <div className="col-tools-brush" 
+                            style={{
+                                left: brushStartX,
+                                width: brushEndX - brushStartX
+                            }}
+                        />
+                    : null}
+                    {viewportTracks ? 
+                        (viewportTracks.map((viewportTrack, i) => {
+                            return viewportTrack ? (
+                                // Narrow brushing rectangles based on viewports.
+                                <ViewColumnBrush
+                                    key={i}
+                                    viewBoundingBox={viewBoundingBox}
+                                    viewportTrack={viewportTrack}
+                                    multivecTrack={multivecTrack}
+                                    onViewportRemove={onViewportRemove}
+                                    onRequestIntervalTFs={(intervalParams) => {
+                                        setRequestedIntervalParams(intervalParams);
+                                    }}
+                                />
+                            ) : null;
+                        }))
+                    : null}
                     <span style={{
                         marginLeft: "4px",
                         verticalAlign: "middle",
@@ -179,21 +202,32 @@ export default function ViewWrapper(props) {
                         </svg>
                         Genomic Interval Selection Bar
                     </span> 
-                : null}
-            </div>
-            <div className="col-tools-hg-overlay">
-                {mouseHoverX ? 
-                    <div className="col-tools-hover-line" style={{
-                        left: `${mouseHoverX}px`
-                    }}/>
-                : null}
-                {brushStartX !== null && brushEndX !== null ?
-                    <div className="col-tools-brush" style={{
-                        left: brushStartX,
-                        width: brushEndX - brushStartX
-                    }}/>
-                : null}
-            </div>
+                </div>
+                <div className="col-tools-hg-overlay">
+                    {brushStartX !== null && brushEndX !== null ?
+                        // New large brushing rectangle.
+                        <div className="col-tools-brush-black" 
+                            style={{
+                                left: brushStartX,
+                                width: brushEndX - brushStartX
+                            }}
+                        />
+                    : null}
+                    {mouseHoverX && brushStartX == null ? 
+                        // Long vertical line.
+                        <div className="col-tools-hover-line" 
+                            style={{ left: `${mouseHoverX}px` }}
+                        />
+                    : null}
+                    {mouseHoverX  ? 
+                        // Text label of chromosome position.
+                        <div className="col-tools-hover-line-info" 
+                            style={{ top: "1px", left: `${mouseHoverX}px` }}
+                        >
+                            {`${chrName}: ${chrPos}`}
+                        </div>
+                    : null}
+                </div>
             </div>
             <div
                 style={{

@@ -9,7 +9,7 @@ const AVAILABLE_CHROM_SIZES_URL = `${CHROM_INFO_SERVER}/available-chrom-sizes/`;
  * See https://docs.higlass.io/javascript_api.html#obtaining-ordered-chromosome-info.
  * @param {string} coordSystem The genome assembly, corresponds to the value of `coordSystem`.
  * @param {number} absStart The genome absolute position of the start of the interval.
- * @param {number} absEnd The genome absolute position of the end of the interval.
+ * @param {number|null} absEnd The genome absolute position of the end of the interval.
  * @returns {promise<array>} A promise that resolves with `[[chrStartName, chrStartPos], [chrEndName, chrEndPos]]`.
  */
 export function resolveIntervalCoordinates(coordSystem, absStart, absEnd) {
@@ -27,8 +27,12 @@ export function resolveIntervalCoordinates(coordSystem, absStart, absEnd) {
                 `${CHROM_SIZES_URL}?id=${coordSystemInfo.uuid}`,
                 (chromInfo) => {
                     const chrStart = chromInfo.absToChr(absStart);
-                    const chrEnd = chromInfo.absToChr(absEnd);
-                    resolve([chrStart, chrEnd]);
+                    if(absEnd) {
+                        const chrEnd = chromInfo.absToChr(absEnd);
+                        resolve([chrStart, chrEnd]);
+                    } else {
+                        resolve([chrStart]);
+                    }  
                 }
             );
         })
