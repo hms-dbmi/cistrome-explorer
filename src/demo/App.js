@@ -13,7 +13,6 @@ const demos = {
     "H3K27ac Demo (1 View, Center Track)": {
         viewConfig: hgDemoViewConfig1,
         options: {
-            colToolsPosition: "bottom",
             rowInfoAttributes: [
                 {field: "Hierarchical Clustering (Average)", type: "tree", position: "left"},
                 {field: "Random 3", type: "quantitative", position: "left"},
@@ -27,8 +26,7 @@ const demos = {
             rowSort: [
                 {field: "Cell Type", type: "nominal", order: "ascending"}
             ],
-            rowFilter: [],
-            rowHighlight: {field: "Cell Type", type: "nominal", contains: "Stem"}
+            rowFilter: []
         }
     },
     "H3K27ac Demo (2 Views, Center Tracks)": {
@@ -37,7 +35,6 @@ const demos = {
             {
                 viewId: "default",
                 trackId: "default",
-                colToolsPosition: "bottom",
                 rowSort: [
                     {field: "Cell Type", type: "nominal", order: "ascending"}
                 ],
@@ -64,7 +61,6 @@ const demos = {
     "H3K27ac Demo (1 View, Top Track)": {
         viewConfig: hgDemoViewConfig7,
         options: {
-            colToolsPosition: "bottom",
             rowInfoAttributes: [
                 {field: "Hierarchical Clustering (Average)", type: "tree", position: "left"},
                 {field: "Random 3", type: "quantitative", position: "left"},
@@ -87,8 +83,7 @@ const demos = {
         options: [
             {
                 viewId: "default",
-                trackId: "default",
-                colToolsPosition: "bottom"
+                trackId: "default"
             },
             {
                 viewId: "cistrome-view-8",

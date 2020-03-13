@@ -2,6 +2,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import uuidv4 from 'uuid/v4';
 
 import { TRACK_TYPE } from './constants.js';
+import { removeItemFromArray } from './array.js';
 
 /**
  * Execute a callback function for every view, track, and innerTrack in a view config object.
@@ -89,6 +90,37 @@ export function getTrackDefFromViewConfig(viewConfig, viewId, trackId) {
 }
 
 /**
+ * Add a track definitaion object to a higlass view config object.
+ * @param {object} currViewConfig A valid higlass view config object.
+ * @param {object} trackDef A track definition object.
+ * @param {string} targetViewId The view ID for the track of interest.
+ * @param {string} position The target position of the track, such as "top" or "bottom".
+ * @returns {object} The new view config. 
+ */
+export function addTrackDefToViewConfig(currViewConfig, trackDef, targetViewId, position) {
+    const newViewConfig = cloneDeep(currViewConfig);
+    let viewIndex = -1;
+    // Get view index.
+    traverseViewConfig(currViewConfig, (d) => {
+        // The horizontal-multivec track could be standalone, or within a "combined" track.
+        if((d.trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC 
+            && d.viewId === targetViewId) || 
+            (d.trackType === TRACK_TYPE.COMBINED 
+            && d.innerTrackType === TRACK_TYPE.HORIZONTAL_MULTIVEC 
+            && d.viewId === targetViewId)
+        ) {
+            viewIndex = d.viewI;
+        }
+    });
+    if(viewIndex !== -1) {
+        newViewConfig.views[viewIndex].tracks[position].push(trackDef);
+    } else {
+        console.log(`WARNING: The following track is not found (${targetViewId}, ${neighborTrackId}).`);
+    }
+    return newViewConfig;
+}
+
+/**
  * This function finds the horizontal-multivec tracks in the view config.
  * @param {object} viewConf A valid HiGlass viewConfig object.
  * @returns {array} Array containing `{ viewId, trackId, ... }` for each horizontal-multivec track.
@@ -123,86 +155,83 @@ export function getSiblingVPHTrackIdsFromViewConfig(viewConf, targetViewId) {
 }
 
 /**
- * This function updates the view config when the user would like to create a genomic interval selection.
- * @param {object} currViewConfig The current HiGlass view config.
- * @param {string} viewId The uid of view containing the `horizontal-multivec` track that was the target of the action.
- * @param {string} trackId The uid of the `horizontal-multivec` track that was the target of the action.
+ * This function removes a viewport horizontal track from a view config.
+ * @param {object} viewConfig The current HiGlass view config.
+ * @param {string} viewId The uid of view containing the `viewport-horizontal` track that was the target of the action.
+ * @param {string} trackId The uid of the `viewport-horizontal` track that was the target of the action.
  * @returns {object} The updated HiGlass view config.
  */
-export function updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, trackId) {
-    const newViewConfig = cloneDeep(currViewConfig);
+export function removeViewportFromViewConfig(viewConfig, viewId, trackId) {
+    const newViewConfig = cloneDeep(viewConfig);
 
     // Find the view associated with this viewId.
     const foundViewIndex = newViewConfig.views.findIndex(v => v.uid === viewId);
     const foundView = newViewConfig.views[foundViewIndex];
-    
-    // Find the track object.
-    for(let [tracksPos, tracks] of Object.entries(foundView.tracks)) {
-        if(Array.isArray(tracks)) {
-            for(let [i, track] of tracks.entries()) {
-                if(track.uid === trackId) {
-                    const newView = foundView;
 
-                    const xRange = newView.initialXDomain[1] - newView.initialXDomain[0];
-                    const xDomain = [
-                        newView.initialXDomain[0] + xRange/4,
-                        newView.initialXDomain[1] - xRange/4
-                    ];
-
-                    const newProjectionTrackDef = {
-                        type: TRACK_TYPE.VIEWPORT_PROJECTION_HORIZONTAL,
-                        uid: newView.uid + uuidv4(),
-                        fromViewUid: null,
-                        projectionXDomain: xDomain,
-                        options: {
-                            projectionFillColor: "#777",
-                            projectionStrokeColor: "#777",
-                            projectionFillOpacity: 0.3,
-                            projectionStrokeOpacity: 0.7,
-                            strokeWidth: 1
-                        }
-                    }
-                    if(!newView.tracks['whole']) {
-                        newView.tracks['whole'] = [];
-                    }
-                    newView.tracks['whole'].push(newProjectionTrackDef);
-                    newViewConfig.views[foundViewIndex] = newView;
-                }
-            }
-        }
+    if(!foundView.tracks['whole']) {
+        // There is no viewport projection horizontal track in this view.
+        console.log(`There is no ${TRACK_TYPE.VIEWPORT_PROJECTION_HORIZONTAL} in a HiGlass view.`);
+        return newViewConfig;
     }
-
+    if(foundView.tracks['whole'].find(d => d.uid === trackId)) {
+        const viewportIndex = foundView.tracks['whole'].findIndex(d => d.uid === trackId);
+        foundView.tracks['whole'] = removeItemFromArray(foundView.tracks['whole'], viewportIndex);
+        newViewConfig.views[foundViewIndex] = foundView;
+    }
     return newViewConfig;
 }
 
 /**
- * Add a track definitaion object to a higlass view config object.
- * @param {object} currViewConfig A valid higlass view config object.
- * @param {object} trackDef A track definition object.
- * @param {string} targetViewId The view ID for the track of interest.
- * @param {string} position The target position of the track, such as "top" or "bottom".
- * @returns {object} The new view config. 
+ * This function updates the view config when the user would like to create a genomic interval selection.
+ * @param {object} viewConfig The current HiGlass view config.
+ * @param {string} viewId The uid of view containing the `horizontal-multivec` track that was the target of the action.
+ * @param {number} startProp The relative starting position (0 ~ 1) of the genomic interval selection from the screen.
+ * @param {number} endProp The relative ending position (0 ~ 1) of the genomic interval selection from the screen.
+ * @param {string} uid The uid of the parent view.
+ * @returns {object} The updated HiGlass view config.
  */
-export function addTrackDefToViewConfig(currViewConfig, trackDef, targetViewId, position) {
-    const newViewConfig = cloneDeep(currViewConfig);
-    let viewIndex = -1;
-    // Get view index.
-    traverseViewConfig(currViewConfig, (d) => {
-        // The horizontal-multivec track could be standalone, or within a "combined" track.
-        if((d.trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC 
-            && d.viewId === targetViewId) || 
-            (d.trackType === TRACK_TYPE.COMBINED 
-            && d.innerTrackType === TRACK_TYPE.HORIZONTAL_MULTIVEC 
-            && d.viewId === targetViewId)
-        ) {
-            viewIndex = d.viewI;
-        }
-    });
-    if(viewIndex !== -1) {
-        newViewConfig.views[viewIndex].tracks[position].push(trackDef);
-    } else {
-        console.log(`WARNING: The following track is not found (${targetViewId}, ${neighborTrackId}).`);
+export function updateViewConfigOnSelectGenomicInterval(viewConfig, viewId, startProp, endProp, uid) {
+    const newViewConfig = cloneDeep(viewConfig);
+
+    // Find the view associated with this viewId.
+    const foundViewIndex = newViewConfig.views.findIndex(v => v.uid === viewId);
+    const foundView = newViewConfig.views[foundViewIndex];
+
+    const xRange = foundView.initialXDomain[1] - foundView.initialXDomain[0];
+    const xDomain = [
+        foundView.initialXDomain[0] + xRange * startProp,
+        foundView.initialXDomain[0] + xRange * endProp
+    ];
+
+    const newUid = `${foundView.uid}-${uid}`;
+    
+    if(!foundView.tracks['whole']) {
+        foundView.tracks['whole'] = [];
     }
+    if(foundView.tracks['whole'].find(d => d.uid === newUid)) {
+        const projIndex = foundView.tracks['whole'].findIndex(d => d.uid === newUid);
+        foundView.tracks['whole'][projIndex] = {
+            ...foundView.tracks['whole'][projIndex],
+            projectionXDomain: xDomain
+        };
+    } else {
+        const newProjectionTrackDef = {
+            type: TRACK_TYPE.VIEWPORT_PROJECTION_HORIZONTAL,
+            uid: newUid,
+            fromViewUid: null,
+            projectionXDomain: xDomain,
+            options: {
+                projectionFillColor: "#777",
+                projectionStrokeColor: "#777",
+                projectionFillOpacity: 0.3,
+                projectionStrokeOpacity: 0.7,
+                strokeWidth: 1
+            }
+        }
+        foundView.tracks['whole'].push(newProjectionTrackDef);
+        newViewConfig.views[foundViewIndex] = foundView;
+    }
+
     return newViewConfig;
 }
 
@@ -273,8 +302,8 @@ export function getHMSelectedRowsFromViewConfig(viewConfig, targetViewId, target
 export function getUniqueViewOrTrackId(viewConfig, { baseId, idKey, interfix }) {
     let newId = baseId;
     if(!baseId) {
-        // TODO: Generate UID with a random string.
-        //
+        // Generate UID with a random string.
+        newId = uuidv4();
     } else {
         if(interfix) {
             // Append suffix.
@@ -298,24 +327,44 @@ export function getUniqueViewOrTrackId(viewConfig, { baseId, idKey, interfix }) 
 }
 
 /**
- * Get all view and track pairs.
+ * Get all view ID and track ID pairs of HiGlass tracks.
  * @param {object} viewConfig A valid higlass view config object.
+ * @param {boolean} onlyHorizontalMultivec Only search for HiGlass `horizontal multivec tracks` (default: true).
+ * @param {boolean} notSide Exclude tracks on the left or right positions (default: false).
  * @returns {array} An array of objects of {traciId, viewId}.
  */
-export function getAllViewAndTrackPairs(viewConfig) {
+export function getAllViewAndTrackPairs(viewConfig, options={}) {
+    const {
+        onlyHorizontalMultivec=true,
+        notSide=false
+    } = options;
+
     let pairs = [];
     traverseViewConfig(viewConfig, (d) => {
-        // The horizontal-multivec track could be standalone, or within a "combined" track.
-        if(d.trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC) {
+        // Screening tracks.
+        if(!d.trackId) {
+            return;
+        } else if(notSide && (d.trackPos === "left" || d.trackPos === "right")) {
+            return;
+        }
+        if(!onlyHorizontalMultivec) {
             pairs.push({
                 viewId: d.viewId,
                 trackId: d.trackId
             });
-        } else if(d.trackType === TRACK_TYPE.COMBINED && d.innerTrackType === TRACK_TYPE.HORIZONTAL_MULTIVEC) {
-            pairs.push({
-                viewId: d.viewId,
-                trackId: d.innerTrackId
-            });
+        } else {
+            // The horizontal-multivec track could be standalone, or within a "combined" track.
+            if(d.trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC) {
+                pairs.push({
+                    viewId: d.viewId,
+                    trackId: d.trackId
+                });
+            } else if(d.trackType === TRACK_TYPE.COMBINED && d.innerTrackType === TRACK_TYPE.HORIZONTAL_MULTIVEC) {
+                pairs.push({
+                    viewId: d.viewId,
+                    trackId: d.innerTrackId
+                });
+            }
         }
     });
     return pairs;

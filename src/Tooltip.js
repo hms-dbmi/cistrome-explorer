@@ -20,7 +20,7 @@ export function destroyTooltip() {
  * @prop {string} color A color related to the value/title.
  */
 export function TooltipContent(props) {
-    const { title, value, color: background } = props;   
+    const { title, value, color: background, warning } = props;   
     return (
         <div className="chgw-tooltip-content">
             <div className="chgw-tooltip-title">{title}</div>
@@ -32,7 +32,7 @@ export function TooltipContent(props) {
                     : null
                 }
                 {value ? 
-                    <div>{value}</div>
+                    <div style={{color: warning ? "red" : "black"}}>{value}</div>
                     : null
                 }
             </div>

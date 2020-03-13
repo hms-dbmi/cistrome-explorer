@@ -58,7 +58,6 @@ export default function TrackRowInfoVis(props) {
     const resizerHeight = 10
     const resizerMargin = 2;
 
-
     const divRef = useRef();
     const resizerRef = useRef();
 

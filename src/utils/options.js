@@ -15,10 +15,6 @@ const baseSchema = {
             "properties": {
                 "viewId": { "type": "string" },
                 "trackId": { "type": "string" },
-                "colToolsPosition": {
-                    "type": "string",
-                    "enum": ["hidden", "bottom", "top"]
-                },
                 "rowInfoAttributes": {
                     "type": "array",
                     "items": { "$ref": "#/definitions/fieldInfo" }
@@ -192,7 +188,6 @@ export function processWrapperOptions(optionsRaw) {
     // Set up the default options:
     const options = {
         [DEFAULT_OPTIONS_KEY]: {
-            colToolsPosition: "bottom",
             rowInfoAttributes: []
         }
     };

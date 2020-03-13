@@ -21,6 +21,8 @@ toc:
 - TrackRowInfoVisQuantitativeBar
 - TrackRowSearch
 - TrackWrapper
+- ViewWrapper
+- ViewColumnBrush
 - SuggestionWithHighlight
 - name: Functions (internal)
 - validateWrapperOptions
@@ -30,9 +32,11 @@ toc:
 - getRetinaRatio
 - traverseViewConfig
 - getViewConfigOfSpecificTrack
+- addTrackDefToViewConfig
 - getHMTrackIdsFromViewConfig
 - getSiblingVPHTrackIdsFromViewConfig
 - updateViewConfigOnSelectGenomicInterval
+- removeViewportFromViewConfig
 - addViewConfigForNewTrack
 - updateViewConfigOnSelectRowsByTrack
 - getHMSelectedRowsFromViewConfig
@@ -53,6 +57,7 @@ toc:
 - componentToHex
 - rgbToHex
 - generateNextUniqueColor
+- getRange
 - name: Classes (internal)
 - Two
 - TwoRectangle

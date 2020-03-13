@@ -10,7 +10,8 @@ import {
     getAllViewAndTrackPairs,
     addTrackDefToViewConfig,
     getTrackDefFromViewConfig,
-    getUniqueViewOrTrackId
+    getUniqueViewOrTrackId,
+    removeViewportFromViewConfig
 } from './viewconf.js';
 
 import hgDemoViewConfig1 from '../viewconfigs/horizontal-multivec-1.json';
@@ -56,7 +57,7 @@ describe('Utilities for processing higlass view config objects', () => {
     });
 
     it('Should update the view config to create a genomic interval selection', () => {
-        const newViewConfig = updateViewConfigOnSelectGenomicInterval(hgDemoViewConfig1, "cistrome-view-1", "cistrome-track-1");
+        const newViewConfig = updateViewConfigOnSelectGenomicInterval(hgDemoViewConfig1, "cistrome-view-1", 0.25, 0.75, "cistrome-track-1");
 
         expect(newViewConfig.views.length).toEqual(1);
         expect(newViewConfig.views[0].tracks.center.length).toEqual(1);
@@ -90,5 +91,38 @@ describe('Utilities for processing higlass view config objects', () => {
         const searchedPairs = getAllViewAndTrackPairs(hgDemoViewConfig4);
         expect(searchedPairs.length).toEqual(2);
         expect(searchedPairs.find(d => d.viewId === "cistrome-view-4-1" && d.trackId === "cistrome-track-4-1") !== undefined).toEqual(true);
+    });
+
+    it('Should get viewId and trackId pairs of all kinds of tracks', () => {
+        const searchedPairs = getAllViewAndTrackPairs(hgDemoViewConfig4, { onlyHorizontalMultivec: false });
+        expect(searchedPairs.length).toEqual(8);
+        expect(searchedPairs.find(d => d.viewId === "cistrome-view-4-2" && d.trackId === "bmcNxj_MSEar_3nYVMnPnQ") !== undefined).toEqual(true);
+    });
+
+    it('Should get viewId and trackId pairs of all kinds of tracks, but without tracks on the left and right positions', () => {
+        const searchedPairs = getAllViewAndTrackPairs(hgDemoViewConfig4, { onlyHorizontalMultivec: false, notSide: true });
+        expect(searchedPairs.length).toEqual(8);
+        expect(searchedPairs.find(d => d.viewId === "cistrome-view-4-2" && d.trackId === "bmcNxj_MSEar_3nYVMnPnQ") !== undefined).toEqual(true);
+    });
+
+    it('Should get viewId and trackId pairs of all kinds of tracks, but without tracks on the left and right positions', () => {
+        const searchedPairs = getAllViewAndTrackPairs(hgDemoViewConfig4, { onlyHorizontalMultivec: true, notSide: true });
+        expect(searchedPairs.length).toEqual(2);
+        expect(searchedPairs.find(d => d.viewId === "cistrome-view-4-1" && d.trackId === "cistrome-track-4-1") !== undefined).toEqual(true);
+    });
+
+    it('Should remove a viewport-projection-horizontal track from viewConfig', () => {
+        const updatedViewConfig = removeViewportFromViewConfig(hgDemoViewConfig3, "cistrome-view-1", "cistrome-view-1-projection-track-1");
+        expect(updatedViewConfig.views[0].tracks['whole'].length).toEqual(0);
+    });
+
+    it('Should not remove a viewport-projection-horizontal track if it is missing from viewConfig', () => {
+        const updatedViewConfig = removeViewportFromViewConfig(hgDemoViewConfig3, "cistrome-view-1", "random-uid");
+        expect(updatedViewConfig.views[0].tracks['whole'].length).toEqual(1);
+    });
+
+    it('Should not remove a viewport-projection-horizontal track if whole track is missing from viewConfig', () => {
+        const updatedViewConfig = removeViewportFromViewConfig(hgDemoViewConfig1, "cistrome-view-1", "random-uid");
+        expect(updatedViewConfig.views[0].tracks['whole'].length).toEqual(0);
     });
 });

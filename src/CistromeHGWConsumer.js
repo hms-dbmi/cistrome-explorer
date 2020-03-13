@@ -8,14 +8,15 @@ import StackedBarTrack from 'higlass-multivec/es/StackedBarTrack.js';
 import { InfoContext, ACTION } from './utils/contexts.js';
 import { selectRows, highlightRowsFromSearch } from './utils/select-rows.js';
 import TrackWrapper from './TrackWrapper.js';
+import ViewWrapper from './ViewWrapper.js';
 import Tooltip from './Tooltip.js';
 import ContextMenu, { destroyContextMenu } from './ContextMenu.js';
 
 import { 
+    DEFAULT_OPTIONS_KEY,
     processWrapperOptions, 
     getTrackWrapperOptions,
     updateWrapperOptions,
-    DEFAULT_OPTIONS_KEY,
     addTrackWrapperOptions
 } from './utils/options.js';
 import { 
@@ -26,7 +27,9 @@ import {
     getHMSelectedRowsFromViewConfig,
     getUniqueViewOrTrackId,
     getTrackDefFromViewConfig,
-    addTrackDefToViewConfig
+    addTrackDefToViewConfig,
+    getAllViewAndTrackPairs,
+    removeViewportFromViewConfig
 } from './utils/viewconf.js';
 
 import './CistromeHGWConsumer.scss';
@@ -64,8 +67,8 @@ export default function CistromeHGWConsumer(props) {
     const drawRef = useRef({});
 
     const [options, setOptions] = useState({});
-    const [trackInfos, setTrackInfos] = useState([]);
-    const [siblingTrackInfos, setSiblingTrackInfos] = useState({});
+    const [muiltivecTrackIds, setMultivecTrackIds] = useState([]);
+    const [viewportTrackIds, setViewportTrackIds] = useState({});
     
     const context = useContext(InfoContext);
 
@@ -96,33 +99,62 @@ export default function CistromeHGWConsumer(props) {
      * to sibling `viewport-projection-horizontal` track IDs.
      */
     const onViewConfig = useCallback((newViewConfig) => {
-        const newTrackInfos = getHMTrackIdsFromViewConfig(newViewConfig);
-        const newSiblingTrackInfos = {};
-        for(let trackInfo of newTrackInfos) {
-            newSiblingTrackInfos[trackInfo.trackId] = getSiblingVPHTrackIdsFromViewConfig(newViewConfig, trackInfo.viewId);
+        const newTrackIds = getHMTrackIdsFromViewConfig(newViewConfig);
+        
+        // Add viewport projection horizontal track IDs for each view.
+        const newViewportTrackIds = {};
+        Array.from(new Set(newTrackIds.map(d => d.viewId))).forEach((viewId) => {    
+            newViewportTrackIds[viewId] = getSiblingVPHTrackIdsFromViewConfig(newViewConfig, viewId);
+        });
 
-            const newSelectedRows = getHMSelectedRowsFromViewConfig(newViewConfig, trackInfo.viewId, trackInfo.trackId);
+        for(let trackIds of newTrackIds) {
+            const newSelectedRows = getHMSelectedRowsFromViewConfig(newViewConfig, trackIds.viewId, trackIds.trackId);
             if(
-                !context.state[trackInfo.viewId] 
-                || !context.state[trackInfo.viewId][trackInfo.trackId] 
-                || !isEqual(newSelectedRows, context.state[trackInfo.viewId][trackInfo.trackId].selectedRows)
+                !context.state[trackIds.viewId] 
+                || !context.state[trackIds.viewId][trackIds.trackId] 
+                || !isEqual(newSelectedRows, context.state[trackIds.viewId][trackIds.trackId].selectedRows)
             ) {
                 context.dispatch({
                     type: ACTION.SELECT_ROWS,
-                    viewId: trackInfo.viewId,
-                    trackId: trackInfo.trackId,
+                    viewId: trackIds.viewId,
+                    trackId: trackIds.trackId,
                     selectedRows: newSelectedRows
                 });
             }
         }
-        setTrackInfos(newTrackInfos);
-        setSiblingTrackInfos(newSiblingTrackInfos);
+        setMultivecTrackIds(newTrackIds);
+        setViewportTrackIds(newViewportTrackIds);
     }, []);
 
     // Function to get a track object from the higlass API.
     const getTrackObject = useCallback((viewId, trackId) => {
         try {
             return hgRef.current.api.getTrackObject(viewId, trackId);
+        } catch(e) {
+            return null;
+        }
+    }, [hgRef]);
+
+    // Custom function to get the boundingbox of a view in higlass,
+    // i.e., { left, top, width, height }
+    const getViewBoundingBox = useCallback((viewId) => {
+        try {
+            const viewConfig = hgRef.current.api.getViewConfig();
+            const trackIds = getAllViewAndTrackPairs(viewConfig, { onlyHorizontalMultivec: false }).filter(d => d.viewId === viewId);
+            
+            let viewLeft = null, viewTop = null;
+            let viewWidth = null, viewBottom = null;
+            trackIds.forEach(({ trackId }) => {
+                const track = hgRef.current.api.getTrackObject(viewId, trackId);
+                const [left, top] = track.position;
+                const [width, height] = track.dimensions;
+
+                if(!viewLeft) viewLeft = left;
+                if(!viewWidth) viewWidth = width;
+                if(!viewTop || top < viewTop) viewTop = top;
+                if(!viewBottom || top + height > viewBottom) viewBottom = top + height;
+            });
+            return { left: viewLeft, top: viewTop, width: viewWidth, height: viewBottom - viewTop };
         } catch(e) {
             return null;
         }
@@ -283,7 +315,7 @@ export default function CistromeHGWConsumer(props) {
     return (
         <div className="chw-root">
             {hgComponent}
-            {trackInfos.map(({ viewId, trackId, trackTilesetId, combinedTrackId }, i) => (
+            {muiltivecTrackIds.map(({ viewId, trackId, trackTilesetId }, i) => (
                 <TrackWrapper
                     key={i}
                     options={getTrackWrapperOptions(options, viewId, trackId)}
@@ -291,15 +323,6 @@ export default function CistromeHGWConsumer(props) {
                     multivecTrackViewId={viewId}
                     multivecTrackTrackId={trackId}
                     multivecTrackTilesetId={trackTilesetId}
-                    combinedTrack={(combinedTrackId ? getTrackObject(viewId, combinedTrackId) : null)}
-                    siblingTracks={siblingTrackInfos[trackId] ? siblingTrackInfos[trackId].map(d => getTrackObject(viewId, d.trackId)) : []}
-                    onSelectGenomicInterval={() => {
-                        const currViewConfig = hgRef.current.api.getViewConfig();
-                        const newViewConfig = updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, trackId);
-                        hgRef.current.api.setViewConfig(newViewConfig).then(() => {
-                            onViewConfig(newViewConfig);
-                        });
-                    }}
                     onAddTrack={(field, type, contains, position) => {
                         onAddTrack(viewId, trackId, field, type, contains, position);
                     }} 
@@ -314,6 +337,29 @@ export default function CistromeHGWConsumer(props) {
                     }}
                     onMetadataLoad={() => {
                         onMetadataLoad(viewId, trackId);
+                    }}
+                    drawRegister={drawRegister}
+                />
+            ))}
+            {Array.from(new Set(muiltivecTrackIds.map(d => d.viewId))).map((viewId, i) => (
+                <ViewWrapper
+                    key={i}
+                    viewBoundingBox={getViewBoundingBox(viewId)}
+                    viewportTracks={viewportTrackIds[viewId] ? viewportTrackIds[viewId].map(d => getTrackObject(viewId, d.trackId)) : []}
+                    multivecTrack={getTrackObject(viewId, muiltivecTrackIds.filter(d => d.viewId === viewId)[0].trackId)}
+                    onSelectGenomicInterval={(startProp, endProp, uid) => {
+                        const currViewConfig = hgRef.current.api.getViewConfig();
+                        const newViewConfig = updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, startProp, endProp, uid);
+                        hgRef.current.api.setViewConfig(newViewConfig).then(() => {
+                            onViewConfig(newViewConfig);
+                        });
+                    }}
+                    onViewportRemove={(viewportId) => {
+                        const currViewConfig = hgRef.current.api.getViewConfig();
+                        const newViewConfig = removeViewportFromViewConfig(currViewConfig, viewId, viewportId);
+                        hgRef.current.api.setViewConfig(newViewConfig).then(() => {
+                            onViewConfig(newViewConfig);
+                        });
                     }}
                     drawRegister={drawRegister}
                 />
