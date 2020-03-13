@@ -3,6 +3,7 @@
 import { 
     validateWrapperOptions, 
     processWrapperOptions,
+    addTrackWrapperOptions,
     updateWrapperOptions,
     getTrackWrapperOptions,
     DEFAULT_OPTIONS_KEY 
@@ -126,61 +127,60 @@ describe('Utilities for processing wrapper component options', () => {
         expect(processedOptions.viewB.default.rowHighlight.field).toEqual("fieldBD");
     });
 
-    it('Should add sorting options to global default', () => {
-        const processedOptions = processWrapperOptions([
+    it('Should add track options in wrapper options', () => {
+        const updatedOptionsAC = addTrackWrapperOptions(
             {
-                viewId: DEFAULT_OPTIONS_KEY,
-                trackId: DEFAULT_OPTIONS_KEY,
-                rowHighlight: {field: "fieldDD", type: "nominal", contains: "abc"}
+                [DEFAULT_OPTIONS_KEY]: { rowHighlight: {field: "fieldDD", type: "nominal", contains: "abc"} },
+                viewA: { trackA: { rowHighlight: {field: "fieldAA", type: "nominal", contains: "abc"} } },
+                viewC: { [DEFAULT_OPTIONS_KEY]: { rowHighlight: {field: "fieldCD", type: "nominal", contains: "abc"} } }
             },
-            {
-                viewId: "viewA",
-                trackId: DEFAULT_OPTIONS_KEY,
-                rowHighlight: {field: "fieldAD", type: "nominal", contains: "abc"}
-            }
-        ]);
-        const updatedOptions = updateWrapperOptions(
-            processedOptions,
-            [{
-                field: "groupA",
-                type: "nominal",
-                order: "ascending"
-            }],
-            "rowSort",
-            DEFAULT_OPTIONS_KEY,
-            DEFAULT_OPTIONS_KEY,
-            { isReplace: true }
-        );
-        const globalDefaultOptions = updatedOptions[DEFAULT_OPTIONS_KEY];
-        expect(globalDefaultOptions.rowSort.length).toBe(1);
-        expect(globalDefaultOptions.rowSort[0].field).toBe("groupA");
-        expect(globalDefaultOptions.rowSort[0].type).toBe("nominal");
-        expect(globalDefaultOptions.rowSort[0].order).toBe("ascending");
-    });
-
-    it('Should add sorting options to global default when there is no track-specific options', () => {
-        const processedOptions = processWrapperOptions([
-            {
-                viewId: DEFAULT_OPTIONS_KEY,
-                trackId: DEFAULT_OPTIONS_KEY,
-                rowHighlight: {field: "fieldDD", type: "nominal", contains: "abc"}
-            },
-            {
-                viewId: "viewA",
-                trackId: DEFAULT_OPTIONS_KEY,
-                rowHighlight: {field: "fieldAD", type: "nominal", contains: "abc"}
-            }
-        ]);
-        const updatedOptions = updateWrapperOptions(
-            processedOptions,
-            [{
-                field: "groupA",
-                type: "nominal",
-                order: "ascending"
-            }],
-            "rowSort",
+            { rowHighlight: {field: "newField", type: "nominal", contains: "abc"} },
             "viewA",
-            "trackA",
+            "trackC"
+        );
+        expect(updatedOptionsAC.viewA.trackC.rowHighlight.field).toBe("newField");
+        const updatedOptionsZZ = addTrackWrapperOptions(
+            {
+                [DEFAULT_OPTIONS_KEY]: { rowHighlight: {field: "fieldDD", type: "nominal", contains: "abc"} },
+                viewA: { trackA: { rowHighlight: {field: "fieldAA", type: "nominal", contains: "abc"} } },
+                viewC: { [DEFAULT_OPTIONS_KEY]: { rowHighlight: {field: "fieldCD", type: "nominal", contains: "abc"} } }
+            },
+            { rowHighlight: {field: "newField", type: "nominal", contains: "abc"} },
+            "viewZ",
+            "trackZ"
+        );
+        expect(updatedOptionsZZ.viewZ.trackZ.rowHighlight.field).toBe("newField");
+        const updatedOptionsAA = addTrackWrapperOptions(
+            {
+                [DEFAULT_OPTIONS_KEY]: { rowHighlight: {field: "fieldAD", type: "nominal", contains: "abc"} },
+                viewA: { trackA: { rowHighlight: {field: "fieldAA", type: "nominal", contains: "abc"} } },
+                viewC: { [DEFAULT_OPTIONS_KEY]: { rowHighlight: {field: "fieldCD", type: "nominal", contains: "abc"} } }
+            },
+            { rowHighlight: {field: "newField", type: "nominal", contains: "abc"} },
+            "viewA",
+            "trackA"
+        );
+        expect(updatedOptionsAA.viewA.trackA.rowHighlight.field).toBe("newField");
+    });
+
+    it('Should make global default options and add sort options', () => {
+        const options = processWrapperOptions([
+            {
+                viewId: "viewA",
+                trackId: "trackA",
+                rowHighlight: {field: "fieldAA", type: "nominal", contains: "abc"}
+            }
+        ]);
+        const updatedOptions = updateWrapperOptions(
+            options,
+            [{
+                field: "groupA",
+                type: "nominal",
+                order: "ascending"
+            }],
+            "rowSort",
+            DEFAULT_OPTIONS_KEY,
+            DEFAULT_OPTIONS_KEY,
             { isReplace: true }
         );
         const globalDefaultOptions = updatedOptions[DEFAULT_OPTIONS_KEY];
@@ -190,7 +190,71 @@ describe('Utilities for processing wrapper component options', () => {
         expect(globalDefaultOptions.rowSort[0].order).toBe("ascending");
     });
 
-    it('Should update sorting options in global default', () => {
+    it('Should replace sort options in global default options', () => {
+        const options = processWrapperOptions([
+            {
+                viewId: DEFAULT_OPTIONS_KEY,
+                trackId: DEFAULT_OPTIONS_KEY,
+                rowHighlight: {field: "fieldDD", type: "nominal", contains: "abc"}
+            },
+            {
+                viewId: "viewA",
+                trackId: DEFAULT_OPTIONS_KEY,
+                rowHighlight: {field: "fieldAD", type: "nominal", contains: "abc"}
+            }
+        ]);
+        const updatedOptions = updateWrapperOptions(
+            options,
+            [{
+                field: "groupA",
+                type: "nominal",
+                order: "ascending"
+            }],
+            "rowSort",
+            DEFAULT_OPTIONS_KEY,
+            DEFAULT_OPTIONS_KEY,
+            { isReplace: true }
+        );
+        const globalDefaultOptions = updatedOptions[DEFAULT_OPTIONS_KEY];
+        expect(globalDefaultOptions.rowSort.length).toBe(1);
+        expect(globalDefaultOptions.rowSort[0].field).toBe("groupA");
+        expect(globalDefaultOptions.rowSort[0].type).toBe("nominal");
+        expect(globalDefaultOptions.rowSort[0].order).toBe("ascending");
+    });
+
+    it('Should add sort options in global default options when sort options were missing', () => {
+        const options = processWrapperOptions([
+            {
+                viewId: DEFAULT_OPTIONS_KEY,
+                trackId: DEFAULT_OPTIONS_KEY,
+                rowHighlight: {field: "fieldDD", type: "nominal", contains: "abc"}
+            },
+            {
+                viewId: "viewA",
+                trackId: DEFAULT_OPTIONS_KEY,
+                rowHighlight: {field: "fieldAD", type: "nominal", contains: "abc"}
+            }
+        ]);
+        const updatedOptions = updateWrapperOptions(
+            options,
+            {
+                field: "groupA",
+                type: "nominal",
+                order: "ascending"
+            },
+            "rowSort",
+            DEFAULT_OPTIONS_KEY,
+            DEFAULT_OPTIONS_KEY,
+            { isReplace: false }
+        );
+        const globalDefaultOptions = updatedOptions[DEFAULT_OPTIONS_KEY];
+        expect(globalDefaultOptions.rowSort.length).toBe(1);
+        expect(globalDefaultOptions.rowSort[0].field).toBe("groupA");
+        expect(globalDefaultOptions.rowSort[0].type).toBe("nominal");
+        expect(globalDefaultOptions.rowSort[0].order).toBe("ascending");
+    });
+
+    it('Should update sorting options in global default options', () => {
         const processedOptions = processWrapperOptions([
             {
                 viewId: DEFAULT_OPTIONS_KEY,
@@ -231,7 +295,7 @@ describe('Utilities for processing wrapper component options', () => {
         expect(globalDefaultOptions.rowSort[0].order).toBe("ascending");
     });
 
-    it('Should add filtering options in the list to track-global default', () => {
+    it('Should add filtering options in track-global default options', () => {
         const processedOptions = processWrapperOptions([
             {
                 viewId: DEFAULT_OPTIONS_KEY,
@@ -272,8 +336,44 @@ describe('Utilities for processing wrapper component options', () => {
         expect(trackGlobalOptions.rowFilter.filter(d => d.contains === "substringC").length).toBe(1);
     });
 
-    it('Should add sorting info to non-global options', () => {
+    it('Should replace sorting options in global default options if there is no track-specific options', () => {
         const processedOptions = processWrapperOptions([
+            {
+                viewId: DEFAULT_OPTIONS_KEY,
+                trackId: DEFAULT_OPTIONS_KEY,
+                rowHighlight: {field: "fieldDD", type: "nominal", contains: "abc"}
+            },
+            {
+                viewId: "viewA",
+                trackId: DEFAULT_OPTIONS_KEY,
+                rowHighlight: {field: "fieldAD", type: "nominal", contains: "abc"}
+            }
+        ]);
+        const updatedOptions = updateWrapperOptions(
+            processedOptions,
+            [{
+                field: "groupA",
+                type: "nominal",
+                order: "ascending"
+            }],
+            "rowSort",
+            "viewA",
+            "trackA",
+            { isReplace: true }
+        );
+        const globalDefaultOptions = updatedOptions[DEFAULT_OPTIONS_KEY];
+        expect(globalDefaultOptions.rowSort.length).toBe(1);
+        expect(globalDefaultOptions.rowSort[0].field).toBe("groupA");
+        expect(globalDefaultOptions.rowSort[0].type).toBe("nominal");
+        expect(globalDefaultOptions.rowSort[0].order).toBe("ascending");
+    });
+
+    it('Should add sorting options in track-specific options', () => {
+        const processedOptions = processWrapperOptions([
+            {
+                viewId: DEFAULT_OPTIONS_KEY,
+                trackId: DEFAULT_OPTIONS_KEY
+            },
             {
                 viewId: "viewA",
                 trackId: "trackA",
@@ -302,27 +402,27 @@ describe('Utilities for processing wrapper component options', () => {
 
     it('Should return the processed options object for a particular track', () => {
         const trackOptionsAA = getTrackWrapperOptions({
-            viewA: { trackA: { rowHighlight: {field: "fieldAA", type: "nominal", contains: "abc"} } },
-            [DEFAULT_OPTIONS_KEY]: { rowHighlight: {field: "fieldDD", type: "nominal", contains: "abc"} }
+            [DEFAULT_OPTIONS_KEY]: { rowHighlight: {field: "fieldDD", type: "nominal", contains: "abc"} },
+            viewA: { trackA: { rowHighlight: {field: "fieldAA", type: "nominal", contains: "abc"} } }
         }, "viewA", "trackA");
         expect(trackOptionsAA.rowHighlight.field).toEqual("fieldAA");
 
         const trackOptionsAB = getTrackWrapperOptions({
-            viewA: { trackA: { rowHighlight: {field: "fieldAA", type: "nominal", contains: "abc"} } },
-            [DEFAULT_OPTIONS_KEY]: { rowHighlight: {field: "fieldDD", type: "nominal", contains: "abc"} }
+            [DEFAULT_OPTIONS_KEY]: { rowHighlight: {field: "fieldDD", type: "nominal", contains: "abc"} },
+            viewA: { trackA: { rowHighlight: {field: "fieldAA", type: "nominal", contains: "abc"} } }
         }, "viewA", "trackB");
         expect(trackOptionsAB.rowHighlight.field).toEqual("fieldDD");
 
         const trackOptionsBA = getTrackWrapperOptions({
-            viewA: { trackA: { rowHighlight: {field: "fieldAA", type: "nominal", contains: "abc"} } },
-            [DEFAULT_OPTIONS_KEY]: { rowHighlight: {field: "fieldDD", type: "nominal", contains: "abc"} }
+            [DEFAULT_OPTIONS_KEY]: { rowHighlight: {field: "fieldDD", type: "nominal", contains: "abc"} },
+            viewA: { trackA: { rowHighlight: {field: "fieldAA", type: "nominal", contains: "abc"} } }
         }, "viewB", "trackA");
         expect(trackOptionsBA.rowHighlight.field).toEqual("fieldDD");
 
         const trackOptionsCA = getTrackWrapperOptions({
+            [DEFAULT_OPTIONS_KEY]: { rowHighlight: {field: "fieldDD", type: "nominal", contains: "abc"} },
             viewA: { trackA: { rowHighlight: {field: "fieldAA", type: "nominal", contains: "abc"} } },
-            viewC: { [DEFAULT_OPTIONS_KEY]: { rowHighlight: {field: "fieldCD", type: "nominal", contains: "abc"} } },
-            [DEFAULT_OPTIONS_KEY]: { rowHighlight: {field: "fieldDD", type: "nominal", contains: "abc"} }
+            viewC: { [DEFAULT_OPTIONS_KEY]: { rowHighlight: {field: "fieldCD", type: "nominal", contains: "abc"} } }
         }, "viewC", "trackA");
         expect(trackOptionsCA.rowHighlight.field).toEqual("fieldCD");
     });
