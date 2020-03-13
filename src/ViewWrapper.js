@@ -158,7 +158,6 @@ export default function ViewWrapper(props) {
                                 viewportTrack={viewportTrack}
                                 multivecTrack={multivecTrack}
                                 onViewportRemove={onViewportRemove}
-                                onRequestIntervalTFs={onRequestIntervalTFs}
                                 onRequestIntervalTFs={(intervalParams) => {
                                     setRequestedIntervalParams(intervalParams);
                                 }}
