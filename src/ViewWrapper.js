@@ -179,15 +179,25 @@ export default function ViewWrapper(props) {
                     }}/>
                 : null}
             </div>
-            {requestedIntervalParams ? 
-                <DataTableForIntervalTFs
-                    left={left}
-                    top={height + 40}
-                    width={width}
-                    height={600}
-                    intervalParams={requestedIntervalParams}
-                />
-            : null}
+            </div>
+            <div
+                style={{
+                    position: "absolute",
+                    top: `${top+height+40}px`,
+                    left: `${left}px`,
+                    width: `${width}px`
+                }}
+            >
+                {requestedIntervalParams ? 
+                    <DataTableForIntervalTFs
+                        left={0}
+                        top={0}
+                        width={width}
+                        height={600}
+                        intervalParams={requestedIntervalParams}
+                    />
+                : null}
+            </div>
         </div>
     );
 };
