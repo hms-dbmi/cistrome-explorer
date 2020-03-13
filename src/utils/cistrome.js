@@ -66,7 +66,14 @@ export function requestIntervalTFs(assembly, chrStartName, chrStartPos, chrEndNa
     const dbToolkitAPIURL = makeDBToolkitIntervalAPIURL(assembly, chrStartName, chrStartPos, chrEndName, chrEndPos);
 
     return fetch(dbToolkitAPIURL)
-        .then((response) => response.json())
+        .then((response) => {
+            if (!response.ok) {
+                return new Promise((resolve, reject) => {
+                    reject(`Error: ${response.statusText}`);
+                });
+            }
+            return response.json();
+        })
         .then((data) => {
             const keys = Object.keys(data);
 
