@@ -2,6 +2,7 @@ import React, { useCallback, useRef } from 'react';
 
 import "./TrackRowInfoControl.scss";
 import "./DataTable.scss";
+import { CLOSE } from './utils/icons';
 
 /**
  * Component for data table.
@@ -24,7 +25,8 @@ export default function DataTable(props) {
         title = "Data Preview",
         subtitle,
         isLoading = false,
-        onCheckRows = null
+        onCheckRows = null,
+        onClose
     } = props;
 
     // Store the currently-checked row indices in a mutable set object.
@@ -76,6 +78,17 @@ export default function DataTable(props) {
             }}
         >
             <h4 className="chw-table-title">{title}</h4>
+            <span style={{ verticalAlign: "middle", display: "inline-block" }}>
+                <svg
+                    className={`chw-button-black`}
+                    style={{ color: "gray" }}
+                    onClick={() => onClose()} 
+                    viewBox={CLOSE.viewBox}
+                >
+                    <title>Close data table</title>
+                    <path d={CLOSE.path} fill="currentColor"/>
+                </svg>
+            </span>
             <span className="chw-table-subtitle">
                 {isLoading ? (
                     <span className="chw-progress-ring" />

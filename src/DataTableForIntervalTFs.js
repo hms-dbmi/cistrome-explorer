@@ -31,6 +31,7 @@ export default function DataTableForIntervalTFs(props) {
         chrEndPos
     } = intervalParams;
 
+    const [isVisible, setIsVisible] = useState(false);
     const [requestStatus, setRequestStatus] = useState(null);
     const [dataTableRows, setDataTableRows] = useState([]);
     const [dataTableColumns, setDataTableColumns] = useState([]);
@@ -53,11 +54,11 @@ export default function DataTableForIntervalTFs(props) {
                     setRequestStatus({ msg, isLoading: false });
                 })
         }
-
+        setIsVisible(true);
         return (() => { didUnmount = true; });
     }, [intervalParams]);
 
-    return (requestStatus ? (
+    return (requestStatus && isVisible ? (
         <DataTable 
             left={left}
             top={top}
@@ -68,6 +69,7 @@ export default function DataTableForIntervalTFs(props) {
             isLoading={requestStatus.isLoading}
             rows={dataTableRows}
             columns={dataTableColumns}
+            onClose={() => setIsVisible(false)}
         />
     ) : null);
 }
