@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useRef } from 'react';
 
 import "./TrackRowInfoControl.scss";
 import "./DataTable.scss";
@@ -14,6 +14,8 @@ import "./DataTable.scss";
  * @prop {string} title A title for the table. Optional.
  * @prop {string} subtitle A subtitle for the table. Optional.
  * @prop {boolean} isLoading Whether the data is still loading, in which case show a spinner.
+ * @prop {(function|null)} onCheckRows If a function is provided, a checkbox will be shown for each row.
+ * On change of any checkbox elements, an array of all checked row objects will be passed to the function. By default, null.
  */
 export default function DataTable(props) {
     const {
@@ -21,18 +23,49 @@ export default function DataTable(props) {
         rows = [], columns = [],
         title = "Data Preview",
         subtitle,
-        isLoading = false
+        isLoading = false,
+        onCheckRows = null
     } = props;
 
-    const head = columns.map((c, j) => {
-        return <th key={j}>{c}</th>;
-    });
+    // Store the currently-checked row indices in a mutable set object.
+    const checkedRowIndicesRef = useRef(new Set());
 
-    let tableRows = rows.map((d, i) => {
-        const cells = columns.map((c, j) => {
+    const handleInputChange = useCallback((event) => {
+        if(!event || !event.target) return;
+        const target = event.target;
+        if(target.checked) {
+            checkedRowIndicesRef.current.add(target.value);
+        } else {
+            checkedRowIndicesRef.current.delete(target.value);
+        }
+        const checkedRows = Array.from(checkedRowIndicesRef.current).map(i => rows[i]);
+        onCheckRows(checkedRows);
+    }, [rows, columns, onCheckRows]);
+
+    const headRow = (
+        <tr>
+            {onCheckRows ? (<th></th>) : null}
+            {columns.map((c, j) => (
+                <th key={j}>{c}</th>
+            ))}
+        </tr>
+    );
+
+    const bodyRows = rows.map((d, i) => {
+        const checkboxCell = (onCheckRows ? (
+            <td>
+                <input
+                    type="checkbox"
+                    name="data-table-checkbox"
+                    value={i}
+                    onChange={handleInputChange}
+                />
+            </td>
+        ) : null);
+        const dataCells = columns.map((c, j) => {
             return <td key={j}>{d[c]}</td>;
         });
-        return <tr key={i}>{cells}</tr>;
+        return <tr key={i}>{checkboxCell}{dataCells}</tr>;
     });
 
     return (
@@ -56,14 +89,18 @@ export default function DataTable(props) {
                     overflowY: "auto"
                 }}
             >
-                {tableRows ? 
-                    <table className="chw-table">
-                        <tbody>
-                            <tr>{head}</tr>
-                            {tableRows}
-                        </tbody>
-                    </table>
-                : null}
+                {bodyRows ? (
+                    <form>
+                        <table className="chw-table">
+                            <thead>
+                                {headRow}
+                            </thead>
+                            <tbody>
+                                {bodyRows}
+                            </tbody>
+                        </table>
+                    </form>
+                ) : null}
             </div>
         </div>
     );
