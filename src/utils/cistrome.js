@@ -65,27 +65,33 @@ export function requestIntervalTFs(assembly, chrStartName, chrStartPos, chrEndNa
 
     const dbToolkitAPIURL = makeDBToolkitIntervalAPIURL(assembly, chrStartName, chrStartPos, chrEndName, chrEndPos);
 
-    return fetch(dbToolkitAPIURL)
-        .then((response) => {
-            if (!response.ok) {
-                return new Promise((resolve, reject) => {
-                    reject(`Error: ${response.statusText}`);
-                });
-            }
-            return response.json();
-        })
-        .then((data) => {
-            const keys = Object.keys(data);
-
-            return new Promise((resolve, reject) => {
-                if(keys.length === 0) {
-                    reject(`No data found for interval ${chrStartName}:${chrStartPos}-${chrEndPos}`);
+    try {
+        return fetch(dbToolkitAPIURL)
+            .then((response) => {
+                if (!response.ok) {
+                    return new Promise((resolve, reject) => {
+                        reject(`Error: ${response.statusText}`);
+                    });
                 }
-                // Generate data for table.
-                const rows = keys.map(k => data[k]);
-                const filteredRows = rows.slice(0, rows.length < 100 ? rows.length : 100);
-                const columns = Object.keys(data[keys[0]]);
-                resolve([filteredRows, columns]);
+                return response.json();
+            })
+            .then((data) => {
+                const keys = Object.keys(data);
+
+                return new Promise((resolve, reject) => {
+                    if(keys.length === 0) {
+                        reject(`No data found for interval ${chrStartName}:${chrStartPos}-${chrEndPos}`);
+                    }
+                    // Generate data for table.
+                    const rows = keys.map(k => data[k]);
+                    const filteredRows = rows.slice(0, rows.length < 100 ? rows.length : 100);
+                    const columns = Object.keys(data[keys[0]]);
+                    resolve([filteredRows, columns]);
+                });
             });
+    } catch(e) {
+        return new Promise((resolve, reject) => {
+            reject(`Error: ${e}`);
         });
+    }
 }
