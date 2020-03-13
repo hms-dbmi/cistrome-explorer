@@ -13,7 +13,6 @@ import { getRange } from './utils/viewport.js';
  * @prop {object} multivecTrack A object of `horizontal-multivec` track in the same view.
  * @prop {function} onSelectGenomicInterval The function to call upon selection of a genomic interval.
  * @prop {function} onViewportRemove The function to call upon removing a viewport track.
- * @prop {function} onRequestIntervalTFs The function to call upon making a request for further interval transcription factor data.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function ViewWrapper(props) {
