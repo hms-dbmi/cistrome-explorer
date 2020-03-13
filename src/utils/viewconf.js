@@ -154,12 +154,11 @@ export function getSiblingVPHTrackIdsFromViewConfig(viewConf, targetViewId) {
     return matches;
 }
 
-// TODO: tests.
 /**
  * This function removes a viewport horizontal track from a view config.
  * @param {object} viewConfig The current HiGlass view config.
  * @param {string} viewId The uid of view containing the `viewport-horizontal` track that was the target of the action.
- * @param {number} trackId The uid of the `viewport-horizontal` track that was the target of the action.
+ * @param {string} trackId The uid of the `viewport-horizontal` track that was the target of the action.
  * @returns {object} The updated HiGlass view config.
  */
 export function removeViewportFromViewConfig(viewConfig, viewId, trackId) {
@@ -334,7 +333,6 @@ export function getUniqueViewOrTrackId(viewConfig, { baseId, idKey, interfix }) 
  * @param {boolean} notSide Exclude tracks on the left or right positions (default: false).
  * @returns {array} An array of objects of {traciId, viewId}.
  */
-// TODO: Add more tests.
 export function getAllViewAndTrackPairs(viewConfig, options={}) {
     const {
         onlyHorizontalMultivec=true,
