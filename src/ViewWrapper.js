@@ -118,15 +118,17 @@ export default function ViewWrapper(props) {
     const brushBarTop = height + 4;
 
     return (
-        <div className="cistrome-hgw-view-wrapper"
-            style={{
-                position: "absolute",
-                top: `${top}px`,
-                left: `${left}px`,
-                width: `${width}px`, 
-                height: `${height}px`,
-                pointerEvents: "none"
-        }}>
+        <div className="cistrome-hgw-view-wrapper">
+            <div 
+                style={{
+                    position: "absolute",
+                    top: `${top}px`,
+                    left: `${left}px`,
+                    width: `${width}px`, 
+                    height: `${height}px`,
+                    pointerEvents: "none"
+                }}
+            >
             <div className="col-tools-brush-bar" ref={divRef}
                 style={{
                     top: `${brushBarTop}px`,
