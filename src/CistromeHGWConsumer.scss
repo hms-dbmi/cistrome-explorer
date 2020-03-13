@@ -31,44 +31,37 @@
 }
 
 .chw-button,
-.chw-button-black {
+.chw-button-sm,
+.chw-button-lg {
+    padding: 4px;
+    cursor: pointer;
+    border-radius: 2.5px;
+}
+.chw-button {
     height: 25px;
     width: 25px;
-    padding: 4px;
-    cursor: pointer;
-    border-radius: 2.5px;
 }
-.chw-button-sm,
-.chw-button-sm-black {
+.chw-button-sm {
     height: 20px;
     width: 20px;
-    padding: 4px;
-    cursor: pointer;
-    border-radius: 2.5px;
 }
-.chw-button-alert {
+.chw-button-lg {
     height: 35px;
     width: 35px;
-    padding: 4px;
-    color: #b6b6b6;
-    cursor: pointer;
-    border-radius: 2.5px;
 }
+.chw-button:hover,
 .chw-button-sm:hover,
-.chw-button-alert:hover {
+.chw-button-lg:hover {
     color: #fff;
     background: #337ab7;
     opacity: 1;
 }
-.chw-button-sm-black:hover {
-    color: black;
-    opacity: 1;
-}
-
 .chw-button-static {
     pointer-events: none;
 }
-
+.chw-button-middle {
+    border-radius: 0;
+}
 .chw-button-left {
     border-radius: 2.5px 0 0 2.5px;
 }

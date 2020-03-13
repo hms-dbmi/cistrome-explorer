@@ -5,6 +5,7 @@ import ViewColumnBrush from './ViewColumnBrush.js';
 import DataTableForIntervalTFs from './DataTableForIntervalTFs.js';
 import './ViewWrapper.scss';
 import { getRange } from './utils/viewport.js';
+import { ARROW_H } from './utils/icons.js';
 
 /**
  * Component for rendering genome interval selection tools.
@@ -162,6 +163,22 @@ export default function ViewWrapper(props) {
                             />
                         );
                     }))
+                : null}
+                {true ?
+                    <span style={{
+                        marginLeft: "4px",
+                        verticalAlign: "middle",
+                        color: "#b7b6b6",
+                        display: "inline-block",
+                        pointerEvents: "none"
+                    }}>
+                        <svg className={'chw-button-sm'}
+                            style={{ color: "#b7b6b6", verticalAlign: "middle" }}
+                            viewBox={ARROW_H.viewBox}>
+                            <path d={ARROW_H.path} fill="currentColor"/>
+                        </svg>
+                        Genomic Interval Selection Bar
+                    </span> 
                 : null}
             </div>
             <div className="col-tools-hg-overlay">

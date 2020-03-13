@@ -79,15 +79,16 @@ export default function ViewColumnBrush(props) {
             {end - start > 50 ? 
                 <div className={"chw-button-sm-container-horizontal"}
                     style={{
-                        right: "4px",
-                        top: "2px",
+                        right: "0px",
+                        height: "100%",
                         opacity: 1,
                         background: "none",
                         boxShadow: "none",
                         color: "gray"
                     }}>
                     {/* Cistrome DB API Button */}
-                    <svg className={"chw-button-sm-black"}
+                    <svg className={"chw-button-sm chw-button-middle"} 
+                        style={{ height: "100%" }}
                         onMouseOver={(e) => {
                             PubSub.publish(EVENT.TOOLTIP, {
                                 x: e.clientX,
@@ -115,7 +116,8 @@ export default function ViewColumnBrush(props) {
                         <path d={SEARCH.path} fill="currentColor"/>
                     </svg>
                     {/* Close Button */}
-                    <svg className={"chw-button-sm-black"}
+                    <svg className={"chw-button-sm chw-button-middle"}
+                        style={{ height: "100%" }}
                         onClick={() => onViewportRemove(viewportTrack.id)} 
                         viewBox={CLOSE.viewBox}>
                         <title>Remove viewport projection track</title>
