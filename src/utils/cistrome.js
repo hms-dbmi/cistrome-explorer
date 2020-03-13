@@ -87,5 +87,10 @@ export function requestIntervalTFs(assembly, chrStartName, chrStartPos, chrEndNa
                 const columns = Object.keys(data[keys[0]]);
                 resolve([filteredRows, columns]);
             });
+        })
+        .catch(error => {
+            return new Promise((resolve, reject) => {
+                reject(`Error: ${error.message}`);
+            });
         });
 }
