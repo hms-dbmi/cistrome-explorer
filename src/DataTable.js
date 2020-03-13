@@ -78,7 +78,7 @@ export default function DataTable(props) {
             }}
         >
             <h4 className="chw-table-title">{title}</h4>
-            <span style={{ verticalAlign: "middle" }}>
+            <span style={{ verticalAlign: "middle", display: "inline-block" }}>
                 <svg
                     className={`chw-button-black`}
                     style={{ color: "gray" }}
