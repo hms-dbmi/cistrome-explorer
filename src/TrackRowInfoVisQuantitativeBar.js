@@ -202,20 +202,20 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
         d3.select(domElement).selectAll("*").remove();
 
         const axisScale = isLeft ? xScale.domain(xScale.domain().reverse()) : xScale;
-        const axis = d3.axisTop(axisScale)
+        const axis = d3.axisBottom(axisScale)
             .ticks(Math.ceil(barAreaWidth / 40));
         
         d3.select(domElement)
             .attr("width", width)
             .attr("height", axisHeight)
             .append("g")
-                .attr("transform", `translate(${isLeft ? textAreaWidth - 1 : 1}, ${axisHeight - margin})`)
+                .attr("transform", `translate(${isLeft ? textAreaWidth - 1 : 1}, 0)`)
                 .call(axis);
         
         d3.select(domElement)
             .selectAll("text")
                 .attr("transform", `translate(${isLeft ? -3 : 3}, 0)`);
-        
+
         return () => { /* Teardown */ };
     });
     
@@ -276,16 +276,16 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
         <div
             ref={divRef}
             style={{
-                top: `${top - axisHeight}px`,
+                top: `${top}px`,
                 position: 'relative',
                 width: `${width}px`,
-                height: `${height + axisHeight}px`,
+                height: `${height}px`,
             }}
         >
             <canvas
                 ref={canvasRef}
                 style={{
-                    top: axisHeight,
+                    top: 0,
                     left: 0, 
                     width: `${width}px`,
                     height: `${height}px`,
@@ -296,16 +296,18 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                 ref={hiddenCanvasRef}
                 className="chw-hidden"
                 style={{
-                    top: axisHeight,
+                    top: 0,
                     left: 0, 
                     width: `${width}px`,
                     height: `${height}px`,
                     position: 'absolute'
                 }}
             />
-            <svg ref={axisRef}
-                style={{
-                    color: "#9A9A9A"
+            <svg ref={axisRef} 
+                style={{ 
+                    pointerEvents: "none",
+                    position: "absolute", 
+                    zIndex: 2
                 }}
             />
             <TrackRowInfoControl
