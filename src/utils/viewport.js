@@ -28,3 +28,20 @@ export function getRange(pos1, pos2, left, right) {
     
     return { start, end };
 }
+
+export const VIEWPORT_OPTIONS = {
+    "black": {
+        projectionFillColor: "black",
+        projectionStrokeColor: "black",
+        projectionFillOpacity: 0.15,
+        projectionStrokeOpacity: 0.4,
+        strokeWidth: 1
+    },
+    "gray": {
+        projectionFillColor: "#777",
+        projectionStrokeColor: "#777",
+        projectionFillOpacity: 0.3,
+        projectionStrokeOpacity: 0.7,
+        strokeWidth: 1
+    }
+}

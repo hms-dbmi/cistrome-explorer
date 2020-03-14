@@ -41,20 +41,19 @@ export default function ViewColumnBrush(props) {
         if(!assembly) {
             return null;
         }
-
         let didUnmount = false;
         const absDomain = viewportTrack.viewportXDomain;
         resolveIntervalCoordinates(assembly, absDomain[0], absDomain[1])
-        .then(result => {
-            if(!didUnmount) {
-                // Only update state if the component has not yet unmounted.
-                // See https://github.com/facebook/react/issues/14369#issuecomment-468267798
-                setChrStartName(result[0][0]);
-                setChrStartPos(result[0][1]);
-                setChrEndName(result[1][0]);
-                setChrEndPos(result[1][1]);
-            }
-        });
+            .then(result => {
+                if(!didUnmount) {
+                    // Only update state if the component has not yet unmounted.
+                    // See https://github.com/facebook/react/issues/14369#issuecomment-468267798
+                    setChrStartName(result[0][0]);
+                    setChrStartPos(result[0][1]);
+                    setChrEndName(result[1][0]);
+                    setChrEndPos(result[1][1]);
+                }
+            });
 
         return (() => { didUnmount = true; });
     });
@@ -69,6 +68,10 @@ export default function ViewColumnBrush(props) {
         // Do not show range when they are ourside.
         return null;
     }
+    
+    // Determines when to hide buttons based on the width of a viewport
+    // Changed from 50 to zero to show it at all time.
+    const minWidthToShowButton = 0; 
 
     return (
         <div className="col-tools-brush"
@@ -76,25 +79,29 @@ export default function ViewColumnBrush(props) {
                 left: start,
                 width: end - start
             }}>
-            {end - start > 50 ? 
+            {end - start > minWidthToShowButton ? 
                 <div className={"chw-button-sm-container-horizontal"}
                     style={{
-                        right: "4px",
-                        top: "2px",
+                        right: "0px",
+                        height: "100%",
                         opacity: 1,
                         background: "none",
                         boxShadow: "none",
                         color: "gray"
                     }}>
                     {/* Cistrome DB API Button */}
-                    <svg className={"chw-button-sm-black"}
+                    <svg className={"chw-button-sm chw-button-middle"} 
+                        style={{ height: "100%" }}
                         onMouseOver={(e) => {
                             PubSub.publish(EVENT.TOOLTIP, {
                                 x: e.clientX,
                                 y: e.clientY,
                                 content: <TooltipContent 
                                     title="Search bind TFs from Cistrome DB"
-                                    value={!intervalValid ? intervalInvalidMsg : undefined}
+                                    value={!intervalValid ? 
+                                        intervalInvalidMsg 
+                                        : `${chrStartName}:${chrStartPos}-${chrEndPos}`
+                                    }
                                     warning={!intervalValid}
                                 />
                             });
@@ -115,7 +122,8 @@ export default function ViewColumnBrush(props) {
                         <path d={SEARCH.path} fill="currentColor"/>
                     </svg>
                     {/* Close Button */}
-                    <svg className={"chw-button-sm-black"}
+                    <svg className={"chw-button-sm chw-button-middle"}
+                        style={{ height: "100%" }}
                         onClick={() => onViewportRemove(viewportTrack.id)} 
                         viewBox={CLOSE.viewBox}>
                         <title>Remove viewport projection track</title>
