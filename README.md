@@ -2,8 +2,8 @@
 
 _wrapper component for [HiGlass](http://higlass.io/), with features for viewing [CistromeDB](http://cistrome.org/db/) data_
 
-- [Demo](https://hms-dbmi.github.io/cistrome-higlass-wrapper/)
-- [Documentation](https://hms-dbmi.github.io/cistrome-higlass-wrapper/docs/)
+- [Demo](http://chgw.gehlenborglab.org/)
+- [Documentation](http://chgw.gehlenborglab.org/docs/)
 
 ### Development
 
