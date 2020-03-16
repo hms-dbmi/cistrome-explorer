@@ -67,7 +67,7 @@ export default function TrackRowHighlight(props) {
         return two.teardown;
     }, [width, height, totalNumRows, selectedRows, highlitRows]);
 
-    drawRegister("TrackRowHighlight", draw);
+    drawRegister("TrackRowHighlight", draw, { top, left, width, height });
 
     useEffect(() => {
         const canvas = canvasRef.current;
