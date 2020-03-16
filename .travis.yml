@@ -16,4 +16,5 @@ deploy:
     skip-cleanup: true
     github-token: $github_token
     local-dir: build-demo
+    fqdn: chgw.gehlenborglab.org
 keep-history: true
