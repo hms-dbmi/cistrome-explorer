@@ -60,7 +60,7 @@ const baseConfig = {
         }),
         html({
             title: pkg.name,
-            publicPath: `/${pkg.homepage.split('/')[3]}/`, // for gh-pages URL
+            publicPath: '/',
             fileName: OUTPUT_HTML,
             template: ({ publicPath, title }) => {
                 return htmlFromTemplate({
