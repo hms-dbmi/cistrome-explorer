@@ -111,15 +111,15 @@ export default function ViewWrapper(props) {
         };
     });
 
-    let assembly;
-    try{
-        assembly = multivecTrack.tilesetInfo.coordSystem;
-    } catch(e) {
-        console.log(e);   
-    }
-
     useEffect(() => {
-        if(assembly) {
+        let assembly;
+        try {
+            assembly = multivecTrack.tilesetInfo.coordSystem;
+        } catch(e) {
+            console.log(e);   
+        }
+
+        if(assembly && multivecTrack._xScale) {
             const domainX = multivecTrack._xScale.invert(mouseHoverX);
             resolveIntervalCoordinates(assembly, domainX)
                 .then(result => {

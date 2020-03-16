@@ -101,7 +101,9 @@ export default function TrackRowInfo(props) {
                     onSortRows={onSortRows}
                     onSearchRows={onSearchRows}
                     onFilterRows={onFilterRows}
-                    drawRegister={drawRegister}
+                    drawRegister={(key, draw, options) => {
+                        drawRegister(`${key}-${i}`, draw, { top: top + d.top, left: left + d.left, width: d.width, height: d.height })
+                    }}
                     
                     onWidthChanged={(val) => setUnitWidthByIndex(i, val)}
                 />

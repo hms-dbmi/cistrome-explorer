@@ -4,7 +4,7 @@
  * See https://github.com/d3/d3/issues/3076
  */ 
 
-import { select } from "d3-selection";
+import { select, create } from "d3-selection";
 import { format } from "d3-format";
 import { schemeSet3, schemeTableau10, interpolateViridis } from "d3-scale-chromatic";
 import { mouse, event as d3_event } from "d3-selection";
@@ -28,6 +28,7 @@ const scaleBand = vega_scale("band");
 export default {
     get event() { return d3_event; }, // https://stackoverflow.com/a/40048292
     select,
+    create,
     format,
     schemeSet3,
     schemeTableau10,

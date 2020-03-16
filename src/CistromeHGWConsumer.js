@@ -31,6 +31,7 @@ import {
     getAllViewAndTrackPairs,
     removeViewportFromViewConfig
 } from './utils/viewconf.js';
+import { wrapSvg } from './utils/wrap-svg.js';
 
 import './CistromeHGWConsumer.scss';
 import cloneDeep from 'lodash/cloneDeep';
@@ -186,10 +187,18 @@ export default function CistromeHGWConsumer(props) {
     }, [hgRef]);
 
     // Function for child components to call to "register" their draw functions.
-    const drawRegister = useCallback((key, drawFunction) => {
-        drawRef.current[key] = drawFunction;
+    const drawRegister = useCallback((key, draw, options) => {
+        drawRef.current[key] = { draw, options };
     }, [drawRef]);
 
+    // Listen for the `createSVG` event.
+    useEffect(() => {
+        hgRef.current.api.on('createSVG', (svg) => {
+            return wrapSvg(svg, drawRef.current);
+        });
+        return () => hgRef.current.api.off('createSVG');
+    }, [hgRef, drawRef]);
+    
     // Callback function for sorting.
     const onSortRows = useCallback((viewId, trackId, field, type, order) => {
         const newRowSort = [ { field, type, order } ];

@@ -120,7 +120,9 @@ export default function TrackWrapper(props) {
                     onSortRows={onSortRows}
                     onSearchRows={onSearchRows}
                     onFilterRows={onFilterRows}
-                    drawRegister={drawRegister}
+                    drawRegister={(key, draw, options) => {
+                        drawRegister(`${key}-left`, draw, options);
+                    }}
                 />) : null}
             {rightAttrs.length !== 0 ? 
                 (<TrackRowInfo
@@ -141,7 +143,9 @@ export default function TrackWrapper(props) {
                     onSortRows={onSortRows}
                     onSearchRows={onSearchRows}
                     onFilterRows={onFilterRows}
-                    drawRegister={drawRegister}
+                    drawRegister={(key, draw, options) => {
+                        drawRegister(`${key}-right`, draw, options);
+                    }}
                 />) : null}
             <TrackRowHighlight 
                 trackX={trackX}
