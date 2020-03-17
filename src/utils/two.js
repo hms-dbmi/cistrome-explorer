@@ -564,6 +564,11 @@ export default class Two {
             dims.width = width;
             dims.height = height;
         } catch(e) {
+            console.warn(e);
+        }
+
+        // Approximate text dimensions when not assigned properly.
+        if(dims.width === 0 && dims.height === 0){
             console.warn("Approximating text dimensions in Two.measureTextSvg().");
             dims.width = content.length;
             dims.height = d.fontsize;

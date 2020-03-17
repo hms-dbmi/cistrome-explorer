@@ -195,7 +195,7 @@ export function processWrapperOptions(optionsRaw) {
     // Validate the raw options:
     const valid = validateWrapperOptions(optionsRaw);
     if(!valid) {
-        console.log("WARNING: Invalid Wrapper Options.");
+        console.warn("Invalid Wrapper Options in processWrapperOptions().");
         return options;
     }
 
