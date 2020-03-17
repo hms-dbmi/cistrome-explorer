@@ -29,7 +29,7 @@ export function generateNextUniqueColor(i) {
         // https://stackoverflow.com/questions/15804149/rgb-color-permutation/15804183#15804183
         return rgbToHex([i & 0xff, (i & 0xff00) >> 8, (i & 0xff0000) >> 16]);
     } else {
-        console.log("WARNING: unique colors out of range.");
+        console.warn("Unique colors are out of range generateNextUniqueColor().");
         return "#000000";
     }
 }

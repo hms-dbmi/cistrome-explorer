@@ -116,7 +116,7 @@ export function addTrackDefToViewConfig(currViewConfig, trackDef, targetViewId, 
     if(viewIndex !== -1) {
         newViewConfig.views[viewIndex].tracks[position].push(trackDef);
     } else {
-        console.log(`WARNING: The following track is not found (${targetViewId}, ${neighborTrackId}).`);
+        console.warn(`The following track is not found (${targetViewId}, ${neighborTrackId}) in addTrackDefToViewConfig().`);
     }
     return newViewConfig;
 }
