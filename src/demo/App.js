@@ -110,20 +110,29 @@ const demos = {
             {
                 viewId: "default",
                 trackId: "default",
+            },
+            {
+                viewId: "cistrome-view-1",
+                trackId: "cistrome-track-1",
                 rowInfoAttributes: [
-                    {field: "Hierarchical Clustering (Average)", type: "tree", position: "left"},
-                    {field: "Random 3", type: "quantitative", position: "left"},
-                    {field: ["Random 1", "Random 2", "Random 3", "Random 4"], type: "quantitative", position: "left"},
                     {field: "Metadata URL", type: "url", position: "left", title: "cid"},
-                    {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right"},
                     {field: "Cell Type", type: "nominal", position: "right"},
                     {field: "Tissue Type", type: "nominal", position: "right"},
                     {field: "Species", type: "nominal", position: "right"}
+                ],
+                rowSort: [
+                    { field: "Cell Type", type: "nominal", order: "ascending" }
                 ]
             },
             {
                 viewId: "cistrome-view-1",
                 trackId: "cistrome-track-1-detail-view-1",
+                rowInfoAttributes: [
+                    {field: "Metadata URL", type: "url", position: "left", title: "cid"},
+                    {field: "Cell Type", type: "nominal", position: "right"},
+                    {field: "Tissue Type", type: "nominal", position: "right"},
+                    {field: "Species", type: "nominal", position: "right"}
+                ],
                 rowFilter: [
                     { field: "Cell Type", type: "nominal", contains: "Fibroblast" }
                 ]
