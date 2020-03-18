@@ -81,7 +81,7 @@ export default function DataTable(props) {
             <span style={{ verticalAlign: "middle", display: "inline-block" }}>
                 <svg
                     className={`chw-button`}
-                    style={{ color: "gray" }}
+                    style={{ color: "gray", background: "none" }}
                     onClick={() => onClose()} 
                     viewBox={CLOSE.viewBox}
                 >

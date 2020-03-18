@@ -69,6 +69,7 @@ export default function DataTableForIntervalTFs(props) {
             isLoading={requestStatus.isLoading}
             rows={dataTableRows}
             columns={dataTableColumns}
+            onCheckRows={() => {}}
             onClose={() => setIsVisible(false)}
         />
     ) : null);
