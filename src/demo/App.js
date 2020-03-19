@@ -16,8 +16,8 @@ const demos = {
         options: {
             rowInfoAttributes: [
                 {field: "Hierarchical Clustering (Average)", type: "tree", position: "left"},
-                {field: "Random 3", type: "quantitative", position: "left"},
-                {field: ["Random 1", "Random 2", "Random 3", "Random 4"], type: "quantitative", position: "left"},
+                {field: "qc_frip", type: "quantitative", position: "left"},
+                {field: "qc_fastqc", type: "quantitative", position: "left"},
                 {field: "Metadata URL", type: "url", position: "left", title: "cid"},
                 {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right"},
                 {field: "Cell Type", type: "nominal", position: "right"},
