@@ -65,7 +65,7 @@ export function requestIntervalTFs(assembly, chrStartName, chrStartPos, chrEndNa
 
     const dbToolkitAPIURL = makeDBToolkitIntervalAPIURL(assembly, chrStartName, chrStartPos, chrEndName, chrEndPos);
 
-    return fetch(dbToolkitAPIURL)
+    return fetch(dbToolkitAPIURL, { cache: "force-cache" })
         .then((response) => {
             if (!response.ok) {
                 return new Promise((resolve, reject) => {

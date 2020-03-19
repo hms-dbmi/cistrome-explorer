@@ -37,7 +37,7 @@ export default function ViewWrapper(props) {
     const [chrName, setChrName] = useState("");
     const [chrPos, setChrPos] = useState("");
     
-    const [requestedIntervalParams, setRequestedIntervalParams] = useState(null);
+    const [allIntervalParams, setAllIntervalParams] = useState([]);
 
     const brushBarHeight = 24;
 
@@ -182,7 +182,7 @@ export default function ViewWrapper(props) {
                                     multivecTrack={multivecTrack}
                                     onViewportRemove={onViewportRemove}
                                     onRequestIntervalTFs={(intervalParams) => {
-                                        setRequestedIntervalParams(intervalParams);
+                                        setAllIntervalParams([ intervalParams, ...allIntervalParams ]);
                                     }}
                                 />
                             ) : null;
@@ -237,13 +237,13 @@ export default function ViewWrapper(props) {
                     width: `${width}px`
                 }}
             >
-                {requestedIntervalParams ? 
+                {allIntervalParams.length > 0 ? 
                     <DataTableForIntervalTFs
                         left={0}
                         top={0}
                         width={width}
                         height={600}
-                        intervalParams={requestedIntervalParams}
+                        allIntervalParams={allIntervalParams}
                     />
                 : null}
             </div>
