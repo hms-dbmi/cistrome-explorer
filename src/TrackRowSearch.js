@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState, useMemo } from "react";
-import { CLOSE, FILTER, UNDO } from './utils/icons.js';
+import React, { useRef, useState, useEffect, useCallback, useMemo } from "react";
+import { CLOSE, FILTER, RESET, SEARCH } from './utils/icons.js';
+import d3 from "./utils/d3.js";
 
 import './TrackRowSearch.scss';
 
@@ -55,9 +56,12 @@ export default function TrackRowSearch(props) {
         transformedRowInfo
     } = props;
 
+    const moverRef = useRef();
     const inputRef = useRef();
     const [keyword, setKeyword] = useState("");
     const [suggestionIndex, setSuggestionIndex] = useState(undefined);
+    const [offset, setOffset] = useState({x: 0, y: 0});
+    const dragStartPos = useRef(null);
 
     const keywordUpperCase = keyword.toUpperCase();
 
@@ -100,13 +104,48 @@ export default function TrackRowSearch(props) {
         }
     }, [suggestions, suggestionIndex]);
 
+    // Set up the d3-drag handler functions (started, ended, dragged).
+    const started = useCallback(() => {
+        const event = d3.event;
+        dragStartPos.current = {
+            x: event.sourceEvent.clientX, 
+            y: event.sourceEvent.clientY
+        };
+    });
+
+    const ended = useCallback(() => {
+        dragStartPos.current = null;
+    });
+
+    const dragged = useCallback(() => {
+        const event = d3.event;
+        console.log(offset.x);
+        const diffX = offset.x + event.sourceEvent.clientX - dragStartPos.current.x;
+        const diffY = offset.y + event.sourceEvent.clientY - dragStartPos.current.y;
+        setOffset({x: diffX, y: diffY});
+    });
+
+    // Detect drag events for the resize element.
+    useEffect(() => {
+        const mover = moverRef.current;
+
+        const drag = d3.drag()
+            .on("start", started)
+            .on("drag", dragged)
+            .on("end", ended);
+
+        d3.select(mover).call(drag);
+
+        return () => d3.select(mover).on(".drag", null);
+    }, [moverRef, started, dragged, ended]);
+    
     function onKeywordChange(e) {
         const newKeyword = e.target.value;
         setKeyword(newKeyword);
         onChange(newKeyword);
     }
 
-    function onUndoClick() {
+    function onResetClick() {
         onFilter();
         setKeyword("");
     }
@@ -186,16 +225,23 @@ export default function TrackRowSearch(props) {
             className="chw-search"
             style={{
                 display: ((left !== null && top !== null) ? 'flex' : 'none'),
-                left: left - (width + padding * 2) / 2,
-                top: top - (height + padding * 2) - 80,
+                left: left - (width + padding * 2) / 2 + offset.x,
+                top: top - (height + padding * 2) - 80 + offset.y,
             }}
         >
-            <div
-                className="chw-search-box"
+            <div className="chw-search-box"
                 style={{
-                    padding: padding
-                }}
-            >
+                    padding: padding,
+                    paddingLeft: '0px'
+                }}>
+                <div ref={moverRef} className="chw-button-drag">
+                    <div/><div/><div/>
+                </div>
+                <svg className="chw-button-sm chw-button-static" 
+                    style={{ color: "gray", marginLeft: "0px" }}
+                    viewBox={SEARCH.viewBox}>
+                    <path d={SEARCH.path} fill="currentColor"/>
+                </svg>
                 <input
                     ref={inputRef}
                     className="chw-search-box-input"
@@ -209,16 +255,15 @@ export default function TrackRowSearch(props) {
                         height 
                     }}
                 />
-                
                 <svg className="chw-button-sm"
                     onClick={onFilterClick} viewBox={FILTER.viewBox}>
-                    <title>Filter rows using the keyword.</title>
+                    <title>Filter rows by searching for keywords</title>
                     <path d={FILTER.path} fill="currentColor"/>
                 </svg>
                 <svg className="chw-button-sm"
-                    onClick={onUndoClick} viewBox={UNDO.viewBox}>
-                    <title>Remove highlights and filters.</title>
-                    <path d={UNDO.path} fill="currentColor"/>
+                    onClick={onResetClick} viewBox={RESET.viewBox}>
+                    <title>Remove all filters</title>
+                    <path d={RESET.path} fill="currentColor"/>
                 </svg>
                 <svg className="chw-button-sm"
                     onClick={onSearchClose} viewBox={CLOSE.viewBox}>
@@ -231,8 +276,9 @@ export default function TrackRowSearch(props) {
                 className="chw-search-suggestions"
                 style={{
                     top: (padding + height),
-                    left: padding,
+                    left: "45px",
                     width,
+                    visibility: suggestions.length > 0 ? "visible" : "collapse"
                 }}
             >
                 <ul>

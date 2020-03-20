@@ -5,8 +5,6 @@ import TrackRowInfoVisNominalBar from './TrackRowInfoVisNominalBar.js';
 import TrackRowInfoVisQuantitativeBar from './TrackRowInfoVisQuantitativeBar.js';
 import TrackRowInfoVisLink from './TrackRowInfoVisLink.js';
 import TrackRowInfoVisDendrogram from './TrackRowInfoVisDendrogram.js';
-import './TrackResizer.scss';
-
 
 const fieldTypeToVisComponent = {
     "nominal": TrackRowInfoVisNominalBar,

@@ -38,7 +38,8 @@
     border-radius: 2.5px;
     transition: background .15s ease, color .15s ease;
 }
-.chw-button {
+.chw-button,
+.chw-button-drag {
     height: 25px;
     width: 25px;
 }
@@ -60,6 +61,19 @@
 .chw-button-static {
     pointer-events: none;
 }
+.chw-button-drag {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: move;
+    div {
+        width: 1px;
+        height: 50%;
+        margin: 1px;
+        background: #bbb;
+    }
+}
 .chw-button-middle {
     border-radius: 0;
 }
@@ -75,3 +89,23 @@
 .chw-button-bottom {
     border-radius: 0 0 2.5px 2.5px;
 }
+
+.visualization-resizer {
+    position: absolute;
+    cursor: ew-resize;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    opacity: 0.3;
+    z-index: 1;
+    transform-origin: center;
+    scale: 1;
+    transition: transform .15s ease, opacity .15s ease;
+}
+
+.visualization-resizer:hover, 
+.visualization-resizer:active {
+    box-shadow: 0 0 3px 1px #0089ff;
+    background: #0089ff;
+    opacity: 1;
+    transform: scale(2);
+} 
