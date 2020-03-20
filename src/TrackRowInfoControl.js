@@ -90,11 +90,14 @@ export default function TrackRowInfoControl(props){
             icon: FILTER,
             title: "Search keywords"
         });
+    }
+
+    if(onFilterRows) {
         buttons.push({
             onClick: onReset,
             icon: RESET,
             title: "Remove all filters"
-        })
+        });
     }
 
     return (
