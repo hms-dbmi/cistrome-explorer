@@ -5,6 +5,7 @@
     border-radius: 6px;
     background: white;
     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 0 3px 0 rgba(0, 0, 0, 0.075), 0 0 7px 0 rgba(0, 0, 0, 0.05);
+    opacity: 0.8;
     .chw-search-box {
         width: auto;
         height: auto;
@@ -35,6 +36,10 @@
             }
         }
     }
+}
+.chw-search:hover,
+.chw-search:focus-within {
+    opacity: 1;
 }
 
 .chw-search-suggestion-text {

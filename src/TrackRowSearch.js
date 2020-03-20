@@ -71,7 +71,9 @@ export default function TrackRowSearch(props) {
     const padding = 5;
     
     useEffect(() => {
-        inputRef.current.focus();
+        if(type === "nominal") {
+            inputRef.current.focus();
+        }
     });
 
     const suggestions = useMemo(() => {
@@ -237,24 +239,31 @@ export default function TrackRowSearch(props) {
                 <div ref={moverRef} className="chw-button-drag">
                     <div/><div/><div/>
                 </div>
-                <svg className="chw-button-sm chw-button-static" 
-                    style={{ color: "gray", marginLeft: "0px" }}
-                    viewBox={SEARCH.viewBox}>
-                    <path d={SEARCH.path} fill="currentColor"/>
-                </svg>
-                <input
-                    ref={inputRef}
-                    className="chw-search-box-input"
-                    type="text"
-                    name="default name"
-                    placeholder="keyword"
-                    onChange={onKeywordChange}
-                    onKeyDown={onKeyDown}
-                    style={{ 
-                        width, 
-                        height 
-                    }}
-                />
+                {type === "nominal" ?
+                    <svg className="chw-button-sm chw-button-static" 
+                        style={{ color: "gray", marginLeft: "0px" }}
+                        viewBox={SEARCH.viewBox}>
+                        <path d={SEARCH.path} fill="currentColor"/>
+                    </svg>
+                    : null
+                }
+                {/* Text Field or Slider */}
+                {type === "nominal" ?
+                    <input
+                        ref={inputRef}
+                        className="chw-search-box-input"
+                        type="text"
+                        name="default name"
+                        placeholder="keyword"
+                        onChange={onKeywordChange}
+                        onKeyDown={onKeyDown}
+                        style={{ 
+                            width, 
+                            height 
+                        }}
+                    />
+                    : null
+                }
                 <svg className="chw-button-sm"
                     onClick={onFilterClick} viewBox={FILTER.viewBox}>
                     <title>Filter rows by searching for keywords</title>
@@ -271,33 +280,36 @@ export default function TrackRowSearch(props) {
                     <path d={CLOSE.path} fill="currentColor"/>
                 </svg>
             </div>
-
-            <div 
-                className="chw-search-suggestions"
-                style={{
-                    top: (padding + height),
-                    left: "45px",
-                    width,
-                    visibility: suggestions.length > 0 ? "visible" : "collapse"
-                }}
-            >
-                <ul>
-                    {suggestions.map((d, i) => (
-                        <li
-                            key={d}
-                            className={"chw-search-suggestion-text " + (i === suggestionIndex ? "active-suggestion" : "")}
-                            onClick={() => onSuggestionEnter(d)}
-                            onMouseEnter={() => setSuggestionIndex(i)}
-                            onMouseLeave={() => setSuggestionIndex(undefined)}
-                        >
-                            <SuggestionWithHighlight
-                                text={d}
-                                target={keywordUpperCase}
-                            />
-                        </li>
-                    ))}
-                </ul>
-            </div>
+            
+            {type === "nominal" ?
+                <div 
+                    className="chw-search-suggestions"
+                    style={{
+                        top: (padding + height),
+                        left: "45px",
+                        width,
+                        visibility: suggestions.length > 0 ? "visible" : "collapse"
+                    }}
+                >
+                    <ul>
+                        {suggestions.map((d, i) => (
+                            <li
+                                key={d}
+                                className={"chw-search-suggestion-text " + (i === suggestionIndex ? "active-suggestion" : "")}
+                                onClick={() => onSuggestionEnter(d)}
+                                onMouseEnter={() => setSuggestionIndex(i)}
+                                onMouseLeave={() => setSuggestionIndex(undefined)}
+                            >
+                                <SuggestionWithHighlight
+                                    text={d}
+                                    target={keywordUpperCase}
+                                />
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                : null
+            }
         </div>
     );
 }

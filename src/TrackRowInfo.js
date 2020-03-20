@@ -104,7 +104,6 @@ export default function TrackRowInfo(props) {
                     drawRegister={(key, draw, options) => {
                         drawRegister(`${key}-${i}`, draw, { top: top + d.top, left: left + d.left, width: d.width, height: d.height })
                     }}
-                    
                     onWidthChanged={(val) => setUnitWidthByIndex(i, val)}
                 />
             ))}
