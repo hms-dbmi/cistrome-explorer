@@ -1,4 +1,13 @@
-## 0.2.0 - in progress
+## 0.3.0 - in progress
+
+### Added
+- Added real data (quality score for each sample) for quantitative bar charts.
+- Added a feature to interactively reposition the keyword search box.
+- Added filter reset buttons directly on the wrapper tracks to make it more accessible.
+
+### Changed
+
+## 0.2.0 - 03/18/20
 
 ### Added
 - Added a feature to interactively resize the width of each vertical track by dragging resizers.

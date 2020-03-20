@@ -8,6 +8,7 @@ import { drawVisTitle } from "./utils/vis.js";
 import { matrixToTree } from './utils/tree.js';
 import { SORT_TREE } from './utils/icons.js';
 import { TooltipContent, destroyTooltip } from './Tooltip.js';
+import TrackRowInfoControl from "./TrackRowInfoControl.js";
 
 /**
  * Component for visualization of row info hierarchies.
@@ -218,6 +219,15 @@ export default function TrackRowInfoVisDendrogram(props) {
                     width: `${width}px`,
                     height: `${height}px`
                 }}
+            />
+            <TrackRowInfoControl
+                isLeft={isLeft}
+                isVisible={isMouseHover}
+                fieldInfo={fieldInfo}
+                searchTop={top}
+                searchLeft={left}
+                onFilterRows={onFilterRows}
+                transformedRowInfo={transformedRowInfo}
             />
             {cannotAlign ? (
                 <div onClick={() => onSortRows(fieldInfo.field, fieldInfo.type, "ascending")}

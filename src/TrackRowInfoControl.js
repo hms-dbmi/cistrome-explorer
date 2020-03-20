@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import PubSub from 'pubsub-js';
 
-import { SEARCH, SORT_ASC, SORT_DESC } from './utils/icons.js';
+import { SORT_ASC, SORT_DESC, FILTER, RESET } from './utils/icons.js';
 import TrackRowSearch from './TrackRowSearch.js';
 
 const LOCAL_EVENT_SEARCH_OPEN = "search-open";
@@ -66,6 +66,9 @@ export default function TrackRowInfoControl(props){
     function onSearchChange(value) {
         onSearchRows(controlField, controlType, value);
     }
+    function onReset() {
+        onFilterRows();
+    }
 
     const buttons = [];
     if(type !== "tree") {
@@ -84,9 +87,17 @@ export default function TrackRowInfoControl(props){
     if(onSearchRows) {
         buttons.push({
             onClick: onSearchClick,
-            icon: SEARCH,
+            icon: FILTER,
             title: "Search keywords"
-        })
+        });
+    }
+
+    if(onFilterRows) {
+        buttons.push({
+            onClick: onReset,
+            icon: RESET,
+            title: "Remove all filters"
+        });
     }
 
     return (

@@ -12,9 +12,13 @@
         align-items: center;
         .chw-search-box-input {
             margin-right: 6px;
+            border: none;
+            border-bottom: solid 1px lightgray;
+        }
+        .chw-search-box-input:focus{
+            outline: none;
         }
     }
-
     .chw-search-suggestions {
         line-height: 14px;
         border-left: 1px solid silver;
