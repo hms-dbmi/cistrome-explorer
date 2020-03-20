@@ -279,8 +279,7 @@ export default function TrackRowSearch(props) {
                     <title>Close search box</title>
                     <path d={CLOSE.path} fill="currentColor"/>
                 </svg>
-            </div>
-            
+            </div>   
             {type === "nominal" ?
                 <div 
                     className="chw-search-suggestions"
