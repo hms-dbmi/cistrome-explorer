@@ -1,0 +1,15 @@
+.chw-range-slider-container {
+    display: flex;
+    flex-direction: row;
+    .chw-range-slider {
+        width: 100px;
+    }
+    .chw-range-input {
+        margin-right: 6px;
+        border: none;
+        border-bottom: solid 1px lightgray;
+    }
+    .chw-range-input:focus{
+        outline: none;
+    }
+}

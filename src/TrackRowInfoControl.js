@@ -13,6 +13,8 @@ const LOCAL_EVENT_SEARCH_OPEN = "search-open";
  * @prop {function} onSortRows The function to call upon a sort interaction.
  * @prop {function} onSearchRows The function to call upon a search interaction.
  * @prop {function} onFilterRows The function to call upon a filter interaction.
+ * @prop {object[]} transformedRowInfo The `rowInfo` array after transforming by filtering and sorting according to the selected rows.
+ * @prop {array} valueExtent The array that have two numbers, indicating the min and max values.
  */
 export default function TrackRowInfoControl(props){
     const {
@@ -21,7 +23,8 @@ export default function TrackRowInfoControl(props){
         onSortRows,
         onSearchRows,
         onFilterRows,
-        transformedRowInfo
+        transformedRowInfo,
+        valueExtent
     } = props;
 
     const divRef = useRef();
@@ -138,9 +141,10 @@ export default function TrackRowInfoControl(props){
                     field={controlField}
                     type={controlType}
                     onChange={onSearchChange}
-                    onFilter={onFilterRows}
+                    onFilterRows={onFilterRows}
                     onClose={onSearchClose}
                     transformedRowInfo={transformedRowInfo}
+                    valueExtent={valueExtent}
                 />
             ) : null}
         </div>

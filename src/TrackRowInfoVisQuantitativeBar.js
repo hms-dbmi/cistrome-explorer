@@ -50,6 +50,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
     const canvasRef = useRef();
     const hiddenCanvasRef = useRef();
     const [isMouseHover, setIsMouseHover] = useState(null);
+    const [xExtent, setXExtent] = useState([null, null]);
 
     // Data, layouts and styles
     const { field } = fieldInfo;
@@ -261,6 +262,8 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
         d3.select(canvas).on("mouseout", destroyTooltip);
         d3.select(div).on("mouseenter", () => setIsMouseHover(true));
         d3.select(div).on("mouseleave", () => setIsMouseHover(null));
+        
+        setXExtent(d3.extent(xScale.domain()));
 
         // Clean up.
         return () => {
@@ -320,6 +323,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                 onSearchRows={onSearchRows}
                 onFilterRows={onFilterRows}
                 transformedRowInfo={transformedRowInfo}
+                valueExtent={xExtent}
             />
         </div>
     );

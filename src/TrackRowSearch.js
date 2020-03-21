@@ -3,6 +3,7 @@ import { CLOSE, FILTER, RESET, SEARCH } from './utils/icons.js';
 import d3 from "./utils/d3.js";
 
 import './TrackRowSearch.scss';
+import RangeSlider from "./RangeSlider.js";
 
 const MAX_NUM_SUGGESTIONS = 15;
 
@@ -40,8 +41,13 @@ function SuggestionWithHighlight(props) {
  * Text field to serach for keywords.
  * @prop {number} top The top coordinate.
  * @prop {number} left The left coordinate.
+ * @prop {string} field The name of field related to the wrapper track.
+ * @prop {string} type The type of field related to the wrapper track.
  * @prop {function} onChange The function to call when the search keyword has changed.
+ * @prop {function} onFilterRows The function to call when the filter should be applied.
  * @prop {function} onClose The function to call when the search field should be closed.
+ * @prop {object[]} transformedRowInfo The `rowInfo` array after transforming by filtering and sorting according to the selected rows.
+ * @prop {array} valueExtent The array that have two numbers, indicating the min and max values.
  * @example
  * <TrackRowSearch/>
  */
@@ -51,13 +57,14 @@ export default function TrackRowSearch(props) {
         top, left,
         field, type,
         onChange,
-        onFilter,
+        onFilterRows,
         onClose,
-        transformedRowInfo
+        transformedRowInfo,
+        valueExtent
     } = props;
 
     const moverRef = useRef();
-    const inputRef = useRef();
+    const keywordInputRef = useRef();
     const [keyword, setKeyword] = useState("");
     const [suggestionIndex, setSuggestionIndex] = useState(undefined);
     const [offset, setOffset] = useState({x: 0, y: 0});
@@ -72,7 +79,7 @@ export default function TrackRowSearch(props) {
     
     useEffect(() => {
         if(type === "nominal") {
-            inputRef.current.focus();
+            keywordInputRef.current.focus();
         }
     });
 
@@ -148,7 +155,7 @@ export default function TrackRowSearch(props) {
     }
 
     function onResetClick() {
-        onFilter();
+        onFilterRows();
         setKeyword("");
     }
 
@@ -159,19 +166,26 @@ export default function TrackRowSearch(props) {
         setSuggestionIndex(undefined);
     }
 
-    function onFilterClick() {
+    function onFilterByKeyword() {
         let contains = keyword.toString();
         if(suggestionIndex !== undefined) {
             contains = suggestions[suggestionIndex];
         }
-        onFilter(field, type, contains);
+        onFilterRows(field, type, contains);
         setKeyword("");
         setSuggestionIndex(undefined);
     }
 
+    function onFilterByRange(min, max) {
+        // TODO:
+        console.log(min, max);
+        // onFilterRows(field, type, contains);
+        // setKeyword("");
+    }
+
     function onSuggestionEnter(suggestion) {
         const contains = suggestion;
-        onFilter(field, type, contains);
+        onFilterRows(field, type, contains);
         setKeyword("");
         setSuggestionIndex(undefined);
     }
@@ -213,7 +227,7 @@ export default function TrackRowSearch(props) {
                 suggestionIndexIncrement();
                 break;
             case 'Enter':
-                onFilterClick(); 
+                onFilterByKeyword(); 
                 break;
             case 'Esc':
             case 'Escape':
@@ -247,10 +261,9 @@ export default function TrackRowSearch(props) {
                     </svg>
                     : null
                 }
-                {/* Text Field or Slider */}
                 {type === "nominal" ?
                     <input
-                        ref={inputRef}
+                        ref={keywordInputRef}
                         className="chw-search-box-input"
                         type="text"
                         name="default name"
@@ -261,11 +274,16 @@ export default function TrackRowSearch(props) {
                             width, 
                             height 
                         }}
+                    /> :
+                    <RangeSlider
+                        height={height}
+                        valueExtent={valueExtent}
+                        onClose={onSearchClose}
+                        onFilter={onFilterByRange}
                     />
-                    : null
                 }
                 <svg className="chw-button-sm"
-                    onClick={onFilterClick} viewBox={FILTER.viewBox}>
+                    onClick={onFilterByKeyword} viewBox={FILTER.viewBox}>
                     <title>Filter rows by searching for keywords</title>
                     <path d={FILTER.path} fill="currentColor"/>
                 </svg>
