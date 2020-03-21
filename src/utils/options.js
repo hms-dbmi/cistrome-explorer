@@ -29,7 +29,7 @@ const baseSchema = {
                 },
                 "rowHighlight": {
                     "type": "object",
-                    "required": ["field", "type", "contains"],
+                    "required": ["field", "type"],
                     "properties": {
                         "field": {
                             "type": "string",
@@ -43,6 +43,10 @@ const baseSchema = {
                         "contains": {
                             "type": "string",
                             "description": "The substring to search for"
+                        },
+                        "range": {
+                            "type": "array",
+                            "description": "Min and max values"
                         }
                     }
                 }

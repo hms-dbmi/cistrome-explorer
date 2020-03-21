@@ -87,8 +87,8 @@ export default function CistromeHGWConsumer(props) {
         
         // Highlight.
         if(trackOptions.rowHighlight) {
-            const { field, type, contains } = trackOptions.rowHighlight;
-            const newHighlitRows = highlightRowsFromSearch(rowInfo, field, type, contains);
+            const { field, type, contains, range } = trackOptions.rowHighlight;
+            const newHighlitRows = highlightRowsFromSearch(rowInfo, field, type, type === "nominal" ? contains : range);    // TODO: better clear
             setHighlitRows(viewId, trackId, newHighlitRows);
         }
     }, [options]);
@@ -212,14 +212,15 @@ export default function CistromeHGWConsumer(props) {
     }, [options]);
 
     // Callback function for searching and highlighting.
-    const onSearchRows = useCallback((viewId, trackId, field, type, contains) => {
+    const onSearchRows = useCallback((viewId, trackId, field, type, condition) => {
         // TODO: Better handle with multiple fields & quantitative fields.
         if(Array.isArray(field)) return;
-        const newRowHighlight = { field, type, contains };
+        const highlightKey = type === "nominal" ? "contains" : "range";
+        const newRowHighlight = { field, type, [highlightKey]: condition };
         const newOptions = updateWrapperOptions(options, newRowHighlight, "rowHighlight", viewId, trackId, { isReplace: true });
 
         // Highlighting options are specified only in the wrapper options.
-        const newHighlitRows = highlightRowsFromSearch(context.state[viewId][trackId].rowInfo, field, type, contains);
+        const newHighlitRows = highlightRowsFromSearch(context.state[viewId][trackId].rowInfo, field, type, condition);
         setHighlitRows(viewId, trackId, newHighlitRows);
         setOptions(newOptions);
     }, [options]);
@@ -339,8 +340,8 @@ export default function CistromeHGWConsumer(props) {
                     onSortRows={(field, type, order) => {
                         onSortRows(viewId, trackId, field, type, order);
                     }}
-                    onSearchRows={(field, type, contains) => {
-                        onSearchRows(viewId, trackId, field, type, contains);
+                    onSearchRows={(field, type, condition) => {
+                        onSearchRows(viewId, trackId, field, type, condition);
                     }}
                     onFilterRows={(field, type, condition) => {
                         onFilterRows(viewId, trackId, field, type, condition);

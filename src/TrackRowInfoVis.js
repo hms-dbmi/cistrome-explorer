@@ -121,8 +121,9 @@ export default function TrackRowInfoVis(props) {
         // TODO: 
         titleSuffix += ` | filtered by ${filterInfo.map(d => `"${d.contains ? d.contains : d.range}"`).join(', ')}`;
     }
-    if(rowHighlight && rowHighlight.field === fieldInfo.field && rowHighlight.contains.length > 0) {
-        titleSuffix += ` | highlighted by "${rowHighlight.contains}"`;
+    if(rowHighlight && rowHighlight.field === fieldInfo.field) {
+        // TODO: 
+        titleSuffix += ` | highlighted by "${rowHighlight.contains ? rowHighlight.contains : rowHighlight.range}"`;
     }
 
     // Create the resizer element.

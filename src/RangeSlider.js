@@ -37,11 +37,15 @@ export default function RangeSlider(props) {
         setMaxCutoff(corrected);
     }
 
-    function onCorrectMinValue(e) {
+    function onHighlight() {
+        
+    }
+
+    function onMinBlur(e) {
         minInputRef.current.value = minCutoff;
     }
 
-    function onCorrectMaxValue(e) {
+    function onMaxBlur(e) {
         maxInputRef.current.value = maxCutoff;
     }
 
@@ -49,8 +53,7 @@ export default function RangeSlider(props) {
         switch(e.key){
             case 'Enter':
                 minInputRef.current.value = minCutoff;
-                onCorrectMinValue();
-                onCorrectMaxValue();
+                maxInputRef.current.value = maxCutoff;
                 onFilter(minCutoff, maxCutoff);
                 break;
             case 'Esc':
@@ -73,7 +76,7 @@ export default function RangeSlider(props) {
                 defaultValue={min}
                 onChange={onMinChange}
                 onKeyDown={onKeyDown}
-                onBlur={onCorrectMinValue}
+                onBlur={onMinBlur}
                 style={{ 
                     width: 30,
                     height,
@@ -94,7 +97,7 @@ export default function RangeSlider(props) {
                 defaultValue={max}
                 onChange={onMaxChange}
                 onKeyDown={onKeyDown}
-                onBlur={onCorrectMaxValue}
+                onBlur={onMaxBlur}
                 style={{ 
                     width: 30, 
                     height,

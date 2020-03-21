@@ -27,6 +27,8 @@ const demos = {
             rowSort: [
                 {field: "Tissue Type", type: "nominal", order: "ascending"}
             ],
+            // TODO: 
+            rowHighlight: {field: "qc_frip", type: "quantitative", range: [25, 35]},
             rowFilter: [
                 // TODO: 
                 {field: "qc_frip", type: "quantitative", range: [20, 40]}
