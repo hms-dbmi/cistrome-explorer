@@ -14,7 +14,7 @@ export function selectRows(rowInfo, options) {
         if(options.rowFilter && options.rowFilter.length > 0) {
             const filterInfos = options.rowFilter;
             filterInfos.forEach(info => {
-                const { field, type, contains } = info;
+                const { field, type, contains, range } = info;
                 const isMultipleFields = Array.isArray(field);
                 if(type === "nominal") {
                     filteredRowInfo = filteredRowInfo.filter(d => d[1][field].toString().toUpperCase().includes(contains.toUpperCase()));
@@ -24,7 +24,9 @@ export function selectRows(rowInfo, options) {
                     if(isMultipleFields) {
                         //...
                     } else {
-                        filteredRowInfo = filteredRowInfo.filter(d => d[1][field].toString().includes(contains));
+                        const [minCutoff, maxCutoff] = range;
+                        console.log(minCutoff, maxCutoff, filteredRowInfo);
+                        filteredRowInfo = filteredRowInfo.filter(d => d[1][field] > minCutoff && d[1][field] < maxCutoff);
                     }
                 } else if(type === "tree") {
                     filteredRowInfo = filteredRowInfo.filter(d => d[1][field].reduce((a, h, i) => a && (i >= contains.length || h === contains[i]), true));

@@ -18,29 +18,40 @@ export default function RangeSlider(props) {
     const [minCutoff, setMinCutoff] = useState(min);
     const [maxCutoff, setMaxCutoff] = useState(max);
 
-    function getCorrectedValue(value, alt) {
-        return isNaN(+value) ? alt : +value;
+    function getCorrectedNumberInRange(value, [min, max], alt) {
+        // Users can write whatever they want, but we need to correct it!
+        return isNaN(+value) || +value < min || +value > max ? alt : +value;
     }
 
-    // TODO: Consider many cases, such as minCuroff > maxCuroff, minCuroff < min
     function onMinChange(e) {
+        // Internal curoff value should be corrected to highlight well.
         const newValue = e.target.value;
-        const corrected = getCorrectedValue(newValue, min);
+        const corrected = getCorrectedNumberInRange(newValue, [min, maxCutoff], min);
         setMinCutoff(corrected);
     }
 
     function onMaxChange(e) {
+        // Internal curoff value should be corrected to highlight well.
         const newValue = e.target.value;
-        const corrected = getCorrectedValue(newValue, max);
+        const corrected = getCorrectedNumberInRange(newValue, [minCutoff, max], max);
         setMaxCutoff(corrected);
+    }
+
+    function onCorrectMinValue(e) {
+        minInputRef.current.value = minCutoff;
+    }
+
+    function onCorrectMaxValue(e) {
+        maxInputRef.current.value = maxCutoff;
     }
 
     function onKeyDown(e) {
         switch(e.key){
             case 'Enter':
-                minInputRef.current.value = getCorrectedValue(minInputRef.current.value, min);
-                maxInputRef.current.value = getCorrectedValue(maxInputRef.current.value, max);
-                onFilter();
+                minInputRef.current.value = minCutoff;
+                onCorrectMinValue();
+                onCorrectMaxValue();
+                onFilter(minCutoff, maxCutoff);
                 break;
             case 'Esc':
             case 'Escape':
@@ -62,6 +73,7 @@ export default function RangeSlider(props) {
                 defaultValue={min}
                 onChange={onMinChange}
                 onKeyDown={onKeyDown}
+                onBlur={onCorrectMinValue}
                 style={{ 
                     width: 30,
                     height,
@@ -82,6 +94,7 @@ export default function RangeSlider(props) {
                 defaultValue={max}
                 onChange={onMaxChange}
                 onKeyDown={onKeyDown}
+                onBlur={onCorrectMaxValue}
                 style={{ 
                     width: 30, 
                     height,

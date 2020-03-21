@@ -25,9 +25,12 @@ const demos = {
                 {field: "Species", type: "nominal", position: "right"}
             ],
             rowSort: [
-                {field: "Cell Type", type: "nominal", order: "ascending"}
+                {field: "Tissue Type", type: "nominal", order: "ascending"}
             ],
-            rowFilter: []
+            rowFilter: [
+                // TODO: 
+                {field: "qc_frip", type: "quantitative", range: [20, 40]}
+            ]
         }
     },
     "H3K27ac Demo (2 Views, Center Tracks)": {

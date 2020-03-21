@@ -118,7 +118,8 @@ export default function TrackRowInfoVis(props) {
     }
     const filterInfo = rowFilter ? rowFilter.filter(d => d.field === fieldInfo.field) : undefined;
     if(filterInfo && filterInfo.length > 0) {
-        titleSuffix += ` | filtered by ${filterInfo.map(d => `"${d.contains}"`).join(', ')}`;
+        // TODO: 
+        titleSuffix += ` | filtered by ${filterInfo.map(d => `"${d.contains ? d.contains : d.range}"`).join(', ')}`;
     }
     if(rowHighlight && rowHighlight.field === fieldInfo.field && rowHighlight.contains.length > 0) {
         titleSuffix += ` | highlighted by "${rowHighlight.contains}"`;

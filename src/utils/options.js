@@ -94,7 +94,7 @@ const baseSchema = {
         },
         "filterInfo": {
             "type": "object",
-            "required": ["field", "type", "contains"],
+            "required": ["field", "type"],
             "properties": {
                 "field": {
                     "type": ["string", "array"],
@@ -108,6 +108,10 @@ const baseSchema = {
                 "contains": {
                     "type": ["string", "array"],
                     "description": "The substring to search for"
+                },
+                "range": {
+                    "type": "array",
+                    "description": "Min and max values"
                 }
             }
         }

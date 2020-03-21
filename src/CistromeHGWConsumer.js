@@ -225,9 +225,10 @@ export default function CistromeHGWConsumer(props) {
     }, [options]);
 
     // Callback function for filtering.
-    const onFilterRows = useCallback((viewId, trackId, field, type, contains) => {
+    const onFilterRows = useCallback((viewId, trackId, field, type, condition) => {
         const isResetFilter = field === undefined;
-        const newRowFilter = isResetFilter ? [] : { field, type, contains };
+        const filterKey = type === "nominal" ? "contains" : "range";
+        const newRowFilter = isResetFilter ? [] : { field, type, [filterKey]: condition };
         let newOptions = updateWrapperOptions(options, newRowFilter, "rowFilter", viewId, trackId, { isReplace: isResetFilter });
         newOptions = updateWrapperOptions(newOptions, undefined, "rowHighlight", viewId, trackId, { isReplace: true });
 
@@ -341,8 +342,8 @@ export default function CistromeHGWConsumer(props) {
                     onSearchRows={(field, type, contains) => {
                         onSearchRows(viewId, trackId, field, type, contains);
                     }}
-                    onFilterRows={(field, type, contains) => {
-                        onFilterRows(viewId, trackId, field, type, contains);
+                    onFilterRows={(field, type, condition) => {
+                        onFilterRows(viewId, trackId, field, type, condition);
                     }}
                     onMetadataLoad={() => {
                         onMetadataLoad(viewId, trackId);

@@ -179,7 +179,7 @@ export default function TrackRowSearch(props) {
     function onFilterByRange(min, max) {
         // TODO:
         console.log(min, max);
-        // onFilterRows(field, type, contains);
+        onFilterRows(field, type, [min, max]);
         // setKeyword("");
     }
 
@@ -227,7 +227,12 @@ export default function TrackRowSearch(props) {
                 suggestionIndexIncrement();
                 break;
             case 'Enter':
-                onFilterByKeyword(); 
+                if(type === "nominal") {
+                    onFilterByKeyword();
+                } else if(type === "quantitative") {
+                    // TODO: Get min and max
+                    onFilterByRange();
+                }
                 break;
             case 'Esc':
             case 'Escape':
