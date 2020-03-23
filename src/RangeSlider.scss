@@ -2,7 +2,40 @@
     display: flex;
     flex-direction: row;
     .chw-range-slider {
-        width: 100px;
+        position: relative;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+    .chw-range-slider-ruler-bg,
+    .chw-range-slider-ruler-fg {
+        background: lightgray;
+        height: 4px;
+        width: 100%;
+        margin: 4px;
+        margin-top: 20px;
+        border-radius: 3px;
+        position: absolute;
+    }
+    .chw-range-slider-ruler-bg {
+        background: lightgray;
+    }
+    .chw-range-slider-ruler-fg {
+        background: #337ab7;
+    }
+    .chw-range-slider-mover-left {
+        background: gray;
+        border-radius: 15px;
+        position: absolute;
+        top: 15px;
+        cursor: ew-resize;
+    }
+    .chw-range-slider-mover-right {
+        background: gray;
+        border-radius: 15px;
+        position: absolute;
+        top: 15px;
+        right: 0px;
+        cursor: ew-resize;
     }
     .chw-range-input {
         width: 30px;

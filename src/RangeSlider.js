@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect, useCallback, useMemo } from "react";
+import d3 from './utils/d3.js';
 
 import "./RangeSlider.scss";
 
@@ -19,11 +20,19 @@ export default function RangeSlider(props) {
     const [minCutoff, setMinCutoff] = useState(min);
     const [maxCutoff, setMaxCutoff] = useState(max);
 
+    const sliderWidth = 150;
+    const moverSize = 14;
+    const xScale = d3.scaleLinear()
+        .domain(valueExtent)
+        .range([0, sliderWidth]);
+
+    // TOOD: Add Dragging interactions.
+
     function getCorrectedNumberInRange(value, [min, max], alt) {
         // Users can write whatever they want, but we need to correct it!
         return Number.isNaN(+value) || +value < min || +value > max ? alt : +value;
     }
-
+    
     function onMinChange(e) {
         // Internal curoff value should be corrected to highlight well.
         const newValue = e.target.value;
@@ -86,11 +95,35 @@ export default function RangeSlider(props) {
                 }}
             />
             <div
-                className={"chw-range-slider"}
+                className="chw-range-slider"
+                style={{
+                    width: `${sliderWidth}px`
+                }}
             >
-                <div>
-                    
-                </div>
+                <div className="chw-range-slider-ruler-bg"/>
+                <div 
+                    className="chw-range-slider-ruler-fg"
+                    style={{
+                        left: `${xScale(minCutoff) - moverSize / 2.0}px`,
+                        width: `${xScale(maxCutoff) - xScale(minCutoff)}px`
+                    }}
+                />
+                <div 
+                    className="chw-range-slider-mover-left"
+                    style={{
+                        left: `${xScale(minCutoff) - moverSize / 2.0}px`,
+                        width: `${moverSize}px`,
+                        height: `${moverSize}px`,
+                    }}
+                />
+                <div 
+                    className="chw-range-slider-mover-right"
+                    style={{
+                        left: `${xScale(maxCutoff) - moverSize / 2.0}px`,
+                        width: `${moverSize}px`,
+                        height: `${moverSize}px`,
+                    }}
+                />
             </div>
             <input
                 ref={maxInputRef}
