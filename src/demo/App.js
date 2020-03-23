@@ -18,6 +18,7 @@ const demos = {
                 {field: "Hierarchical Clustering (Average)", type: "tree", position: "left"},
                 {field: "qc_frip", type: "quantitative", position: "left"},
                 {field: "qc_fastqc", type: "quantitative", position: "left"},
+                {field: ["qc_frip", "qc_fastqc"], type: "quantitative", position: "left"},  //TODO:
                 {field: "Metadata URL", type: "url", position: "left", title: "cid"},
                 {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right"},
                 {field: "Cell Type", type: "nominal", position: "right"},

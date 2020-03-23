@@ -19,13 +19,14 @@ export function selectRows(rowInfo, options) {
                 if(type === "nominal") {
                     filteredRowInfo = filteredRowInfo.filter(d => d[1][field].toString().toUpperCase().includes(contains.toUpperCase()));
                 } else if(type === "quantitative") {
-                    // TODO: Better deal with quantitative data. Need to update Wrapper options for this.
-                    // refer vega filter, such as lt: https://vega.github.io/vega-lite/docs/filter.html
+                    const [minCutoff, maxCutoff] = range;
                     if(isMultipleFields) {
-                        //...
+                        filteredRowInfo = filteredRowInfo.filter(d => {
+                            let sum = 0;
+                            field.forEach(f => sum += d[1][f]);
+                            return sum > minCutoff && sum < maxCutoff;
+                        });
                     } else {
-                        const [minCutoff, maxCutoff] = range;
-                        console.log(minCutoff, maxCutoff, filteredRowInfo);
                         filteredRowInfo = filteredRowInfo.filter(d => d[1][field] > minCutoff && d[1][field] < maxCutoff);
                     }
                 } else if(type === "tree") {
@@ -94,8 +95,6 @@ export function highlightRowsFromSearch(rowInfo, field, type, conditions) {
         const filteredRows = rowsWithIndex.filter(d => !d[1][field].toString().toUpperCase().includes(conditions.toUpperCase()));
         newHighlitRows = filteredRows.map(d => d[0]);
     } else if(type === "quantitative") {
-        // TODO: Better deal with quantitative data. Need to update Wrapper options for this.
-        // refer vega filter, such as lt: https://vega.github.io/vega-lite/docs/filter.html
         const [minCutoff, maxCutoff] = conditions;
         const rowsWithIndex = Array.from(rowInfo.entries());
         const filteredRows = rowsWithIndex.filter(d => d[1][field] < minCutoff || d[1][field] > maxCutoff);
