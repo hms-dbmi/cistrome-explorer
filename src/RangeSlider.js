@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useCallback, useMemo } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import d3 from './utils/d3.js';
 
 import "./RangeSlider.scss";
@@ -15,10 +15,14 @@ export default function RangeSlider(props) {
     
     const minInputRef = useRef();
     const maxInputRef = useRef();
+    const minMoverRef = useRef();
+    const maxMoverRef = useRef();
+    const selectedMover = useRef(); // either "left" or "right".
     
     const [min, max] = valueExtent;
     const [minCutoff, setMinCutoff] = useState(min);
     const [maxCutoff, setMaxCutoff] = useState(max);
+    const dragStartX = useRef(null);
 
     const sliderWidth = 150;
     const moverSize = 14;
@@ -26,7 +30,73 @@ export default function RangeSlider(props) {
         .domain(valueExtent)
         .range([0, sliderWidth]);
 
-    // TOOD: Add Dragging interactions.
+    // Set up the d3-drag handler functions (started, ended, dragged).
+    const started = useCallback(() => {
+        const event = d3.event;
+        dragStartX.current = event.sourceEvent.clientX;
+    });
+
+    const ended = useCallback(() => {
+        dragStartX.current = null;
+        onHighlight([minCutoff, maxCutoff]);
+    });
+    
+    // We do not want to position two movers in the exact same position.
+    const minMoverDist = moverSize + 2;
+    const dragged = useCallback(() => {
+        const event = d3.event;
+        const diffX = event.sourceEvent.clientX - dragStartX.current;
+        if(selectedMover.current === "left") {
+            let newX = xScale(minCutoff) + diffX;
+            if(newX < 0) {
+                newX = 0;
+            } else if(newX > xScale(maxCutoff) - minMoverDist) {
+                newX = xScale(maxCutoff) - minMoverDist;
+            }
+            const newCutoff = xScale.invert(newX);
+            minInputRef.current.value = newCutoff;
+            setMinCutoff(newCutoff);
+        } else {
+            let newX = xScale(maxCutoff) + diffX;
+            if(newX < xScale(minCutoff) + minMoverDist) {
+                newX = xScale(minCutoff) + minMoverDist;
+            } else if(newX > sliderWidth) {
+                newX = sliderWidth;
+            }
+            const newCutoff = xScale.invert(newX);
+            maxInputRef.current.value = newCutoff;
+            setMaxCutoff(newCutoff);
+        }
+    });
+
+    // Detect drag events for the resize element.
+    useEffect(() => {
+        const minMover = minMoverRef.current;
+        const maxMover = maxMoverRef.current;
+
+        const drag = d3.drag()
+            .on("start", started)
+            .on("drag", dragged)
+            .on("end", ended);
+
+        d3.select(minMover).call(drag);
+        d3.select(maxMover).call(drag);
+
+        return () => {
+            d3.select(minMover).on(".drag", null);
+            d3.select(maxMover).on(".drag", null);
+        };
+    }, [minMoverRef, maxMoverRef, started, dragged, ended]);
+
+    useEffect(() => {
+        const minMover = minMoverRef.current;
+        const maxMover = maxMoverRef.current;
+
+        d3.select(minMover).on("mouseenter", () => {selectedMover.current = "left"});
+        d3.select(maxMover).on("mouseenter", () => {selectedMover.current = "right"});
+
+        return () => d3.select(div).on("mouseenter", null);
+    }, [minMoverRef, maxMoverRef]);
 
     function getCorrectedNumberInRange(value, [min, max], alt) {
         // Users can write whatever they want, but we need to correct it!
@@ -109,6 +179,7 @@ export default function RangeSlider(props) {
                     }}
                 />
                 <div 
+                    ref={minMoverRef}
                     className="chw-range-slider-mover-left"
                     style={{
                         left: `${xScale(minCutoff) - moverSize / 2.0}px`,
@@ -117,6 +188,7 @@ export default function RangeSlider(props) {
                     }}
                 />
                 <div 
+                    ref={maxMoverRef}
                     className="chw-range-slider-mover-right"
                     style={{
                         left: `${xScale(maxCutoff) - moverSize / 2.0}px`,

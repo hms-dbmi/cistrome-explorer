@@ -128,7 +128,6 @@ export default function TrackRowSearch(props) {
 
     const dragged = useCallback(() => {
         const event = d3.event;
-        console.log(offset.x);
         const diffX = offset.x + event.sourceEvent.clientX - dragStartPos.current.x;
         const diffY = offset.y + event.sourceEvent.clientY - dragStartPos.current.y;
         setOffset({x: diffX, y: diffY});
