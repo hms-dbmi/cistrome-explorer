@@ -23,9 +23,10 @@ export default function RangeSlider(props) {
     const [minCutoff, setMinCutoff] = useState(min);
     const [maxCutoff, setMaxCutoff] = useState(max);
     const dragStartX = useRef(null);
+    let highlitRange = [min, max];
 
     const sliderWidth = 150;
-    const moverSize = 14;
+    const moverSize = 16;
     const xScale = d3.scaleLinear()
         .domain(valueExtent)
         .range([0, sliderWidth]);
@@ -38,10 +39,11 @@ export default function RangeSlider(props) {
 
     const ended = useCallback(() => {
         dragStartX.current = null;
-        onHighlight([minCutoff, maxCutoff]);
+        onHighlight(highlitRange);
     });
     
     // We do not want to position two movers in the exact same position.
+    // TODO: intergrate dragged and onMinChange?
     const minMoverDist = moverSize + 2;
     const dragged = useCallback(() => {
         const event = d3.event;
@@ -54,8 +56,10 @@ export default function RangeSlider(props) {
                 newX = xScale(maxCutoff) - minMoverDist;
             }
             const newCutoff = xScale.invert(newX);
-            minInputRef.current.value = newCutoff;
+            minInputRef.current.value = newCutoff.toFixed(1);
+
             setMinCutoff(newCutoff);
+            highlitRange = [newCutoff, maxCutoff];
         } else {
             let newX = xScale(maxCutoff) + diffX;
             if(newX < xScale(minCutoff) + minMoverDist) {
@@ -64,8 +68,10 @@ export default function RangeSlider(props) {
                 newX = sliderWidth;
             }
             const newCutoff = xScale.invert(newX);
-            maxInputRef.current.value = newCutoff;
+            maxInputRef.current.value = newCutoff.toFixed(1);
+
             setMaxCutoff(newCutoff);
+            highlitRange = [minCutoff, newCutoff];
         }
     });
 
@@ -95,7 +101,10 @@ export default function RangeSlider(props) {
         d3.select(minMover).on("mouseenter", () => {selectedMover.current = "left"});
         d3.select(maxMover).on("mouseenter", () => {selectedMover.current = "right"});
 
-        return () => d3.select(div).on("mouseenter", null);
+        return () => {
+            d3.select(minMover).on("mouseenter", null);
+            d3.select(maxMover).on("mouseenter", null);
+        }
     }, [minMoverRef, maxMoverRef]);
 
     function getCorrectedNumberInRange(value, [min, max], alt) {
@@ -107,7 +116,9 @@ export default function RangeSlider(props) {
         // Internal curoff value should be corrected to highlight well.
         const newValue = e.target.value;
         const corrected = getCorrectedNumberInRange(newValue, [min, maxCutoff], min);
-        onHighlight([corrected, maxCutoff]);
+
+        highlitRange = [corrected, maxCutoff];
+        onHighlight(highlitRange);
         setMinCutoff(corrected);
     }
 
@@ -115,7 +126,9 @@ export default function RangeSlider(props) {
         // Internal curoff value should be corrected to highlight well.
         const newValue = e.target.value;
         const corrected = getCorrectedNumberInRange(newValue, [minCutoff, max], max);
-        onHighlight([minCutoff, corrected]);
+
+        highlitRange = [minCutoff, corrected];
+        onHighlight(highlitRange);
         setMaxCutoff(corrected);
     }
 
@@ -123,19 +136,19 @@ export default function RangeSlider(props) {
         onChange(range);
     }
 
-    function onMinBlur(e) {
-        minInputRef.current.value = minCutoff;
+    function displayMinCutoff(e) {
+        minInputRef.current.value = minCutoff.toFixed(1);
     }
 
-    function onMaxBlur(e) {
-        maxInputRef.current.value = maxCutoff;
+    function displayMaxCutoff(e) {
+        maxInputRef.current.value = maxCutoff.toFixed(1);
     }
 
     function onKeyDown(e) {
         switch(e.key){
             case 'Enter':
-                minInputRef.current.value = minCutoff;
-                maxInputRef.current.value = maxCutoff;
+                displayMinCutoff();
+                displayMaxCutoff();
                 onFilter([minCutoff, maxCutoff]);
                 break;
             case 'Esc':
@@ -158,7 +171,7 @@ export default function RangeSlider(props) {
                 defaultValue={min}
                 onChange={onMinChange}
                 onKeyDown={onKeyDown}
-                onBlur={onMinBlur}
+                onBlur={displayMinCutoff}
                 style={{
                     height,
                     textAlign: "right"
@@ -174,7 +187,7 @@ export default function RangeSlider(props) {
                 <div 
                     className="chw-range-slider-ruler-fg"
                     style={{
-                        left: `${xScale(minCutoff) - moverSize / 2.0}px`,
+                        left: `${xScale(minCutoff)}px`,
                         width: `${xScale(maxCutoff) - xScale(minCutoff)}px`
                     }}
                 />
@@ -206,7 +219,7 @@ export default function RangeSlider(props) {
                 defaultValue={max}
                 onChange={onMaxChange}
                 onKeyDown={onKeyDown}
-                onBlur={onMaxBlur}
+                onBlur={displayMaxCutoff}
                 style={{
                     height,
                     textAlign: "left"
