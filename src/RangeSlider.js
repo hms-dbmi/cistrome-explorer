@@ -88,7 +88,9 @@ export default function RangeSlider(props) {
             <div
                 className={"chw-range-slider"}
             >
-
+                <div>
+                    
+                </div>
             </div>
             <input
                 ref={maxInputRef}

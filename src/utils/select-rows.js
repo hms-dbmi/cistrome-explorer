@@ -87,7 +87,6 @@ export function selectRows(rowInfo, options) {
  */
 export function highlightRowsFromSearch(rowInfo, field, type, conditions) {
     let newHighlitRows = [];
-    if(Array.isArray(field)) return newHighlitRows;
     if(conditions === "") {
         newHighlitRows = [];
     } else if(type === "nominal") {
@@ -97,7 +96,16 @@ export function highlightRowsFromSearch(rowInfo, field, type, conditions) {
     } else if(type === "quantitative") {
         const [minCutoff, maxCutoff] = conditions;
         const rowsWithIndex = Array.from(rowInfo.entries());
-        const filteredRows = rowsWithIndex.filter(d => d[1][field] < minCutoff || d[1][field] > maxCutoff);
+        let filteredRows;
+        if(Array.isArray(field)) {
+            filteredRows = rowsWithIndex.filter(d => {
+                let sum = 0;
+                field.forEach(f => sum += d[1][f]);
+                return sum < minCutoff || sum > maxCutoff;
+            });
+        } else {
+            filteredRows = rowsWithIndex.filter(d => d[1][field] < minCutoff || d[1][field] > maxCutoff);
+        }
         newHighlitRows = filteredRows.map(d => d[0]);
     }
     return newHighlitRows;

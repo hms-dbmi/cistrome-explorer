@@ -20,6 +20,9 @@ export default function TrackRowInfoControl(props){
     const {
         isVisible, 
         fieldInfo,
+        sortAsceButtonHighlit,
+        sortDescButtonHighlit,
+        filterButtonHighlit,
         onSortRows,
         onSearchRows,
         onFilterRows,
@@ -78,12 +81,14 @@ export default function TrackRowInfoControl(props){
         buttons.push({
             onClick: onSortAscClick,
             icon: SORT_ASC,
-            title: "Sort rows in ascending order"
+            title: "Sort rows in ascending order",
+            highlit: sortAsceButtonHighlit
         });
         buttons.push({
             onClick: onSortDescClick,
             icon: SORT_DESC,
-            title: "Sort rows in descending order"
+            title: "Sort rows in descending order",
+            highlit: sortDescButtonHighlit
         });
     }
 
@@ -91,7 +96,8 @@ export default function TrackRowInfoControl(props){
         buttons.push({
             onClick: onSearchClick,
             icon: FILTER,
-            title: "Search keywords"
+            title: "Filter rows",
+            highlit: filterButtonHighlit
         });
     }
 
@@ -99,7 +105,8 @@ export default function TrackRowInfoControl(props){
         buttons.push({
             onClick: onReset,
             icon: RESET,
-            title: "Remove all filters"
+            title: "Remove all filters",
+            isHighlit: false
         });
     }
 
@@ -124,7 +131,7 @@ export default function TrackRowInfoControl(props){
                     return (
                         <svg 
                             key={button.title}
-                            className={`chw-button-sm ${positionClass}`}
+                            className={`${button.highlit ? "chw-button-sm-hl" : "chw-button-sm"} ${positionClass}`}
                             onClick={button.onClick} 
                             viewBox={button.icon.viewBox}
                         >

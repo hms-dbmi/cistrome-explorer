@@ -121,10 +121,6 @@ export default function TrackRowInfoVis(props) {
         // TODO: 
         titleSuffix += ` | filtered by ${filterInfo.map(d => `"${d.contains ? d.contains : d.range}"`).join(', ')}`;
     }
-    if(rowHighlight && rowHighlight.field === fieldInfo.field) {
-        // TODO: 
-        titleSuffix += ` | highlighted by "${rowHighlight.contains ? rowHighlight.contains : rowHighlight.range}"`;
-    }
 
     // Create the resizer element.
     const resizer = useMemo(() => {
@@ -166,6 +162,8 @@ export default function TrackRowInfoVis(props) {
                     rowInfo,
                     transformedRowInfo,
                     titleSuffix,
+                    sortInfo,
+                    filterInfo,
                     onAddTrack,
                     onSortRows,
                     onSearchRows,

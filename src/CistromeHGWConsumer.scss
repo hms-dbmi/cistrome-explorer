@@ -15,7 +15,7 @@
     position: absolute;
     border-radius: 2.5px;
     background: white;
-    opacity: 0.6;
+    opacity: 0.8;
     box-shadow: 0 0 0 1px rgba(0,0,0,.05),0 0 3px 0 rgba(0,0,0,.1);
     display: flex;
 }
@@ -32,18 +32,24 @@
 
 .chw-button,
 .chw-button-sm,
+.chw-button-sm-hl,
 .chw-button-lg {
     padding: 4px;
     cursor: pointer;
     border-radius: 2.5px;
     transition: background .15s ease, color .15s ease;
 }
+.chw-button-sm-hl {
+    background: rgb(37, 167, 106);
+    color: white;
+}
 .chw-button,
 .chw-button-drag {
     height: 25px;
     width: 25px;
 }
-.chw-button-sm {
+.chw-button-sm,
+.chw-button-sm-hl {
     height: 20px;
     width: 20px;
 }
@@ -53,6 +59,7 @@
 }
 .chw-button:hover,
 .chw-button-sm:hover,
+.chw-button-sm-hl:hover,
 .chw-button-lg:hover {
     color: #fff;
     background: #337ab7;
