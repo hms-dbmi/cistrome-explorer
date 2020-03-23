@@ -154,6 +154,10 @@ export default function TrackRowSearch(props) {
         onChange(newKeyword);
     }
 
+    function onRangeChange(range) {
+        onChange(range);
+    }
+
     function onResetClick() {
         onFilterRows();
         setKeyword("");
@@ -176,11 +180,8 @@ export default function TrackRowSearch(props) {
         setSuggestionIndex(undefined);
     }
 
-    function onFilterByRange(min, max) {
-        // TODO:
-        console.log(min, max);
-        onFilterRows(field, type, [min, max]);
-        // setKeyword("");
+    function onFilterByRange(range) {
+        onFilterRows(field, type, range);
     }
 
     function onSuggestionEnter(suggestion) {
@@ -227,12 +228,7 @@ export default function TrackRowSearch(props) {
                 suggestionIndexIncrement();
                 break;
             case 'Enter':
-                if(type === "nominal") {
-                    onFilterByKeyword();
-                } else if(type === "quantitative") {
-                    // TODO: Get min and max
-                    onFilterByRange();
-                }
+                onFilterByKeyword();
                 break;
             case 'Esc':
             case 'Escape':
@@ -283,16 +279,19 @@ export default function TrackRowSearch(props) {
                     <RangeSlider
                         height={height}
                         valueExtent={valueExtent}
-                        onChange={onChange}
+                        onChange={onRangeChange}
                         onFilter={onFilterByRange}
                         onClose={onSearchClose}
                     />
                 }
-                <svg className="chw-button-sm"
-                    onClick={onFilterByKeyword} viewBox={FILTER.viewBox}>
-                    <title>Filter rows by searching for keywords</title>
-                    <path d={FILTER.path} fill="currentColor"/>
-                </svg>
+                {type === "nominal" ?
+                    <svg className="chw-button-sm"
+                        onClick={onFilterByKeyword} viewBox={FILTER.viewBox}>
+                        <title>Filter rows by searching for keywords</title>
+                        <path d={FILTER.path} fill="currentColor"/>
+                    </svg> :
+                    null
+                }
                 <svg className="chw-button-sm"
                     onClick={onResetClick} viewBox={RESET.viewBox}>
                     <title>Remove all filters</title>

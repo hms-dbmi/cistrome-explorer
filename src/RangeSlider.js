@@ -57,7 +57,7 @@ export default function RangeSlider(props) {
             case 'Enter':
                 minInputRef.current.value = minCutoff;
                 maxInputRef.current.value = maxCutoff;
-                onFilter(minCutoff, maxCutoff);
+                onFilter([minCutoff, maxCutoff]);
                 break;
             case 'Esc':
             case 'Escape':
