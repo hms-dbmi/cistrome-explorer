@@ -7,6 +7,7 @@ export default function RangeSlider(props) {
     const {
         height,
         valueExtent,
+        onChange,
         onFilter,
         onClose
     } = props;
@@ -20,13 +21,14 @@ export default function RangeSlider(props) {
 
     function getCorrectedNumberInRange(value, [min, max], alt) {
         // Users can write whatever they want, but we need to correct it!
-        return isNaN(+value) || +value < min || +value > max ? alt : +value;
+        return Number.isNaN(+value) || +value < min || +value > max ? alt : +value;
     }
 
     function onMinChange(e) {
         // Internal curoff value should be corrected to highlight well.
         const newValue = e.target.value;
         const corrected = getCorrectedNumberInRange(newValue, [min, maxCutoff], min);
+        onHighlight([corrected, maxCutoff]);
         setMinCutoff(corrected);
     }
 
@@ -34,11 +36,12 @@ export default function RangeSlider(props) {
         // Internal curoff value should be corrected to highlight well.
         const newValue = e.target.value;
         const corrected = getCorrectedNumberInRange(newValue, [minCutoff, max], max);
+        onHighlight([minCutoff, corrected]);
         setMaxCutoff(corrected);
     }
 
-    function onHighlight() {
-        
+    function onHighlight(range) {
+        onChange(range);
     }
 
     function onMinBlur(e) {
@@ -77,8 +80,7 @@ export default function RangeSlider(props) {
                 onChange={onMinChange}
                 onKeyDown={onKeyDown}
                 onBlur={onMinBlur}
-                style={{ 
-                    width: 30,
+                style={{
                     height,
                     textAlign: "right"
                 }}
@@ -98,8 +100,7 @@ export default function RangeSlider(props) {
                 onChange={onMaxChange}
                 onKeyDown={onKeyDown}
                 onBlur={onMaxBlur}
-                style={{ 
-                    width: 30, 
+                style={{
                     height,
                     textAlign: "left"
                 }}

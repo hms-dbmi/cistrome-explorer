@@ -283,8 +283,9 @@ export default function TrackRowSearch(props) {
                     <RangeSlider
                         height={height}
                         valueExtent={valueExtent}
-                        onClose={onSearchClose}
+                        onChange={onChange}
                         onFilter={onFilterByRange}
+                        onClose={onSearchClose}
                     />
                 }
                 <svg className="chw-button-sm"
