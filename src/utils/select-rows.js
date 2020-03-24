@@ -82,7 +82,7 @@ export function selectRows(rowInfo, options) {
  * @param {object[]} rowInfo The original/full default-ordered rowInfo array.
  * @param {string} field The attribute on which to search.
  * @param {string} type The data type contained in the field value.
- * @param {string} conditions The conditions to check for highlighting.
+ * @param {string|array} conditions The conditions to check for highlighting.
  * @returns {number[]} The array of highlit indices.
  */
 export function highlightRowsFromSearch(rowInfo, field, type, conditions) {
