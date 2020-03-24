@@ -229,7 +229,7 @@ export default function CistromeHGWConsumer(props) {
     // Callback function for filtering.
     const onFilterRows = useCallback((viewId, trackId, field, type, condition) => {
         const isResetFilter = field === undefined;
-        const filterKey = type === "nominal" ? "contains" : "range";
+        const filterKey = type === "quantitative" ? "range" : "contains";
         const newRowFilter = isResetFilter ? [] : { field, type, [filterKey]: condition };
         let newOptions = updateWrapperOptions(options, newRowFilter, "rowFilter", viewId, trackId, { isReplace: isResetFilter });
         newOptions = updateWrapperOptions(newOptions, undefined, "rowHighlight", viewId, trackId, { isReplace: true });
