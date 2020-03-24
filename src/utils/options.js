@@ -29,7 +29,10 @@ const baseSchema = {
                 },
                 "rowHighlight": {
                     "type": "object",
-                    "required": ["field", "type"],
+                    "oneOf":[ 
+                        { "required": ["field", "type", "contains"] },
+                        { "required": ["field", "type", "range"] }
+                    ],
                     "properties": {
                         "field": {
                             "type": "string",
@@ -98,7 +101,10 @@ const baseSchema = {
         },
         "filterInfo": {
             "type": "object",
-            "required": ["field", "type"],
+            "oneOf":[ 
+                { "required": ["field", "type", "contains"] },
+                { "required": ["field", "type", "range"] }
+            ],
             "properties": {
                 "field": {
                     "type": ["string", "array"],

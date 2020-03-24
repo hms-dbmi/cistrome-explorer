@@ -37,10 +37,10 @@
     padding: 4px;
     cursor: pointer;
     border-radius: 2.5px;
-    transition: background .15s ease, color .15s ease;
+    transition: background .15s ease, color .15s ease stroke .15s ease, color .15s ease;
 }
 .chw-button-sm-hl {
-    background: lightgray;
+    color: green;
 }
 .chw-button,
 .chw-button-drag {

@@ -18,7 +18,6 @@ const demos = {
                 {field: "Hierarchical Clustering (Average)", type: "tree", position: "left"},
                 {field: "qc_frip", type: "quantitative", position: "left"},
                 {field: "qc_fastqc", type: "quantitative", position: "left"},
-                {field: ["qc_frip", "qc_fastqc"], type: "quantitative", position: "left"},  //TODO:
                 {field: "Metadata URL", type: "url", position: "left", title: "cid"},
                 {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right"},
                 {field: "Cell Type", type: "nominal", position: "right"},
@@ -26,14 +25,10 @@ const demos = {
                 {field: "Species", type: "nominal", position: "right"}
             ],
             rowSort: [
-                {field: "Tissue Type", type: "nominal", order: "ascending"}
+                {field: "Tissue Type", type: "nominal", order: "ascending"},
+                {field: "qc_frip", type: "quantitative", order: "descending"}
             ],
-            // TODO: 
-            rowHighlight: {field: "qc_frip", type: "quantitative", range: [25, 35]},
-            rowFilter: [
-                // TODO: 
-                {field: "qc_frip", type: "quantitative", range: [20, 40]}
-            ]
+            rowFilter: [ ]
         }
     },
     "H3K27ac Demo (2 Views, Center Tracks)": {

@@ -69,7 +69,7 @@ export default function TrackRowSearch(props) {
     const [suggestionIndex, setSuggestionIndex] = useState(undefined);
     const [offset, setOffset] = useState({x: 0, y: 0});
     const dragStartPos = useRef(null);
-
+    const cutoffRange = useRef(valueExtent);
     const keywordUpperCase = keyword.toUpperCase();
 
     // Styles
@@ -78,7 +78,7 @@ export default function TrackRowSearch(props) {
     const padding = 5;
     
     useEffect(() => {
-        if(type === "nominal") {
+        if(type === "nominal" || type === "link") {
             keywordInputRef.current.focus();
         }
     });
@@ -154,6 +154,7 @@ export default function TrackRowSearch(props) {
     }
 
     function onRangeChange(range) {
+        cutoffRange.current = range;
         onChange(range);
     }
 
@@ -167,6 +168,14 @@ export default function TrackRowSearch(props) {
         onClose();
         setKeyword("");
         setSuggestionIndex(undefined);
+    }
+
+    function onFilterClick() {
+        if(type === "nominal" || type === "link") {
+            onFilterByKeyword();
+        } else if(type === "quantitative") {
+            onFilterByRange(cutoffRange.current);
+        }
     }
 
     function onFilterByKeyword() {
@@ -253,7 +262,7 @@ export default function TrackRowSearch(props) {
                 <div ref={moverRef} className="chw-button-drag">
                     <div/><div/><div/>
                 </div>
-                {type === "nominal" ?
+                {type === "nominal" || type === "link" ?
                     <svg className="chw-button-sm chw-button-static" 
                         style={{ color: "gray", marginLeft: "0px" }}
                         viewBox={SEARCH.viewBox}>
@@ -261,7 +270,7 @@ export default function TrackRowSearch(props) {
                     </svg>
                     : null
                 }
-                {type === "nominal" ?
+                {type === "nominal" || type === "link" ?
                     <input
                         ref={keywordInputRef}
                         className="chw-search-box-input"
@@ -274,8 +283,8 @@ export default function TrackRowSearch(props) {
                             width, 
                             height 
                         }}
-                    /> :
-                    <RangeSlider
+                    />
+                    : <RangeSlider
                         height={height}
                         valueExtent={valueExtent}
                         onChange={onRangeChange}
@@ -283,14 +292,11 @@ export default function TrackRowSearch(props) {
                         onClose={onSearchClose}
                     />
                 }
-                {type === "nominal" ?
-                    <svg className="chw-button-sm"
-                        onClick={onFilterByKeyword} viewBox={FILTER.viewBox}>
-                        <title>Filter rows by searching for keywords</title>
-                        <path d={FILTER.path} fill="currentColor"/>
-                    </svg> :
-                    null
-                }
+                <svg className="chw-button-sm"
+                    onClick={onFilterClick} viewBox={FILTER.viewBox}>
+                    <title>Filter rows by searching for keywords</title>
+                    <path d={FILTER.path} fill="currentColor"/>
+                </svg>
                 <svg className="chw-button-sm"
                     onClick={onResetClick} viewBox={RESET.viewBox}>
                     <title>Remove all filters</title>
@@ -302,7 +308,7 @@ export default function TrackRowSearch(props) {
                     <path d={CLOSE.path} fill="currentColor"/>
                 </svg>
             </div>   
-            {type === "nominal" ?
+            {type === "nominal" || type === "link" ?
                 <div 
                     className="chw-search-suggestions"
                     style={{
