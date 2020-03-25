@@ -157,7 +157,7 @@ export default function TrackRowSearch(props) {
 
     function onRangeChange(range) {
         const [left, right] = range;
-        cutoffRange.current = left > right ? range.reverse() : range;
+        cutoffRange.current = left < right ? range : Array.from(range).reverse();
         onChange(cutoffRange.current);
     }
 
@@ -192,7 +192,9 @@ export default function TrackRowSearch(props) {
     }
 
     function onFilterByRange(range) {
-        onFilterRows(field, type, range);
+        const [left, right] = range;
+        cutoffRange.current = left < right ? range : Array.from(range).reverse();
+        onFilterRows(field, type, cutoffRange.current);
     }
 
     function onSuggestionEnter(suggestion) {

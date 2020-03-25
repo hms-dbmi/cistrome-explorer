@@ -30,10 +30,9 @@ export default function RangeSlider(props) {
     const rightMoverRef = useRef();
     
     const [leftMost, rightMost] = isRight ? valueExtent : Array.from(valueExtent).reverse();
-    console.log(isRight, valueExtent);
     const [leftCutoff, setLeftCutoff] = useState(leftMost);
     const [rightCutoff, setRightCutoff] = useState(rightMost);
-    const selectedMover = useRef(null); // either "min" or "max"
+    const selectedMover = useRef(null); // either "left" or "right"
     const dragStartX = useRef(null);
     const highlitRange = useRef([leftMost, rightMost]);
 
@@ -51,16 +50,17 @@ export default function RangeSlider(props) {
         displayRightCutoff(rightMost);
     }, [leftMost, rightMost]);
 
-    function getCorrectedNumberInRange(valStr, [left, right], alt) {
+    function getCorrectedNumberInRange(valStr, range, alt) {
+        const [left, right] = (range[0] < range[1]) ? range : Array.from(range).reverse();
         // Users can write whatever they want, but we need to correct it!
         if(Number.isNaN(+valStr)) {
             return alt;
+        } else if(left <= +valStr && +valStr <= right) {
+            return +valStr;
         } else if(+valStr < left) {
             return left;
         } else if(+valStr > right) {
             return right;
-        } else {
-            return +valStr;
         }
     }
     
@@ -70,7 +70,7 @@ export default function RangeSlider(props) {
         const corrected = getCorrectedNumberInRange(newValue, [leftMost, rightCutoff], leftMost);
 
         highlitRange.current = [corrected, rightCutoff];
-        onHighlight(highlitRange).current;
+        onHighlight(highlitRange.current);
         setLeftCutoff(corrected);
     }
 
@@ -102,7 +102,7 @@ export default function RangeSlider(props) {
         const event = d3.event;
         const diffX = event.sourceEvent.clientX - dragStartX.current;
 
-        if(selectedMover.current === "min") {
+        if(selectedMover.current === "left") {
             let newX = xScale(leftCutoff) + diffX;
             newX = getCorrectedNumberInRange(newX, [0, xScale(rightCutoff) - minMoverGap], 0);
             const newCutoff = xScale.invert(newX);
@@ -141,15 +141,15 @@ export default function RangeSlider(props) {
     }, [leftMoverRef, rightMoverRef, started, dragged, ended]);
 
     useEffect(() => {
-        const minMover = leftMoverRef.current;
-        const maxMover = rightMoverRef.current;
+        const leftMover = leftMoverRef.current;
+        const rightMover = rightMoverRef.current;
 
-        d3.select(minMover).on("mouseenter", () => { selectedMover.current = "min" });
-        d3.select(maxMover).on("mouseenter", () => { selectedMover.current = "max" });
+        d3.select(leftMover).on("mouseenter", () => { selectedMover.current = "left" });
+        d3.select(rightMover).on("mouseenter", () => { selectedMover.current = "right" });
 
         return () => {
-            d3.select(minMover).on("mouseenter", null);
-            d3.select(maxMover).on("mouseenter", null);
+            d3.select(leftMover).on("mouseenter", null);
+            d3.select(rightMover).on("mouseenter", null);
         }
     }, [leftMoverRef, rightMoverRef]);
 
