@@ -288,7 +288,7 @@ export default function TrackRowSearch(props) {
                         }}
                     />
                     : <RangeSlider
-                        isLeft={!isLeft}
+                        isRight={!isLeft}
                         height={height}
                         valueExtent={valueExtent}
                         onChange={onRangeChange}

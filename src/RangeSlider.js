@@ -30,6 +30,7 @@ export default function RangeSlider(props) {
     const rightMoverRef = useRef();
     
     const [leftMost, rightMost] = isRight ? valueExtent : Array.from(valueExtent).reverse();
+    console.log(isRight, valueExtent);
     const [leftCutoff, setLeftCutoff] = useState(leftMost);
     const [rightCutoff, setRightCutoff] = useState(rightMost);
     const selectedMover = useRef(null); // either "min" or "max"
