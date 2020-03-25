@@ -8,6 +8,7 @@ const LOCAL_EVENT_SEARCH_OPEN = "search-open";
 
 /**
  * Component with control buttons for each vertical track (for sorting, searching, etc).
+ * @prop {boolean} isLeft Is this view on the left side of the HiGlass track?
  * @prop {boolean} isVisible The visibility of the control.
  * @prop {object} fieldInfo JSON object of the name and type of an attribute.
  * @prop {function} onSortRows The function to call upon a sort interaction.
@@ -18,6 +19,7 @@ const LOCAL_EVENT_SEARCH_OPEN = "search-open";
  */
 export default function TrackRowInfoControl(props){
     const {
+        isLeft,
         isVisible, 
         fieldInfo,
         sortAsceButtonHighlit,
@@ -143,6 +145,7 @@ export default function TrackRowInfoControl(props){
             </div>
             {isSearching ? (
                 <TrackRowSearch
+                    isLeft={isLeft}
                     top={searchTop}
                     left={searchLeft}
                     field={controlField}

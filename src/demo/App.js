@@ -64,14 +64,14 @@ const demos = {
         viewConfig: hgDemoViewConfig7,
         options: {
             rowInfoAttributes: [
-                {field: "Hierarchical Clustering (Average)", type: "tree", position: "left"},
-                {field: "Random 3", type: "quantitative", position: "left"},
-                {field: ["Random 1", "Random 2", "Random 3", "Random 4"], type: "quantitative", position: "left"},
-                {field: "Metadata URL", type: "url", position: "left", title: "cid"},
-                {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right"},
-                {field: "Cell Type", type: "nominal", position: "right"},
-                {field: "Tissue Type", type: "nominal", position: "right"},
-                {field: "Species", type: "nominal", position: "right"}
+                {field: "Hierarchical Clustering (Average)", type: "tree", position: "right"},
+                {field: "Random 3", type: "quantitative", position: "right"},
+                {field: ["Random 1", "Random 2", "Random 3", "Random 4"], type: "quantitative", position: "right"},
+                {field: "Metadata URL", type: "url", position: "right", title: "cid"},
+                {field: "Hierarchical Clustering (Ward)", type: "tree", position: "left"},
+                {field: "Cell Type", type: "nominal", position: "left"},
+                {field: "Tissue Type", type: "nominal", position: "left"},
+                {field: "Species", type: "nominal", position: "left"}
             ],
             rowSort: [
                 {field: "Cell Type", type: "nominal", order: "ascending"}

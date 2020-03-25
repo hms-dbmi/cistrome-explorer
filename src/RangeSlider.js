@@ -5,6 +5,7 @@ import "./RangeSlider.scss";
 
 /**
  * React component to interactively determine the left and right cutoff values.
+ * @prop {boolean} isRight Is this view on the right side of the HiGlass track?
  * @prop {number} height The size along y-axis of this component.
  * @prop {array} valueExtent The array that have two numbers, indicating the min and max values.
  * @prop {function} onChange The function to call when the search keyword has changed.
@@ -15,6 +16,7 @@ import "./RangeSlider.scss";
  */
 export default function RangeSlider(props) {
     const {
+        isRight,
         height,
         valueExtent,
         onChange,
@@ -24,61 +26,61 @@ export default function RangeSlider(props) {
     
     const minInputRef = useRef();
     const maxInputRef = useRef();
-    const minMoverRef = useRef();
-    const maxMoverRef = useRef();
+    const leftMoverRef = useRef();
+    const rightMoverRef = useRef();
     
-    const [min, max] = valueExtent;
-    const [minCutoff, setMinCutoff] = useState(min);
-    const [maxCutoff, setMaxCutoff] = useState(max);
+    const [leftMost, rightMost] = isRight ? valueExtent : Array.from(valueExtent).reverse();
+    const [leftCutoff, setLeftCutoff] = useState(leftMost);
+    const [rightCutoff, setRightCutoff] = useState(rightMost);
     const selectedMover = useRef(null); // either "min" or "max"
     const dragStartX = useRef(null);
-    const highlitRange = useRef([min, max]);
+    const highlitRange = useRef([leftMost, rightMost]);
 
     const sliderWidth = 150;
     const moverSize = 16;
     const xScale = d3.scaleLinear()
-        .domain(valueExtent)
+        .domain([leftMost, rightMost])
         .range([0, sliderWidth]);
 
     useEffect(() => {
         // Update cutoff values when they are changed.
-        setMinCutoff(min);
-        setMaxCutoff(max);
-        displayMinCutoff(min);
-        displayMaxCutoff(max);
-    }, [min, max]);
+        setLeftCutoff(leftMost);
+        setRightCutoff(rightMost);
+        displayLeftCutoff(leftMost);
+        displayRightCutoff(rightMost);
+    }, [leftMost, rightMost]);
 
-    function getCorrectedNumberInRange(valStr, [min, max], alt) {
+    function getCorrectedNumberInRange(valStr, [left, right], alt) {
         // Users can write whatever they want, but we need to correct it!
         if(Number.isNaN(+valStr)) {
             return alt;
-        } else if(+valStr < min) {
-            return min;
-        } else if(+valStr > max) {
-            return max;
+        } else if(+valStr < left) {
+            return left;
+        } else if(+valStr > right) {
+            return right;
         } else {
             return +valStr;
         }
     }
     
-    function onMinChange(e) {
+    function onLeftChange(e) {
         // Internal curoff value should be corrected to highlight well.
         const newValue = e.target.value;
-        const corrected = getCorrectedNumberInRange(newValue, [min, maxCutoff], min);
+        const corrected = getCorrectedNumberInRange(newValue, [leftMost, rightCutoff], leftMost);
 
-        highlitRange.current = [corrected, maxCutoff];
+        highlitRange.current = [corrected, rightCutoff];
         onHighlight(highlitRange).current;
-        setMinCutoff(corrected);
+        setLeftCutoff(corrected);
     }
 
-    function onMaxChange(e) {
+    function onRightChange(e) {
         // Internal curoff value should be corrected to highlight well.
         const newValue = e.target.value;
-        const corrected = getCorrectedNumberInRange(newValue, [minCutoff, max], max);
+        const corrected = getCorrectedNumberInRange(newValue, [leftCutoff, rightMost], rightMost);
 
-        highlitRange.current = [minCutoff, corrected];
+        highlitRange.current = [leftCutoff, corrected];
         onHighlight(highlitRange.current);
-        setMaxCutoff(corrected);
+        setRightCutoff(corrected);
     }
     
     // Set up the d3-drag handler functions (started, ended, dragged).
@@ -100,46 +102,46 @@ export default function RangeSlider(props) {
         const diffX = event.sourceEvent.clientX - dragStartX.current;
 
         if(selectedMover.current === "min") {
-            let newX = xScale(minCutoff) + diffX;
-            newX = getCorrectedNumberInRange(newX, [0, xScale(maxCutoff) - minMoverGap], 0);
+            let newX = xScale(leftCutoff) + diffX;
+            newX = getCorrectedNumberInRange(newX, [0, xScale(rightCutoff) - minMoverGap], 0);
             const newCutoff = xScale.invert(newX);
             
-            highlitRange.current = [newCutoff, maxCutoff];
-            setMinCutoff(newCutoff);
-            displayMinCutoff(newCutoff);
+            highlitRange.current = [newCutoff, rightCutoff];
+            setLeftCutoff(newCutoff);
+            displayLeftCutoff(newCutoff);
         } else {
-            let newX = xScale(maxCutoff) + diffX;
-            newX = getCorrectedNumberInRange(newX, [xScale(minCutoff) + minMoverGap, sliderWidth], sliderWidth);
+            let newX = xScale(rightCutoff) + diffX;
+            newX = getCorrectedNumberInRange(newX, [xScale(leftCutoff) + minMoverGap, sliderWidth], sliderWidth);
             const newCutoff = xScale.invert(newX);
             
-            highlitRange.current = [minCutoff, newCutoff];
-            setMaxCutoff(newCutoff);
-            displayMaxCutoff(newCutoff);
+            highlitRange.current = [leftCutoff, newCutoff];
+            setRightCutoff(newCutoff);
+            displayRightCutoff(newCutoff);
         }
     });
 
     // Detect drag events for the slider elements.
     useEffect(() => {
-        const minMover = minMoverRef.current;
-        const maxMover = maxMoverRef.current;
+        const leftMover = leftMoverRef.current;
+        const rightMover = rightMoverRef.current;
 
         const drag = d3.drag()
             .on("start", started)
             .on("drag", dragged)
             .on("end", ended);
 
-        d3.select(minMover).call(drag);
-        d3.select(maxMover).call(drag);
+        d3.select(leftMover).call(drag);
+        d3.select(rightMover).call(drag);
 
         return () => {
-            d3.select(minMover).on(".drag", null);
-            d3.select(maxMover).on(".drag", null);
+            d3.select(leftMover).on(".drag", null);
+            d3.select(rightMover).on(".drag", null);
         };
-    }, [minMoverRef, maxMoverRef, started, dragged, ended]);
+    }, [leftMoverRef, rightMoverRef, started, dragged, ended]);
 
     useEffect(() => {
-        const minMover = minMoverRef.current;
-        const maxMover = maxMoverRef.current;
+        const minMover = leftMoverRef.current;
+        const maxMover = rightMoverRef.current;
 
         d3.select(minMover).on("mouseenter", () => { selectedMover.current = "min" });
         d3.select(maxMover).on("mouseenter", () => { selectedMover.current = "max" });
@@ -148,26 +150,26 @@ export default function RangeSlider(props) {
             d3.select(minMover).on("mouseenter", null);
             d3.select(maxMover).on("mouseenter", null);
         }
-    }, [minMoverRef, maxMoverRef]);
+    }, [leftMoverRef, rightMoverRef]);
 
     function onHighlight(range) {
         onChange(range);
     }
 
-    function displayMinCutoff(value) {
+    function displayLeftCutoff(value) {
         minInputRef.current.value = value.toFixed(1);
     }
 
-    function displayMaxCutoff(value) {
+    function displayRightCutoff(value) {
         maxInputRef.current.value = value.toFixed(1);
     }
 
     function onKeyDown(e) {
         switch(e.key){
             case 'Enter':
-                displayMinCutoff(minCutoff);
-                displayMaxCutoff(maxCutoff);
-                onFilter([minCutoff, maxCutoff]);
+                displayLeftCutoff(leftCutoff);
+                displayRightCutoff(rightCutoff);
+                onFilter([leftCutoff, rightCutoff]);
                 break;
             case 'Esc':
             case 'Escape':
@@ -184,12 +186,12 @@ export default function RangeSlider(props) {
                 ref={minInputRef}
                 className="chw-range-input"
                 type="text"
-                name="min-name"
-                placeholder="min"
-                defaultValue={min}
-                onChange={onMinChange}
+                name="leftcutoff"
+                placeholder={isRight ? "min" : "max"}
+                defaultValue={leftMost}
+                onChange={onLeftChange}
                 onKeyDown={onKeyDown}
-                onBlur={() => displayMinCutoff(minCutoff)}
+                onBlur={() => displayLeftCutoff(leftCutoff)}
                 style={{
                     height,
                     textAlign: "right"
@@ -205,24 +207,24 @@ export default function RangeSlider(props) {
                 <div 
                     className="chw-range-slider-ruler-fg"
                     style={{
-                        left: `${xScale(minCutoff)}px`,
-                        width: `${xScale(maxCutoff) - xScale(minCutoff)}px`
+                        left: `${xScale(leftCutoff)}px`,
+                        width: `${xScale(rightCutoff) - xScale(leftCutoff)}px`
                     }}
                 />
                 <div 
-                    ref={minMoverRef}
+                    ref={leftMoverRef}
                     className="chw-range-slider-mover-left"
                     style={{
-                        left: `${xScale(minCutoff) - moverSize / 2.0}px`,
+                        left: `${xScale(leftCutoff) - moverSize / 2.0}px`,
                         width: `${moverSize}px`,
                         height: `${moverSize}px`,
                     }}
                 />
                 <div 
-                    ref={maxMoverRef}
+                    ref={rightMoverRef}
                     className="chw-range-slider-mover-right"
                     style={{
-                        left: `${xScale(maxCutoff) - moverSize / 2.0}px`,
+                        left: `${xScale(rightCutoff) - moverSize / 2.0}px`,
                         width: `${moverSize}px`,
                         height: `${moverSize}px`,
                     }}
@@ -232,12 +234,12 @@ export default function RangeSlider(props) {
                 ref={maxInputRef}
                 className="chw-range-input"
                 type="text"
-                name="max-input"
-                placeholder="max"
-                defaultValue={max}
-                onChange={onMaxChange}
+                name="rightcutoff"
+                placeholder={isRight ? "max" : "min"}
+                defaultValue={rightMost}
+                onChange={onRightChange}
                 onKeyDown={onKeyDown}
-                onBlur={() => displayMaxCutoff(maxCutoff)}
+                onBlur={() => displayRightCutoff(rightCutoff)}
                 style={{
                     height,
                     textAlign: "left"

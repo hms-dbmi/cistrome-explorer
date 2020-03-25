@@ -39,6 +39,7 @@ function SuggestionWithHighlight(props) {
 
 /**
  * Text field to serach for keywords.
+ * @prop {boolean} isLeft Is this view on the left side of the HiGlass track?
  * @prop {number} top The top coordinate.
  * @prop {number} left The left coordinate.
  * @prop {string} field The name of field related to the wrapper track.
@@ -54,6 +55,7 @@ function SuggestionWithHighlight(props) {
 export default function TrackRowSearch(props) {
 
     const {
+        isLeft,
         top, left,
         field, type,
         onChange,
@@ -154,8 +156,9 @@ export default function TrackRowSearch(props) {
     }
 
     function onRangeChange(range) {
-        cutoffRange.current = range;
-        onChange(range);
+        const [left, right] = range;
+        cutoffRange.current = left > right ? range.reverse() : range;
+        onChange(cutoffRange.current);
     }
 
     function onResetClick() {
@@ -285,6 +288,7 @@ export default function TrackRowSearch(props) {
                         }}
                     />
                     : <RangeSlider
+                        isLeft={!isLeft}
                         height={height}
                         valueExtent={valueExtent}
                         onChange={onRangeChange}
