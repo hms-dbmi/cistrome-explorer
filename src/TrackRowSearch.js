@@ -3,6 +3,7 @@ import { CLOSE, FILTER, RESET, SEARCH } from './utils/icons.js';
 import d3 from "./utils/d3.js";
 
 import './TrackRowSearch.scss';
+import RangeSlider from "./RangeSlider.js";
 
 const MAX_NUM_SUGGESTIONS = 15;
 
@@ -38,31 +39,39 @@ function SuggestionWithHighlight(props) {
 
 /**
  * Text field to serach for keywords.
+ * @prop {boolean} isLeft Is this view on the left side of the HiGlass track?
  * @prop {number} top The top coordinate.
  * @prop {number} left The left coordinate.
+ * @prop {string} field The name of field related to the wrapper track.
+ * @prop {string} type The type of field related to the wrapper track.
  * @prop {function} onChange The function to call when the search keyword has changed.
+ * @prop {function} onFilterRows The function to call when the filter should be applied.
  * @prop {function} onClose The function to call when the search field should be closed.
+ * @prop {object[]} transformedRowInfo The `rowInfo` array after transforming by filtering and sorting according to the selected rows.
+ * @prop {array} valueExtent The array that have two numbers, indicating the min and max values.
  * @example
  * <TrackRowSearch/>
  */
 export default function TrackRowSearch(props) {
 
     const {
+        isLeft,
         top, left,
         field, type,
         onChange,
-        onFilter,
+        onFilterRows,
         onClose,
-        transformedRowInfo
+        transformedRowInfo,
+        valueExtent
     } = props;
 
     const moverRef = useRef();
-    const inputRef = useRef();
+    const keywordInputRef = useRef();
     const [keyword, setKeyword] = useState("");
     const [suggestionIndex, setSuggestionIndex] = useState(undefined);
     const [offset, setOffset] = useState({x: 0, y: 0});
     const dragStartPos = useRef(null);
-
+    const cutoffRange = useRef(valueExtent);
     const keywordUpperCase = keyword.toUpperCase();
 
     // Styles
@@ -71,7 +80,9 @@ export default function TrackRowSearch(props) {
     const padding = 5;
     
     useEffect(() => {
-        inputRef.current.focus();
+        if(type === "nominal" || type === "link") {
+            keywordInputRef.current.focus();
+        }
     });
 
     const suggestions = useMemo(() => {
@@ -119,7 +130,6 @@ export default function TrackRowSearch(props) {
 
     const dragged = useCallback(() => {
         const event = d3.event;
-        console.log(offset.x);
         const diffX = offset.x + event.sourceEvent.clientX - dragStartPos.current.x;
         const diffY = offset.y + event.sourceEvent.clientY - dragStartPos.current.y;
         setOffset({x: diffX, y: diffY});
@@ -145,8 +155,14 @@ export default function TrackRowSearch(props) {
         onChange(newKeyword);
     }
 
+    function onRangeChange(range) {
+        const [left, right] = range;
+        cutoffRange.current = left < right ? range : Array.from(range).reverse();
+        onChange(cutoffRange.current);
+    }
+
     function onResetClick() {
-        onFilter();
+        onFilterRows();
         setKeyword("");
     }
 
@@ -158,18 +174,32 @@ export default function TrackRowSearch(props) {
     }
 
     function onFilterClick() {
+        if(type === "nominal" || type === "link") {
+            onFilterByKeyword();
+        } else if(type === "quantitative") {
+            onFilterByRange(cutoffRange.current);
+        }
+    }
+
+    function onFilterByKeyword() {
         let contains = keyword.toString();
         if(suggestionIndex !== undefined) {
             contains = suggestions[suggestionIndex];
         }
-        onFilter(field, type, contains);
+        onFilterRows(field, type, contains);
         setKeyword("");
         setSuggestionIndex(undefined);
     }
 
+    function onFilterByRange(range) {
+        const [left, right] = range;
+        cutoffRange.current = left < right ? range : Array.from(range).reverse();
+        onFilterRows(field, type, cutoffRange.current);
+    }
+
     function onSuggestionEnter(suggestion) {
         const contains = suggestion;
-        onFilter(field, type, contains);
+        onFilterRows(field, type, contains);
         setKeyword("");
         setSuggestionIndex(undefined);
     }
@@ -211,7 +241,7 @@ export default function TrackRowSearch(props) {
                 suggestionIndexIncrement();
                 break;
             case 'Enter':
-                onFilterClick(); 
+                onFilterByKeyword();
                 break;
             case 'Esc':
             case 'Escape':
@@ -237,24 +267,37 @@ export default function TrackRowSearch(props) {
                 <div ref={moverRef} className="chw-button-drag">
                     <div/><div/><div/>
                 </div>
-                <svg className="chw-button-sm chw-button-static" 
-                    style={{ color: "gray", marginLeft: "0px" }}
-                    viewBox={SEARCH.viewBox}>
-                    <path d={SEARCH.path} fill="currentColor"/>
-                </svg>
-                <input
-                    ref={inputRef}
-                    className="chw-search-box-input"
-                    type="text"
-                    name="default name"
-                    placeholder="keyword"
-                    onChange={onKeywordChange}
-                    onKeyDown={onKeyDown}
-                    style={{ 
-                        width, 
-                        height 
-                    }}
-                />
+                {type === "nominal" || type === "link" ?
+                    <svg className="chw-button-sm chw-button-static" 
+                        style={{ color: "gray", marginLeft: "0px" }}
+                        viewBox={SEARCH.viewBox}>
+                        <path d={SEARCH.path} fill="currentColor"/>
+                    </svg>
+                    : null
+                }
+                {type === "nominal" || type === "link" ?
+                    <input
+                        ref={keywordInputRef}
+                        className="chw-search-box-input"
+                        type="text"
+                        name="default name"
+                        placeholder="keyword"
+                        onChange={onKeywordChange}
+                        onKeyDown={onKeyDown}
+                        style={{ 
+                            width, 
+                            height 
+                        }}
+                    />
+                    : <RangeSlider
+                        isRight={!isLeft}
+                        height={height}
+                        valueExtent={valueExtent}
+                        onChange={onRangeChange}
+                        onFilter={onFilterByRange}
+                        onClose={onSearchClose}
+                    />
+                }
                 <svg className="chw-button-sm"
                     onClick={onFilterClick} viewBox={FILTER.viewBox}>
                     <title>Filter rows by searching for keywords</title>
@@ -270,34 +313,36 @@ export default function TrackRowSearch(props) {
                     <title>Close search box</title>
                     <path d={CLOSE.path} fill="currentColor"/>
                 </svg>
-            </div>
-
-            <div 
-                className="chw-search-suggestions"
-                style={{
-                    top: (padding + height),
-                    left: "45px",
-                    width,
-                    visibility: suggestions.length > 0 ? "visible" : "collapse"
-                }}
-            >
-                <ul>
-                    {suggestions.map((d, i) => (
-                        <li
-                            key={d}
-                            className={"chw-search-suggestion-text " + (i === suggestionIndex ? "active-suggestion" : "")}
-                            onClick={() => onSuggestionEnter(d)}
-                            onMouseEnter={() => setSuggestionIndex(i)}
-                            onMouseLeave={() => setSuggestionIndex(undefined)}
-                        >
-                            <SuggestionWithHighlight
-                                text={d}
-                                target={keywordUpperCase}
-                            />
-                        </li>
-                    ))}
-                </ul>
-            </div>
+            </div>   
+            {type === "nominal" || type === "link" ?
+                <div 
+                    className="chw-search-suggestions"
+                    style={{
+                        top: (padding + height),
+                        left: "45px",
+                        width,
+                        visibility: suggestions.length > 0 ? "visible" : "collapse"
+                    }}
+                >
+                    <ul>
+                        {suggestions.map((d, i) => (
+                            <li
+                                key={d}
+                                className={"chw-search-suggestion-text " + (i === suggestionIndex ? "active-suggestion" : "")}
+                                onClick={() => onSuggestionEnter(d)}
+                                onMouseEnter={() => setSuggestionIndex(i)}
+                                onMouseLeave={() => setSuggestionIndex(undefined)}
+                            >
+                                <SuggestionWithHighlight
+                                    text={d}
+                                    target={keywordUpperCase}
+                                />
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                : null
+            }
         </div>
     );
 }

@@ -8,20 +8,28 @@ const LOCAL_EVENT_SEARCH_OPEN = "search-open";
 
 /**
  * Component with control buttons for each vertical track (for sorting, searching, etc).
+ * @prop {boolean} isLeft Is this view on the left side of the HiGlass track?
  * @prop {boolean} isVisible The visibility of the control.
  * @prop {object} fieldInfo JSON object of the name and type of an attribute.
  * @prop {function} onSortRows The function to call upon a sort interaction.
  * @prop {function} onSearchRows The function to call upon a search interaction.
  * @prop {function} onFilterRows The function to call upon a filter interaction.
+ * @prop {object[]} transformedRowInfo The `rowInfo` array after transforming by filtering and sorting according to the selected rows.
+ * @prop {array} valueExtent The array that have two numbers, indicating the min and max values.
  */
 export default function TrackRowInfoControl(props){
     const {
+        isLeft,
         isVisible, 
         fieldInfo,
+        sortAsceButtonHighlit,
+        sortDescButtonHighlit,
+        filterButtonHighlit,
         onSortRows,
         onSearchRows,
         onFilterRows,
-        transformedRowInfo
+        transformedRowInfo,
+        valueExtent
     } = props;
 
     const divRef = useRef();
@@ -75,12 +83,14 @@ export default function TrackRowInfoControl(props){
         buttons.push({
             onClick: onSortAscClick,
             icon: SORT_ASC,
-            title: "Sort rows in ascending order"
+            title: "Sort rows in ascending order",
+            highlit: sortAsceButtonHighlit
         });
         buttons.push({
             onClick: onSortDescClick,
             icon: SORT_DESC,
-            title: "Sort rows in descending order"
+            title: "Sort rows in descending order",
+            highlit: sortDescButtonHighlit
         });
     }
 
@@ -88,7 +98,8 @@ export default function TrackRowInfoControl(props){
         buttons.push({
             onClick: onSearchClick,
             icon: FILTER,
-            title: "Search keywords"
+            title: "Filter rows",
+            highlit: filterButtonHighlit
         });
     }
 
@@ -96,7 +107,8 @@ export default function TrackRowInfoControl(props){
         buttons.push({
             onClick: onReset,
             icon: RESET,
-            title: "Remove all filters"
+            title: "Remove all filters",
+            highlit: false
         });
     }
 
@@ -121,7 +133,7 @@ export default function TrackRowInfoControl(props){
                     return (
                         <svg 
                             key={button.title}
-                            className={`chw-button-sm ${positionClass}`}
+                            className={`${button.highlit ? "chw-button-sm-hl" : "chw-button-sm"} ${positionClass}`}
                             onClick={button.onClick} 
                             viewBox={button.icon.viewBox}
                         >
@@ -133,14 +145,16 @@ export default function TrackRowInfoControl(props){
             </div>
             {isSearching ? (
                 <TrackRowSearch
+                    isLeft={isLeft}
                     top={searchTop}
                     left={searchLeft}
                     field={controlField}
                     type={controlType}
                     onChange={onSearchChange}
-                    onFilter={onFilterRows}
+                    onFilterRows={onFilterRows}
                     onClose={onSearchClose}
                     transformedRowInfo={transformedRowInfo}
+                    valueExtent={valueExtent}
                 />
             ) : null}
         </div>

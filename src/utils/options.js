@@ -29,7 +29,10 @@ const baseSchema = {
                 },
                 "rowHighlight": {
                     "type": "object",
-                    "required": ["field", "type", "contains"],
+                    "oneOf":[ 
+                        { "required": ["field", "type", "contains"] },
+                        { "required": ["field", "type", "range"] }
+                    ],
                     "properties": {
                         "field": {
                             "type": "string",
@@ -43,6 +46,10 @@ const baseSchema = {
                         "contains": {
                             "type": "string",
                             "description": "The substring to search for"
+                        },
+                        "range": {
+                            "type": "array",
+                            "description": "Min and max values"
                         }
                     }
                 }
@@ -94,7 +101,10 @@ const baseSchema = {
         },
         "filterInfo": {
             "type": "object",
-            "required": ["field", "type", "contains"],
+            "oneOf":[ 
+                { "required": ["field", "type", "contains"] },
+                { "required": ["field", "type", "range"] }
+            ],
             "properties": {
                 "field": {
                     "type": ["string", "array"],
@@ -108,6 +118,10 @@ const baseSchema = {
                 "contains": {
                     "type": ["string", "array"],
                     "description": "The substring to search for"
+                },
+                "range": {
+                    "type": "array",
+                    "description": "Min and max values"
                 }
             }
         }

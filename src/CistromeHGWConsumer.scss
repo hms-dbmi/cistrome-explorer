@@ -32,18 +32,23 @@
 
 .chw-button,
 .chw-button-sm,
+.chw-button-sm-hl,
 .chw-button-lg {
     padding: 4px;
     cursor: pointer;
     border-radius: 2.5px;
-    transition: background .15s ease, color .15s ease;
+    transition: background .15s ease, color .15s ease stroke .15s ease, color .15s ease;
+}
+.chw-button-sm-hl {
+    color: green;
 }
 .chw-button,
 .chw-button-drag {
     height: 25px;
     width: 25px;
 }
-.chw-button-sm {
+.chw-button-sm,
+.chw-button-sm-hl {
     height: 20px;
     width: 20px;
 }
@@ -53,6 +58,7 @@
 }
 .chw-button:hover,
 .chw-button-sm:hover,
+.chw-button-sm-hl:hover,
 .chw-button-lg:hover {
     color: #fff;
     background: #337ab7;

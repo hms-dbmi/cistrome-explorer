@@ -2,10 +2,14 @@
 
 ### Added
 - Added real data (quality score for each sample) for quantitative bar charts.
-- Added a feature to interactively reposition the keyword search box.
-- Added filter reset buttons directly on the wrapper tracks to make it more accessible.
+- Added a mover component that allows one to interactively reposition the keyword search box.
+- Added filter reset buttons on the wrapper tracks to make it more accessible.
+- Added `range` condition in filter and highlighting options to enable filtering rows by value ranges.
+- Added a range slider to interactively filter rows by determining min and max cutoff values in quantitative bar charts, including stacked bar charts.
 
 ### Changed
+- Make keyword search box semi-transparent when blurred.
+- Changed the color of filter and sort icons when they are applied on a track as a visual indicator.
 
 ## 0.2.0 - 03/18/20
 

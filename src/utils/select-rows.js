@@ -14,17 +14,20 @@ export function selectRows(rowInfo, options) {
         if(options.rowFilter && options.rowFilter.length > 0) {
             const filterInfos = options.rowFilter;
             filterInfos.forEach(info => {
-                const { field, type, contains } = info;
+                const { field, type, contains, range } = info;
                 const isMultipleFields = Array.isArray(field);
                 if(type === "nominal") {
                     filteredRowInfo = filteredRowInfo.filter(d => d[1][field].toString().toUpperCase().includes(contains.toUpperCase()));
                 } else if(type === "quantitative") {
-                    // TODO: Better deal with quantitative data. Need to update Wrapper options for this.
-                    // refer vega filter, such as lt: https://vega.github.io/vega-lite/docs/filter.html
+                    const [minCutoff, maxCutoff] = range;
                     if(isMultipleFields) {
-                        //...
+                        filteredRowInfo = filteredRowInfo.filter(d => {
+                            let sum = 0;
+                            field.forEach(f => sum += d[1][f]);
+                            return sum > minCutoff && sum < maxCutoff;
+                        });
                     } else {
-                        filteredRowInfo = filteredRowInfo.filter(d => d[1][field].toString().includes(contains));
+                        filteredRowInfo = filteredRowInfo.filter(d => d[1][field] > minCutoff && d[1][field] < maxCutoff);
                     }
                 } else if(type === "tree") {
                     filteredRowInfo = filteredRowInfo.filter(d => d[1][field].reduce((a, h, i) => a && (i >= contains.length || h === contains[i]), true));
@@ -75,27 +78,34 @@ export function selectRows(rowInfo, options) {
 }
 
 /**
- * Generate an array of highlighted row indices based on search keyword information.
+ * Generate an array of highlighted row indices based on conditions.
  * @param {object[]} rowInfo The original/full default-ordered rowInfo array.
  * @param {string} field The attribute on which to search.
  * @param {string} type The data type contained in the field value.
- * @param {string} contains The search term.
+ * @param {string|array} conditions The conditions to check for highlighting.
  * @returns {number[]} The array of highlit indices.
  */
-export function highlightRowsFromSearch(rowInfo, field, type, contains) {
+export function highlightRowsFromSearch(rowInfo, field, type, conditions) {
     let newHighlitRows = [];
-    if(Array.isArray(field)) return newHighlitRows;
-    if(contains === "") {
+    if(conditions === "") {
         newHighlitRows = [];
     } else if(type === "nominal") {
         const rowsWithIndex = Array.from(rowInfo.entries());
-        const filteredRows = rowsWithIndex.filter(d => !d[1][field].toString().toUpperCase().includes(contains.toUpperCase()));
+        const filteredRows = rowsWithIndex.filter(d => !d[1][field].toString().toUpperCase().includes(conditions.toUpperCase()));
         newHighlitRows = filteredRows.map(d => d[0]);
     } else if(type === "quantitative") {
-        // TODO: Better deal with quantitative data. Need to update Wrapper options for this.
-        // refer vega filter, such as lt: https://vega.github.io/vega-lite/docs/filter.html
+        const [minCutoff, maxCutoff] = conditions;
         const rowsWithIndex = Array.from(rowInfo.entries());
-        const filteredRows = rowsWithIndex.filter(d => !d[1][field].toString().includes(contains));
+        let filteredRows;
+        if(Array.isArray(field)) {
+            filteredRows = rowsWithIndex.filter(d => {
+                let sum = 0;
+                field.forEach(f => sum += d[1][f]);
+                return sum < minCutoff || sum > maxCutoff;
+            });
+        } else {
+            filteredRows = rowsWithIndex.filter(d => d[1][field] < minCutoff || d[1][field] > maxCutoff);
+        }
         newHighlitRows = filteredRows.map(d => d[0]);
     }
     return newHighlitRows;

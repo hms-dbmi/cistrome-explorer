@@ -81,14 +81,17 @@ export default function CistromeHGWConsumer(props) {
         const trackOptions = getTrackWrapperOptions(options, viewId, trackId);
         const rowInfo = context.state[viewId][trackId].rowInfo;
         
-        // Filter and sort.
+        // Filter and sort
         const newSelectedRows = selectRows(rowInfo, trackOptions);
         setTrackSelectedRows(viewId, trackId, newSelectedRows);
         
-        // Highlight.
+        // Highlight
         if(trackOptions.rowHighlight) {
-            const { field, type, contains } = trackOptions.rowHighlight;
-            const newHighlitRows = highlightRowsFromSearch(rowInfo, field, type, contains);
+            const { field, type } = trackOptions.rowHighlight;
+            const condition = type === "nominal" ? 
+                trackOptions.rowHighlight.contains :
+                trackOptions.rowHighlight.range;
+            const newHighlitRows = highlightRowsFromSearch(rowInfo, field, type, condition);
             setHighlitRows(viewId, trackId, newHighlitRows);
         }
     }, [options]);
@@ -212,22 +215,22 @@ export default function CistromeHGWConsumer(props) {
     }, [options]);
 
     // Callback function for searching and highlighting.
-    const onSearchRows = useCallback((viewId, trackId, field, type, contains) => {
-        // TODO: Better handle with multiple fields & quantitative fields.
-        if(Array.isArray(field)) return;
-        const newRowHighlight = { field, type, contains };
+    const onSearchRows = useCallback((viewId, trackId, field, type, condition) => {
+        const highlightKey = type === "nominal" ? "contains" : "range";
+        const newRowHighlight = { field, type, [highlightKey]: condition };
         const newOptions = updateWrapperOptions(options, newRowHighlight, "rowHighlight", viewId, trackId, { isReplace: true });
 
         // Highlighting options are specified only in the wrapper options.
-        const newHighlitRows = highlightRowsFromSearch(context.state[viewId][trackId].rowInfo, field, type, contains);
+        const newHighlitRows = highlightRowsFromSearch(context.state[viewId][trackId].rowInfo, field, type, condition);
         setHighlitRows(viewId, trackId, newHighlitRows);
         setOptions(newOptions);
     }, [options]);
 
     // Callback function for filtering.
-    const onFilterRows = useCallback((viewId, trackId, field, type, contains) => {
+    const onFilterRows = useCallback((viewId, trackId, field, type, condition) => {
         const isResetFilter = field === undefined;
-        const newRowFilter = isResetFilter ? [] : { field, type, contains };
+        const filterKey = type === "quantitative" ? "range" : "contains";
+        const newRowFilter = isResetFilter ? [] : { field, type, [filterKey]: condition };
         let newOptions = updateWrapperOptions(options, newRowFilter, "rowFilter", viewId, trackId, { isReplace: isResetFilter });
         newOptions = updateWrapperOptions(newOptions, undefined, "rowHighlight", viewId, trackId, { isReplace: true });
 
@@ -338,11 +341,11 @@ export default function CistromeHGWConsumer(props) {
                     onSortRows={(field, type, order) => {
                         onSortRows(viewId, trackId, field, type, order);
                     }}
-                    onSearchRows={(field, type, contains) => {
-                        onSearchRows(viewId, trackId, field, type, contains);
+                    onSearchRows={(field, type, condition) => {
+                        onSearchRows(viewId, trackId, field, type, condition);
                     }}
-                    onFilterRows={(field, type, contains) => {
-                        onFilterRows(viewId, trackId, field, type, contains);
+                    onFilterRows={(field, type, condition) => {
+                        onFilterRows(viewId, trackId, field, type, condition);
                     }}
                     onMetadataLoad={() => {
                         onMetadataLoad(viewId, trackId);

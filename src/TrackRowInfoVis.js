@@ -118,10 +118,16 @@ export default function TrackRowInfoVis(props) {
     }
     const filterInfo = rowFilter ? rowFilter.filter(d => d.field === fieldInfo.field) : undefined;
     if(filterInfo && filterInfo.length > 0) {
-        titleSuffix += ` | filtered by ${filterInfo.map(d => `"${d.contains}"`).join(', ')}`;
-    }
-    if(rowHighlight && rowHighlight.field === fieldInfo.field && rowHighlight.contains.length > 0) {
-        titleSuffix += ` | highlighted by "${rowHighlight.contains}"`;
+        titleSuffix += ` | filtered by ${filterInfo.map(d => {
+            let condition = "";
+            if(d.contains) {
+                condition = `"${d.contains}"`;
+            } else {
+                const [min, max] = d.range;
+                condition = `(${min.toFixed(1)}~${max.toFixed(1)})`;
+            }
+            return condition;
+        }).join(', ')}`;
     }
 
     // Create the resizer element.
@@ -164,6 +170,8 @@ export default function TrackRowInfoVis(props) {
                     rowInfo,
                     transformedRowInfo,
                     titleSuffix,
+                    sortInfo,
+                    filterInfo,
                     onAddTrack,
                     onSortRows,
                     onSearchRows,

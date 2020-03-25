@@ -9,7 +9,6 @@ toc:
 - ContextMenu
 - Tooltip
 - TooltipContent
-- TrackColSelectionInfo
 - TrackColTools
 - TrackRowHighlight
 - TrackRowInfo
@@ -20,6 +19,7 @@ toc:
 - TrackRowInfoVisNominalBar
 - TrackRowInfoVisQuantitativeBar
 - TrackRowSearch
+- RangeSlider
 - TrackWrapper
 - ViewWrapper
 - ViewColumnBrush
