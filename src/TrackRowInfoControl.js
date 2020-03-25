@@ -108,7 +108,7 @@ export default function TrackRowInfoControl(props){
             onClick: onReset,
             icon: RESET,
             title: "Remove all filters",
-            isHighlit: false
+            highlit: false
         });
     }
 
