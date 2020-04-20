@@ -14,10 +14,14 @@ export function selectRows(rowInfo, options) {
         if(options.rowFilter && options.rowFilter.length > 0) {
             const filterInfos = options.rowFilter;
             filterInfos.forEach(info => {
-                const { field, type, contains, range } = info;
+                const { field, type, notOneOf, contains, range } = info;
                 const isMultipleFields = Array.isArray(field);
                 if(type === "nominal") {
-                    filteredRowInfo = filteredRowInfo.filter(d => d[1][field].toString().toUpperCase().includes(contains.toUpperCase()));
+                    if(notOneOf !== undefined) {
+                        filteredRowInfo = filteredRowInfo.filter(d => d[1][field].toString().toUpperCase() !== notOneOf.toUpperCase());
+                    } else if (contains !== undefined) {
+                        filteredRowInfo = filteredRowInfo.filter(d => d[1][field].toString().toUpperCase().includes(contains.toUpperCase()));
+                    }
                 } else if(type === "quantitative") {
                     const [minCutoff, maxCutoff] = range;
                     if(isMultipleFields) {

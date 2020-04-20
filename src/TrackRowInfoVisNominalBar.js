@@ -198,7 +198,7 @@ export default function TrackRowInfoVisNominalBar(props) {
             d3.select(div).on("mouseleave", null);
         };
     }, [top, left, width, height, transformedRowInfo, hoverValue]);
-
+    
     return (
         <div
             ref={divRef}
@@ -231,6 +231,8 @@ export default function TrackRowInfoVisNominalBar(props) {
                 onSortRows={onSortRows}
                 onSearchRows={onSearchRows}
                 onFilterRows={onFilterRows}
+                filterInfo={filterInfo}
+                rowInfo={rowInfo}
                 transformedRowInfo={transformedRowInfo}
             />
         </div>

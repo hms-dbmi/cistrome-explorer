@@ -28,7 +28,9 @@ const demos = {
                 {field: "Tissue Type", type: "nominal", order: "ascending"},
                 {field: "qc_frip", type: "quantitative", order: "descending"}
             ],
-            rowFilter: [ ]
+            rowFilter: [
+                {field: "Tissue Type", type: "nominal", notOneOf: "None"}
+            ]
         }
     },
     "H3K27ac Demo (2 Views, Center Tracks)": {

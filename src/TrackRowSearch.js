@@ -5,38 +5,9 @@ import d3 from "./utils/d3.js";
 import './TrackRowSearch.scss';
 import RangeSlider from "./RangeSlider.js";
 
-const MAX_NUM_SUGGESTIONS = 15;
+const MAX_NUM_SUGGESTIONS = 200;
 
-/**
- * Returns <span> elements in which text is highlighted based on a keyword
- * @prop {string} text The suggested search text.
- * @prop {string} target The keyword to highlight, uppercase.
- */
-function SuggestionWithHighlight(props) {
-    const {
-        text,
-        target
-    } = props;
-    const i0 = text.toUpperCase().indexOf(target);
-    const i1 = i0 + target.length;
-
-    const s0 = text.substring(0, i0);
-    const s1 = text.substring(i0, i1);
-    const s2 = text.substring(i1, text.length);
-    return (
-        <div 
-            style={{ display: "flex", alignItems: "center" }}>
-            <svg className="chw-button-sm chw-button-static"
-                viewBox={FILTER.viewBox}>
-                <path d={FILTER.path} fill="gray"/>
-            </svg>
-            <span>
-                {s0}<b>{s1}</b>{s2}
-            </span>
-        </div>
-    );
-}
-
+// TODO: Add `filterInfo` and `rowInfo` in multiple classes! Make sure not to exclude any parameters actually used below.
 /**
  * Text field to serach for keywords.
  * @prop {boolean} isLeft Is this view on the left side of the HiGlass track?
@@ -61,7 +32,9 @@ export default function TrackRowSearch(props) {
         onChange,
         onFilterRows,
         onClose,
-        transformedRowInfo,
+        rowInfo,
+        transformedRowInfo, // TODO: Ultimately, replaced this to rowInfo
+        filterInfo,
         valueExtent
     } = props;
 
@@ -73,10 +46,12 @@ export default function TrackRowSearch(props) {
     const dragStartPos = useRef(null);
     const cutoffRange = useRef(valueExtent);
     const keywordUpperCase = keyword.toUpperCase();
-
+    const [checkedCategories, setCheckedCategories] = useState([]); 
+    
     // Styles
     const width = 180;
     const height = 30;
+    const maxHeight = 420;
     const padding = 5;
     
     useEffect(() => {
@@ -85,24 +60,36 @@ export default function TrackRowSearch(props) {
         }
     });
 
+    useEffect(() => {
+        let newChecked = [];
+        filterInfo.forEach(info => {
+            if(info.notOneOf) {
+                newChecked.push(info.notOneOf);
+            }
+        });
+        setCheckedCategories(newChecked);
+    }, [filterInfo])
+
     const suggestions = useMemo(() => {
         let result = [];
-        if(keyword.length > 0) {
-            if(!Array.isArray(field)) {
-                const fieldData = transformedRowInfo.map(d => d[field].toString());
-                const fieldDataByKeyword = fieldData.filter(d => d.toUpperCase().includes(keywordUpperCase));
-                const potentialResult = Array.from(new Set(fieldDataByKeyword));
-                if(potentialResult.length < MAX_NUM_SUGGESTIONS) {
-                    result = potentialResult;
-                } else {
-                    result = potentialResult.slice(0, MAX_NUM_SUGGESTIONS);
-                }
+        if(!Array.isArray(field)) {
+            const fieldData = rowInfo.map(d => d[field].toString());
+            const fieldDataByKeyword = fieldData.filter(d => d.toUpperCase().includes(keywordUpperCase));
+            const potentialResult = Array.from(new Set(fieldDataByKeyword));
+            if(potentialResult.length < MAX_NUM_SUGGESTIONS) {
+                result = potentialResult;
+            } else {
+                result = potentialResult.slice(0, MAX_NUM_SUGGESTIONS);
             }
-            // Sort so that suggestions that _start with_ the keyword appear first.
-            result.sort((a, b) => {
-                return a.toUpperCase().indexOf(keywordUpperCase) - b.toUpperCase().indexOf(keywordUpperCase);
-            });
         }
+        // Sort in alphabetical order first.
+        result.sort((a, b) => {
+            return a.toUpperCase() > b.toUpperCase();
+        });
+        // Sort so that suggestions that _start with_ the keyword appear first.
+        result.sort((a, b) => {
+            return a.toUpperCase().indexOf(keywordUpperCase) - b.toUpperCase().indexOf(keywordUpperCase);
+        });
         return result;
     }, [field, keyword]);
 
@@ -250,6 +237,50 @@ export default function TrackRowSearch(props) {
         }
     }
 
+    const onCheckboxChange = useCallback((event) => {
+        if(!event || !event.target) return;
+        const target = event.target;
+        if(target.checked) {
+            // TODO: Add proper function.
+        } else {
+            // TODO: Change this to filter out rows, using `notOnfOf`, instead of leaving only these rows.
+            onFilterRows(field, type, target.value);
+        }
+    });
+
+    /**
+     * Returns <span> elements in which text is highlighted based on a keyword
+     * @prop {string} text The suggested search text.
+     * @prop {string} target The keyword to highlight, uppercase.
+     */
+    function SuggestionWithHighlight(props) {
+        const {
+            text,
+            target
+        } = props;
+        const i0 = text.toUpperCase().indexOf(target);
+        const i1 = i0 + target.length;
+
+        const s0 = text.substring(0, i0);
+        const s1 = text.substring(i0, i1);
+        const s2 = text.substring(i1, text.length);
+        return (
+            <div 
+                style={{ display: "flex", alignItems: "center" }}>
+                <input
+                    type="checkbox"
+                    name="data-table-checkbox"
+                    value={text}
+                    onChange={onCheckboxChange}
+                    checked={checkedCategories.indexOf(text) == -1}
+                />
+                <span>
+                    {s0}<b>{s1}</b>{s2}
+                </span>
+            </div>
+        );
+    }
+
     return (
         <div
             className="chw-search"
@@ -321,6 +352,8 @@ export default function TrackRowSearch(props) {
                         top: (padding + height),
                         left: "45px",
                         width,
+                        maxHeight: maxHeight,
+                        overflow: "auto",
                         visibility: suggestions.length > 0 ? "visible" : "collapse"
                     }}
                 >
@@ -329,7 +362,6 @@ export default function TrackRowSearch(props) {
                             <li
                                 key={d}
                                 className={"chw-search-suggestion-text " + (i === suggestionIndex ? "active-suggestion" : "")}
-                                onClick={() => onSuggestionEnter(d)}
                                 onMouseEnter={() => setSuggestionIndex(i)}
                                 onMouseLeave={() => setSuggestionIndex(undefined)}
                             >

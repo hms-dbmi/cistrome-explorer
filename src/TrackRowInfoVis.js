@@ -122,6 +122,8 @@ export default function TrackRowInfoVis(props) {
             let condition = "";
             if(d.contains) {
                 condition = `"${d.contains}"`;
+            } else if(d.notOneOf) {
+                condition = `"${d.notOneOf}"`;
             } else {
                 const [min, max] = d.range;
                 condition = `(${min.toFixed(1)}~${max.toFixed(1)})`;

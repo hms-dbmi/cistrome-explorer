@@ -278,7 +278,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             d3.select(div).on("mouseleave", null);
         };
     }, [top, left, width, height, transformedRowInfo]);
-
+    
     return (
         <div
             ref={divRef}
@@ -330,6 +330,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                 onSearchRows={onSearchRows}
                 onFilterRows={onFilterRows}
                 transformedRowInfo={transformedRowInfo}
+                // notOneOf={}
                 valueExtent={xExtent}
             />
         </div>

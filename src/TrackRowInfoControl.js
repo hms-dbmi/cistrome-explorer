@@ -28,7 +28,9 @@ export default function TrackRowInfoControl(props){
         onSortRows,
         onSearchRows,
         onFilterRows,
+        rowInfo,
         transformedRowInfo,
+        filterInfo,
         valueExtent
     } = props;
 
@@ -153,7 +155,9 @@ export default function TrackRowInfoControl(props){
                     onChange={onSearchChange}
                     onFilterRows={onFilterRows}
                     onClose={onSearchClose}
+                    rowInfo={rowInfo}
                     transformedRowInfo={transformedRowInfo}
+                    filterInfo={filterInfo}
                     valueExtent={valueExtent}
                 />
             ) : null}

@@ -102,6 +102,7 @@ const baseSchema = {
         "filterInfo": {
             "type": "object",
             "oneOf":[ 
+                { "required": ["field", "type", "notOneOf"] },
                 { "required": ["field", "type", "contains"] },
                 { "required": ["field", "type", "range"] }
             ],
@@ -115,8 +116,13 @@ const baseSchema = {
                     "enum": ["nominal", "quantitative", "tree"],
                     "description": "The data type of a field"
                 },
+                "notOneOf": {
+                    // TODO: Add tests for this.
+                    "type": "string",
+                    "description": "A string of the value of the field should not be included in the filtered data"
+                },
                 "contains": {
-                    "type": ["string", "array"],
+                    "type": "string",
                     "description": "The substring to search for"
                 },
                 "range": {
