@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useCallback, useMemo } from "react";
-import { CLOSE, FILTER, RESET, SEARCH } from './utils/icons.js';
+import { CLOSE, FILTER, RESET, SEARCH, SQUARE_CHECK, SQUARE } from './utils/icons.js';
 import d3 from "./utils/d3.js";
 
 import './TrackRowSearch.scss';
@@ -7,7 +7,6 @@ import RangeSlider from "./RangeSlider.js";
 
 const MAX_NUM_SUGGESTIONS = 200;
 
-// TODO: Add `filterInfo` and `rowInfo` in multiple classes! Make sure not to exclude any parameters actually used below.
 /**
  * Text field to serach for keywords.
  * @prop {boolean} isLeft Is this view on the left side of the HiGlass track?
@@ -18,8 +17,8 @@ const MAX_NUM_SUGGESTIONS = 200;
  * @prop {function} onChange The function to call when the search keyword has changed.
  * @prop {function} onFilterRows The function to call when the filter should be applied.
  * @prop {function} onClose The function to call when the search field should be closed.
- * @prop {object[]} transformedRowInfo The `rowInfo` array after transforming by filtering and sorting according to the selected rows.
- * @prop {array} valueExtent The array that have two numbers, indicating the min and max values.
+ * @prop {object[]} rowInfo Array of JSON objects, one object for each sample, without filtering/sorting based on selected rows.
+ * @prop {object} filterInfo The options for filtering rows of the field used in this track.
  * @example
  * <TrackRowSearch/>
  */
@@ -33,9 +32,7 @@ export default function TrackRowSearch(props) {
         onFilterRows,
         onClose,
         rowInfo,
-        transformedRowInfo, // TODO: Ultimately, replaced this to rowInfo
-        filterInfo,
-        valueExtent
+        filterInfo
     } = props;
 
     const moverRef = useRef();
@@ -44,9 +41,10 @@ export default function TrackRowSearch(props) {
     const [suggestionIndex, setSuggestionIndex] = useState(undefined);
     const [offset, setOffset] = useState({x: 0, y: 0});
     const dragStartPos = useRef(null);
+    const [valueExtent, setValueExtent] = useState(d3.extent(rowInfo.map(d => d[field])));
     const cutoffRange = useRef(valueExtent);
     const keywordUpperCase = keyword.toUpperCase();
-    const [checkedCategories, setCheckedCategories] = useState([]); 
+    const [notOneOf, setNotOneOf] = useState(!filterInfo || type === "quantitative" ? [] : filterInfo.notOneOf); 
     
     // Styles
     const width = 180;
@@ -55,19 +53,17 @@ export default function TrackRowSearch(props) {
     const padding = 5;
     
     useEffect(() => {
+        setValueExtent(d3.extent(rowInfo.map(d => d[field])));
+    }, [field, rowInfo]);
+
+    useEffect(() => {
         if(type === "nominal" || type === "link") {
             keywordInputRef.current.focus();
         }
     });
 
     useEffect(() => {
-        let newChecked = [];
-        filterInfo.forEach(info => {
-            if(info.notOneOf) {
-                newChecked.push(info.notOneOf);
-            }
-        });
-        setCheckedCategories(newChecked);
+        setNotOneOf(!filterInfo || type === "quantitative" ? [] : filterInfo.notOneOf);
     }, [filterInfo])
 
     const suggestions = useMemo(() => {
@@ -149,7 +145,11 @@ export default function TrackRowSearch(props) {
     }
 
     function onResetClick() {
-        onFilterRows();
+        if(type === "nominal" || type == "link") {
+            onFilterRows(field, type, rowInfo.map(d => d[field].toString()), true);
+        } else if(type === "quantitative") {
+            onFilterRows(field, type, [], true);
+        }
         setKeyword("");
     }
 
@@ -168,14 +168,16 @@ export default function TrackRowSearch(props) {
         }
     }
 
+    function onUnckeckAllClick() {
+        onFilterRows(field, type, rowInfo.map(d => d[field].toString()), false);
+    }
+
     function onFilterByKeyword() {
-        let contains = keyword.toString();
+        let oneOfNotOneOf = keyword.toString();
         if(suggestionIndex !== undefined) {
-            contains = suggestions[suggestionIndex];
+            oneOfNotOneOf = suggestions[suggestionIndex];
         }
-        onFilterRows(field, type, contains);
-        setKeyword("");
-        setSuggestionIndex(undefined);
+        onSuggestionEnter(oneOfNotOneOf);
     }
 
     function onFilterByRange(range) {
@@ -184,11 +186,10 @@ export default function TrackRowSearch(props) {
         onFilterRows(field, type, cutoffRange.current);
     }
 
-    function onSuggestionEnter(suggestion) {
-        const contains = suggestion;
-        onFilterRows(field, type, contains);
+    function onSuggestionEnter(oneOfNotOneOf) {
+        const isRemove = notOneOf.indexOf(oneOfNotOneOf) !== -1;
+        onFilterRows(field, type, [oneOfNotOneOf], isRemove);
         setKeyword("");
-        setSuggestionIndex(undefined);
     }
 
     function suggestionIndexIncrement() {
@@ -237,17 +238,6 @@ export default function TrackRowSearch(props) {
         }
     }
 
-    const onCheckboxChange = useCallback((event) => {
-        if(!event || !event.target) return;
-        const target = event.target;
-        if(target.checked) {
-            // TODO: Add proper function.
-        } else {
-            // TODO: Change this to filter out rows, using `notOnfOf`, instead of leaving only these rows.
-            onFilterRows(field, type, target.value);
-        }
-    });
-
     /**
      * Returns <span> elements in which text is highlighted based on a keyword
      * @prop {string} text The suggested search text.
@@ -265,18 +255,29 @@ export default function TrackRowSearch(props) {
         const s1 = text.substring(i0, i1);
         const s2 = text.substring(i1, text.length);
         return (
-            <div 
-                style={{ display: "flex", alignItems: "center" }}>
+            <div>
                 <input
+                    style={{
+                        display: "inline-block",
+                        verticalAlign: "top",
+                        width: "30px",
+                        marginLeft: "5px",
+                        marginTop: "0px"
+                    }}
                     type="checkbox"
                     name="data-table-checkbox"
                     value={text}
-                    onChange={onCheckboxChange}
-                    checked={checkedCategories.indexOf(text) == -1}
+                    checked={notOneOf.indexOf(text) === -1}
+                    readOnly={true} // This checkbox only provide visual feedback.
                 />
-                <span>
+                <div
+                    style={{
+                        width: "100px",
+                        display: "inline-block"
+                    }}
+                >
                     {s0}<b>{s1}</b>{s2}
-                </span>
+                </div>
             </div>
         );
     }
@@ -312,7 +313,7 @@ export default function TrackRowSearch(props) {
                         className="chw-search-box-input"
                         type="text"
                         name="default name"
-                        placeholder="keyword"
+                        placeholder="Search"
                         onChange={onKeywordChange}
                         onKeyDown={onKeyDown}
                         style={{ 
@@ -329,16 +330,27 @@ export default function TrackRowSearch(props) {
                         onClose={onSearchClose}
                     />
                 }
+                {type === "quantitative" ?
+                    <svg className="chw-button-sm"
+                        onClick={onFilterClick} viewBox={FILTER.viewBox}>
+                        <title>Filter rows by the range of values</title>
+                        <path d={FILTER.path} fill="currentColor"/>
+                    </svg>
+                    : null
+                }
                 <svg className="chw-button-sm"
-                    onClick={onFilterClick} viewBox={FILTER.viewBox}>
-                    <title>Filter rows by searching for keywords</title>
-                    <path d={FILTER.path} fill="currentColor"/>
-                </svg>
-                <svg className="chw-button-sm"
-                    onClick={onResetClick} viewBox={RESET.viewBox}>
+                    onClick={onResetClick} viewBox={type === "quantitative" ? RESET.viewBox : SQUARE_CHECK.viewBox}>
                     <title>Remove all filters</title>
-                    <path d={RESET.path} fill="currentColor"/>
+                    <path d={type === "quantitative" ? RESET.path : SQUARE_CHECK.path} fill="currentColor"/>
                 </svg>
+                {type === "nominal" || type === "link" ?
+                    <svg className="chw-button-sm"
+                        onClick={onUnckeckAllClick} viewBox={SQUARE.viewBox}>
+                        <title>Unckeck all categories</title>
+                        <path d={SQUARE.path} fill="currentColor"/>
+                    </svg>
+                    : null
+                }
                 <svg className="chw-button-sm"
                     onClick={onSearchClose} viewBox={CLOSE.viewBox}>
                     <title>Close search box</title>
@@ -362,6 +374,7 @@ export default function TrackRowSearch(props) {
                             <li
                                 key={d}
                                 className={"chw-search-suggestion-text " + (i === suggestionIndex ? "active-suggestion" : "")}
+                                onClick={() => onSuggestionEnter(d)}
                                 onMouseEnter={() => setSuggestionIndex(i)}
                                 onMouseLeave={() => setSuggestionIndex(undefined)}
                             >

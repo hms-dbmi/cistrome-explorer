@@ -11,11 +11,14 @@ const LOCAL_EVENT_SEARCH_OPEN = "search-open";
  * @prop {boolean} isLeft Is this view on the left side of the HiGlass track?
  * @prop {boolean} isVisible The visibility of the control.
  * @prop {object} fieldInfo JSON object of the name and type of an attribute.
+ * @prop {boolean} sortAsceButtonHighlit Is sorting in ascending order applied in this vertical track?
+ * @prop {boolean} sortDescButtonHighlit Is sorting in descending order applied in this vertical track?
+ * @prop {boolean} filterButtonHighlit Is filter applied in this vertical track?
  * @prop {function} onSortRows The function to call upon a sort interaction.
  * @prop {function} onSearchRows The function to call upon a search interaction.
  * @prop {function} onFilterRows The function to call upon a filter interaction.
- * @prop {object[]} transformedRowInfo The `rowInfo` array after transforming by filtering and sorting according to the selected rows.
- * @prop {array} valueExtent The array that have two numbers, indicating the min and max values.
+ * @prop {object[]} rowInfo Array of JSON objects, one object for each sample, without filtering/sorting based on selected rows.
+ * @prop {object} filterInfo The options for filtering rows of the field used in this track.
  */
 export default function TrackRowInfoControl(props){
     const {
@@ -29,9 +32,7 @@ export default function TrackRowInfoControl(props){
         onSearchRows,
         onFilterRows,
         rowInfo,
-        transformedRowInfo,
-        filterInfo,
-        valueExtent
+        filterInfo
     } = props;
 
     const divRef = useRef();
@@ -77,7 +78,11 @@ export default function TrackRowInfoControl(props){
         onSearchRows(controlField, controlType, value);
     }
     function onReset() {
-        onFilterRows();
+        if(type === "nominal" || type == "link") {
+            onFilterRows(field, type, rowInfo.map(d => d[field].toString()), true);
+        } else if(type === "quantitative" || type == "tree") {
+            onFilterRows(field, type, [], true);
+        }
     }
 
     const buttons = [];
@@ -156,9 +161,7 @@ export default function TrackRowInfoControl(props){
                     onFilterRows={onFilterRows}
                     onClose={onSearchClose}
                     rowInfo={rowInfo}
-                    transformedRowInfo={transformedRowInfo}
                     filterInfo={filterInfo}
-                    valueExtent={valueExtent}
                 />
             ) : null}
         </div>

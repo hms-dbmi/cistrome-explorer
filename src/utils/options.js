@@ -103,7 +103,7 @@ const baseSchema = {
             "type": "object",
             "oneOf":[ 
                 { "required": ["field", "type", "notOneOf"] },
-                { "required": ["field", "type", "contains"] },
+                { "required": ["field", "type", "subtree"] },
                 { "required": ["field", "type", "range"] }
             ],
             "properties": {
@@ -118,11 +118,11 @@ const baseSchema = {
                 },
                 "notOneOf": {
                     // TODO: Add tests for this.
-                    "type": "string",
+                    "type": "array",
                     "description": "A string of the value of the field should not be included in the filtered data"
                 },
-                "contains": {
-                    "type": "string",
+                "subtree": {
+                    "type": "array",
                     "description": "The substring to search for"
                 },
                 "range": {
@@ -308,6 +308,24 @@ export function addTrackWrapperOptions(options, optionsToAdd, viewId, trackId) {
 }
 
 /**
+ * Get sub-options for a specific track, using its viewId and trackId.
+ * @param {object} options A _processed_ options object to update.
+ * @param {string} key The key of sub-options object.
+ * @param {string} viewId The viewId for the track of interest.
+ * @param {string} trackId The trackId for the track of interest.
+ * @returns {object} The options object for the track, or the default options object.
+ */
+export function getWrapperSubOptions(options, key, viewId, trackId) {
+    if(!options[viewId] || (options[viewId] && !options[viewId][trackId])) {
+        // Update global defaults if there is no track specific options.
+        return options[DEFAULT_OPTIONS_KEY][key];
+    } else {
+        // Update track specific options.
+        return options[viewId][trackId][key];
+    }
+}
+
+/**
  * Update options for a specific track, using its viewId and trackId.
  * @param {object} options A _processed_ options object to update.
  * @param {object} subOptions A sub-options object to replace or insert.
@@ -325,6 +343,7 @@ export function updateWrapperOptions(options, subOptions, key, viewId, trackId, 
             [DEFAULT_OPTIONS_KEY]: {
                 ...options[DEFAULT_OPTIONS_KEY],
                 [key]: isReplace ? subOptions : insertItemToArray(options[DEFAULT_OPTIONS_KEY][key], 0, subOptions)
+                        
             }
         };
     } else {

@@ -29,7 +29,7 @@ const demos = {
                 {field: "qc_frip", type: "quantitative", order: "descending"}
             ],
             rowFilter: [
-                {field: "Tissue Type", type: "nominal", notOneOf: "None"}
+                {field: "Tissue Type", type: "nominal", notOneOf: ["None"]}
             ]
         }
     },
@@ -137,7 +137,8 @@ const demos = {
                     {field: "Species", type: "nominal", position: "right"}
                 ],
                 rowFilter: [
-                    { field: "Cell Type", type: "nominal", contains: "Fibroblast" }
+                    // TODO: Change this
+                    // { field: "Cell Type", type: "nominal", contains: "Fibroblast" }
                 ]
             }
         ]

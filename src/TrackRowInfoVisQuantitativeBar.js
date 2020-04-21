@@ -21,9 +21,11 @@ export const margin = 5;
  * @prop {number} top The top position of this view.
  * @prop {number} width The width of this view.
  * @prop {number} height The height of this view.
- * @prop {object[]} transformedRowInfo The `rowInfo` array after transforming by filtering and sorting according to the selected rows.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
+ * @prop {boolean} isShowControlButtons Determine if control buttons should be shown.
+ * @prop {object[]} rowInfo Array of JSON objects, one object for each sample, without filtering/sorting based on selected rows.
+ * @prop {object[]} transformedRowInfo The `rowInfo` array after transforming by filtering and sorting according to the selected rows.
  * @prop {string} titleSuffix The suffix of a title, information about sorting and filtering status.
  * @prop {object} sortInfo The options for sorting rows of the field used in this track.
  * @prop {object} filterInfo The options for filtering rows of the field used in this track.
@@ -36,9 +38,11 @@ export const margin = 5;
 export default function TrackRowInfoVisQuantitativeBar(props) {
     const {
         left, top, width, height,
-        transformedRowInfo,
         fieldInfo,
         isLeft,
+        isShowControlButtons,
+        rowInfo,
+        transformedRowInfo,
         titleSuffix,
         sortInfo,
         filterInfo,
@@ -53,8 +57,6 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
     const axisRef = useRef();
     const canvasRef = useRef();
     const hiddenCanvasRef = useRef();
-    const [isMouseHover, setIsMouseHover] = useState(null);
-    const [xExtent, setXExtent] = useState([null, null]);
 
     // Data, layouts and styles
     const { field } = fieldInfo;
@@ -264,10 +266,6 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
 
         // Handle mouse enter and leave.
         d3.select(canvas).on("mouseout", destroyTooltip);
-        d3.select(div).on("mouseenter", () => setIsMouseHover(true));
-        d3.select(div).on("mouseleave", () => setIsMouseHover(null));
-        
-        setXExtent(d3.extent(xScale.domain()));
 
         // Clean up.
         return () => {
@@ -319,19 +317,19 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             />
             <TrackRowInfoControl
                 isLeft={isLeft}
-                isVisible={isMouseHover !== null}
+                isVisible={isShowControlButtons}
                 fieldInfo={fieldInfo}
                 searchTop={top + axisHeight}
                 searchLeft={left}
                 sortAsceButtonHighlit={sortInfo && sortInfo.order === "ascending"}
                 sortDescButtonHighlit={sortInfo && sortInfo.order === "descending"}
-                filterButtonHighlit={filterInfo && filterInfo.length > 0}
+                filterButtonHighlit={filterInfo !== undefined}
                 onSortRows={onSortRows}
                 onSearchRows={onSearchRows}
                 onFilterRows={onFilterRows}
+                filterInfo={filterInfo}
+                rowInfo={rowInfo}
                 transformedRowInfo={transformedRowInfo}
-                // notOneOf={}
-                valueExtent={xExtent}
             />
         </div>
     );
