@@ -70,6 +70,7 @@ export default function CistromeHGWConsumer(props) {
     const [options, setOptions] = useState({});
     const [muiltivecTrackIds, setMultivecTrackIds] = useState([]);
     const [viewportTrackIds, setViewportTrackIds] = useState({});
+    const [isWheelListening, setIsWheelListening] = useState(false);
     
     const context = useContext(InfoContext);
 
@@ -289,8 +290,46 @@ export default function CistromeHGWConsumer(props) {
 
     // Destroy the context menu upon any click.
     useEffect(() => {
-        document.addEventListener("click", () => { destroyContextMenu() });
+        const clickHandler = () => { destroyContextMenu() };
+        document.addEventListener("click", clickHandler);
+        return () => document.removeEventListener("click", clickHandler);
     }, []);
+
+    // Set up the wheel event callback function.
+    const wheelCallback = useCallback((event) => {
+        console.log(event);
+    }, []);
+
+    // Add or remove the higlass wheel event listener.
+    useEffect(() => {
+        if(isWheelListening) {
+            hgRef.current.api.on('wheel', wheelCallback);
+        } else {
+            hgRef.current.api.off('wheel', wheelCallback);
+        }
+    }, [hgRef, isWheelListening]);
+
+    // Listen for key events in order to start listening for wheel events.
+    useEffect(() => {
+        const keydownHandler = (keyEvent) => {
+            if(keyEvent.keyCode === 89) {
+                setIsWheelListening(true);
+            }
+        };
+        const keyupHandler = (keyEvent) => {
+            if(keyEvent.keyCode === 89) {
+                setIsWheelListening(false);
+            }
+        };
+        
+        document.addEventListener("keydown", keydownHandler);
+        document.addEventListener("keyup", keyupHandler);
+
+        return () => {
+            document.removeEventListener("keydown", keydownHandler);
+            document.removeEventListener("keyup", keyupHandler);
+        };
+    }, [hgRef]);
 
     // Listen for higlass view config changes.
     useEffect(() => {
