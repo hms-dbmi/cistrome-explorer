@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState, useMemo, useCallback, useContext } from 'react';
 import isEqual from 'lodash/isEqual';
+import clamp from 'lodash/clamp';
 
 import { HiGlassComponent } from 'higlass';
 import higlassRegister from 'higlass-register';
@@ -244,16 +245,35 @@ export default function CistromeHGWConsumer(props) {
     }, [options]);
 
     // Callback function for vertical (row) zooming.
-    const onZoomRows = useCallback((viewId, trackId, zoomLevel, zoomCenter) => {
-        const newRowZoom = { level: zoomLevel, center: zoomCenter };
-        const newOptions = updateWrapperOptions(options, newRowZoom, "rowZoom", viewId, trackId, { isReplace: true });
+    const onZoomRows = useCallback((viewId, trackId, y, deltaY, deltaMode) => {
+        const oldWrapperOptions = getTrackWrapperOptions(options, viewId, trackId);
+        const trackNumRowsTotal = context.state[viewId][trackId].rowInfo.length;
+        const trackNumRowsSelected = context.state[viewId][trackId].selectedRows.length;
 
-        const trackOptions = getTrackWrapperOptions(newOptions, viewId, trackId);
-        const newSelectedRows = selectRows(context.state[viewId][trackId].rowInfo, trackOptions);
+        const oldRowZoom = oldWrapperOptions.rowZoom || { level: trackNumRowsTotal, top: 0 };
 
-        setHighlitRows(viewId, trackId, undefined); // TODO: figure out how to update highlit rows.y
+        const dir = deltaY > 0 ? 1 : -1;
+        const delta = dir * Math.abs(deltaY/2);
+        const factor = 1 + 0.1 * delta;
+        console.log("direction", dir);
+
+        const move = y > 0.5 ? 1 : -1;
+
+        const newLevel = clamp(oldRowZoom.level * factor, 1, trackNumRowsTotal);
+        const newTop = clamp(oldRowZoom.top + move, 0, trackNumRowsTotal - newLevel);
+
+        
+        
+        console.log("old", oldRowZoom.level, oldRowZoom.top, "new", newLevel, newTop);
+
+        const newRowZoom = { level: newLevel, top: newTop };
+        const newWrapperOptions = updateWrapperOptions(options, newRowZoom, "rowZoom", viewId, trackId, { isReplace: true });
+        const newTrackOptions = getTrackWrapperOptions(newWrapperOptions, viewId, trackId);
+        const newSelectedRows = selectRows(context.state[viewId][trackId].rowInfo, newTrackOptions);
+
+        setHighlitRows(viewId, trackId, undefined); // TODO: figure out how to update highlit rows y
         setTrackSelectedRows(viewId, trackId, newSelectedRows);
-        setOptions(newOptions);
+        setOptions(newWrapperOptions);
     }, [options]);
 
     // Callback function for adding a track.
@@ -384,8 +404,8 @@ export default function CistromeHGWConsumer(props) {
                     onFilterRows={(field, type, condition) => {
                         onFilterRows(viewId, trackId, field, type, condition);
                     }}
-                    onZoomRows={(level, center) => {
-                        onZoomRows(viewId, trackId, level, center);
+                    onZoomRows={(y, deltaY, deltaMode) => {
+                        onZoomRows(viewId, trackId, y, deltaY, deltaMode);
                     }}
                     onMetadataLoad={() => {
                         onMetadataLoad(viewId, trackId);

@@ -167,8 +167,6 @@ export default function TrackWrapper(props) {
                 trackWidth={trackWidth}
                 isWheelListening={isWheelListening}
                 onZoomRows={onZoomRows}
-                numRowsTotal={totalNumRows}
-                numRowsSelected={(selectedRows ? selectedRows.length : undefined)}
             />
         </div>
     );

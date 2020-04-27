@@ -1,14 +1,12 @@
 import React, { useRef, useEffect, useCallback } from 'react';
-
-
+import debounce from 'lodash/debounce';
 
 export default function TrackRowZoomOverlay(props) {
     const {
         trackX, trackY,
         trackWidth, trackHeight,
         onZoomRows,
-        isWheelListening,
-        numRowsTotal, numRowsSelected
+        isWheelListening
     } = props;
 
     const top = trackY;
@@ -19,23 +17,17 @@ export default function TrackRowZoomOverlay(props) {
     const overlayRef = useRef();
 
     useEffect(() => {
-        const wheelHandler = (event) => {
+        const wheelHandler = debounce((event) => {
             const { deltaMode, deltaY, layerY } = event;
-            if(numRowsSelected !== undefined && numRowsTotal !== undefined && trackHeight !== undefined) {
-
-                const zoomLevel = Math.max(0, Math.min(numRowsTotal, numRowsSelected - Math.floor(deltaY)));
-                const zoomCenter = Math.floor((layerY / trackHeight) * numRowsSelected);
-                console.log("zoomLevel", zoomLevel, "zoomCenter", zoomCenter);
-                onZoomRows(zoomLevel, zoomCenter);
-            }
-        };
+            onZoomRows(layerY / trackHeight, deltaY, deltaMode);
+        }, 50);
         if(isWheelListening) {
             overlayRef.current.addEventListener("wheel", wheelHandler);
         }
         return () => {
             overlayRef.current.removeEventListener("wheel", wheelHandler);
         }
-    }, [overlayRef, isWheelListening, onZoomRows, trackHeight, numRowsTotal, numRowsSelected]);
+    }, [overlayRef, isWheelListening, onZoomRows, trackHeight]);
 
 
 

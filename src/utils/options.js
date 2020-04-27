@@ -131,11 +131,11 @@ const baseSchema = {
             "properties": {
                 "level": {
                     "type": "number",
-                    "description": "The name of a data field"
+                    "description": "The number of rows visible in the zoom window."
                 },
-                "center": {
+                "top": {
                     "type": "number",
-                    "description": "The data type of a field"
+                    "description": "The index of the row at the top of the zoom window."
                 }
             }
         }
