@@ -73,7 +73,7 @@ export default function TrackRowInfo(props) {
         currentLeft += width;
     });
 
-    console.log("TrackRowInfo.render");
+    //console.log("TrackRowInfo.render");
     return (
         <div
             style={{

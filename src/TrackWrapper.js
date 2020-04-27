@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { InfoContext, ACTION } from "./utils/contexts.js";
 import TrackRowInfo from './TrackRowInfo.js';
 import TrackRowHighlight from './TrackRowHighlight.js';
+import TrackRowZoomOverlay from './TrackRowZoomOverlay.js';
 
 // TODO: remove the below fakedata import.
 //       see https://github.com/hms-dbmi/cistrome-higlass-wrapper/issues/26
@@ -22,7 +23,7 @@ import fakedata from './demo/fakedata/index.js';
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function TrackWrapper(props) {
-    const { 
+    const {
         options, 
         multivecTrack,
         multivecTrackViewId,
@@ -30,8 +31,10 @@ export default function TrackWrapper(props) {
         onAddTrack,
         onSortRows,
         onSearchRows,
+        onZoomRows,
         onFilterRows,
         onMetadataLoad,
+        isWheelListening,
         drawRegister
     } = props;
 
@@ -156,6 +159,16 @@ export default function TrackWrapper(props) {
                 selectedRows={selectedRows}
                 highlitRows={highlitRows}
                 drawRegister={drawRegister}
+            />
+            <TrackRowZoomOverlay
+                trackX={trackX}
+                trackY={trackY}
+                trackHeight={trackHeight}
+                trackWidth={trackWidth}
+                isWheelListening={isWheelListening}
+                onZoomRows={onZoomRows}
+                numRowsTotal={totalNumRows}
+                numRowsSelected={(selectedRows ? selectedRows.length : undefined)}
             />
         </div>
     );

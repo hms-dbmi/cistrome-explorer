@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useState, useMemo, useCallback, useContext } from 'react';
 import isEqual from 'lodash/isEqual';
-import throttle from 'lodash/throttle';
 
 import { HiGlassComponent } from 'higlass';
 import higlassRegister from 'higlass-register';
@@ -309,29 +308,6 @@ export default function CistromeHGWConsumer(props) {
         return () => document.removeEventListener("click", clickHandler);
     }, []);
 
-    // Add or remove the higlass wheel event listener.
-    useEffect(() => {
-
-        const wheelHandler = throttle((event) => {
-            const viewId = "cistrome-view-1"; // TODO: get this info from event.viewUid when new HiGlass PR gets merged.
-            const trackId = event.track.id;
-            if(viewId && trackId) {
-                console.log(event);
-                const zoomLevel = 5;
-                const zoomCenter = 4;
-                onZoomRows(viewId, trackId, zoomLevel, zoomCenter);
-            }
-        }, 100);
-
-        if(isWheelListening) {
-            hgRef.current.api.on('wheel', wheelHandler);
-        }
-
-        return () => {
-            hgRef.current.api.off('wheel', wheelHandler);
-        }
-    }, [hgRef, isWheelListening, onZoomRows]);
-
     // Listen for key events in order to start listening for wheel events.
     useEffect(() => {
         const keydownHandler = (keyEvent) => {
@@ -383,13 +359,14 @@ export default function CistromeHGWConsumer(props) {
         );
     }, [viewConfig]);
 
-    console.log("CistromeHGWConsumer.render");
+    //console.log("CistromeHGWConsumer.render");
     return (
         <div className="chw-root">
             {hgComponent}
             {muiltivecTrackIds.map(({ viewId, trackId, trackTilesetId }, i) => (
                 <TrackWrapper
                     key={i}
+                    isWheelListening={isWheelListening}
                     options={getTrackWrapperOptions(options, viewId, trackId)}
                     multivecTrack={getTrackObject(viewId, trackId)}
                     multivecTrackViewId={viewId}
@@ -406,6 +383,9 @@ export default function CistromeHGWConsumer(props) {
                     }}
                     onFilterRows={(field, type, condition) => {
                         onFilterRows(viewId, trackId, field, type, condition);
+                    }}
+                    onZoomRows={(level, center) => {
+                        onZoomRows(viewId, trackId, level, center);
                     }}
                     onMetadataLoad={() => {
                         onMetadataLoad(viewId, trackId);

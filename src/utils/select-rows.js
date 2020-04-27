@@ -75,7 +75,7 @@ export function selectRows(rowInfo, options) {
         if(options.rowZoom) {
             const { level: zoomLevel, center: zoomCenter } = options.rowZoom;
             if(zoomLevel >= 1 && zoomLevel <= rowInfo.length) {
-                const topRowIndex = zoomCenter - Math.floor(zoomLevel / 2);
+                const topRowIndex = Math.max(0, zoomCenter - Math.floor(zoomLevel / 2));
                 transformedRowInfo = transformedRowInfo.slice(topRowIndex, topRowIndex + zoomLevel);
             }
         }
