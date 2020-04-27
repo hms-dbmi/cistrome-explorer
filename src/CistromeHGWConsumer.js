@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState, useMemo, useCallback, useContext } from 'react';
 import isEqual from 'lodash/isEqual';
+import throttle from 'lodash/throttle';
 
 import { HiGlassComponent } from 'higlass';
 import higlassRegister from 'higlass-register';
@@ -243,6 +244,19 @@ export default function CistromeHGWConsumer(props) {
         setOptions(newOptions);
     }, [options]);
 
+    // Callback function for vertical (row) zooming.
+    const onZoomRows = useCallback((viewId, trackId, zoomLevel, zoomCenter) => {
+        const newRowZoom = { level: zoomLevel, center: zoomCenter };
+        const newOptions = updateWrapperOptions(options, newRowZoom, "rowZoom", viewId, trackId, { isReplace: true });
+
+        const trackOptions = getTrackWrapperOptions(newOptions, viewId, trackId);
+        const newSelectedRows = selectRows(context.state[viewId][trackId].rowInfo, trackOptions);
+
+        setHighlitRows(viewId, trackId, undefined); // TODO: figure out how to update highlit rows.y
+        setTrackSelectedRows(viewId, trackId, newSelectedRows);
+        setOptions(newOptions);
+    }, [options]);
+
     // Callback function for adding a track.
     const onAddTrack = useCallback((viewId, trackId, field, type, contains, position) => {
         if(viewId === DEFAULT_OPTIONS_KEY || trackId === DEFAULT_OPTIONS_KEY) {
@@ -295,19 +309,28 @@ export default function CistromeHGWConsumer(props) {
         return () => document.removeEventListener("click", clickHandler);
     }, []);
 
-    // Set up the wheel event callback function.
-    const wheelCallback = useCallback((event) => {
-        console.log(event);
-    }, []);
-
     // Add or remove the higlass wheel event listener.
     useEffect(() => {
+
+        const wheelHandler = throttle((event) => {
+            const viewId = "cistrome-view-1"; // TODO: get this info from event.viewUid when new HiGlass PR gets merged.
+            const trackId = event.track.id;
+            if(viewId && trackId) {
+                console.log(event);
+                const zoomLevel = 5;
+                const zoomCenter = 4;
+                onZoomRows(viewId, trackId, zoomLevel, zoomCenter);
+            }
+        }, 100);
+
         if(isWheelListening) {
-            hgRef.current.api.on('wheel', wheelCallback);
-        } else {
-            hgRef.current.api.off('wheel', wheelCallback);
+            hgRef.current.api.on('wheel', wheelHandler);
         }
-    }, [hgRef, isWheelListening]);
+
+        return () => {
+            hgRef.current.api.off('wheel', wheelHandler);
+        }
+    }, [hgRef, isWheelListening, onZoomRows]);
 
     // Listen for key events in order to start listening for wheel events.
     useEffect(() => {
@@ -321,10 +344,8 @@ export default function CistromeHGWConsumer(props) {
                 setIsWheelListening(false);
             }
         };
-        
         document.addEventListener("keydown", keydownHandler);
         document.addEventListener("keyup", keyupHandler);
-
         return () => {
             document.removeEventListener("keydown", keydownHandler);
             document.removeEventListener("keyup", keyupHandler);

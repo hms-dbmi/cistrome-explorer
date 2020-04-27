@@ -70,6 +70,16 @@ export function selectRows(rowInfo, options) {
                 }
             });
         }
+
+        // Zoom
+        if(options.rowZoom) {
+            const { level: zoomLevel, center: zoomCenter } = options.rowZoom;
+            if(zoomLevel >= 1 && zoomLevel <= rowInfo.length) {
+                const topRowIndex = zoomCenter - Math.floor(zoomLevel / 2);
+                transformedRowInfo = transformedRowInfo.slice(topRowIndex, topRowIndex + zoomLevel);
+            }
+        }
+
         return transformedRowInfo.map(d => d[0]);
     }
 

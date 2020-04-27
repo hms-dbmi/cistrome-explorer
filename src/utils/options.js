@@ -52,7 +52,8 @@ const baseSchema = {
                             "description": "Min and max values"
                         }
                     }
-                }
+                },
+                "rowZoom": { "$ref": "#/definitions/zoomInfo" }
             }
         },
         "fieldInfo": {
@@ -122,6 +123,19 @@ const baseSchema = {
                 "range": {
                     "type": "array",
                     "description": "Min and max values"
+                }
+            }
+        },
+        "zoomInfo": {
+            "type": "object",
+            "properties": {
+                "level": {
+                    "type": "number",
+                    "description": "The name of a data field"
+                },
+                "center": {
+                    "type": "number",
+                    "description": "The data type of a field"
                 }
             }
         }

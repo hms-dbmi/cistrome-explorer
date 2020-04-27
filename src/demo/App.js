@@ -28,7 +28,16 @@ const demos = {
                 {field: "Tissue Type", type: "nominal", order: "ascending"},
                 {field: "qc_frip", type: "quantitative", order: "descending"}
             ],
-            rowFilter: [ ]
+            rowFilter: [ ],
+            rowZoom: {
+                level: 1, // the number of rows that are visible (between 1 and the total # of rows)
+                center: 0 // the index of the row that is in the center of the zoom window
+                // TODO: would it be easier or more clear if `center` was `top` instead, and referred to the top row of the zoom window?
+            }
+            // TODO: discuss the following.
+            // Maybe it would be better to instead map the categorical y-axis to the HiGlass genome axis and let HiGlass handle the zooming, which would also enable better support for linked/locked zooming across tracks.
+            // However, an issue with that approach is that higlass zooming assumes you want to zoom in both horizontal and vertical axes with the same mouse scroll event. 
+            // But here, we need to distinguish between vertical and horizontal zooming.
         }
     },
     "H3K27ac Demo (2 Views, Center Tracks)": {
