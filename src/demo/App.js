@@ -137,8 +137,17 @@ const demos = {
                     {field: "Species", type: "nominal", position: "right"}
                 ],
                 rowFilter: [
-                    // TODO: Change this
-                    // { field: "Cell Type", type: "nominal", contains: "Fibroblast" }
+                    { field: "Cell Type", type: "nominal", notOneOf: [
+                        "Th1", "Spermatid", "ILC1", "Th17", "None", "Monocyte", "Natural Killer Cell", 
+                        "T Lymphocyte", "Erythroid Progenitor Cell", "B Lymphocyte", "liver", "Dendritic Cell", 
+                        "Macrophage", "Myeloid Cell", "Plasmablast", "Th2", "Endothelial Cell", "Epithelium", 
+                        "Melanoma Cell", "Keratinocyte", "Cortex", "Stem cell", "Embryonic Stem Cell", "Adipocyte", 
+                        "Neuroblastoma", "Neuroectoderm", "Neural crest cell", "Glial Cell", "Neural Progenitor Cell", 
+                        "Neuroblastoma patient cells", "Inferior Temporal Lobe Cell", "Substantia Nigra Cell", 
+                        "Hippocampus Middle Cell", "iPSC", "Melanocyte", "Endoderm Cell", "Erythroblast", 
+                        "Lymphoblastoid", "Mesenchymal Stem Cell", "Osteoblast", "Stromal Cell", "Intermediate", 
+                        "Myoblast", "Schwann Cell"
+                    ] }
                 ]
             }
         ]

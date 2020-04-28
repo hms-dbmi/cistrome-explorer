@@ -309,7 +309,7 @@ describe('Utilities for processing wrapper component options', () => {
                 rowFilter: [{
                     field: "groupB",
                     type: "quantitative",
-                    contains: "substringB"
+                    notOneOf: ["substringB"]
                 }]
             },
             {
@@ -323,7 +323,7 @@ describe('Utilities for processing wrapper component options', () => {
             {
                 field: "groupC",
                 type: "nominal",
-                contains: "substringC"
+                notOneOf: ["substringC"]
             },
             "rowFilter",
             "viewA",
@@ -334,7 +334,7 @@ describe('Utilities for processing wrapper component options', () => {
         expect(trackGlobalOptions.rowFilter.length).toBe(2);
         expect(trackGlobalOptions.rowFilter.filter(d => d.field === "groupC").length).toBe(1);
         expect(trackGlobalOptions.rowFilter.filter(d => d.type === "nominal").length).toBe(1);
-        expect(trackGlobalOptions.rowFilter.filter(d => d.contains === "substringC").length).toBe(1);
+        expect(trackGlobalOptions.rowFilter.filter(d => d.notOneOf[0] === "substringC").length).toBe(1);
     });
 
     it('Should replace sorting options in global default options if there is no track-specific options', () => {
