@@ -234,16 +234,13 @@ export default function CistromeHGWConsumer(props) {
         if(!newSubOptions) newSubOptions = [];
         let fieldOption = newSubOptions.find(d => d.field === field);
         
-        if(!field) {
-            newSubOptions = [];
-        } else if(isRemove) {
+        if(isRemove) {
             if(!fieldOption) {
                 // Nothing to remove.
             } else if(type === "nominal" || type == "link") {
                 // Remove elements of notOneOf for the cetain field by `condition`.
                 const fieldOptionIndex = newSubOptions.indexOf(fieldOption);
                 condition.forEach(one => {
-                    console.log("HERE", one)
                     const index = fieldOption.notOneOf.indexOf(one);
                     fieldOption.notOneOf.splice(index, 1);
                 });
@@ -287,7 +284,6 @@ export default function CistromeHGWConsumer(props) {
                 }
             }
         }
-        console.log(newSubOptions)
         let newOptions = updateWrapperOptions(options, newSubOptions, "rowFilter", viewId, trackId, { isReplace: true });
         newOptions = updateWrapperOptions(newOptions, undefined, "rowHighlight", viewId, trackId, { isReplace: true });
         const trackOptions = getTrackWrapperOptions(newOptions, viewId, trackId);

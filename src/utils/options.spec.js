@@ -296,7 +296,6 @@ describe('Utilities for processing wrapper component options', () => {
     });
 
     it('Should add filtering options in track-global default options', () => {
-        // TODO: Update filter options here.
         const processedOptions = processWrapperOptions([
             {
                 viewId: DEFAULT_OPTIONS_KEY,

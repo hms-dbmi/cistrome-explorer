@@ -117,7 +117,6 @@ const baseSchema = {
                     "description": "The data type of a field"
                 },
                 "notOneOf": {
-                    // TODO: Add tests for this.
                     "type": "array",
                     "description": "A string of the value of the field should not be included in the filtered data"
                 },
