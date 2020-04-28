@@ -235,10 +235,11 @@ export default function CistromeHGWConsumer(props) {
         let fieldOption = newSubOptions.find(d => d.field === field);
         
         if(isRemove) {
+            // Remove filters in a certain row track.
             if(!fieldOption) {
                 // Nothing to remove.
             } else if(type === "nominal" || type == "link") {
-                // Remove elements of notOneOf for the cetain field by `condition`.
+                // Remove elements of `notOneOf` from the cetain field in the array of `condition`.
                 const fieldOptionIndex = newSubOptions.indexOf(fieldOption);
                 condition.forEach(one => {
                     const index = fieldOption.notOneOf.indexOf(one);
@@ -246,12 +247,13 @@ export default function CistromeHGWConsumer(props) {
                 });
                 newSubOptions[fieldOptionIndex] = fieldOption;
             } else if(type === "quantitative" || type === "tree") {
-                // Simply remove range or contains filter for the cetain field.
+                // Simply remove `range` or `subtree` filters from the cetain field.
                 newSubOptions = removeItemFromArray(newSubOptions, newSubOptions.indexOf(fieldOption));
             }
         } else {
+            // Add filters in a certain row track.
             if(type === "nominal" || type === "link") {
-                // Add `notOneOf` to the list without duplication.
+                // Add elements of `notOneOf` in not already presented.
                 if(!fieldOption) {
                     fieldOption = { field, type, notOneOf: [] }
                 }
