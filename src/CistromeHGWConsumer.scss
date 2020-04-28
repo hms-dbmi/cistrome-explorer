@@ -40,7 +40,7 @@
     transition: background .15s ease, color .15s ease stroke .15s ease, color .15s ease;
 }
 .chw-button-sm-hl {
-    color: green;
+    color: #b12929;
 }
 .chw-button,
 .chw-button-drag {
@@ -115,3 +115,7 @@
     opacity: 1;
     transform: scale(2);
 } 
+
+input[type="checkbox"] {
+    zoom: 1.1;
+}

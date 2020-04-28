@@ -34,6 +34,8 @@ export default function TrackRowInfoVisLink(props) {
         left, top, width, height,
         fieldInfo,
         isLeft,
+        isShowControlButtons,
+        rowInfo,
         transformedRowInfo,
         titleSuffix,
         sortInfo,
@@ -187,14 +189,16 @@ export default function TrackRowInfoVisLink(props) {
             />
             <TrackRowInfoControl
                 isLeft={isLeft}
-                isVisible={hoverIndex !== null}
+                isVisible={isShowControlButtons}
                 fieldInfo={fieldInfo}
                 sortAsceButtonHighlit={sortInfo && sortInfo.order === "ascending"}
                 sortDescButtonHighlit={sortInfo && sortInfo.order === "descending"}
-                filterButtonHighlit={filterInfo && filterInfo.length > 0}
+                filterButtonHighlit={filterInfo && filterInfo.notOneOf.length !== 0}
                 onSortRows={onSortRows}
                 onSearchRows={onSearchRows}
                 onFilterRows={onFilterRows}
+                filterInfo={filterInfo}
+                rowInfo={rowInfo}
                 transformedRowInfo={transformedRowInfo}
             />
         </div>

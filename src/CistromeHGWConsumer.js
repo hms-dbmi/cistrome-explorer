@@ -16,6 +16,7 @@ import {
     DEFAULT_OPTIONS_KEY,
     processWrapperOptions, 
     getTrackWrapperOptions,
+    getWrapperSubOptions,
     updateWrapperOptions,
     addTrackWrapperOptions
 } from './utils/options.js';
@@ -35,6 +36,7 @@ import { wrapSvg } from './utils/wrap-svg.js';
 
 import './CistromeHGWConsumer.scss';
 import cloneDeep from 'lodash/cloneDeep';
+import { removeItemFromArray, modifyItemInArray, insertItemToArray } from './utils/array.js';
 
 higlassRegister({
     name: 'StackedBarTrack',
@@ -227,13 +229,65 @@ export default function CistromeHGWConsumer(props) {
     }, [options]);
 
     // Callback function for filtering.
-    const onFilterRows = useCallback((viewId, trackId, field, type, condition) => {
-        const isResetFilter = field === undefined;
-        const filterKey = type === "quantitative" ? "range" : "contains";
-        const newRowFilter = isResetFilter ? [] : { field, type, [filterKey]: condition };
-        let newOptions = updateWrapperOptions(options, newRowFilter, "rowFilter", viewId, trackId, { isReplace: isResetFilter });
+    const onFilterRows = useCallback((viewId, trackId, field, type, condition, isRemove) => {
+        let newSubOptions = getWrapperSubOptions(options, "rowFilter", viewId, trackId);
+        if(!newSubOptions) newSubOptions = [];
+        let fieldOption = newSubOptions.find(d => d.field === field);
+        
+        if(isRemove) {
+            // Remove filters in a certain row track.
+            if(!fieldOption) {
+                // Nothing to remove.
+            } else if(type === "nominal" || type == "link") {
+                // Remove elements of `notOneOf` from the cetain field in the array of `condition`.
+                const fieldOptionIndex = newSubOptions.indexOf(fieldOption);
+                condition.forEach(one => {
+                    const index = fieldOption.notOneOf.indexOf(one);
+                    fieldOption.notOneOf.splice(index, 1);
+                });
+                newSubOptions[fieldOptionIndex] = fieldOption;
+            } else if(type === "quantitative" || type === "tree") {
+                // Simply remove `range` or `subtree` filters from the cetain field.
+                newSubOptions = removeItemFromArray(newSubOptions, newSubOptions.indexOf(fieldOption));
+            }
+        } else {
+            // Add filters in a certain row track.
+            if(type === "nominal" || type === "link") {
+                // Add elements of `notOneOf` in not already presented.
+                if(!fieldOption) {
+                    fieldOption = { field, type, notOneOf: [] }
+                }
+                const fieldOptionIndex = newSubOptions.indexOf(fieldOption);
+                condition.forEach(one => {
+                    if(fieldOption.notOneOf.indexOf(one) === -1) {
+                        fieldOption.notOneOf.push(one);
+                    }
+                });
+                if(fieldOptionIndex === -1) {
+                    newSubOptions = insertItemToArray(newSubOptions, 0, fieldOption);
+                } else {
+                    newSubOptions = modifyItemInArray(newSubOptions, fieldOptionIndex, fieldOption);
+                }
+            } else if(type === "quantitative") {
+                // Replace with the incoming.
+                if(fieldOption) {
+                    const fieldOptionIndex = newSubOptions.indexOf(fieldOption);
+                    newSubOptions = modifyItemInArray(newSubOptions, fieldOptionIndex, { field, type, range: condition });
+                } else {
+                    newSubOptions = insertItemToArray(newSubOptions, 0, { field, type, range: condition });
+                }
+            } else if(type === "tree") {
+                // Replace with the incoming.
+                if(fieldOption) {
+                    const fieldOptionIndex = newSubOptions.indexOf(fieldOption);
+                    newSubOptions = modifyItemInArray(newSubOptions, fieldOptionIndex, { field, type, subtree: condition });
+                } else {
+                    newSubOptions = insertItemToArray(newSubOptions, 0, { field, type, subtree: condition });
+                }
+            }
+        }
+        let newOptions = updateWrapperOptions(options, newSubOptions, "rowFilter", viewId, trackId, { isReplace: true });
         newOptions = updateWrapperOptions(newOptions, undefined, "rowHighlight", viewId, trackId, { isReplace: true });
-
         const trackOptions = getTrackWrapperOptions(newOptions, viewId, trackId);
         const newSelectedRows = selectRows(context.state[viewId][trackId].rowInfo, trackOptions);
 
@@ -243,12 +297,12 @@ export default function CistromeHGWConsumer(props) {
     }, [options]);
 
     // Callback function for adding a track.
-    const onAddTrack = useCallback((viewId, trackId, field, type, contains, position) => {
+    const onAddTrack = useCallback((viewId, trackId, field, type, notOneOf, position) => {
         if(viewId === DEFAULT_OPTIONS_KEY || trackId === DEFAULT_OPTIONS_KEY) {
             console.log("A view or track ID is a default ID.");
             return;
         }
-        const newRowFilter = { field, type, contains };
+        const newRowFilter = { field, type, notOneOf };
         const currViewConfig = hgRef.current.api.getViewConfig();
         const newTrackId = getUniqueViewOrTrackId(currViewConfig, { 
             baseId: trackId, 
@@ -335,17 +389,17 @@ export default function CistromeHGWConsumer(props) {
                     multivecTrackViewId={viewId}
                     multivecTrackTrackId={trackId}
                     multivecTrackTilesetId={trackTilesetId}
-                    onAddTrack={(field, type, contains, position) => {
-                        onAddTrack(viewId, trackId, field, type, contains, position);
-                    }} 
+                    onAddTrack={(field, type, notOneOf, position) => {
+                        onAddTrack(viewId, trackId, field, type, notOneOf, position);
+                    }}
                     onSortRows={(field, type, order) => {
                         onSortRows(viewId, trackId, field, type, order);
                     }}
                     onSearchRows={(field, type, condition) => {
                         onSearchRows(viewId, trackId, field, type, condition);
                     }}
-                    onFilterRows={(field, type, condition) => {
-                        onFilterRows(viewId, trackId, field, type, condition);
+                    onFilterRows={(field, type, condition, isRemove) => {
+                        onFilterRows(viewId, trackId, field, type, condition, isRemove);
                     }}
                     onMetadataLoad={() => {
                         onMetadataLoad(viewId, trackId);

@@ -14,10 +14,12 @@ export function selectRows(rowInfo, options) {
         if(options.rowFilter && options.rowFilter.length > 0) {
             const filterInfos = options.rowFilter;
             filterInfos.forEach(info => {
-                const { field, type, contains, range } = info;
+                const { field, type, notOneOf, range, subtree } = info;
                 const isMultipleFields = Array.isArray(field);
                 if(type === "nominal") {
-                    filteredRowInfo = filteredRowInfo.filter(d => d[1][field].toString().toUpperCase().includes(contains.toUpperCase()));
+                    notOneOf.forEach(one => {
+                        filteredRowInfo = filteredRowInfo.filter(d => d[1][field].toString().toUpperCase() !== one.toUpperCase());
+                    })
                 } else if(type === "quantitative") {
                     const [minCutoff, maxCutoff] = range;
                     if(isMultipleFields) {
@@ -30,12 +32,15 @@ export function selectRows(rowInfo, options) {
                         filteredRowInfo = filteredRowInfo.filter(d => d[1][field] > minCutoff && d[1][field] < maxCutoff);
                     }
                 } else if(type === "tree") {
-                    filteredRowInfo = filteredRowInfo.filter(d => d[1][field].reduce((a, h, i) => a && (i >= contains.length || h === contains[i]), true));
+                    filteredRowInfo = filteredRowInfo.filter(d => d[1][field].reduce((a, h, i) => a && (i >= subtree.length || h === subtree[i]), true));
                 }
             });
         }
-        // Sort
         let transformedRowInfo = filteredRowInfo;
+        if(!transformedRowInfo || transformedRowInfo.length == 0) {
+            return [];
+        }
+        // Sort
         if(options.rowSort && options.rowSort.length > 0) {
             let sortOptions = options.rowSort.slice().reverse();
             sortOptions.forEach((d) => {

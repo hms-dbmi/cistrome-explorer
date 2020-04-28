@@ -28,6 +28,7 @@ toc:
 - validateWrapperOptions
 - processWrapperOptions
 - updateWrapperOptions
+- getWrapperSubOptions
 - getTrackWrapperOptions
 - getRetinaRatio
 - traverseViewConfig
