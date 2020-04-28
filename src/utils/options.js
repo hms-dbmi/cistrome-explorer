@@ -118,7 +118,7 @@ const baseSchema = {
                 },
                 "notOneOf": {
                     "type": "array",
-                    "description": "A string of the value of the field should not be included in the filtered data"
+                    "description": "An array of values of a field that should not be included in the filtered data"
                 },
                 "subtree": {
                     "type": "array",
