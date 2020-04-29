@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState, useMemo, useCallback, useContext } from 'react';
 import isEqual from 'lodash/isEqual';
+import clamp from 'lodash/clamp';
 
 import { HiGlassComponent } from 'higlass';
 import higlassRegister from 'higlass-register';
@@ -72,6 +73,7 @@ export default function CistromeHGWConsumer(props) {
     const [options, setOptions] = useState({});
     const [muiltivecTrackIds, setMultivecTrackIds] = useState([]);
     const [viewportTrackIds, setViewportTrackIds] = useState({});
+    const [isWheelListening, setIsWheelListening] = useState(false);
     
     const context = useContext(InfoContext);
 
@@ -288,12 +290,44 @@ export default function CistromeHGWConsumer(props) {
         }
         let newOptions = updateWrapperOptions(options, newSubOptions, "rowFilter", viewId, trackId, { isReplace: true });
         newOptions = updateWrapperOptions(newOptions, undefined, "rowHighlight", viewId, trackId, { isReplace: true });
+        newOptions = updateWrapperOptions(newOptions, undefined, "rowZoom", viewId, trackId, { isReplace: true });
+
         const trackOptions = getTrackWrapperOptions(newOptions, viewId, trackId);
         const newSelectedRows = selectRows(context.state[viewId][trackId].rowInfo, trackOptions);
 
         setHighlitRows(viewId, trackId, undefined);
         setTrackSelectedRows(viewId, trackId, newSelectedRows);
         setOptions(newOptions);
+    }, [options]);
+
+    // Callback function for vertical (row) zooming.
+    const onZoomRows = useCallback((viewId, trackId, y, deltaY, deltaMode) => {
+        const oldWrapperOptions = getTrackWrapperOptions(options, viewId, trackId);
+        const trackNumRowsTotal = context.state[viewId][trackId].rowInfo.length;
+        const trackNumRowsSelected = context.state[viewId][trackId].selectedRows.length;
+
+        const oldRowZoom = oldWrapperOptions.rowZoom || { level: 1.0, top: 0.0, numRows: trackNumRowsSelected || trackNumRowsTotal };
+        const numRows = oldRowZoom.numRows;
+        const rowUnit = 1.0 / numRows;
+        const oldLevel = oldRowZoom.level;
+        const oldTop = oldRowZoom.top;
+        const oldNumRows = oldLevel / rowUnit;
+
+        const delta = deltaY;
+        const factor = 1 + delta/12;
+        const newLevel = clamp(oldRowZoom.level * factor, rowUnit, 1.0);
+        const levelDiff = newLevel - oldLevel;
+        const absoluteY = oldTop + ((y * oldNumRows) * rowUnit);
+        const newTop = clamp(absoluteY - (levelDiff/2), 0.0, 1.0 - newLevel);
+
+        const newRowZoom = { level: newLevel, top: newTop, numRows: numRows };
+        const newWrapperOptions = updateWrapperOptions(options, newRowZoom, "rowZoom", viewId, trackId, { isReplace: true });
+        const newTrackOptions = getTrackWrapperOptions(newWrapperOptions, viewId, trackId);
+        const newSelectedRows = selectRows(context.state[viewId][trackId].rowInfo, newTrackOptions);
+
+        setHighlitRows(viewId, trackId, undefined); // TODO: figure out how to update highlit rows y
+        setTrackSelectedRows(viewId, trackId, newSelectedRows);
+        setOptions(newWrapperOptions);
     }, [options]);
 
     // Callback function for adding a track.
@@ -343,8 +377,30 @@ export default function CistromeHGWConsumer(props) {
 
     // Destroy the context menu upon any click.
     useEffect(() => {
-        document.addEventListener("click", () => { destroyContextMenu() });
+        const clickHandler = () => { destroyContextMenu() };
+        document.addEventListener("click", clickHandler);
+        return () => document.removeEventListener("click", clickHandler);
     }, []);
+
+    // Listen for key events in order to start listening for wheel events.
+    useEffect(() => {
+        const keydownHandler = (keyEvent) => {
+            if(keyEvent.keyCode === 89) {
+                setIsWheelListening(true);
+            }
+        };
+        const keyupHandler = (keyEvent) => {
+            if(keyEvent.keyCode === 89) {
+                setIsWheelListening(false);
+            }
+        };
+        document.addEventListener("keydown", keydownHandler);
+        document.addEventListener("keyup", keyupHandler);
+        return () => {
+            document.removeEventListener("keydown", keydownHandler);
+            document.removeEventListener("keyup", keyupHandler);
+        };
+    }, [hgRef]);
 
     // Listen for higlass view config changes.
     useEffect(() => {
@@ -377,13 +433,14 @@ export default function CistromeHGWConsumer(props) {
         );
     }, [viewConfig]);
 
-    console.log("CistromeHGWConsumer.render");
+    //console.log("CistromeHGWConsumer.render");
     return (
         <div className="chw-root">
             {hgComponent}
             {muiltivecTrackIds.map(({ viewId, trackId, trackTilesetId }, i) => (
                 <TrackWrapper
                     key={i}
+                    isWheelListening={isWheelListening}
                     options={getTrackWrapperOptions(options, viewId, trackId)}
                     multivecTrack={getTrackObject(viewId, trackId)}
                     multivecTrackViewId={viewId}
@@ -400,6 +457,9 @@ export default function CistromeHGWConsumer(props) {
                     }}
                     onFilterRows={(field, type, condition, isRemove) => {
                         onFilterRows(viewId, trackId, field, type, condition, isRemove);
+                    }}
+                    onZoomRows={(y, deltaY, deltaMode) => {
+                        onZoomRows(viewId, trackId, y, deltaY, deltaMode);
                     }}
                     onMetadataLoad={() => {
                         onMetadataLoad(viewId, trackId);

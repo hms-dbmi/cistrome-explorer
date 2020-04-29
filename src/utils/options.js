@@ -52,7 +52,8 @@ const baseSchema = {
                             "description": "Min and max values"
                         }
                     }
-                }
+                },
+                "rowZoom": { "$ref": "#/definitions/zoomInfo" }
             }
         },
         "fieldInfo": {
@@ -127,6 +128,24 @@ const baseSchema = {
                 "range": {
                     "type": "array",
                     "description": "Min and max values"
+                }
+            }
+        },
+        "zoomInfo": {
+            "type": "object",
+            "required": ["level", "top", "numRows"],
+            "properties": {
+                "level": {
+                    "type": "number",
+                    "description": "The fraction of rows visible in the zoom window. Between 0 and 1."
+                },
+                "top": {
+                    "type": "number",
+                    "description": "The top offset of the zoom window. Between 0 and 1."
+                },
+                "numRows": {
+                    "type": "number",
+                    "description": "The number of rows to take into account (after filtering but before zooming)."
                 }
             }
         }

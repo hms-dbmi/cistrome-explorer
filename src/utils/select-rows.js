@@ -75,6 +75,18 @@ export function selectRows(rowInfo, options) {
                 }
             });
         }
+
+        // Zoom
+        if(options.rowZoom) {
+            const { level: zoomLevel, top: zoomTop, numRows } = options.rowZoom;
+            const rowUnit = 1.0 / numRows;
+            if(0 < zoomLevel && zoomLevel <= 1.0) {
+                const topIndex = Math.floor(zoomTop * numRows);
+                const numRowsZoomed = Math.ceil(zoomLevel / rowUnit);
+                transformedRowInfo = transformedRowInfo.slice(topIndex, topIndex + numRowsZoomed);
+            }
+        }
+
         return transformedRowInfo.map(d => d[0]);
     }
 

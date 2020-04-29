@@ -75,7 +75,7 @@ export default function TrackRowHighlight(props) {
         return teardown;
     });
 
-    console.log("TrackRowHighlight.render");
+    //console.log("TrackRowHighlight.render");
     return (
         <canvas
             ref={canvasRef}

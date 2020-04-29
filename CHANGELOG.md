@@ -6,6 +6,7 @@
 - Added filter reset buttons on the wrapper tracks to make it more accessible.
 - Added `range` condition in filter and highlighting options to enable filtering rows by value ranges.
 - Added a range slider to interactively filter rows by determining min and max cutoff values in quantitative bar charts, including stacked bar charts.
+- Added a vertical mouse wheel zooming feature for horizontal multivec tracks, activated when the `Y` key is pressed on the keyboard.
 
 ### Changed
 - Make keyword search box semi-transparent when blurred.
