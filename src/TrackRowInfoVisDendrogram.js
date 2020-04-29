@@ -19,9 +19,10 @@ import TrackRowInfoControl from "./TrackRowInfoControl.js";
  * @prop {object[]} transformedRowInfo The `rowInfo` array after transforming by filtering and sorting according to the selected rows.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
+ * @prop {boolean} isShowControlButtons Determine if control buttons should be shown.
  * @prop {function} onAddTrack The function to call upon a track insertion.
  * @prop {function} onSortRows The function to call upon a sort interaction.
- * @prop {function} onSearchRows The function to call upon a search interaction.
+ * @prop {function} onFilterRows The function to call upon a filter interaction.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function TrackRowInfoVisDendrogram(props) {
@@ -30,6 +31,7 @@ export default function TrackRowInfoVisDendrogram(props) {
         transformedRowInfo,
         fieldInfo,
         isLeft,
+        isShowControlButtons,
         onAddTrack,
         onSortRows,
         onFilterRows,
@@ -44,7 +46,6 @@ export default function TrackRowInfoVisDendrogram(props) {
     const descendantsRef = useRef();
     const delaunayRef = useRef();
 
-    const [isMouseHover, setIsMouseHover] = useState(null);
     const [highlightNodeX, setHighlightNodeX] = useState(null);
     const [highlightNodeY, setHighlightNodeY] = useState(null);
 
@@ -141,7 +142,6 @@ export default function TrackRowInfoVisDendrogram(props) {
         const teardown = draw(canvas);
 
         d3.select(canvas).on("mousemove", () => {
-            setIsMouseHover(true);
 
             if(cannotAlign) {
                 // Show a tooltip indicating that the dendrogram has been hidden.
@@ -186,7 +186,7 @@ export default function TrackRowInfoVisDendrogram(props) {
                     node = node.parent;
                 }
                 subtree.reverse();
-                onFilterRows(field, "tree", subtree);
+                onFilterRows(field, "tree", subtree, false);
 
                 setHighlightNodeX(null);
                 setHighlightNodeY(null);
@@ -194,7 +194,6 @@ export default function TrackRowInfoVisDendrogram(props) {
         });
 
         d3.select(canvas).on("mouseout", destroyTooltip);
-        d3.select(div).on("mouseleave", () => setIsMouseHover(null));
 
         return () => {
             teardown();
@@ -222,7 +221,7 @@ export default function TrackRowInfoVisDendrogram(props) {
             />
             <TrackRowInfoControl
                 isLeft={isLeft}
-                isVisible={isMouseHover}
+                isVisible={isShowControlButtons}
                 fieldInfo={fieldInfo}
                 searchTop={top}
                 searchLeft={left}
@@ -244,7 +243,7 @@ export default function TrackRowInfoVisDendrogram(props) {
                     </svg>
                 </div>
             ) : null}
-            {(isMouseHover && highlightNodeX && highlightNodeY) ? (
+            {(isShowControlButtons && highlightNodeX && highlightNodeY) ? (
                 <svg style={{
                     position: "absolute",
                     top: 0,

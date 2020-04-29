@@ -10,6 +10,12 @@
 ### Changed
 - Make keyword search box semi-transparent when blurred.
 - Changed the color of filter and sort icons when they are applied on a track as a visual indicator.
+- Changed the filtering interface for nominal values to use checkboxes.
+- Render range sliders and checkboxes for filtering interactions based on the original data.
+- Replace `contains` filtering condition to `notOneOf`.
+- Rename the filtering condition for `tree` type data from `contains` to `subtree`.
+- Reset buttons remove all filters related only to a certain field.
+- Each field has only one `filterInfo` for the simplicity.
 
 ## 0.2.0 - 03/18/20
 

@@ -19,10 +19,11 @@ export const margin = 5;
  * @prop {number} top The top position of this view.
  * @prop {number} width The width of this view.
  * @prop {number} height The height of this view.
- * @prop {object[]} rowInfo Array of JSON objects, one object for each sample, without filtering/sorting based on selected rows.
- * @prop {object[]} transformedRowInfo The `rowInfo` array after transforming by filtering and sorting according to the selected rows.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
+ * @prop {boolean} isShowControlButtons Determine if control buttons should be shown.
+ * @prop {object[]} rowInfo Array of JSON objects, one object for each sample, without filtering/sorting based on selected rows.
+ * @prop {object[]} transformedRowInfo The `rowInfo` array after transforming by filtering and sorting according to the selected rows.
  * @prop {string} titleSuffix The suffix of a title, information about sorting and filtering status.
  * @prop {object} sortInfo The options for sorting rows of the field used in this track.
  * @prop {object} filterInfo The options for filtering rows of the field used in this track.
@@ -37,6 +38,7 @@ export default function TrackRowInfoVisNominalBar(props) {
         left, top, width, height,
         fieldInfo,
         isLeft,
+        isShowControlButtons,
         rowInfo,
         transformedRowInfo,
         titleSuffix,
@@ -141,6 +143,9 @@ export default function TrackRowInfoVisNominalBar(props) {
         const mouseViewportX = e.clientX;
         const mouseViewportY = e.clientY;
 
+        const notOneOf = Array.from(colorScale.domain());
+        notOneOf.splice(notOneOf.indexOf(hoverValue), 1);
+
         PubSub.publish(EVENT.CONTEXT_MENU, {
             x: mouseViewportX,
             y: mouseViewportY,
@@ -148,9 +153,9 @@ export default function TrackRowInfoVisNominalBar(props) {
             title: `Selected category: ${hoverValue}`,
             items: [
                 { title: "Highlight Rows", icon: HIGHLIGHTER, action: () => onSearchRows(field, "nominal", hoverValue) },
-                { title: "Filter Rows", icon: FILTER, action: () => onFilterRows(field, "nominal", hoverValue) },
-                { title: "Add Top Track with Selected Rows", icon: ARROW_UP, action: () => onAddTrack(field, "nominal", hoverValue, "top") },
-                { title: "Add Bottom Track with Selected Rows", icon: ARROW_DOWN, action: () => onAddTrack(field, "nominal", hoverValue, "bottom") }
+                { title: "Filter Rows", icon: FILTER, action: () => onFilterRows(field, "nominal", notOneOf) },
+                { title: "Add Top Track with Selected Rows", icon: ARROW_UP, action: () => onAddTrack(field, "nominal", notOneOf, "top") },
+                { title: "Add Bottom Track with Selected Rows", icon: ARROW_DOWN, action: () => onAddTrack(field, "nominal", notOneOf, "bottom") }
             ]
         });    
     }
@@ -198,7 +203,7 @@ export default function TrackRowInfoVisNominalBar(props) {
             d3.select(div).on("mouseleave", null);
         };
     }, [top, left, width, height, transformedRowInfo, hoverValue]);
-
+    
     return (
         <div
             ref={divRef}
@@ -221,16 +226,18 @@ export default function TrackRowInfoVisNominalBar(props) {
             />
             <TrackRowInfoControl
                 isLeft={isLeft}
-                isVisible={hoverValue !== null}
+                isVisible={isShowControlButtons}
                 fieldInfo={fieldInfo}
                 searchTop={top}
                 searchLeft={left}
                 sortAsceButtonHighlit={sortInfo && sortInfo.order === "ascending"}
                 sortDescButtonHighlit={sortInfo && sortInfo.order === "descending"}
-                filterButtonHighlit={filterInfo && filterInfo.length > 0}
+                filterButtonHighlit={filterInfo && filterInfo.notOneOf.length !== 0}
                 onSortRows={onSortRows}
                 onSearchRows={onSearchRows}
                 onFilterRows={onFilterRows}
+                filterInfo={filterInfo}
+                rowInfo={rowInfo}
                 transformedRowInfo={transformedRowInfo}
             />
         </div>
