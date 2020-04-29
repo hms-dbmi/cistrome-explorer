@@ -136,11 +136,15 @@ const baseSchema = {
             "properties": {
                 "level": {
                     "type": "number",
-                    "description": "The number of rows visible in the zoom window."
+                    "description": "The fraction of rows visible in the zoom window. Between 0 and 1."
                 },
                 "top": {
                     "type": "number",
-                    "description": "The index of the row at the top of the zoom window."
+                    "description": "The top offset of the zoom window. Between 0 and 1."
+                },
+                "numRows": {
+                    "type": "number",
+                    "description": "The number of rows to take into account (after filtering but before zooming)."
                 }
             }
         }

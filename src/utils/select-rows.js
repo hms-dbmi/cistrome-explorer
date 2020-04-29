@@ -83,7 +83,6 @@ export function selectRows(rowInfo, options) {
             if(0 < zoomLevel && zoomLevel <= 1.0) {
                 const topIndex = Math.floor(zoomTop * numRows);
                 const numRowsZoomed = Math.ceil(zoomLevel / rowUnit);
-                console.log("select-rows", topIndex, numRowsZoomed);
                 transformedRowInfo = transformedRowInfo.slice(topIndex, topIndex + numRowsZoomed);
             }
         }
