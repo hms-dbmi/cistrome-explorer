@@ -248,23 +248,31 @@ export default function CistromeHGWConsumer(props) {
     const onZoomRows = useCallback((viewId, trackId, y, deltaY, deltaMode) => {
         const oldWrapperOptions = getTrackWrapperOptions(options, viewId, trackId);
         const trackNumRowsTotal = context.state[viewId][trackId].rowInfo.length;
-        const trackNumRowsSelected = context.state[viewId][trackId].selectedRows.length;
 
-        const oldRowZoom = oldWrapperOptions.rowZoom || { level: trackNumRowsTotal, top: 0 };
+        const rowUnit = 1.0 / trackNumRowsTotal;
+
+        const oldRowZoom = oldWrapperOptions.rowZoom || { level: 1.0, top: 0.0 };
+        const oldLevel = oldRowZoom.level;
+        const oldTop = oldRowZoom.top;
+        const oldNumRows = oldLevel / rowUnit;
+        console.log("old num rows", oldNumRows);
 
         const dir = deltaY > 0 ? 1 : -1;
-        const delta = dir * Math.abs(deltaY/2);
-        const factor = 1 + 0.1 * delta;
+        const delta = deltaY;
+        const factor = 1 + delta/4;
         console.log("direction", dir);
 
-        const move = y > 0.5 ? 1 : -1;
+        const newLevel = clamp(oldRowZoom.level * factor, rowUnit, 1.0);
 
-        const newLevel = clamp(oldRowZoom.level * factor, 1, trackNumRowsTotal);
-        const newTop = clamp(oldRowZoom.top + move, 0, trackNumRowsTotal - newLevel);
+        const levelDiff = newLevel - oldLevel;
+
+        const absoluteY = oldTop + ((y * oldNumRows) * rowUnit);
+
+        const newTop = clamp(absoluteY - (levelDiff/2), 0.0, 1.0 - newLevel);
 
         
         
-        console.log("old", oldRowZoom.level, oldRowZoom.top, "new", newLevel, newTop);
+        console.log("old", oldLevel, oldTop, "new", newLevel, newTop);
 
         const newRowZoom = { level: newLevel, top: newTop };
         const newWrapperOptions = updateWrapperOptions(options, newRowZoom, "rowZoom", viewId, trackId, { isReplace: true });
