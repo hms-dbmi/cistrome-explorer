@@ -133,6 +133,7 @@ const baseSchema = {
         },
         "zoomInfo": {
             "type": "object",
+            "required": ["level", "top", "numRows"],
             "properties": {
                 "level": {
                     "type": "number",
