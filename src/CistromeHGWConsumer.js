@@ -235,6 +235,7 @@ export default function CistromeHGWConsumer(props) {
         const newRowFilter = isResetFilter ? [] : { field, type, [filterKey]: condition };
         let newOptions = updateWrapperOptions(options, newRowFilter, "rowFilter", viewId, trackId, { isReplace: isResetFilter });
         newOptions = updateWrapperOptions(newOptions, undefined, "rowHighlight", viewId, trackId, { isReplace: true });
+        newOptions = updateWrapperOptions(newOptions, undefined, "rowZoom", viewId, trackId, { isReplace: true });
 
         const trackOptions = getTrackWrapperOptions(newOptions, viewId, trackId);
         const newSelectedRows = selectRows(context.state[viewId][trackId].rowInfo, trackOptions);
@@ -248,10 +249,11 @@ export default function CistromeHGWConsumer(props) {
     const onZoomRows = useCallback((viewId, trackId, y, deltaY, deltaMode) => {
         const oldWrapperOptions = getTrackWrapperOptions(options, viewId, trackId);
         const trackNumRowsTotal = context.state[viewId][trackId].rowInfo.length;
+        const trackNumRowsSelected = context.state[viewId][trackId].selectedRows.length;
 
-        const rowUnit = 1.0 / trackNumRowsTotal;
-
-        const oldRowZoom = oldWrapperOptions.rowZoom || { level: 1.0, top: 0.0 };
+        const oldRowZoom = oldWrapperOptions.rowZoom || { level: 1.0, top: 0.0, numRows: trackNumRowsSelected || trackNumRowsTotal };
+        const numRows = oldRowZoom.numRows;
+        const rowUnit = 1.0 / numRows;
         const oldLevel = oldRowZoom.level;
         const oldTop = oldRowZoom.top;
         const oldNumRows = oldLevel / rowUnit;
@@ -259,7 +261,7 @@ export default function CistromeHGWConsumer(props) {
 
         const dir = deltaY > 0 ? 1 : -1;
         const delta = deltaY;
-        const factor = 1 + delta/4;
+        const factor = 1 + delta/12;
         console.log("direction", dir);
 
         const newLevel = clamp(oldRowZoom.level * factor, rowUnit, 1.0);
@@ -274,7 +276,7 @@ export default function CistromeHGWConsumer(props) {
         
         console.log("old", oldLevel, oldTop, "new", newLevel, newTop);
 
-        const newRowZoom = { level: newLevel, top: newTop };
+        const newRowZoom = { level: newLevel, top: newTop, numRows: numRows };
         const newWrapperOptions = updateWrapperOptions(options, newRowZoom, "rowZoom", viewId, trackId, { isReplace: true });
         const newTrackOptions = getTrackWrapperOptions(newWrapperOptions, viewId, trackId);
         const newSelectedRows = selectRows(context.state[viewId][trackId].rowInfo, newTrackOptions);
