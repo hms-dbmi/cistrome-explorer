@@ -7,6 +7,7 @@ import hgDemoViewConfig6 from '../viewconfigs/horizontal-multivec-6.json';
 import hgDemoViewConfig7 from '../viewconfigs/horizontal-multivec-7.json';
 import hgDemoViewConfig8 from '../viewconfigs/horizontal-multivec-8.json';
 import hgDemoViewConfig9 from '../viewconfigs/horizontal-multivec-9.json';
+import hgDemoViewConfigApril2020 from '../viewconfigs/meeting-2020-04-29.json';
 
 import './App.scss';
 
@@ -151,6 +152,19 @@ const demos = {
                 ]
             }
         ]
+    },
+    "Demo for Meeting 2020-04-29": {
+        viewConfig: hgDemoViewConfigApril2020,
+        options: {
+            rowInfoAttributes: [
+                {field: "Cluster", type: "nominal", position: "right"},
+                {field: "Cell Type", type: "nominal", position: "right"}
+            ],
+            rowSort: [
+                {field: "Cell Type", type: "nominal", order: "ascending"},
+            ],
+            rowFilter: [ ]
+        }
     },
 };
 
