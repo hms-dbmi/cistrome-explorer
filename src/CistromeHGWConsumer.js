@@ -257,24 +257,13 @@ export default function CistromeHGWConsumer(props) {
         const oldLevel = oldRowZoom.level;
         const oldTop = oldRowZoom.top;
         const oldNumRows = oldLevel / rowUnit;
-        console.log("old num rows", oldNumRows);
 
-        const dir = deltaY > 0 ? 1 : -1;
         const delta = deltaY;
         const factor = 1 + delta/12;
-        console.log("direction", dir);
-
         const newLevel = clamp(oldRowZoom.level * factor, rowUnit, 1.0);
-
         const levelDiff = newLevel - oldLevel;
-
         const absoluteY = oldTop + ((y * oldNumRows) * rowUnit);
-
         const newTop = clamp(absoluteY - (levelDiff/2), 0.0, 1.0 - newLevel);
-
-        
-        
-        console.log("old", oldLevel, oldTop, "new", newLevel, newTop);
 
         const newRowZoom = { level: newLevel, top: newTop, numRows: numRows };
         const newWrapperOptions = updateWrapperOptions(options, newRowZoom, "rowZoom", viewId, trackId, { isReplace: true });

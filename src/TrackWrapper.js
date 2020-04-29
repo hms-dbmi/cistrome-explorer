@@ -18,8 +18,10 @@ import fakedata from './demo/fakedata/index.js';
  * @prop {function} onAddTrack The function to call upon a track insertion.
  * @prop {function} onSortRows The function to call upon a sort interaction.
  * @prop {function} onSearchRows The function to call upon a search interaction.
+ * @prop {function} onZoomRows The function to call upon a vertical zoom interaction.
  * @prop {function} onFilterRows The function to call upon a filer interaction.
  * @prop {function} onMetadataLoad The function to call upon rowInfo is set to Context.
+ * @prop {boolean} isWheelListening Whether or not to listen for wheel events for vertical zooming.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function TrackWrapper(props) {
