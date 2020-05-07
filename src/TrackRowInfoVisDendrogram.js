@@ -98,14 +98,16 @@ export default function TrackRowInfoVisDendrogram(props) {
 
         let pathFunction;
         if(encodeDistance) {
+            // Since our dendrogram is rotated, *.y is indicating position along x-axis.
             if(isLeft){
                 pathFunction = (d) => {
+                    d.y = visWidth * (1 - d.data.dist / maxDistance);
+                    d.parent.y = visWidth * (1 - d.parent.data.dist / maxDistance);
                     return two.makePath(
-                        // Since our dendrogram is rotated, *.y is indicating position along x-axis.
-                        d.parent.y, top + d.parent.x,
-                        d.parent.y, top + d.x,
-                        d.y, top + d.x,
-                        d.parent.y, top + d.x
+                        titleAreaWidth + d.parent.y, top + d.parent.x,
+                        titleAreaWidth + d.parent.y, top + d.x,
+                        titleAreaWidth + d.y, top + d.x,
+                        titleAreaWidth + d.parent.y, top + d.x
                     );
                 }
             } else {
@@ -113,7 +115,6 @@ export default function TrackRowInfoVisDendrogram(props) {
                     d.y = visWidth * (1 - d.data.dist / maxDistance);
                     d.parent.y = visWidth * (1 - d.parent.data.dist / maxDistance);
                     return two.makePath(
-                        // Since our dendrogram is rotated, *.y is indicating position along x-axis.
                         visWidth - d.parent.y, top + d.parent.x,
                         visWidth - d.parent.y, top + d.x,
                         visWidth - d.y, top + d.x,
@@ -126,7 +127,6 @@ export default function TrackRowInfoVisDendrogram(props) {
             if(isLeft){
                 pathFunction = (d) => {
                     return two.makePath(
-                        // Since our dendrogram is rotated, *.y is indicating position along x-axis.
                         d.parent.y, top + d.parent.x,
                         d.parent.y, top + d.x,
                         d.y, top + d.x,
@@ -136,7 +136,6 @@ export default function TrackRowInfoVisDendrogram(props) {
             } else {
                 pathFunction = (d) => {
                     return two.makePath(
-                        // Since our dendrogram is rotated, *.y is indicating position along x-axis.
                         visWidth - d.parent.y, top + d.parent.x,
                         visWidth - d.parent.y, top + d.x,
                         visWidth - d.y, top + d.x,
@@ -188,7 +187,7 @@ export default function TrackRowInfoVisDendrogram(props) {
             .attr("width", visWidth)
             .attr("height", axisHeight)
             .append("g")
-                .attr("transform", `translate(${isLeft ? titleAreaWidth - 1 : -1}, 0)`)
+                .attr("transform", `translate(${-1}, 0)`)
                 .call(axis);
         
         d3.select(domElement)
@@ -279,6 +278,13 @@ export default function TrackRowInfoVisDendrogram(props) {
                 height: `${height}px`,
             }}
         >
+            <svg ref={axisRef} 
+                style={{
+                    left: isLeft ? titleAreaWidth : 0,
+                    pointerEvents: "none",
+                    position: "absolute"
+                }}
+            />
             <canvas
                 ref={canvasRef}
                 style={{
@@ -286,12 +292,6 @@ export default function TrackRowInfoVisDendrogram(props) {
                     top: 0,
                     width: `${width}px`,
                     height: `${height}px`
-                }}
-            />
-            <svg ref={axisRef} 
-                style={{ 
-                    pointerEvents: "none",
-                    position: "absolute"
                 }}
             />
             <TrackRowInfoControl
