@@ -52,6 +52,7 @@ toc:
 - removeItemFromArray
 - drawVisTitle
 - matrixToTree
+- matrixToTreeWithDistance
 - createReducer
 - validateIntervalParams
 - makeDBToolkitIntervalAPIURL

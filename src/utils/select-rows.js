@@ -32,7 +32,10 @@ export function selectRows(rowInfo, options) {
                         filteredRowInfo = filteredRowInfo.filter(d => d[1][field] > minCutoff && d[1][field] < maxCutoff);
                     }
                 } else if(type === "tree") {
-                    filteredRowInfo = filteredRowInfo.filter(d => d[1][field].reduce((a, h, i) => a && (i >= subtree.length || h === subtree[i]), true));
+                    filteredRowInfo = filteredRowInfo.filter(d => d[1][field].reduce(
+                        // TODO: Remove `h === subtree[i]` when we always encode similarity distance in dendrogram.
+                        (a, h, i) => a && (i >= subtree.length || h === subtree[i] || h.name === subtree[i]), true)
+                    );
                 }
             });
         }

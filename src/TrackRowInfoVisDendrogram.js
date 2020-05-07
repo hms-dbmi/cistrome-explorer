@@ -16,6 +16,7 @@ import TrackRowInfoControl from "./TrackRowInfoControl.js";
  * @prop {number} top The top position of this view.
  * @prop {number} width The width of this view.
  * @prop {number} height The height of this view.
+ * @prop {object[]} rowInfo Array of JSON objects, one object for each sample, without filtering/sorting based on selected rows.
  * @prop {object[]} transformedRowInfo The `rowInfo` array after transforming by filtering and sorting according to the selected rows.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
@@ -28,6 +29,7 @@ import TrackRowInfoControl from "./TrackRowInfoControl.js";
 export default function TrackRowInfoVisDendrogram(props) {
     const {
         left, top, width, height,
+        rowInfo,
         transformedRowInfo,
         fieldInfo,
         isLeft,
@@ -41,6 +43,7 @@ export default function TrackRowInfoVisDendrogram(props) {
     // DOM refs.
     const divRef = useRef();
     const canvasRef = useRef();
+    const axisRef = useRef();
 
     // Data refs.
     const descendantsRef = useRef();
@@ -51,13 +54,21 @@ export default function TrackRowInfoVisDendrogram(props) {
 
     // Data, layouts and styles
     const { field } = fieldInfo;
+    const axisHeight = 30;
+    const titleAreaWidth = 20;
+    const visWidth = width - titleAreaWidth;
 
     // Process the hierarchy data. Result will be null if the tree leaves
     // cannot be aligned based on the current rowInfo ordering.
     const hierarchyData = matrixToTree(transformedRowInfo.map(d => d[field]));
     const root = d3.hierarchy(hierarchyData);
     const leaves = root.leaves().map(l => l.data);
+    const encodeDistance = hierarchyData.children[0] && hierarchyData.children[0].dist !== undefined;
+    const maxDistance = encodeDistance ? hierarchyData.children[0].dist : null;
 
+    // When subtrees are filtered, make sure the leaves touch the baseline.
+    leaves.forEach(d => d.dist = 0);
+    
     // Check whether dendrogram leaves can be aligned to the current row ordering.
     let cannotAlign = false;
     for(let i = 0; i < leaves.length; i++) {
@@ -67,12 +78,12 @@ export default function TrackRowInfoVisDendrogram(props) {
         }
     }
     const treeLayout = d3.cluster()
-        .size([height, width])
+        .size([height, visWidth])
         .separation(() => 1);
     treeLayout(root);
 
     function pointFromNode(d) {
-        return [ (isLeft ? d.y : width - d.y), d.x ];
+        return [ (isLeft ? d.y : visWidth - d.y), d.x ];
     }
 
     const draw = useCallback((domElement) => {
@@ -86,26 +97,54 @@ export default function TrackRowInfoVisDendrogram(props) {
         const descendants = root.descendants();
 
         let pathFunction;
-        if(isLeft){
-            pathFunction = (d) => {
-                return two.makePath(
-                    d.parent.y, top + d.parent.x,
-                    d.parent.y, top + d.x,
-                    d.y, top + d.x,
-                    d.parent.y, top + d.x
-                );
+        if(encodeDistance) {
+            if(isLeft){
+                pathFunction = (d) => {
+                    return two.makePath(
+                        // Since our dendrogram is rotated, *.y is indicating position along x-axis.
+                        d.parent.y, top + d.parent.x,
+                        d.parent.y, top + d.x,
+                        d.y, top + d.x,
+                        d.parent.y, top + d.x
+                    );
+                }
+            } else {
+                pathFunction = (d) => {
+                    d.y = visWidth * (1 - d.data.dist / maxDistance);
+                    d.parent.y = visWidth * (1 - d.parent.data.dist / maxDistance);
+                    return two.makePath(
+                        // Since our dendrogram is rotated, *.y is indicating position along x-axis.
+                        visWidth - d.parent.y, top + d.parent.x,
+                        visWidth - d.parent.y, top + d.x,
+                        visWidth - d.y, top + d.x,
+                        visWidth - d.parent.y, top + d.x
+                    );
+                }
             }
         } else {
-            pathFunction = (d) => {
-                return two.makePath(
-                    width -  d.parent.y, top + d.parent.x,
-                    width - d.parent.y, top + d.x,
-                    width - d.y, top + d.x,
-                    width - d.parent.y, top + d.x
-                );
+            // TODO: Remove this part when we always encode similarity distance in dendrogram.
+            if(isLeft){
+                pathFunction = (d) => {
+                    return two.makePath(
+                        // Since our dendrogram is rotated, *.y is indicating position along x-axis.
+                        d.parent.y, top + d.parent.x,
+                        d.parent.y, top + d.x,
+                        d.y, top + d.x,
+                        d.parent.y, top + d.x
+                    );
+                }
+            } else {
+                pathFunction = (d) => {
+                    return two.makePath(
+                        // Since our dendrogram is rotated, *.y is indicating position along x-axis.
+                        visWidth - d.parent.y, top + d.parent.x,
+                        visWidth - d.parent.y, top + d.x,
+                        visWidth - d.y, top + d.x,
+                        visWidth - d.parent.y, top + d.x
+                    );
+                }
             }
         }
-        
         descendants.forEach((d, i) => {
             if(i > 0) {
                 const path = pathFunction(d);
@@ -134,12 +173,40 @@ export default function TrackRowInfoVisDendrogram(props) {
         return two.teardown;
     });
 
+    const drawAxis = useCallback((domElement) => {
+        if(!encodeDistance) return () => { };
+        
+        d3.select(domElement).selectAll("*").remove();
+
+        const axisScale = d3.scaleLinear()
+            .domain(isLeft ? [maxDistance, 0] : [0, maxDistance])
+            .range([0, visWidth]);
+        const axis = d3.axisBottom(axisScale)
+            .ticks(Math.ceil(visWidth / 40));
+        
+        d3.select(domElement)
+            .attr("width", visWidth)
+            .attr("height", axisHeight)
+            .append("g")
+                .attr("transform", `translate(${isLeft ? titleAreaWidth - 1 : -1}, 0)`)
+                .call(axis);
+        
+        d3.select(domElement)
+            .selectAll("text")
+                .attr("transform", `translate(${isLeft ? -3 : 3}, 0)`);
+
+        return () => { /* Teardown */ };
+    });
+
     drawRegister("TrackRowInfoVisDendrogram", draw);
+    drawRegister("TrackRowInfoVisDendrogramAxis", drawAxis);
 
     useEffect(() => {
         const canvas = canvasRef.current;
+        const svg = axisRef.current;
         const div = divRef.current;
         const teardown = draw(canvas);
+        const teardownSvg = drawAxis(svg);
 
         d3.select(canvas).on("mousemove", () => {
 
@@ -197,6 +264,7 @@ export default function TrackRowInfoVisDendrogram(props) {
 
         return () => {
             teardown();
+            teardownSvg();
             d3.select(div).on("mouseleave", null);
         };
     }, [width, height, root]);
@@ -205,6 +273,7 @@ export default function TrackRowInfoVisDendrogram(props) {
         <div
             ref={divRef}
             style={{
+                top: `${top}px`,
                 position: 'relative',
                 width: `${width}px`,
                 height: `${height}px`,
@@ -213,10 +282,16 @@ export default function TrackRowInfoVisDendrogram(props) {
             <canvas
                 ref={canvasRef}
                 style={{
-                    position: "relative",
+                    position: "absolute",
                     top: 0,
                     width: `${width}px`,
                     height: `${height}px`
+                }}
+            />
+            <svg ref={axisRef} 
+                style={{ 
+                    pointerEvents: "none",
+                    position: "absolute"
                 }}
             />
             <TrackRowInfoControl

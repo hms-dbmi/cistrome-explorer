@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { CistromeHGW } from '../index.js';
 
 import hgDemoViewConfig1 from '../viewconfigs/horizontal-multivec-1.json';
+import hgDemoViewConfig2 from '../viewconfigs/horizontal-multivec-2.json';
+import hgDemoViewConfig2b from '../viewconfigs/horizontal-multivec-2b.json';
 import hgDemoViewConfig6 from '../viewconfigs/horizontal-multivec-6.json';
 import hgDemoViewConfig7 from '../viewconfigs/horizontal-multivec-7.json';
 import hgDemoViewConfig8 from '../viewconfigs/horizontal-multivec-8.json';
@@ -166,6 +168,24 @@ const demos = {
             rowFilter: [ ]
         }
     },
+    "Minimumal Dataset": {
+        viewConfig: hgDemoViewConfig2,
+        options: {
+            rowInfoAttributes: [
+                {field: "Hierarchical Clustering", type: "tree", position: "right"}
+            ],
+            rowFilter: [ ]
+        }
+    },
+    "Minimumal Dataset (w/ Dendrogram Simillarity Distance)": {
+        viewConfig: hgDemoViewConfig2b,
+        options: {
+            rowInfoAttributes: [
+                {field: "Hierarchical Clustering", type: "tree", position: "right"}
+            ],
+            rowFilter: [ ]
+        }
+    }
 };
 
 function onViewConfigChange(viewConfigString) {
