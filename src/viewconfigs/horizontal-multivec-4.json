@@ -308,9 +308,7 @@
           "w": 6,
           "h": 71,
           "x": 6,
-          "y": 0,
-          "moved": false,
-          "static": false
+          "y": 0
         },
         "uid": "cistrome-view-4-2"
       }
