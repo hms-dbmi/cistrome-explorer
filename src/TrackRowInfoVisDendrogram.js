@@ -83,7 +83,7 @@ export default function TrackRowInfoVisDendrogram(props) {
     treeLayout(root);
 
     function pointFromNode(d) {
-        return [ (isLeft ? d.y : visWidth - d.y), d.x ];
+        return [ (isLeft ? d.y + titleAreaWidth : visWidth - d.y), d.x ];
     }
 
     const draw = useCallback((domElement) => {
@@ -127,10 +127,10 @@ export default function TrackRowInfoVisDendrogram(props) {
             if(isLeft){
                 pathFunction = (d) => {
                     return two.makePath(
-                        d.parent.y, top + d.parent.x,
-                        d.parent.y, top + d.x,
-                        d.y, top + d.x,
-                        d.parent.y, top + d.x
+                        titleAreaWidth + d.parent.y, top + d.parent.x,
+                        titleAreaWidth + d.parent.y, top + d.x,
+                        titleAreaWidth + d.y, top + d.x,
+                        titleAreaWidth + d.parent.y, top + d.x
                     );
                 }
             } else {
