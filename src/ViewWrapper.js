@@ -31,6 +31,7 @@ export default function ViewWrapper(props) {
     const divRef = useRef();
     const dragX = useRef(null);
     const newViewportId = useRef(null);
+    const [assembly, setAssembly] = useState(null);
     const [mouseHoverX, setMouseHoverX] = useState(null);
     const [brushStartX, setBrushStartX] = useState(null);
     const [brushEndX, setBrushEndX] = useState(null);
@@ -112,13 +113,14 @@ export default function ViewWrapper(props) {
     });
 
     useEffect(() => {
-        let assembly;
         try {
-            assembly = multivecTrack.tilesetInfo.coordSystem;
+            setAssembly(multivecTrack.tilesetInfo.coordSystem);
         } catch(e) {
             console.log(e);   
         }
+    });
 
+    useEffect(() => {
         if(assembly && multivecTrack._xScale) {
             const domainX = multivecTrack._xScale.invert(mouseHoverX);
             resolveIntervalCoordinates(assembly, domainX)
@@ -138,7 +140,7 @@ export default function ViewWrapper(props) {
     const { top, left, width, height } = viewBoundingBox;
     const brushBarTop = height + 4;
 
-    return (
+    return assembly ? (
         <div className="cistrome-hgw-view-wrapper">
             <div 
                 style={{
@@ -248,5 +250,5 @@ export default function ViewWrapper(props) {
                 : null}
             </div>
         </div>
-    );
+    ) : null;
 };
