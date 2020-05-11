@@ -177,7 +177,7 @@ const demos = {
             rowFilter: [ ]
         }
     },
-    "Minimumal Dataset (w/ Dendrogram Simillarity Distance)": {
+    "Minimal Dataset (w/ Dendrogram Similarity Distance)": {
         viewConfig: hgDemoViewConfig2b,
         options: {
             rowInfoAttributes: [
