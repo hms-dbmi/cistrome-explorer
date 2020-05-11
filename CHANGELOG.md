@@ -17,6 +17,7 @@
 - Rename the filtering condition for `tree` type data from `contains` to `subtree`.
 - Reset buttons remove all filters related only to a certain field.
 - Each field has only one `filterInfo` for the simplicity.
+- Update dendrogram to visually encode similarity distance between nodes.
 
 ## 0.2.0 - 03/18/20
 

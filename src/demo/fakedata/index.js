@@ -4,6 +4,7 @@
  */
 import rowInfo1 from './cistrome-track-1/rowInfo.json';
 import rowInfo2 from './cistrome-track-2/rowInfo.json';
+import rowInfo3 from './cistrome-track-3/rowInfo.json';
 
 const _fakedata = {
     "default": {
@@ -19,6 +20,11 @@ const _fakedata = {
     "cistrome-track-2": {
         tilesetInfo: {
             rowInfo: rowInfo2
+        }
+    },
+    "cistrome-track-2b": {
+        tilesetInfo: {
+            rowInfo: rowInfo3
         }
     },
     "cistrome-track-4-1": {
