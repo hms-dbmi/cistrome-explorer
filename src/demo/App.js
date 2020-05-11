@@ -168,7 +168,7 @@ const demos = {
             rowFilter: [ ]
         }
     },
-    "Minimumal Dataset": {
+    "Minimal Dataset": {
         viewConfig: hgDemoViewConfig2,
         options: {
             rowInfoAttributes: [
