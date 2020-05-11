@@ -28,7 +28,6 @@ import TrackRowInfoControl from "./TrackRowInfoControl.js";
 export default function TrackRowInfoVisDendrogram(props) {
     const {
         left, top, width, height,
-        rowInfo,
         transformedRowInfo,
         fieldInfo,
         isLeft,
