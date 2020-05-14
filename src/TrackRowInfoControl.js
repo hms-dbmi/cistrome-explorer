@@ -15,7 +15,7 @@ const LOCAL_EVENT_SEARCH_OPEN = "search-open";
  * @prop {boolean} sortDescButtonHighlit Is sorting in descending order applied in this vertical track?
  * @prop {boolean} filterButtonHighlit Is filter applied in this vertical track?
  * @prop {function} onSortRows The function to call upon a sort interaction.
- * @prop {function} onSearchRows The function to call upon a search interaction.
+ * @prop {function} onHighlightRows The function to call upon a search interaction.
  * @prop {function} onFilterRows The function to call upon a filter interaction.
  * @prop {object[]} rowInfo Array of JSON objects, one object for each sample, without filtering/sorting based on selected rows.
  * @prop {object} filterInfo The options for filtering rows of the field used in this track.
@@ -29,7 +29,7 @@ export default function TrackRowInfoControl(props){
         sortDescButtonHighlit,
         filterButtonHighlit,
         onSortRows,
-        onSearchRows,
+        onHighlightRows,
         onFilterRows,
         rowInfo,
         filterInfo
@@ -75,7 +75,7 @@ export default function TrackRowInfoControl(props){
         setIsSearching(false);
     }
     function onSearchChange(value) {
-        onSearchRows(controlField, controlType, value);
+        onHighlightRows(controlField, controlType, value);
     }
     function onReset() {
         if(type === "nominal" || type == "link") {
@@ -101,7 +101,7 @@ export default function TrackRowInfoControl(props){
         });
     }
 
-    if(onSearchRows) {
+    if(onHighlightRows) {
         buttons.push({
             onClick: onSearchClick,
             icon: FILTER,

@@ -146,8 +146,7 @@ export default function TrackRowInfoVisDendrogram(props) {
             if(i > 0) {
                 const path = pathFunction(d);
                 path.stroke = "#555";
-                path.opacity = 0.6;
-                path.linewidth = 1.5;
+                path.linewidth = 1;
             }
         });
 
@@ -230,6 +229,7 @@ export default function TrackRowInfoVisDendrogram(props) {
                 const [mouseX, mouseY] = d3.mouse(canvas);
                 const i = delaunayRef.current.find(mouseX, mouseY);
                 const d = descendantsRef.current[i];
+                console.log(d, i);
                 const [pointX, pointY] = pointFromNode(d);
 
                 setHighlightNodeX(pointX);

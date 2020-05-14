@@ -210,7 +210,7 @@ function onViewConfigChange(viewConfigString) {
 
 export default function App() {
     
-    const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[0]);
+    const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[Object.keys(demos).length - 4]); // TODO: Revert Back
 
     return (
         <div className="app">

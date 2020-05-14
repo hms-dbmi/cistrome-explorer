@@ -31,7 +31,8 @@ const baseSchema = {
                     "type": "object",
                     "oneOf":[ 
                         { "required": ["field", "type", "contains"] },
-                        { "required": ["field", "type", "range"] }
+                        { "required": ["field", "type", "range"] },
+                        { "required": ["field", "type", "ancestor"] },
                     ],
                     "properties": {
                         "field": {
@@ -40,12 +41,16 @@ const baseSchema = {
                         },
                         "type": {
                             "type": "string",
-                            "enum": ["nominal", "quantitative"],
+                            "enum": ["nominal", "quantitative", "tree"],
                             "description": "The data type of a field"
                         },
                         "contains": {
                             "type": "string",
                             "description": "The substring to search for"
+                        },
+                        "ancestor": {
+                            "type": "string",
+                            "description": "The name of an ancestor to highlight a subtree"
                         },
                         "range": {
                             "type": "array",

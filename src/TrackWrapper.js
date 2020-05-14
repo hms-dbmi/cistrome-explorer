@@ -17,7 +17,7 @@ import fakedata from './demo/fakedata/index.js';
  * @prop {string} multivecTrackTrackId The trackId for the multivecTrack.
  * @prop {function} onAddTrack The function to call upon a track insertion.
  * @prop {function} onSortRows The function to call upon a sort interaction.
- * @prop {function} onSearchRows The function to call upon a search interaction.
+ * @prop {function} onHighlightRows The function to call upon a highlight interaction.
  * @prop {function} onZoomRows The function to call upon a vertical zoom interaction.
  * @prop {function} onFilterRows The function to call upon a filer interaction.
  * @prop {function} onMetadataLoad The function to call upon rowInfo is set to Context.
@@ -32,7 +32,7 @@ export default function TrackWrapper(props) {
         multivecTrackTrackId,
         onAddTrack,
         onSortRows,
-        onSearchRows,
+        onHighlightRows,
         onZoomRows,
         onFilterRows,
         onMetadataLoad,
@@ -125,7 +125,7 @@ export default function TrackWrapper(props) {
                     rowInfoPosition="left"
                     onAddTrack={onAddTrack}
                     onSortRows={onSortRows}
-                    onSearchRows={onSearchRows}
+                    onHighlightRows={onHighlightRows}
                     onFilterRows={onFilterRows}
                     drawRegister={(key, draw, options) => {
                         drawRegister(`${key}-left`, draw, options);
@@ -148,7 +148,7 @@ export default function TrackWrapper(props) {
                     rowInfoPosition="right"
                     onAddTrack={onAddTrack}
                     onSortRows={onSortRows}
-                    onSearchRows={onSearchRows}
+                    onHighlightRows={onHighlightRows}
                     onFilterRows={onFilterRows}
                     drawRegister={(key, draw, options) => {
                         drawRegister(`${key}-right`, draw, options);

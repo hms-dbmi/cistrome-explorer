@@ -219,7 +219,7 @@ export default function CistromeHGWConsumer(props) {
     }, [options]);
 
     // Callback function for searching and highlighting.
-    const onSearchRows = useCallback((viewId, trackId, field, type, condition) => {
+    const onHighlightRows = useCallback((viewId, trackId, field, type, condition) => {
         const highlightKey = type === "nominal" ? "contains" : "range";
         const newRowHighlight = { field, type, [highlightKey]: condition };
         const newOptions = updateWrapperOptions(options, newRowHighlight, "rowHighlight", viewId, trackId, { isReplace: true });
@@ -452,8 +452,8 @@ export default function CistromeHGWConsumer(props) {
                     onSortRows={(field, type, order) => {
                         onSortRows(viewId, trackId, field, type, order);
                     }}
-                    onSearchRows={(field, type, condition) => {
-                        onSearchRows(viewId, trackId, field, type, condition);
+                    onHighlightRows={(field, type, condition) => {
+                        onHighlightRows(viewId, trackId, field, type, condition);
                     }}
                     onFilterRows={(field, type, condition, isRemove) => {
                         onFilterRows(viewId, trackId, field, type, condition, isRemove);

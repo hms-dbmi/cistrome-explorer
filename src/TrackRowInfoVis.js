@@ -28,7 +28,7 @@ const fieldTypeToVisComponent = {
  * @prop {object} rowHighlight The options for highlighting rows.
  * @prop {function} onAddTrack The function to call upon a track insertion.
  * @prop {function} onSortRows The function to call upon a sort interaction.
- * @prop {function} onSearchRows The function to call upon a search interaction.
+ * @prop {function} onHighlightRows The function to call upon a highlight interaction.
  * @prop {function} onFilterRows The function to call upon a filter interaction.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  * @prop {function} onWidthChanged The function to call when the component resize element has been dragged.
@@ -45,7 +45,7 @@ export default function TrackRowInfoVis(props) {
         rowHighlight,
         onAddTrack,
         onSortRows,
-        onSearchRows,
+        onHighlightRows,
         onFilterRows,
         drawRegister,
         onWidthChanged
@@ -163,7 +163,7 @@ export default function TrackRowInfoVis(props) {
                     filterInfo,
                     onAddTrack,
                     onSortRows,
-                    onSearchRows,
+                    onHighlightRows,
                     onFilterRows,
                     drawRegister,
                 }
