@@ -5,6 +5,7 @@
 import rowInfo1 from './cistrome-track-1/rowInfo.json';
 import rowInfo2 from './cistrome-track-2/rowInfo.json';
 import rowInfo3 from './cistrome-track-3/rowInfo.json';
+import rowInfo10 from './cistrome-track-10/rowInfo.json';
 
 const _fakedata = {
     "default": {
@@ -62,6 +63,11 @@ const _fakedata = {
             rowInfo: rowInfo2
         }
     },
+    "cistrome-track-10": {
+      tilesetInfo: {
+          rowInfo: rowInfo10
+      }
+  },
 };
 
 export default new Proxy(_fakedata, {

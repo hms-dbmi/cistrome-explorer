@@ -179,7 +179,8 @@ export default function TrackRowInfoVisDendrogram(props) {
             .domain(isLeft ? [maxDistance, 0] : [0, maxDistance])
             .range([0, visWidth]);
         const axis = d3.axisBottom(axisScale)
-            .ticks(Math.ceil(visWidth / 40));
+            .ticks(Math.ceil(visWidth / 60))
+            .tickFormat(d3.format("~s"));
         
         d3.select(domElement)
             .attr("width", visWidth)
