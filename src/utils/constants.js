@@ -29,5 +29,6 @@ export const POSITION = Object.freeze({
  * Types for Context Menu.
  */
 export const CONTEXT_MENU_TYPE = Object.freeze({
-    NOMINAL_BAR: "context-menu-type-nominal-bar"
+    NOMINAL_BAR: "context-menu-type-nominal-bar",
+    TREE_ANCESTOR: "context-menu-type-tree-ancestor"
 });

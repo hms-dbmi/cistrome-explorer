@@ -128,9 +128,12 @@ export function highlightRowsFromSearch(rowInfo, field, type, conditions) {
         }
         newHighlitRows = filteredRows.map(d => d[0]);
     } else if(type === "tree") {
-        // TODO: get back to here again.
+        const subtree = conditions;
         const rowsWithIndex = Array.from(rowInfo.entries());
-        const filteredRows = rowsWithIndex.filter(d => !d[1][field].map(o => `(${o.name})`).join("").toUpperCase().includes(`(${conditions.toUpperCase()})`));
+        const filteredRows = rowsWithIndex.filter(d => d[1][field].reduce(
+            // TODO: Remove `h === subtree[i]` when we always encode similarity distance in dendrogram.
+            (a, h, i) => a || (i < subtree.length && h !== subtree[i] && h.name !== subtree[i]), false)
+        );
         newHighlitRows = filteredRows.map(d => d[0]);
     }
     return newHighlitRows;

@@ -32,7 +32,7 @@ const baseSchema = {
                     "oneOf":[ 
                         { "required": ["field", "type", "contains"] },
                         { "required": ["field", "type", "range"] },
-                        { "required": ["field", "type", "ancestor"] },
+                        { "required": ["field", "type", "subtree"] },
                     ],
                     "properties": {
                         "field": {
@@ -48,9 +48,9 @@ const baseSchema = {
                             "type": "string",
                             "description": "The substring to search for"
                         },
-                        "ancestor": {
-                            "type": "string",
-                            "description": "The name of an ancestor to highlight a subtree"
+                        "subtree": {
+                            "type": "array",
+                            "description": "The subtree to search for"
                         },
                         "range": {
                             "type": "array",
@@ -128,7 +128,7 @@ const baseSchema = {
                 },
                 "subtree": {
                     "type": "array",
-                    "description": "The substring to search for"
+                    "description": "The subtree to search for"
                 },
                 "range": {
                     "type": "array",
@@ -201,7 +201,7 @@ export function getHighlightKeyByFieldType(type) {
     case "nominal":
       return "contains";
     case "tree":
-      return "ancestor";
+      return "subtree";
   }
 }
 

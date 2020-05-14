@@ -3,12 +3,13 @@ import PubSub from "pubsub-js";
 
 import d3 from "./utils/d3.js";
 import Two from "./utils/two.js";
-import { EVENT } from "./utils/constants.js";
+import { EVENT, CONTEXT_MENU_TYPE } from "./utils/constants.js";
 import { drawVisTitle } from "./utils/vis.js";
 import { matrixToTree } from './utils/tree.js';
 import { SORT_TREE } from './utils/icons.js';
 import { TooltipContent, destroyTooltip } from './Tooltip.js';
 import TrackRowInfoControl from "./TrackRowInfoControl.js";
+import { FILTER, ARROW_UP, ARROW_DOWN } from './utils/icons.js';
 
 /**
  * Component for visualization of row info hierarchies.
@@ -48,6 +49,7 @@ export default function TrackRowInfoVisDendrogram(props) {
     // Data refs.
     const descendantsRef = useRef();
     const delaunayRef = useRef();
+    const ancestor = useRef();
 
     const [highlightNodeX, setHighlightNodeX] = useState(null);
     const [highlightNodeY, setHighlightNodeY] = useState(null);
@@ -200,6 +202,37 @@ export default function TrackRowInfoVisDendrogram(props) {
     drawRegister("TrackRowInfoVisDendrogram", draw);
     drawRegister("TrackRowInfoVisDendrogramAxis", drawAxis);
 
+    // Context menu.
+    function onContextMenu(e){
+        e.preventDefault();
+
+        if(!cannotAlign && delaunayRef.current && descendantsRef.current) {
+            onHighlightRows(field, "tree", ancestor.current.data.name);
+
+            const mouseViewportX = e.clientX;
+            const mouseViewportY = e.clientY;
+            
+            let node = ancestor.current;
+            const subtree = [];
+            while(node.parent) {
+                subtree.push(node.data.name);
+                node = node.parent;
+            }
+            subtree.reverse();
+
+            PubSub.publish(EVENT.CONTEXT_MENU, {
+                x: mouseViewportX,
+                y: mouseViewportY,
+                title: "Options for dendrogram",
+                menuType: CONTEXT_MENU_TYPE.TREE_ANCESTOR,
+                items: [
+                    { title: "Filter Rows", icon: FILTER, action: () => onFilterRows(field, "tree", subtree, false) },
+                    // TODO: Add more options for context menu.
+                ]
+            });
+        }   
+    }
+
     useEffect(() => {
         const canvas = canvasRef.current;
         const svg = axisRef.current;
@@ -230,34 +263,21 @@ export default function TrackRowInfoVisDendrogram(props) {
                 // Show hover indicator.
                 const [mouseX, mouseY] = d3.mouse(canvas);
                 const i = delaunayRef.current.find(mouseX, mouseY);
-                const d = descendantsRef.current[i];
+                const d = ancestor.current = descendantsRef.current[i];
                 const [pointX, pointY] = pointFromNode(d);
-
-                setHighlightNodeX(pointX);
-                setHighlightNodeY(pointY);
-
-                onHighlightRows(field, "tree", d.data.name);
-            }
-        });
-
-        d3.select(canvas).on("click", () => {
-            if(!cannotAlign && delaunayRef.current && descendantsRef.current) {
-                // Filter to select a subtree based on clicking near its root node.
-                const [mouseX, mouseY] = d3.mouse(canvas);
-
-                const i = delaunayRef.current.find(mouseX, mouseY);
-
+                
+                let node = ancestor.current;
                 const subtree = [];
-                let node = descendantsRef.current[i];
                 while(node.parent) {
                     subtree.push(node.data.name);
                     node = node.parent;
                 }
                 subtree.reverse();
-                onFilterRows(field, "tree", subtree, false);
 
-                setHighlightNodeX(null);
-                setHighlightNodeY(null);
+                setHighlightNodeX(pointX);
+                setHighlightNodeY(pointY);
+
+                onHighlightRows(field, "tree", subtree);
             }
         });
 
@@ -292,6 +312,7 @@ export default function TrackRowInfoVisDendrogram(props) {
             />
             <canvas
                 ref={canvasRef}
+                onContextMenu={onContextMenu}
                 style={{
                     position: "absolute",
                     top: 0,
