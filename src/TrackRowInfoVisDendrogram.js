@@ -22,6 +22,7 @@ import TrackRowInfoControl from "./TrackRowInfoControl.js";
  * @prop {boolean} isShowControlButtons Determine if control buttons should be shown.
  * @prop {function} onAddTrack The function to call upon a track insertion.
  * @prop {function} onSortRows The function to call upon a sort interaction.
+ * @prop {function} onHighlightRows The function to call upon a highlight interaction.
  * @prop {function} onFilterRows The function to call upon a filter interaction.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
@@ -34,6 +35,7 @@ export default function TrackRowInfoVisDendrogram(props) {
         isShowControlButtons,
         onAddTrack,
         onSortRows,
+        onHighlightRows,
         onFilterRows,
         drawRegister,
     } = props;
@@ -229,11 +231,12 @@ export default function TrackRowInfoVisDendrogram(props) {
                 const [mouseX, mouseY] = d3.mouse(canvas);
                 const i = delaunayRef.current.find(mouseX, mouseY);
                 const d = descendantsRef.current[i];
-                console.log(d, i);
                 const [pointX, pointY] = pointFromNode(d);
 
                 setHighlightNodeX(pointX);
                 setHighlightNodeY(pointY);
+
+                onHighlightRows(field, "tree", d.data.name);
             }
         });
 
@@ -258,7 +261,10 @@ export default function TrackRowInfoVisDendrogram(props) {
             }
         });
 
-        d3.select(canvas).on("mouseout", destroyTooltip);
+        d3.select(canvas).on("mouseout", () => {
+            destroyTooltip();
+            onHighlightRows("");
+        });
 
         return () => {
             teardown();

@@ -127,6 +127,11 @@ export function highlightRowsFromSearch(rowInfo, field, type, conditions) {
             filteredRows = rowsWithIndex.filter(d => d[1][field] < minCutoff || d[1][field] > maxCutoff);
         }
         newHighlitRows = filteredRows.map(d => d[0]);
+    } else if(type === "tree") {
+        // TODO: get back to here again.
+        const rowsWithIndex = Array.from(rowInfo.entries());
+        const filteredRows = rowsWithIndex.filter(d => !d[1][field].map(o => `(${o.name})`).join("").toUpperCase().includes(`(${conditions.toUpperCase()})`));
+        newHighlitRows = filteredRows.map(d => d[0]);
     }
     return newHighlitRows;
 }

@@ -190,6 +190,22 @@ const optionsObjectSchema = merge(cloneDeep(baseSchema), {
 });
 
 /**
+ * Get a key in `rowHighlight` object that indicate a certain condition (e.g., `contains`) for highlighting.
+ * @param {string} type The field type.
+ * @returns {string} The key of `rowHighlight` object that indicate a certain condition.
+ */
+export function getHighlightKeyByFieldType(type) {
+  switch(type) {
+    case "quantitative":
+      return "range";
+    case "nominal":
+      return "contains";
+    case "tree":
+      return "ancestor";
+  }
+}
+
+/**
  * Validate the CistromeHGW `options` prop.
  * @param {(object|object[]|null)} optionsRaw The raw value of the options prop.
  * @returns {boolean} True if the options prop value was valid.

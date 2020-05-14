@@ -19,7 +19,8 @@ import {
     getTrackWrapperOptions,
     getWrapperSubOptions,
     updateWrapperOptions,
-    addTrackWrapperOptions
+    addTrackWrapperOptions,
+    getHighlightKeyByFieldType
 } from './utils/options.js';
 import { 
     getHMTrackIdsFromViewConfig, 
@@ -220,11 +221,11 @@ export default function CistromeHGWConsumer(props) {
 
     // Callback function for searching and highlighting.
     const onHighlightRows = useCallback((viewId, trackId, field, type, condition) => {
-        const highlightKey = type === "nominal" ? "contains" : "range";
+        const highlightKey = getHighlightKeyByFieldType(type);
         const newRowHighlight = { field, type, [highlightKey]: condition };
         const newOptions = updateWrapperOptions(options, newRowHighlight, "rowHighlight", viewId, trackId, { isReplace: true });
 
-        // Highlighting options are specified only in the wrapper options.
+        // Notice: Highlighting options are specified only in the wrapper options.
         const newHighlitRows = highlightRowsFromSearch(context.state[viewId][trackId].rowInfo, field, type, condition);
         setHighlitRows(viewId, trackId, newHighlitRows);
         setOptions(newOptions);
