@@ -33,6 +33,7 @@ const baseSchema = {
                         { "required": ["field", "type", "contains"] },
                         { "required": ["field", "type", "range"] },
                         { "required": ["field", "type", "subtree"] },
+                        { "required": ["field", "type", "minSimilarity"] },
                     ],
                     "properties": {
                         "field": {

@@ -392,7 +392,7 @@ export default function TrackRowInfoVisDendrogram(props) {
         };
     }, [width, height, root]);
 
-    // Create the resizer element.
+    // Create the minimum similarity bar element.
     const minSimBar = useMemo(() => {
         return (
             <div
