@@ -68,6 +68,13 @@ export default function TrackRowInfoVisDendrogram(props) {
     const visWidth = width - titleAreaWidth;
 
     useEffect(() => {
+        if(!filterInfo || filterInfo.length === 0) {
+            // Upon reset button, reset the minSimilarity value to zero to reset fading out dendrograms.
+            minSimilarity.current = undefined;
+        }
+    }, [filterInfo]);
+
+    useEffect(() => {
         // Handling cases where the width changes by a `reziser`.
         if(isLeft && minSimBarLeft < 0) {
             setMinSimBarLeft(0);
