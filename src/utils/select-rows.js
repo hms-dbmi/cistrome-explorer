@@ -1,5 +1,6 @@
 import { matrixToTree } from './tree.js';
 import d3 from './d3.js';
+import { insertItemToArray } from './array.js';
 
 /**
  * Generate an array of selected row indices based on filter and sort options.
@@ -14,7 +15,7 @@ export function selectRows(rowInfo, options) {
         if(options.rowFilter && options.rowFilter.length > 0) {
             const filterInfos = options.rowFilter;
             filterInfos.forEach(info => {
-                const { field, type, notOneOf, range, subtree } = info;
+                const { field, type, notOneOf, range, subtree, minSimilarity } = info;
                 const isMultipleFields = Array.isArray(field);
                 if(type === "nominal") {
                     notOneOf.forEach(one => {
@@ -32,10 +33,17 @@ export function selectRows(rowInfo, options) {
                         filteredRowInfo = filteredRowInfo.filter(d => d[1][field] > minCutoff && d[1][field] < maxCutoff);
                     }
                 } else if(type === "tree") {
-                    filteredRowInfo = filteredRowInfo.filter(d => d[1][field].reduce(
-                        // TODO: Remove `h === subtree[i]` when we always encode similarity distance in dendrogram.
-                        (a, h, i) => a && (i >= subtree.length || h === subtree[i] || h.name === subtree[i]), true)
-                    );
+                    if(subtree) {
+                        filteredRowInfo = filteredRowInfo.filter(d => d[1][field].reduce(
+                            // TODO: Remove `h === subtree[i]` when we always encode similarity distance in dendrogram.
+                            (a, h, i) => a && (i >= subtree.length || h === subtree[i] || h.name === subtree[i]), true)
+                        );
+                    } else if (minSimilarity) {
+                        filteredRowInfo = filteredRowInfo.filter(
+                            // Note that leafs' `dist` values are zero.
+                            d => d[1][field].map(d => d.dist).filter(d => d <= minSimilarity).length > 1
+                        );
+                    }
                 }
             });
         }
@@ -128,13 +136,23 @@ export function highlightRowsFromSearch(rowInfo, field, type, conditions) {
         }
         newHighlitRows = filteredRows.map(d => d[0]);
     } else if(type === "tree") {
-        const subtree = conditions;
-        const rowsWithIndex = Array.from(rowInfo.entries());
-        const filteredRows = rowsWithIndex.filter(d => d[1][field].reduce(
-            // TODO: Remove `h === subtree[i]` when we always encode similarity distance in dendrogram.
-            (a, h, i) => a || (i < subtree.length && h !== subtree[i] && h.name !== subtree[i]), false)
-        );
-        newHighlitRows = filteredRows.map(d => d[0]);
+        if(Array.isArray(conditions)) {
+            const subtree = conditions;
+            const rowsWithIndex = Array.from(rowInfo.entries());
+            const filteredRows = rowsWithIndex.filter(d => d[1][field].reduce(
+                // TODO: Remove `h === subtree[i]` when we always encode similarity distance in dendrogram.
+                (a, h, i) => a || (i < subtree.length && h !== subtree[i] && h.name !== subtree[i]), false)
+            );
+            newHighlitRows = filteredRows.map(d => d[0]);
+        } else {
+            const minSimilarity = conditions;
+            const rowsWithIndex = Array.from(rowInfo.entries());
+            const filteredRows = rowsWithIndex.filter(
+                // Note that leafs' `dist` values are zero.
+                d => d[1][field].map(d => d.dist).filter(d => d <= minSimilarity).length <= 1
+            );
+            newHighlitRows = filteredRows.map(d => d[0]);
+        }
     }
     return newHighlitRows;
 }

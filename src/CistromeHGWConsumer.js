@@ -221,7 +221,7 @@ export default function CistromeHGWConsumer(props) {
 
     // Callback function for searching and highlighting.
     const onHighlightRows = useCallback((viewId, trackId, field, type, condition) => {
-        const highlightKey = getHighlightKeyByFieldType(type);
+        const highlightKey = getHighlightKeyByFieldType(type, condition);
         const newRowHighlight = { field, type, [highlightKey]: condition };
         const newOptions = updateWrapperOptions(options, newRowHighlight, "rowHighlight", viewId, trackId, { isReplace: true });
 
@@ -281,11 +281,12 @@ export default function CistromeHGWConsumer(props) {
                 }
             } else if(type === "tree") {
                 // Replace with the incoming.
+                const key = Array.isArray(condition) ? "subtree" : "minSimilarity";
                 if(fieldOption) {
                     const fieldOptionIndex = newSubOptions.indexOf(fieldOption);
-                    newSubOptions = modifyItemInArray(newSubOptions, fieldOptionIndex, { field, type, subtree: condition });
+                    newSubOptions = modifyItemInArray(newSubOptions, fieldOptionIndex, { field, type, [key]: condition });
                 } else {
-                    newSubOptions = insertItemToArray(newSubOptions, 0, { field, type, subtree: condition });
+                    newSubOptions = insertItemToArray(newSubOptions, 0, { field, type, [key]: condition });
                 }
             }
         }

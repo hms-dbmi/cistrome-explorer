@@ -48,14 +48,18 @@ const baseSchema = {
                             "type": "string",
                             "description": "The substring to search for"
                         },
+                        "range": {
+                            "type": "array",
+                            "description": "Min and max values"
+                        },
                         "subtree": {
                             "type": "array",
                             "description": "The subtree to search for"
                         },
-                        "range": {
-                            "type": "array",
-                            "description": "Min and max values"
-                        }
+                        "minSimilarity": {
+                            "type": "number",
+                            "description": "A similarity threshold"
+                        },
                     }
                 },
                 "rowZoom": { "$ref": "#/definitions/zoomInfo" }
@@ -126,14 +130,18 @@ const baseSchema = {
                     "type": "array",
                     "description": "An array of values of a field that should not be included in the filtered data"
                 },
+                "range": {
+                    "type": "array",
+                    "description": "Min and max values"
+                },
                 "subtree": {
                     "type": "array",
                     "description": "The subtree to search for"
                 },
-                "range": {
-                    "type": "array",
-                    "description": "Min and max values"
-                }
+                "minSimilarity": {
+                    "type": "number",
+                    "description": "A similarity threshold"
+                },
             }
         },
         "zoomInfo": {
@@ -194,14 +202,14 @@ const optionsObjectSchema = merge(cloneDeep(baseSchema), {
  * @param {string} type The field type.
  * @returns {string} The key of `rowHighlight` object that indicate a certain condition.
  */
-export function getHighlightKeyByFieldType(type) {
+export function getHighlightKeyByFieldType(type, condition) {
   switch(type) {
     case "quantitative":
-      return "range";
+        return "range";
     case "nominal":
-      return "contains";
+        return "contains";
     case "tree":
-      return "subtree";
+        return Array.isArray(condition) ? "subtree" : "minSimilarity";
   }
 }
 

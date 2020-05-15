@@ -17,6 +17,7 @@ const LOCAL_EVENT_SEARCH_OPEN = "search-open";
  * @prop {function} onSortRows The function to call upon a sort interaction.
  * @prop {function} onHighlightRows The function to call upon a search interaction.
  * @prop {function} onFilterRows The function to call upon a filter interaction.
+ * @prop {function} toggleMinSimBar Toggle showing the minimum similarity bar in dendrogram.
  * @prop {object[]} rowInfo Array of JSON objects, one object for each sample, without filtering/sorting based on selected rows.
  * @prop {object} filterInfo The options for filtering rows of the field used in this track.
  */
@@ -31,6 +32,7 @@ export default function TrackRowInfoControl(props){
         onSortRows,
         onHighlightRows,
         onFilterRows,
+        toggleMinSimBar,
         rowInfo,
         filterInfo
     } = props;
@@ -77,6 +79,9 @@ export default function TrackRowInfoControl(props){
     function onSearchChange(value) {
         onHighlightRows(controlField, controlType, value);
     }
+    function onToggleMinSimBar() {
+        toggleMinSimBar();
+    }
     function onReset() {
         if(type === "nominal" || type == "link") {
             onFilterRows(field, type, rowInfo.map(d => d[field].toString()), true);
@@ -106,6 +111,15 @@ export default function TrackRowInfoControl(props){
             onClick: onSearchClick,
             icon: FILTER,
             title: "Filter rows",
+            highlit: filterButtonHighlit
+        });
+    }
+
+    if(toggleMinSimBar) {
+        buttons.push({
+            onClick: onToggleMinSimBar,
+            icon: FILTER,
+            title: "Show minimum similarity bar",
             highlit: filterButtonHighlit
         });
     }
