@@ -156,20 +156,20 @@ const demos = {
             }
         ]
     },
-    "Cistrome_DNase_1kb_average.multires.mv5": {
-      viewConfig: hgDemoViewConfig10,
-      options: {
-          rowInfoAttributes: [
-              {field: "Cluster", type: "nominal", position: "right"},
-              {field: "Hierarchical Clustering", type: "tree", position: "right"},
-              {field: "Cell Type", type: "nominal", position: "left"}
-          ],
-          rowSort: [
-              // {field: "Cluster", type: "nominal", order: "ascending"},
-          ],
-          rowFilter: [ ]
-      }
-  },
+    "Cistrome_DNase_1kb_average_QN.multires.mv5": {
+        viewConfig: hgDemoViewConfig10,
+        options: {
+            rowInfoAttributes: [
+                {field: "Cluster", type: "nominal", position: "right"},
+                {field: "Hierarchical Clustering", type: "tree", position: "right"},
+                {field: "Cell Type", type: "nominal", position: "left"}
+            ],
+            rowSort: [
+                // {field: "Cluster", type: "nominal", order: "ascending"},
+            ],
+            rowFilter: [ ]
+        }
+    },
     "Demo for Meeting 2020-04-29": {
         viewConfig: hgDemoViewConfigApril2020,
         options: {
