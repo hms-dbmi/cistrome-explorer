@@ -292,13 +292,14 @@ export default function CistromeHGWConsumer(props) {
                 }
             }
         }
+        
         let newOptions = updateWrapperOptions(options, newSubOptions, "rowFilter", viewId, trackId, { isReplace: true });
         newOptions = updateWrapperOptions(newOptions, undefined, "rowHighlight", viewId, trackId, { isReplace: true });
         newOptions = updateWrapperOptions(newOptions, undefined, "rowZoom", viewId, trackId, { isReplace: true });
 
         const trackOptions = getTrackWrapperOptions(newOptions, viewId, trackId);
         const newSelectedRows = selectRows(context.state[viewId][trackId].rowInfo, trackOptions);
-
+        
         setHighlitRows(viewId, trackId, undefined);
         setTrackSelectedRows(viewId, trackId, newSelectedRows);
         setOptions(newOptions);

@@ -105,7 +105,7 @@ export default function TrackWrapper(props) {
 
     const transformedRowInfo = (!selectedRows ? rowInfo : selectedRows.map(i => rowInfo[i]));
 
-    console.log("TrackWrapper.render");
+    // console.log("TrackWrapper.render");
     return (
         <div className="cistrome-hgw-track-wrapper">
             {leftAttrs.length !== 0 ? 

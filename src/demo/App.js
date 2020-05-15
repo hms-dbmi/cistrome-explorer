@@ -162,7 +162,8 @@ const demos = {
           rowInfoAttributes: [
               {field: "Cluster", type: "nominal", position: "right"},
               {field: "Hierarchical Clustering", type: "tree", position: "right"},
-              {field: "Cell Type", type: "nominal", position: "left"}
+              {field: "Cell Type", type: "nominal", position: "left"},
+              {field: "Hierarchical Clustering", type: "tree", position: "left"}
           ],
           rowSort: [
               // {field: "Cluster", type: "nominal", order: "ascending"},
