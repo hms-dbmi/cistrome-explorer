@@ -132,10 +132,11 @@ export default function TrackRowInfoVisDendrogram(props) {
             newLeft = width;
         }
         minSimilarity.current = isLeft ? 
-            maxDistance * (1 - newLeft / visWidth) : 
+            maxDistance * (1 - (newLeft - titleAreaWidth) / visWidth) : 
             maxDistance * (newLeft / visWidth);
         setMinSimBarLeft(newLeft);
-        // TODO: We want to uncomment the below line, but this is somehow removing `filterInfo`'s `subtree`.
+        
+        // TODO: We want to uncomment the below line, but that is somehow removing `subtree` in `filterInfo`.
         // onHighlightRows(field, "tree", minSimilarity.current);
     }, [maxDistance, width, dragX, minSimBarLeft]);
 
@@ -297,7 +298,6 @@ export default function TrackRowInfoVisDendrogram(props) {
                 items: [
                     { title: "Filter Rows", icon: FILTER, action: () => onFilterRows(field, "tree", subtree, false) },
                     { title: "Highlight Rows", icon: HIGHLIGHTER, action: () => onHighlightRows(field, "tree", subtree) }
-                    // TODO: Add more options for context menu.
                 ]
             });
         }   
@@ -316,9 +316,11 @@ export default function TrackRowInfoVisDendrogram(props) {
                 title: "Options for dendrogram",
                 menuType: CONTEXT_MENU_TYPE.TREE_ANCESTOR,
                 items: [
-                    { title: "Filter Rows", icon: FILTER, action: () => onFilterRows(field, "tree", minSimilarity.current, false) },
+                    { title: "Filter Rows", icon: FILTER, action: () => {
+                        onFilterRows(field, "tree", minSimilarity.current, false);
+                        setMinSimBarLeft(isLeft ? 0 : width); // Move to the original position.
+                    }},
                     { title: "Highlight Rows", icon: HIGHLIGHTER, action: () => onHighlightRows(field, "tree", minSimilarity.current) }
-                    // TODO: Add more options for context menu.
                 ]
             });
         }   
