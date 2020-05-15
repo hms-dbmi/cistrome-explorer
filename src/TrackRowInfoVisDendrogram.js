@@ -408,7 +408,7 @@ export default function TrackRowInfoVisDendrogram(props) {
                 }}
             />
         );
-    }); // TODO: Add here.
+    }, [minSimBarLeft, height, showMinSimBar, minSimBarRef]);
 
     return (
         <div
@@ -449,6 +449,7 @@ export default function TrackRowInfoVisDendrogram(props) {
                 toggleMinSimBar={maxDistance ? () => {
                     // Show the minimum similarity bar only when similarity distance is available.
                     setMinSimBarLeft(isLeft ? 0 : width);
+                    minSimilarity.current = undefined;
                     setShowMinSimBar(!showMinSimBar);
                 } : undefined}
             />

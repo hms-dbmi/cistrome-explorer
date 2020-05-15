@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import PubSub from 'pubsub-js';
 
-import { SORT_ASC, SORT_DESC, FILTER, RESET } from './utils/icons.js';
+import { SORT_ASC, SORT_DESC, FILTER, RESET, TOGGLE_ON } from './utils/icons.js';
 import TrackRowSearch from './TrackRowSearch.js';
 
 const LOCAL_EVENT_SEARCH_OPEN = "search-open";
@@ -118,7 +118,7 @@ export default function TrackRowInfoControl(props){
     if(toggleMinSimBar) {
         buttons.push({
             onClick: onToggleMinSimBar,
-            icon: FILTER,
+            icon: TOGGLE_ON,
             title: "Show minimum similarity bar",
             highlit: filterButtonHighlit
         });

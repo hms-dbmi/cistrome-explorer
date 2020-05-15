@@ -1,6 +1,5 @@
 import { matrixToTree } from './tree.js';
 import d3 from './d3.js';
-import { insertItemToArray } from './array.js';
 
 /**
  * Generate an array of selected row indices based on filter and sort options.

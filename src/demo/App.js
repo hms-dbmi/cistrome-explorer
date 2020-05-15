@@ -162,8 +162,7 @@ const demos = {
           rowInfoAttributes: [
               {field: "Cluster", type: "nominal", position: "right"},
               {field: "Hierarchical Clustering", type: "tree", position: "right"},
-              {field: "Cell Type", type: "nominal", position: "left"},
-              {field: "Hierarchical Clustering", type: "tree", position: "left"}
+              {field: "Cell Type", type: "nominal", position: "left"}
           ],
           rowSort: [
               // {field: "Cluster", type: "nominal", order: "ascending"},
@@ -211,7 +210,7 @@ function onViewConfigChange(viewConfigString) {
 
 export default function App() {
     
-    const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[Object.keys(demos).length - 4]); // TODO: Revert Back
+    const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[0]);
 
     return (
         <div className="app">
