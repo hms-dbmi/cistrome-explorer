@@ -437,9 +437,10 @@ export default function TrackRowInfoVisDendrogram(props) {
                 onFilterRows={onFilterRows}
                 transformedRowInfo={processedRowInfo}
                 filterButtonHighlit={showMinSimBar}
-                toggleMinSimBar={() => {
+                toggleMinSimBar={encodeDistance ? () => {
+                    // Show the minimum similarity bar only when similarity distance is available.
                     setShowMinSimBar(!showMinSimBar);
-                }}
+                } : undefined}
             />
             {cannotAlign ? (
                 <div onClick={() => onSortRows(fieldInfo.field, fieldInfo.type, "ascending")}
