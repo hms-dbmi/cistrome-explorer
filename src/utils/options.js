@@ -113,8 +113,10 @@ const baseSchema = {
             "type": "object",
             "oneOf":[ 
                 { "required": ["field", "type", "notOneOf"] },
+                { "required": ["field", "type", "range"] },
                 { "required": ["field", "type", "subtree"] },
-                { "required": ["field", "type", "range"] }
+                { "required": ["field", "type", "subtree", "minSimilarity"] },
+                { "required": ["field", "type", "minSimilarity"] },
             ],
             "properties": {
                 "field": {

@@ -33,12 +33,14 @@ export function selectRows(rowInfo, options) {
                         filteredRowInfo = filteredRowInfo.filter(d => d[1][field] > minCutoff && d[1][field] < maxCutoff);
                     }
                 } else if(type === "tree") {
+                    // `tree` type filter can have both the `subtree` and `minSimilarity` filters in a single `filterInfo`.
                     if(subtree) {
                         filteredRowInfo = filteredRowInfo.filter(d => d[1][field].reduce(
                             // TODO: Remove `h === subtree[i]` when we always encode similarity distance in dendrogram.
                             (a, h, i) => a && (i >= subtree.length || h === subtree[i] || h.name === subtree[i]), true)
                         );
-                    } else if (minSimilarity) {
+                    } 
+                    if (minSimilarity) {
                         filteredRowInfo = filteredRowInfo.filter(
                             // Note that leafs' `dist` values are zero.
                             d => d[1][field].map(d => d.dist).filter(d => d <= minSimilarity).length > 1

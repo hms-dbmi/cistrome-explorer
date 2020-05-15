@@ -250,7 +250,7 @@ export default function CistromeHGWConsumer(props) {
                 });
                 newSubOptions[fieldOptionIndex] = fieldOption;
             } else if(type === "quantitative" || type === "tree") {
-                // Simply remove `range` or `subtree` filters from the cetain field.
+                // Simply remove `range` or `subtree` and `minSimilarity` filters from the cetain field.
                 newSubOptions = removeItemFromArray(newSubOptions, newSubOptions.indexOf(fieldOption));
             }
         } else {
@@ -284,7 +284,9 @@ export default function CistromeHGWConsumer(props) {
                 const key = Array.isArray(condition) ? "subtree" : "minSimilarity";
                 if(fieldOption) {
                     const fieldOptionIndex = newSubOptions.indexOf(fieldOption);
-                    newSubOptions = modifyItemInArray(newSubOptions, fieldOptionIndex, { field, type, [key]: condition });
+                    newSubOptions = modifyItemInArray(newSubOptions, fieldOptionIndex, {
+                        ...fieldOption, [key]: condition // We do not want to remove a `subtree` or `minSimilarity` option if exists.
+                    });
                 } else {
                     newSubOptions = insertItemToArray(newSubOptions, 0, { field, type, [key]: condition });
                 }
