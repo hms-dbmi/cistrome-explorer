@@ -211,7 +211,7 @@ function onViewConfigChange(viewConfigString) {
 
 export default function App() {
     
-    const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[8]);
+    const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[0]);
 
     return (
         <div className="app">
