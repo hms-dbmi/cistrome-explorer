@@ -452,7 +452,7 @@ export default function TrackRowInfoVisDendrogram(props) {
                 onFilterRows={onFilterRows}
                 transformedRowInfo={transformedRowInfo}
                 filterButtonHighlit={showMinSimBar}
-                toggleMinSimBar={maxDistance ? () => {
+                toggleMinSimBar={maxDistance && !cannotAlign ? () => {
                     // Show the minimum similarity bar only when similarity distance is available.
                     setMinSimBarLeft(initialMinSimBarLeft);
                     minSimilarity.current = undefined;

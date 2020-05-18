@@ -44,6 +44,25 @@ export function selectRows(rowInfo, options) {
                             // Note that leafs' `dist` values are zero.
                             d => d[1][field].map(d => d.dist).filter(d => d <= minSimilarity).length > 1
                         );
+                        filteredRowInfo = filteredRowInfo.filter(
+                            // When a row has a branch that is closer than `minSimilarity`, but there is
+                            // no other rows to be connected (due to a certain filtering status), the row has no connections.
+                            // (Refer to https://github.com/hms-dbmi/cistrome-higlass-wrapper/pull/241)
+                            d => {
+                                const treeData = d[1][field];
+                                for(let i = 0; i < treeData.length; i++) {
+                                    const branch = treeData[i];
+                                    if(branch.dist > minSimilarity) continue;
+                                    const numOfFound = filteredRowInfo.filter(
+                                        info => info[1][field].find(b => b.dist === branch.dist && b.name === branch.name) !== undefined
+                                    ).length;
+                                    if(numOfFound >= 2) {   // Using `2` since filteredRowInfo contains `treeData` itself.
+                                        return true;
+                                    }
+                                }
+                                return false;
+                            }
+                        );
                     }
                 }
             });
