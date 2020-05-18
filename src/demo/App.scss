@@ -1,24 +1,62 @@
 .app {
     text-align: center;
-}
-
-.container {
-    border: 0px solid gray;
-    width: 50%;
-    position: relative;
-    margin-left: 25%;
-    box-sizing: border-box;
-}
-
-.viewconf-options {
-    form {
-        span {
-            display: block;
-            label {
+    height: 100vh;
+    .header-container{
+        font-family: 'Lato', sans-serif;
+        font-weight: normal;
+        border-radius: 0px;
+        border-bottom: 2px solid lightgray;
+        padding-top: 10px;
+        margin-bottom: 0px;
+        background: #F6F6F6;
+        height: 50px;
+        .header {
+            width: 50%;
+            margin-left: 25%;
+            font-size: 18px;
+            text-align: left;
+            padding-left: 15px;
+            padding-right: 15px;
+            .viewconf-options {
                 margin-left: 10px;
-                cursor: pointer;
-                font-weight: normal;
+                font-size: 14px;
+                select {
+                    width: 200px;
+                }
+                form {
+                    span {
+                        display: block;
+                        label {
+                            margin-left: 10px;
+                            cursor: pointer;
+                            font-weight: normal;
+                        }
+                    }
+                }
             }
+            .header-info {
+                float: right;
+                span {
+                    margin-left: 7px;
+                }
+            }
+            @media (max-width: 950px) {
+                width: 100%;
+                margin-left: 0;
+            }
+        }
+    } // End of header-container
+    .cistrome-explorer {
+        width: 100%;
+        height: calc(100% - 50px);
+        padding-top: 10px;
+        overflow-x: auto;
+        .container {
+            border: 0px solid gray;
+            width: 50%;
+            position: relative;
+            margin-left: 25%;
+            box-sizing: border-box;
         }
     }
 }
