@@ -58,7 +58,7 @@ export default function TrackRowInfoVisDendrogram(props) {
     const [maxDistance, setMaxDistance] = useState(transformedRowInfo?.[0]?.[field]?.[0]?.dist);
     const [highlightNodeX, setHighlightNodeX] = useState(null);
     const [highlightNodeY, setHighlightNodeY] = useState(null);
-    const [minSimBarLeft, setMinSimBarLeft] = useState(isLeft ? 0 : width);
+    const [minSimBarLeft, setMinSimBarLeft] = useState(isLeft ? 20 : width - 20);
     const [showMinSimBar, setShowMinSimBar] = useState(false);
 
     // Data, layouts and styles
@@ -66,7 +66,7 @@ export default function TrackRowInfoVisDendrogram(props) {
     const axisHeight = 30;
     const titleAreaWidth = 20;
     const visWidth = width - titleAreaWidth;
-
+    
     useEffect(() => {
         if(!filterInfo || filterInfo.length === 0) {
             // Upon reset button, reset the minSimilarity value to zero to reset fading out dendrograms.
@@ -76,11 +76,14 @@ export default function TrackRowInfoVisDendrogram(props) {
 
     useEffect(() => {
         // Handling cases where the width changes by a `reziser`.
-        if(isLeft && minSimBarLeft < 0) {
-            setMinSimBarLeft(0);
-        } else if(!isLeft && minSimBarLeft > width) {
-            setMinSimBarLeft(width);
+        let newLeft;
+        if(isLeft) {
+            newLeft = titleAreaWidth + (1 - minSimilarity.current / maxDistance) * visWidth;
+        } else {
+            newLeft = minSimilarity.current / maxDistance * visWidth;
+            console.log(newLeft);
         }
+        setMinSimBarLeft(newLeft);
     }, [width]);
 
     // Process the hierarchy data. Result will be null if the tree leaves
@@ -326,7 +329,7 @@ export default function TrackRowInfoVisDendrogram(props) {
                     { title: "Highlight Rows", icon: HIGHLIGHTER, action: () => onHighlightRows(field, "tree", minSimilarity.current) },
                     { title: "Filter Rows", icon: FILTER, action: () => {
                         onFilterRows(field, "tree", minSimilarity.current, false);
-                        setMinSimBarLeft(isLeft ? 0 : width); // Move to the original position.
+                        setMinSimBarLeft(isLeft ? 20 : width - 20); // Move to the original position.
                     }}
                 ]
             });
@@ -448,7 +451,7 @@ export default function TrackRowInfoVisDendrogram(props) {
                 filterButtonHighlit={showMinSimBar}
                 toggleMinSimBar={maxDistance ? () => {
                     // Show the minimum similarity bar only when similarity distance is available.
-                    setMinSimBarLeft(isLeft ? 0 : width);
+                    setMinSimBarLeft(isLeft ? 20 : width - 20);
                     minSimilarity.current = undefined;
                     setShowMinSimBar(!showMinSimBar);
                 } : undefined}
