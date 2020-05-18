@@ -52,7 +52,7 @@
     "build": "rollup -c rollup.demo.config.js --environment NODE_ENV:production",
     "build-pkg": "rollup -c rollup.pkg.config.js --environment NODE_ENV:production",
     "test": "jest -c jest.config.js",
-    "docs": "documentation build src/** -f html -o docs --config .documentation.yml"
+    "docs": "documentation build src/** -f html -o build-docs --config .documentation.yml"
   },
   "main": "build-pkg/index.umd.js",
   "unpkg": "build-pkg/index.min.js",

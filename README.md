@@ -41,6 +41,12 @@ Build for NPM package:
 yarn build-pkg
 ```
 
+### Docs
+
+```sh
+yarn docs
+```
+
 ### Creating and loading multivec files with JSON metadata
 
 - [Example](https://github.com/keller-mark/clodius-cistrome-example)
