@@ -1,4 +1,6 @@
 toc:
+- name: Getting Started
+  file: docs/GETTING_STARTED.md
 - name: React Components
 - CistromeHGW
 - name: React Components (internal)
