@@ -214,30 +214,27 @@ export default function App() {
 
     return (
         <div className="app">
-            <div className="navbar header-container">
+            <div className="header-container">
                 <div className="header">
-                    <span className="navbar-nav">
-                        <span className="nav-item text-truncate">Cistrome Explorer</span>
-                        <span className="nav-item viewconf-options">
-                            <select 
-                                onChange={e => setSelectedDemo(e.target.value)} 
-                                defaultValue={selectedDemo}
-                            >
-                                {Object.keys(demos).map(vcKey => (
-                                    <option 
-                                        key={vcKey} 
-                                        value={vcKey} 
-                                    >
-                                        {vcKey}
-                                    </option>
-                                ))}
-                            </select>
-                        </span>
+                    <span>Cistrome Explorer</span>
+                    <span className="viewconf-options">
+                        <select 
+                            onChange={e => setSelectedDemo(e.target.value)} 
+                            defaultValue={selectedDemo}
+                        >
+                            {Object.keys(demos).map(vcKey => (
+                                <option 
+                                    key={vcKey} 
+                                    value={vcKey} 
+                                >
+                                    {vcKey}
+                                </option>
+                            ))}
+                        </select>
                     </span>
-                    <span className="navbar-nav navbar-right header-info">
-                        <span className="nav-item">
-                            <a className=""
-                                href="http://chgw.gehlenborglab.org/docs/">
+                    <span className="header-info">
+                        <span>
+                            <a href="http://chgw.gehlenborglab.org/docs/">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
                                     viewBox="0 0 1792 1792">
                                     <title>Documents</title>
@@ -245,9 +242,8 @@ export default function App() {
                                 </svg>
                             </a>
                         </span>
-                        <span className="nav-item">
-                            <a className=""
-                                href="https://github.com/hms-dbmi/cistrome-higlass-wrapper">
+                        <span>
+                            <a href="https://github.com/hms-dbmi/cistrome-higlass-wrapper">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                     viewBox="0 0 24 24">
                                     <title>GitHub</title>
@@ -259,12 +255,14 @@ export default function App() {
                 </div>
             </div>
 
-            <div className="container">
-                <CistromeHGW 
-                    viewConfig={demos[selectedDemo].viewConfig}
-                    options={demos[selectedDemo].options}
-                    onViewConfigChange={onViewConfigChange}
-                />
+            <div className="cistrome-explorer">
+                <div className="container">
+                    <CistromeHGW 
+                        viewConfig={demos[selectedDemo].viewConfig}
+                        options={demos[selectedDemo].options}
+                        onViewConfigChange={onViewConfigChange}
+                    />
+                </div>
             </div>
         </div>
     );
