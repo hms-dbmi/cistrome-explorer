@@ -406,7 +406,7 @@ export default function TrackRowInfoVisDendrogram(props) {
                 className="minimum-similarity-bar"
                 onContextMenu={onContextMenuFromMinSimBar}
                 style={{
-                    visibility: showMinSimBar ? "visible" : "hidden",
+                    visibility: showMinSimBar && !cannotAlign ? "visible" : "hidden",
                     top: "0px",
                     left: minSimBarLeft,
                     height: `${height}px`,
@@ -414,7 +414,7 @@ export default function TrackRowInfoVisDendrogram(props) {
                 }}
             />
         );
-    }, [minSimBarLeft, height, showMinSimBar, minSimBarRef]);
+    }, [minSimBarLeft, height, showMinSimBar, minSimBarRef, cannotAlign]);
 
     return (
         <div
