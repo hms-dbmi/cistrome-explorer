@@ -242,7 +242,7 @@ export default function TrackRowInfoVisDendrogram(props) {
         if(cannotAlign) {
             const rect = two.makeRect(0, 0, width, height);
             rect.fill = "white";
-            rect.opacity = 0.8;
+            rect.opacity = 1;
         }
 
         drawVisTitle(field, { two, isLeft, width, height });
