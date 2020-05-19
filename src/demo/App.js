@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import pkg from '../../package.json';
 
 import { CistromeHGW } from '../index.js';
 
@@ -235,7 +236,7 @@ export default function App() {
                     </span>
                     <span className="header-info">
                         <span>
-                            <a href="http://chgw.gehlenborglab.org/docs/">
+                            <a href={`${pkg.homepage}/docs/`} target="_blank">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
                                     viewBox="0 0 1792 1792">
                                     <title>Documents</title>
@@ -244,7 +245,7 @@ export default function App() {
                             </a>
                         </span>
                         <span>
-                            <a href="https://github.com/hms-dbmi/cistrome-higlass-wrapper">
+                            <a href={pkg.repository.url} target="_blank">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                     viewBox="0 0 24 24">
                                     <title>GitHub</title>
