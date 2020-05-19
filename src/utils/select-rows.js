@@ -12,7 +12,11 @@ export function selectRows(rowInfo, options) {
         // Filter
         let filteredRowInfo = Array.from(rowInfo.entries());
         if(options.rowFilter && options.rowFilter.length > 0) {
-            const filterInfos = options.rowFilter;
+            let filterInfos = options.rowFilter;
+
+            // Should apply `minSimilarity` filter lastly.
+            filterInfos.sort((a, b) => a.minSimilarity ? 1 : b.minSimilarity ? -1 : 0);
+
             filterInfos.forEach(info => {
                 const { field, type, notOneOf, range, subtree, minSimilarity } = info;
                 const isMultipleFields = Array.isArray(field);
