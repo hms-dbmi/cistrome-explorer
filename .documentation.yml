@@ -27,6 +27,7 @@ toc:
 - ViewColumnBrush
 - SuggestionWithHighlight
 - name: Functions (internal)
+- getHighlightKeyByFieldType
 - addTrackWrapperOptions
 - validateWrapperOptions
 - processWrapperOptions

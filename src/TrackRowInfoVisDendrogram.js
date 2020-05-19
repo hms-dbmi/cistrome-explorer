@@ -1,14 +1,15 @@
-import React, { useRef, useCallback, useEffect, useState } from "react";
+import React, { useRef, useCallback, useEffect, useState, useMemo } from "react";
 import PubSub from "pubsub-js";
 
 import d3 from "./utils/d3.js";
 import Two from "./utils/two.js";
-import { EVENT } from "./utils/constants.js";
+import { EVENT, CONTEXT_MENU_TYPE } from "./utils/constants.js";
 import { drawVisTitle } from "./utils/vis.js";
 import { matrixToTree } from './utils/tree.js';
-import { SORT_TREE } from './utils/icons.js';
+import { SORT_TREE, HIGHLIGHTER } from './utils/icons.js';
 import { TooltipContent, destroyTooltip } from './Tooltip.js';
 import TrackRowInfoControl from "./TrackRowInfoControl.js";
+import { FILTER } from './utils/icons.js';
 
 /**
  * Component for visualization of row info hierarchies.
@@ -18,10 +19,12 @@ import TrackRowInfoControl from "./TrackRowInfoControl.js";
  * @prop {number} height The height of this view.
  * @prop {object[]} transformedRowInfo The `rowInfo` array after transforming by filtering and sorting according to the selected rows.
  * @prop {object} fieldInfo The name and type of data field.
+ * @prop {object} filterInfo The options for filtering rows of the field used in this track.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  * @prop {boolean} isShowControlButtons Determine if control buttons should be shown.
  * @prop {function} onAddTrack The function to call upon a track insertion.
  * @prop {function} onSortRows The function to call upon a sort interaction.
+ * @prop {function} onHighlightRows The function to call upon a highlight interaction.
  * @prop {function} onFilterRows The function to call upon a filter interaction.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
@@ -30,10 +33,12 @@ export default function TrackRowInfoVisDendrogram(props) {
         left, top, width, height,
         transformedRowInfo,
         fieldInfo,
+        filterInfo,
         isLeft,
         isShowControlButtons,
         onAddTrack,
         onSortRows,
+        onHighlightRows,
         onFilterRows,
         drawRegister,
     } = props;
@@ -42,28 +47,62 @@ export default function TrackRowInfoVisDendrogram(props) {
     const divRef = useRef();
     const canvasRef = useRef();
     const axisRef = useRef();
+    const minSimBarRef = useRef();
 
     // Data refs.
     const descendantsRef = useRef();
     const delaunayRef = useRef();
+    const ancestor = useRef();
+    const minSimilarity = useRef();
 
+    const [maxDistance, setMaxDistance] = useState(transformedRowInfo?.[0]?.[field]?.[0]?.dist);
     const [highlightNodeX, setHighlightNodeX] = useState(null);
     const [highlightNodeY, setHighlightNodeY] = useState(null);
+    const [minSimBarLeft, setMinSimBarLeft] = useState(initialMinSimBarLeft);
+    const [showMinSimBar, setShowMinSimBar] = useState(false);
 
     // Data, layouts and styles
     const { field } = fieldInfo;
     const axisHeight = 30;
     const titleAreaWidth = 20;
     const visWidth = width - titleAreaWidth;
+    
+    const initialMinSimBarLeft = useMemo(() => {
+        return isLeft ? 20 : width - 20
+    }, [isLeft, width]);
+
+    useEffect(() => {
+        if(!filterInfo || filterInfo.length === 0) {
+            // Upon reset button, reset the minSimilarity value to zero to reset fading out dendrograms.
+            minSimilarity.current = undefined;
+        }
+    }, [filterInfo]);
+
+    useEffect(() => {
+        // Handling cases where the width changes by a `reziser`.
+        let newLeft;
+        if(isLeft) {
+            newLeft = titleAreaWidth + (1 - minSimilarity.current / maxDistance) * visWidth;
+        } else {
+            newLeft = minSimilarity.current / maxDistance * visWidth;
+        }
+        setMinSimBarLeft(newLeft ? newLeft : initialMinSimBarLeft);
+    }, [width, titleAreaWidth, visWidth, maxDistance, isLeft, minSimilarity]);
 
     // Process the hierarchy data. Result will be null if the tree leaves
     // cannot be aligned based on the current rowInfo ordering.
     const hierarchyData = matrixToTree(transformedRowInfo.map(d => d[field]));
     const root = d3.hierarchy(hierarchyData);
     const leaves = root.leaves().map(l => l.data);
-    const encodeDistance = hierarchyData.children[0] && hierarchyData.children[0].dist !== undefined;
-    const maxDistance = encodeDistance ? hierarchyData.children[0].dist : null;
 
+    useEffect(() => {
+        let newMaxDist = filterInfo?.minSimilarity;
+        if(!newMaxDist) {
+            newMaxDist = transformedRowInfo?.[0]?.[field]?.[0]?.dist;
+        }
+        setMaxDistance(newMaxDist);
+    }, [filterInfo, transformedRowInfo, field]);
+    
     // When subtrees are filtered, make sure the leaves touch the baseline.
     leaves.forEach(d => d.dist = 0);
     
@@ -84,6 +123,50 @@ export default function TrackRowInfoVisDendrogram(props) {
         return [ (isLeft ? d.y + titleAreaWidth : visWidth - d.y), d.x ];
     }
 
+    const dragX = useRef(null);
+
+    // Set up the d3-drag handler functions (started, ended, dragged).
+    const started = useCallback(() => {
+        const event = d3.event;
+        dragX.current = event.sourceEvent.clientX;
+    }, [dragX])
+
+    const ended = useCallback(() => {
+        dragX.current = null;
+    }, [maxDistance, width, dragX, minSimBarLeft]);
+
+    const dragged = useCallback(() => {
+        const event = d3.event;
+        const diff = event.sourceEvent.clientX - dragX.current;
+        let newLeft = minSimBarLeft + diff;
+        if(newLeft < 0) {
+            newLeft = 0;
+        } else if (newLeft > width) {
+            newLeft = width;
+        }
+        minSimilarity.current = isLeft ? 
+            maxDistance * (1 - (newLeft - titleAreaWidth) / visWidth) : 
+            maxDistance * (newLeft / visWidth);
+        setMinSimBarLeft(newLeft);
+        
+        // TODO: We want to uncomment the below line, but that is somehow removing `subtree` in `filterInfo`.
+        // onHighlightRows(field, "tree", minSimilarity.current);
+    }, [maxDistance, width, dragX, minSimBarLeft]);
+
+    // Detect drag events for repositioning minimum similarity bar.
+    useEffect(() => {
+        const minSimBar = minSimBarRef.current;
+
+        const drag = d3.drag()
+            .on("start", started)
+            .on("drag", dragged)
+            .on("end", ended);
+
+        d3.select(minSimBar).call(drag);
+
+        return () => d3.select(minSimBar).on(".drag", null);
+    }, [minSimBarRef, started, dragged, ended]);
+
     const draw = useCallback((domElement) => {
         const two = new Two({
             width,
@@ -95,10 +178,11 @@ export default function TrackRowInfoVisDendrogram(props) {
         const descendants = root.descendants();
 
         let pathFunction;
-        if(encodeDistance) {
+        if(maxDistance) {
             // Since our dendrogram is rotated, *.y is indicating position along x-axis.
             if(isLeft){
                 pathFunction = (d) => {
+                    if(filterInfo?.minSimilarity && d.parent.data.dist > filterInfo.minSimilarity) return null;
                     d.y = visWidth * (1 - d.data.dist / maxDistance);
                     d.parent.y = visWidth * (1 - d.parent.data.dist / maxDistance);
                     return two.makePath(
@@ -110,6 +194,7 @@ export default function TrackRowInfoVisDendrogram(props) {
                 }
             } else {
                 pathFunction = (d) => {
+                    if(filterInfo?.minSimilarity && d.parent.data.dist > filterInfo.minSimilarity) return null;
                     d.y = visWidth * (1 - d.data.dist / maxDistance);
                     d.parent.y = visWidth * (1 - d.parent.data.dist / maxDistance);
                     return two.makePath(
@@ -145,9 +230,12 @@ export default function TrackRowInfoVisDendrogram(props) {
         descendants.forEach((d, i) => {
             if(i > 0) {
                 const path = pathFunction(d);
-                path.stroke = "#555";
-                path.opacity = 0.6;
-                path.linewidth = 1.5;
+                if(path) {
+                    // A path that is out of a min similarity bar can be cut off.
+                    path.stroke = "#555";
+                    path.linewidth = 1;
+                    path.opacity = showMinSimBar && d.parent?.data.dist > minSimilarity.current ? 0.2 : 1;
+                }
             }
         });
 
@@ -171,7 +259,7 @@ export default function TrackRowInfoVisDendrogram(props) {
     });
 
     const drawAxis = useCallback((domElement) => {
-        if(!encodeDistance) return () => { };
+        if(!maxDistance) return () => { };
         
         d3.select(domElement).selectAll("*").remove();
 
@@ -199,6 +287,58 @@ export default function TrackRowInfoVisDendrogram(props) {
     drawRegister("TrackRowInfoVisDendrogram", draw);
     drawRegister("TrackRowInfoVisDendrogramAxis", drawAxis);
 
+    // Context menu.
+    function onContextMenuFromBranch(e){
+        e.preventDefault();
+
+        if(!cannotAlign && delaunayRef.current && descendantsRef.current && !showMinSimBar) {
+            const mouseViewportX = e.clientX;
+            const mouseViewportY = e.clientY;
+            
+            let node = ancestor.current;
+            const subtree = [];
+            while(node.parent) {
+                subtree.push(node.data.name);
+                node = node.parent;
+            }
+            subtree.reverse();
+            console.log(subtree);
+            PubSub.publish(EVENT.CONTEXT_MENU, {
+                x: mouseViewportX,
+                y: mouseViewportY,
+                title: "Options for dendrogram",
+                menuType: CONTEXT_MENU_TYPE.TREE_ANCESTOR,
+                items: [
+                    { title: "Highlight Rows", icon: HIGHLIGHTER, action: () => onHighlightRows(field, "tree", subtree) },
+                    { title: "Filter Rows", icon: FILTER, action: () => onFilterRows(field, "tree", subtree, false) }
+                ]
+            });
+        }   
+    }
+
+    function onContextMenuFromMinSimBar(e){
+        e.preventDefault();
+
+        if(!cannotAlign && showMinSimBar) {
+            const mouseViewportX = e.clientX;
+            const mouseViewportY = e.clientY;
+            
+            PubSub.publish(EVENT.CONTEXT_MENU, {
+                x: mouseViewportX,
+                y: mouseViewportY,
+                title: "Options for dendrogram",
+                menuType: CONTEXT_MENU_TYPE.TREE_ANCESTOR,
+                items: [
+                    { title: "Highlight Rows", icon: HIGHLIGHTER, action: () => onHighlightRows(field, "tree", minSimilarity.current) },
+                    { title: "Filter Rows", icon: FILTER, action: () => {
+                        onFilterRows(field, "tree", minSimilarity.current, false);
+                        setMinSimBarLeft(initialMinSimBarLeft); // Move to the original position.
+                    }}
+                ]
+            });
+        }   
+    }
+
     useEffect(() => {
         const canvas = canvasRef.current;
         const svg = axisRef.current;
@@ -225,40 +365,31 @@ export default function TrackRowInfoVisDendrogram(props) {
             } else {
                 // The dendrogram is visible, so no tooltip should be shown on hover.
                 destroyTooltip();
+                
+                if(showMinSimBar) {
+                    // Do not want to select nearest branch when min similarity bar shown.
+                    setHighlightNodeX(null);
+                    setHighlightNodeY(null);
+                    return;
+                }
 
                 // Show hover indicator.
                 const [mouseX, mouseY] = d3.mouse(canvas);
                 const i = delaunayRef.current.find(mouseX, mouseY);
-                const d = descendantsRef.current[i];
+                const d = ancestor.current = descendantsRef.current[i];
                 const [pointX, pointY] = pointFromNode(d);
-
+                
                 setHighlightNodeX(pointX);
                 setHighlightNodeY(pointY);
             }
         });
 
-        d3.select(canvas).on("click", () => {
-            if(!cannotAlign && delaunayRef.current && descendantsRef.current) {
-                // Filter to select a subtree based on clicking near its root node.
-                const [mouseX, mouseY] = d3.mouse(canvas);
-
-                const i = delaunayRef.current.find(mouseX, mouseY);
-
-                const subtree = [];
-                let node = descendantsRef.current[i];
-                while(node.parent) {
-                    subtree.push(node.data.name);
-                    node = node.parent;
-                }
-                subtree.reverse();
-                onFilterRows(field, "tree", subtree, false);
-
-                setHighlightNodeX(null);
-                setHighlightNodeY(null);
+        d3.select(canvas).on("mouseout", () => {
+            destroyTooltip();
+            if(!showMinSimBar) {
+                // onHighlightRows("");
             }
         });
-
-        d3.select(canvas).on("mouseout", destroyTooltip);
 
         return () => {
             teardown();
@@ -266,6 +397,24 @@ export default function TrackRowInfoVisDendrogram(props) {
             d3.select(div).on("mouseleave", null);
         };
     }, [width, height, root]);
+
+    // Create the minimum similarity bar element.
+    const minSimBar = useMemo(() => {
+        return (
+            <div
+                ref={minSimBarRef}
+                className="minimum-similarity-bar"
+                onContextMenu={onContextMenuFromMinSimBar}
+                style={{
+                    visibility: showMinSimBar && !cannotAlign ? "visible" : "hidden",
+                    top: "0px",
+                    left: minSimBarLeft,
+                    height: `${height}px`,
+                    width: "2px"
+                }}
+            />
+        );
+    }, [minSimBarLeft, height, showMinSimBar, minSimBarRef, cannotAlign]);
 
     return (
         <div
@@ -286,6 +435,7 @@ export default function TrackRowInfoVisDendrogram(props) {
             />
             <canvas
                 ref={canvasRef}
+                onContextMenu={onContextMenuFromBranch}
                 style={{
                     position: "absolute",
                     top: 0,
@@ -301,6 +451,13 @@ export default function TrackRowInfoVisDendrogram(props) {
                 searchLeft={left}
                 onFilterRows={onFilterRows}
                 transformedRowInfo={transformedRowInfo}
+                filterButtonHighlit={showMinSimBar}
+                toggleMinSimBar={maxDistance && !cannotAlign ? () => {
+                    // Show the minimum similarity bar only when similarity distance is available.
+                    setMinSimBarLeft(initialMinSimBarLeft);
+                    minSimilarity.current = undefined;
+                    setShowMinSimBar(!showMinSimBar);
+                } : undefined}
             />
             {cannotAlign ? (
                 <div onClick={() => onSortRows(fieldInfo.field, fieldInfo.type, "ascending")}
@@ -336,6 +493,7 @@ export default function TrackRowInfoVisDendrogram(props) {
                     />
                 </svg>
             ) : null}
+            {minSimBar}
         </div>
     );
 }

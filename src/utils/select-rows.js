@@ -12,9 +12,13 @@ export function selectRows(rowInfo, options) {
         // Filter
         let filteredRowInfo = Array.from(rowInfo.entries());
         if(options.rowFilter && options.rowFilter.length > 0) {
-            const filterInfos = options.rowFilter;
+            let filterInfos = options.rowFilter;
+
+            // Should apply `minSimilarity` filter lastly.
+            filterInfos.sort((a, b) => a.minSimilarity ? 1 : b.minSimilarity ? -1 : 0);
+
             filterInfos.forEach(info => {
-                const { field, type, notOneOf, range, subtree } = info;
+                const { field, type, notOneOf, range, subtree, minSimilarity } = info;
                 const isMultipleFields = Array.isArray(field);
                 if(type === "nominal") {
                     notOneOf.forEach(one => {
@@ -32,10 +36,38 @@ export function selectRows(rowInfo, options) {
                         filteredRowInfo = filteredRowInfo.filter(d => d[1][field] > minCutoff && d[1][field] < maxCutoff);
                     }
                 } else if(type === "tree") {
-                    filteredRowInfo = filteredRowInfo.filter(d => d[1][field].reduce(
-                        // TODO: Remove `h === subtree[i]` when we always encode similarity distance in dendrogram.
-                        (a, h, i) => a && (i >= subtree.length || h === subtree[i] || h.name === subtree[i]), true)
-                    );
+                    // `tree` type filter can have both the `subtree` and `minSimilarity` filters in a single `filterInfo`.
+                    if(subtree) {
+                        filteredRowInfo = filteredRowInfo.filter(d => d[1][field].reduce(
+                            // TODO: Remove `h === subtree[i]` when we always encode similarity distance in dendrogram.
+                            (a, h, i) => a && (i >= subtree.length || h === subtree[i] || h.name === subtree[i]), true)
+                        );
+                    } 
+                    if (minSimilarity) {
+                        filteredRowInfo = filteredRowInfo.filter(
+                            // Note that leafs' `dist` values are zero.
+                            d => d[1][field].map(d => d.dist).filter(d => d <= minSimilarity).length > 1
+                        );
+                        filteredRowInfo = filteredRowInfo.filter(
+                            // When a row has a branch that is closer than `minSimilarity`, but there is
+                            // no other rows to be connected (due to a certain filtering status), the row has no connections.
+                            // (Refer to https://github.com/hms-dbmi/cistrome-higlass-wrapper/pull/241)
+                            d => {
+                                const treeData = d[1][field];
+                                for(let i = 0; i < treeData.length; i++) {
+                                    const branch = treeData[i];
+                                    if(branch.dist > minSimilarity) continue;
+                                    const numOfFound = filteredRowInfo.filter(
+                                        info => info[1][field].find(b => b.dist === branch.dist && b.name === branch.name) !== undefined
+                                    ).length;
+                                    if(numOfFound >= 2) {   // Using `2` since filteredRowInfo contains `treeData` itself.
+                                        return true;
+                                    }
+                                }
+                                return false;
+                            }
+                        );
+                    }
                 }
             });
         }
@@ -127,6 +159,24 @@ export function highlightRowsFromSearch(rowInfo, field, type, conditions) {
             filteredRows = rowsWithIndex.filter(d => d[1][field] < minCutoff || d[1][field] > maxCutoff);
         }
         newHighlitRows = filteredRows.map(d => d[0]);
+    } else if(type === "tree") {
+        if(Array.isArray(conditions)) {
+            const subtree = conditions;
+            const rowsWithIndex = Array.from(rowInfo.entries());
+            const filteredRows = rowsWithIndex.filter(d => d[1][field].reduce(
+                // TODO: Remove `h === subtree[i]` when we always encode similarity distance in dendrogram.
+                (a, h, i) => a || (i < subtree.length && h !== subtree[i] && h.name !== subtree[i]), false)
+            );
+            newHighlitRows = filteredRows.map(d => d[0]);
+        } else {
+            const minSimilarity = conditions;
+            const rowsWithIndex = Array.from(rowInfo.entries());
+            const filteredRows = rowsWithIndex.filter(
+                // Note that leafs' `dist` values are zero.
+                d => d[1][field].map(d => d.dist).filter(d => d <= minSimilarity).length <= 1
+            );
+            newHighlitRows = filteredRows.map(d => d[0]);
+        }
     }
     return newHighlitRows;
 }

@@ -31,7 +31,9 @@ const baseSchema = {
                     "type": "object",
                     "oneOf":[ 
                         { "required": ["field", "type", "contains"] },
-                        { "required": ["field", "type", "range"] }
+                        { "required": ["field", "type", "range"] },
+                        { "required": ["field", "type", "subtree"] },
+                        { "required": ["field", "type", "minSimilarity"] },
                     ],
                     "properties": {
                         "field": {
@@ -40,7 +42,7 @@ const baseSchema = {
                         },
                         "type": {
                             "type": "string",
-                            "enum": ["nominal", "quantitative"],
+                            "enum": ["nominal", "quantitative", "tree"],
                             "description": "The data type of a field"
                         },
                         "contains": {
@@ -50,7 +52,15 @@ const baseSchema = {
                         "range": {
                             "type": "array",
                             "description": "Min and max values"
-                        }
+                        },
+                        "subtree": {
+                            "type": "array",
+                            "description": "The subtree to search for"
+                        },
+                        "minSimilarity": {
+                            "type": "number",
+                            "description": "A similarity threshold"
+                        },
                     }
                 },
                 "rowZoom": { "$ref": "#/definitions/zoomInfo" }
@@ -104,8 +114,10 @@ const baseSchema = {
             "type": "object",
             "oneOf":[ 
                 { "required": ["field", "type", "notOneOf"] },
+                { "required": ["field", "type", "range"] },
                 { "required": ["field", "type", "subtree"] },
-                { "required": ["field", "type", "range"] }
+                { "required": ["field", "type", "subtree", "minSimilarity"] },
+                { "required": ["field", "type", "minSimilarity"] },
             ],
             "properties": {
                 "field": {
@@ -121,14 +133,18 @@ const baseSchema = {
                     "type": "array",
                     "description": "An array of values of a field that should not be included in the filtered data"
                 },
-                "subtree": {
-                    "type": "array",
-                    "description": "The substring to search for"
-                },
                 "range": {
                     "type": "array",
                     "description": "Min and max values"
-                }
+                },
+                "subtree": {
+                    "type": "array",
+                    "description": "The subtree to search for"
+                },
+                "minSimilarity": {
+                    "type": "number",
+                    "description": "A similarity threshold"
+                },
             }
         },
         "zoomInfo": {
@@ -183,6 +199,22 @@ const optionsObjectSchema = merge(cloneDeep(baseSchema), {
         }
     }
 });
+
+/**
+ * Get a key in `rowHighlight` object that indicate a certain condition (e.g., `contains`) for highlighting.
+ * @param {string} type The field type.
+ * @returns {string} The key of `rowHighlight` object that indicate a certain condition.
+ */
+export function getHighlightKeyByFieldType(type, condition) {
+  switch(type) {
+    case "quantitative":
+        return "range";
+    case "nominal":
+        return "contains";
+    case "tree":
+        return Array.isArray(condition) ? "subtree" : "minSimilarity";
+  }
+}
 
 /**
  * Validate the CistromeHGW `options` prop.

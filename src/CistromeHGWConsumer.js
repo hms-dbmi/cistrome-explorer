@@ -19,7 +19,8 @@ import {
     getTrackWrapperOptions,
     getWrapperSubOptions,
     updateWrapperOptions,
-    addTrackWrapperOptions
+    addTrackWrapperOptions,
+    getHighlightKeyByFieldType
 } from './utils/options.js';
 import { 
     getHMTrackIdsFromViewConfig, 
@@ -219,12 +220,12 @@ export default function CistromeHGWConsumer(props) {
     }, [options]);
 
     // Callback function for searching and highlighting.
-    const onSearchRows = useCallback((viewId, trackId, field, type, condition) => {
-        const highlightKey = type === "nominal" ? "contains" : "range";
+    const onHighlightRows = useCallback((viewId, trackId, field, type, condition) => {
+        const highlightKey = getHighlightKeyByFieldType(type, condition);
         const newRowHighlight = { field, type, [highlightKey]: condition };
         const newOptions = updateWrapperOptions(options, newRowHighlight, "rowHighlight", viewId, trackId, { isReplace: true });
 
-        // Highlighting options are specified only in the wrapper options.
+        // Notice: Highlighting options are specified only in the wrapper options.
         const newHighlitRows = highlightRowsFromSearch(context.state[viewId][trackId].rowInfo, field, type, condition);
         setHighlitRows(viewId, trackId, newHighlitRows);
         setOptions(newOptions);
@@ -249,7 +250,7 @@ export default function CistromeHGWConsumer(props) {
                 });
                 newSubOptions[fieldOptionIndex] = fieldOption;
             } else if(type === "quantitative" || type === "tree") {
-                // Simply remove `range` or `subtree` filters from the cetain field.
+                // Simply remove `range` or `subtree` and `minSimilarity` filters from the cetain field.
                 newSubOptions = removeItemFromArray(newSubOptions, newSubOptions.indexOf(fieldOption));
             }
         } else {
@@ -280,21 +281,25 @@ export default function CistromeHGWConsumer(props) {
                 }
             } else if(type === "tree") {
                 // Replace with the incoming.
+                const key = Array.isArray(condition) ? "subtree" : "minSimilarity";
                 if(fieldOption) {
                     const fieldOptionIndex = newSubOptions.indexOf(fieldOption);
-                    newSubOptions = modifyItemInArray(newSubOptions, fieldOptionIndex, { field, type, subtree: condition });
+                    newSubOptions = modifyItemInArray(newSubOptions, fieldOptionIndex, {
+                        ...fieldOption, [key]: condition // We do not want to remove a `subtree` or `minSimilarity` option if exists.
+                    });
                 } else {
-                    newSubOptions = insertItemToArray(newSubOptions, 0, { field, type, subtree: condition });
+                    newSubOptions = insertItemToArray(newSubOptions, 0, { field, type, [key]: condition });
                 }
             }
         }
+        
         let newOptions = updateWrapperOptions(options, newSubOptions, "rowFilter", viewId, trackId, { isReplace: true });
         newOptions = updateWrapperOptions(newOptions, undefined, "rowHighlight", viewId, trackId, { isReplace: true });
         newOptions = updateWrapperOptions(newOptions, undefined, "rowZoom", viewId, trackId, { isReplace: true });
 
         const trackOptions = getTrackWrapperOptions(newOptions, viewId, trackId);
         const newSelectedRows = selectRows(context.state[viewId][trackId].rowInfo, trackOptions);
-
+        
         setHighlitRows(viewId, trackId, undefined);
         setTrackSelectedRows(viewId, trackId, newSelectedRows);
         setOptions(newOptions);
@@ -452,8 +457,8 @@ export default function CistromeHGWConsumer(props) {
                     onSortRows={(field, type, order) => {
                         onSortRows(viewId, trackId, field, type, order);
                     }}
-                    onSearchRows={(field, type, condition) => {
-                        onSearchRows(viewId, trackId, field, type, condition);
+                    onHighlightRows={(field, type, condition) => {
+                        onHighlightRows(viewId, trackId, field, type, condition);
                     }}
                     onFilterRows={(field, type, condition, isRemove) => {
                         onFilterRows(viewId, trackId, field, type, condition, isRemove);

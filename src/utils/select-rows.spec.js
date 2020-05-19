@@ -66,4 +66,128 @@ describe('Helper functions for producing arrays of row indices for track.options
         expect(selectedRows.slice(0, 5)).toContain(13);
         expect(selectedRows.slice(0, 5)).toContain(14);
     });
+
+    it('Should produce correct selectRows array after filtering on tree attribute using `substree`', () => {
+        const rowInfo = [
+            {"id": "a","t":[{"name":"root","dist":1},{"name":"b1","dist":0.5},{"name":"b2","dist":0.1},{"name":"node-a","dist":0}]},
+            {"id": "b","t":[{"name":"root","dist":1},{"name":"b1","dist":0.5},{"name":"b2","dist":0.1},{"name":"node-b","dist":0}]},
+            {"id": "c","t":[{"name":"root","dist":1},{"name":"b1","dist":0.5},{"name":"node-c","dist":0}]},
+            {"id": "d","t":[{"name":"root","dist":1},{"name":"b3","dist":0.3},{"name":"node-d","dist":0}]},
+            {"id": "e","t":[{"name":"root","dist":1},{"name":"b3","dist":0.3},{"name":"node-e","dist":0}]},
+        ];
+        const options = {
+            rowFilter: [{
+                field: "t",
+                type: "tree",
+                subtree: ["root", "b1"]
+            }]
+        };
+        const selectedRows = selectRows(rowInfo, options);
+        expect(selectedRows).toContain(0);
+        expect(selectedRows).toContain(1);
+        expect(selectedRows).toContain(2);
+        expect(selectedRows).not.toContain(3);
+        expect(selectedRows).not.toContain(4);
+    });
+
+    it('Should produce correct selectRows array after filtering on tree attribute using `minSimilarity`', () => {
+        const rowInfo = [
+            {"id": "a","t":[{"name":"root","dist":1},{"name":"b1","dist":0.5},{"name":"b2","dist":0.1},{"name":"node-a","dist":0}]},
+            {"id": "b","t":[{"name":"root","dist":1},{"name":"b1","dist":0.5},{"name":"b2","dist":0.1},{"name":"node-b","dist":0}]},
+            {"id": "c","t":[{"name":"root","dist":1},{"name":"b1","dist":0.5},{"name":"node-c","dist":0}]},
+            {"id": "d","t":[{"name":"root","dist":1},{"name":"b3","dist":0.3},{"name":"node-d","dist":0}]},
+            {"id": "e","t":[{"name":"root","dist":1},{"name":"b3","dist":0.3},{"name":"node-e","dist":0}]},
+        ];
+        const options = {
+            rowFilter: [{
+                field: "t",
+                type: "tree",
+                minSimilarity: 0.2
+            }]
+        };
+        const selectedRows = selectRows(rowInfo, options);
+        expect(selectedRows).toContain(0);
+        expect(selectedRows).toContain(1);
+        expect(selectedRows).not.toContain(2);
+        expect(selectedRows).not.toContain(3);
+        expect(selectedRows).not.toContain(4);
+    });
+
+    it('Should produce correct selectRows array after filtering on tree attribute using `subtree` and `minSimilarity`', () => {
+        const rowInfo = [
+            {"id": "a","t":[{"name":"root","dist":1},{"name":"b1","dist":0.5},{"name":"b2","dist":0.1},{"name":"node-a","dist":0}]},
+            {"id": "b","t":[{"name":"root","dist":1},{"name":"b1","dist":0.5},{"name":"b2","dist":0.1},{"name":"node-b","dist":0}]},
+            {"id": "c","t":[{"name":"root","dist":1},{"name":"b1","dist":0.5},{"name":"node-c","dist":0}]},
+            {"id": "d","t":[{"name":"root","dist":1},{"name":"b3","dist":0.3},{"name":"node-d","dist":0}]},
+            {"id": "e","t":[{"name":"root","dist":1},{"name":"b3","dist":0.3},{"name":"node-e","dist":0}]},
+        ];
+        const options = {
+            rowFilter: [{
+                field: "t",
+                type: "tree",
+                minSimilarity: 0.2,
+                subtree: ["root", "b1"]
+            }]
+        };
+        const selectedRows = selectRows(rowInfo, options);
+        expect(selectedRows).toContain(0);
+        expect(selectedRows).toContain(1);
+        expect(selectedRows).not.toContain(2);
+        expect(selectedRows).not.toContain(3);
+        expect(selectedRows).not.toContain(4);
+    });
+
+    it('Should produce correct selectRows array after filtering on tree and other attributes together', () => {
+        const rowInfo = [
+            {"id": "a","t":[{"name":"root","dist":1},{"name":"b1","dist":0.5},{"name":"b2","dist":0.1},{"name":"node-a","dist":0}]},
+            {"id": "b","t":[{"name":"root","dist":1},{"name":"b1","dist":0.5},{"name":"b2","dist":0.1},{"name":"node-b","dist":0}]},
+            {"id": "c","t":[{"name":"root","dist":1},{"name":"b1","dist":0.5},{"name":"node-c","dist":0}]},
+            {"id": "d","t":[{"name":"root","dist":1},{"name":"b3","dist":0.3},{"name":"node-d","dist":0}]},
+            {"id": "e","t":[{"name":"root","dist":1},{"name":"b3","dist":0.3},{"name":"node-e","dist":0}]},
+        ];
+        const options = {
+            rowFilter: [
+                {
+                    field: "t",
+                    type: "tree",
+                    minSimilarity: 0.2,
+                    subtree: ["root", "b1"]
+                },
+                {
+                    field: "id",
+                    type: "nominal",
+                    notOneOf: ["a"] // This should also remove node "b" since there is no connection.
+                }
+            ]
+        };
+        let selectedRows = selectRows(rowInfo, options);
+        expect(selectedRows).not.toContain(0);
+        expect(selectedRows).not.toContain(1);
+        expect(selectedRows).not.toContain(2);
+        expect(selectedRows).not.toContain(3);
+        expect(selectedRows).not.toContain(4);
+
+        // Should work identically independant to the order of filters suggested.
+        const optionsRev = {
+            rowFilter: [
+                {
+                    field: "id",
+                    type: "nominal",
+                    notOneOf: ["a"] // This should also remove node "b" since there is no connection.
+                },
+                {
+                    field: "t",
+                    type: "tree",
+                    minSimilarity: 0.2,
+                    subtree: ["root", "b1"]
+                }
+            ]
+        };
+        selectedRows = selectRows(rowInfo, optionsRev);
+        expect(selectedRows).not.toContain(0);
+        expect(selectedRows).not.toContain(1);
+        expect(selectedRows).not.toContain(2);
+        expect(selectedRows).not.toContain(3);
+        expect(selectedRows).not.toContain(4);
+    });
 });

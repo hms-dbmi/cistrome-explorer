@@ -7,6 +7,7 @@
 - Added `range` condition in filter and highlighting options to enable filtering rows by value ranges.
 - Added a range slider to interactively filter rows by determining min and max cutoff values in quantitative bar charts, including stacked bar charts.
 - Added a vertical mouse wheel zooming feature for horizontal multivec tracks, activated when the `Y` key is pressed on the keyboard.
+- Added a minimum similarity bar in dendrogram to enable filtering rows by similarity scores.
 - Added a simple nav bar with links to GitHub and documentations.
 
 ### Changed

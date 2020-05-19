@@ -34,7 +34,12 @@ export default function ContextMenu() {
             switch(data.menuType) {
                 case CONTEXT_MENU_TYPE.NOMINAL_BAR:
                     menuData.push({ title: data.title });
-                    menuData.push({ isSeparator: true })
+                    menuData.push({ isSeparator: true });
+                    menuData.push(...data.items);
+                    break;
+                case CONTEXT_MENU_TYPE.TREE_ANCESTOR:
+                    menuData.push({ title: data.title });
+                    menuData.push({ isSeparator: true });
                     menuData.push(...data.items);
                     break;
                 default:

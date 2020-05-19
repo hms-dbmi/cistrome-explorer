@@ -43,6 +43,10 @@
             @media (max-width: 950px) {
                 width: 100%;
                 margin-left: 0;
+                font-size: 16px;
+                .viewconf-options select {
+                    width: 100px;
+                }
             }
         }
     } // End of header-container

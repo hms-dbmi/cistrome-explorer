@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import PubSub from 'pubsub-js';
 
-import { SORT_ASC, SORT_DESC, FILTER, RESET } from './utils/icons.js';
+import { SORT_ASC, SORT_DESC, FILTER, RESET, TOGGLE_ON } from './utils/icons.js';
 import TrackRowSearch from './TrackRowSearch.js';
 
 const LOCAL_EVENT_SEARCH_OPEN = "search-open";
@@ -15,8 +15,9 @@ const LOCAL_EVENT_SEARCH_OPEN = "search-open";
  * @prop {boolean} sortDescButtonHighlit Is sorting in descending order applied in this vertical track?
  * @prop {boolean} filterButtonHighlit Is filter applied in this vertical track?
  * @prop {function} onSortRows The function to call upon a sort interaction.
- * @prop {function} onSearchRows The function to call upon a search interaction.
+ * @prop {function} onHighlightRows The function to call upon a search interaction.
  * @prop {function} onFilterRows The function to call upon a filter interaction.
+ * @prop {function} toggleMinSimBar Toggle showing the minimum similarity bar in dendrogram.
  * @prop {object[]} rowInfo Array of JSON objects, one object for each sample, without filtering/sorting based on selected rows.
  * @prop {object} filterInfo The options for filtering rows of the field used in this track.
  */
@@ -29,8 +30,9 @@ export default function TrackRowInfoControl(props){
         sortDescButtonHighlit,
         filterButtonHighlit,
         onSortRows,
-        onSearchRows,
+        onHighlightRows,
         onFilterRows,
+        toggleMinSimBar,
         rowInfo,
         filterInfo
     } = props;
@@ -75,7 +77,10 @@ export default function TrackRowInfoControl(props){
         setIsSearching(false);
     }
     function onSearchChange(value) {
-        onSearchRows(controlField, controlType, value);
+        onHighlightRows(controlField, controlType, value);
+    }
+    function onToggleMinSimBar() {
+        toggleMinSimBar();
     }
     function onReset() {
         if(type === "nominal" || type == "link") {
@@ -101,11 +106,20 @@ export default function TrackRowInfoControl(props){
         });
     }
 
-    if(onSearchRows) {
+    if(onHighlightRows) {
         buttons.push({
             onClick: onSearchClick,
             icon: FILTER,
             title: "Filter rows",
+            highlit: filterButtonHighlit
+        });
+    }
+
+    if(toggleMinSimBar) {
+        buttons.push({
+            onClick: onToggleMinSimBar,
+            icon: TOGGLE_ON,
+            title: "Show minimum similarity bar",
             highlit: filterButtonHighlit
         });
     }

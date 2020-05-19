@@ -29,7 +29,7 @@ export const margin = 5;
  * @prop {object} filterInfo The options for filtering rows of the field used in this track.
  * @prop {function} onAddTrack The function to call upon a track insertion.
  * @prop {function} onSortRows The function to call upon a sort interaction.
- * @prop {function} onSearchRows The function to call upon a search interaction.
+ * @prop {function} onHighlightRows The function to call upon a highlight interaction.
  * @prop {function} onFilterRows The function to call upon a filter interaction.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
@@ -46,7 +46,7 @@ export default function TrackRowInfoVisNominalBar(props) {
         filterInfo,
         onAddTrack,
         onSortRows,
-        onSearchRows,
+        onHighlightRows,
         onFilterRows,
         drawRegister,
     } = props;
@@ -152,7 +152,7 @@ export default function TrackRowInfoVisNominalBar(props) {
             menuType: CONTEXT_MENU_TYPE.NOMINAL_BAR,
             title: `Selected category: ${hoverValue}`,
             items: [
-                { title: "Highlight Rows", icon: HIGHLIGHTER, action: () => onSearchRows(field, "nominal", hoverValue) },
+                { title: "Highlight Rows", icon: HIGHLIGHTER, action: () => onHighlightRows(field, "nominal", hoverValue) },
                 { title: "Filter Rows", icon: FILTER, action: () => onFilterRows(field, "nominal", notOneOf) },
                 { title: "Add Top Track with Selected Rows", icon: ARROW_UP, action: () => onAddTrack(field, "nominal", notOneOf, "top") },
                 { title: "Add Bottom Track with Selected Rows", icon: ARROW_DOWN, action: () => onAddTrack(field, "nominal", notOneOf, "bottom") }
@@ -234,7 +234,7 @@ export default function TrackRowInfoVisNominalBar(props) {
                 sortDescButtonHighlit={sortInfo && sortInfo.order === "descending"}
                 filterButtonHighlit={filterInfo && filterInfo.notOneOf.length !== 0}
                 onSortRows={onSortRows}
-                onSearchRows={onSearchRows}
+                onHighlightRows={onHighlightRows}
                 onFilterRows={onFilterRows}
                 filterInfo={filterInfo}
                 rowInfo={rowInfo}

@@ -31,7 +31,7 @@ export const margin = 5;
  * @prop {object} filterInfo The options for filtering rows of the field used in this track.
  * @prop {function} onAddTrack The function to call upon a track insertion.
  * @prop {function} onSortRows The function to call upon a sort interaction.
- * @prop {function} onSearchRows The function to call upon a search interaction.
+ * @prop {function} onHighlightRows The function to call upon a highlight interaction.
  * @prop {function} onFilterRows The function to call upon a filter interaction.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
@@ -48,7 +48,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
         filterInfo,
         onAddTrack,
         onSortRows,
-        onSearchRows,
+        onHighlightRows,
         onFilterRows,
         drawRegister,
     } = props;
@@ -325,7 +325,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                 sortDescButtonHighlit={sortInfo && sortInfo.order === "descending"}
                 filterButtonHighlit={filterInfo !== undefined}
                 onSortRows={onSortRows}
-                onSearchRows={onSearchRows}
+                onHighlightRows={onHighlightRows}
                 onFilterRows={onFilterRows}
                 filterInfo={filterInfo}
                 rowInfo={rowInfo}

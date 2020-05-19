@@ -196,6 +196,7 @@ const demos = {
         viewConfig: hgDemoViewConfig2b,
         options: {
             rowInfoAttributes: [
+                {field: "id", type: "nominal", position: "right"},
                 {field: "Hierarchical Clustering", type: "tree", position: "right"},
                 {field: "Hierarchical Clustering", type: "tree", position: "left"}
             ],
