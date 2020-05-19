@@ -10,7 +10,7 @@ script:
   - yarn build
 before_deploy:
   - yarn docs
-  - mv ./docs ./build-demo/docs
+  - mv ./build-docs ./build-demo/docs
 deploy:
   - provider: pages
     skip-cleanup: true

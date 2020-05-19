@@ -1,6 +1,6 @@
 toc:
-- name: Getting Started
-  file: docs/GETTING_STARTED.md
+- name: Introduction
+  file: docs/Introduction.md
 - name: React Components
 - CistromeHGW
 - name: React Components (internal)
@@ -11,7 +11,6 @@ toc:
 - ContextMenu
 - Tooltip
 - TooltipContent
-- TrackColTools
 - TrackRowHighlight
 - TrackRowInfo
 - TrackRowInfoControl
@@ -29,6 +28,7 @@ toc:
 - SuggestionWithHighlight
 - name: Functions (internal)
 - getHighlightKeyByFieldType
+- addTrackWrapperOptions
 - validateWrapperOptions
 - processWrapperOptions
 - updateWrapperOptions
@@ -36,13 +36,12 @@ toc:
 - getTrackWrapperOptions
 - getRetinaRatio
 - traverseViewConfig
-- getViewConfigOfSpecificTrack
 - addTrackDefToViewConfig
+- getTrackDefFromViewConfig
 - getHMTrackIdsFromViewConfig
 - getSiblingVPHTrackIdsFromViewConfig
 - updateViewConfigOnSelectGenomicInterval
 - removeViewportFromViewConfig
-- addViewConfigForNewTrack
 - updateViewConfigOnSelectRowsByTrack
 - getHMSelectedRowsFromViewConfig
 - getUniqueViewOrTrackId
@@ -64,6 +63,7 @@ toc:
 - rgbToHex
 - generateNextUniqueColor
 - getRange
+- wrapSvg
 - name: Classes (internal)
 - Two
 - TwoRectangle
