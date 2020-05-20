@@ -1,11 +1,11 @@
 {
-  "name": "cistrome-higlass-wrapper",
+  "name": "cistrome-explorer",
   "version": "0.3.0",
   "author": "Gehlenborg Lab (http://gehlenborglab.org/)",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/hms-dbmi/cistrome-higlass-wrapper"
+    "url": "https://github.com/hms-dbmi/cistrome-explorer"
   },
   "homepage": "http://cisvis.gehlenborglab.org",
   "dependencies": {
