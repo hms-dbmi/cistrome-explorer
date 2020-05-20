@@ -1,4 +1,4 @@
-# cistrome-higlass-wrapper
+# cistrome-explorer
 
 _wrapper component for [HiGlass](http://higlass.io/), with features for viewing [CistromeDB](http://cistrome.org/db/) data_
 

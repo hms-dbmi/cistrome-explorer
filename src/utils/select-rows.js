@@ -51,7 +51,7 @@ export function selectRows(rowInfo, options) {
                         filteredRowInfo = filteredRowInfo.filter(
                             // When a row has a branch that is closer than `minSimilarity`, but there is
                             // no other rows to be connected (due to a certain filtering status), the row has no connections.
-                            // (Refer to https://github.com/hms-dbmi/cistrome-higlass-wrapper/pull/241)
+                            // (Refer to https://github.com/hms-dbmi/cistrome-explorer/pull/241)
                             d => {
                                 const treeData = d[1][field];
                                 for(let i = 0; i < treeData.length; i++) {

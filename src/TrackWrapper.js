@@ -6,7 +6,7 @@ import TrackRowHighlight from './TrackRowHighlight.js';
 import TrackRowZoomOverlay from './TrackRowZoomOverlay.js';
 
 // TODO: remove the below fakedata import.
-//       see https://github.com/hms-dbmi/cistrome-higlass-wrapper/issues/26
+//       see https://github.com/hms-dbmi/cistrome-explorer/issues/26
 import fakedata from './demo/fakedata/index.js';
 
 /**
@@ -72,11 +72,11 @@ export default function TrackWrapper(props) {
     try {
         if(["meeting-2020-04-29-track"].includes(multivecTrackTrackId)) {
             // TODO: use the below line to use the real metadata coming from the HiGlass Server tileset_info.
-            //       see https://github.com/hms-dbmi/cistrome-higlass-wrapper/issues/26
+            //       see https://github.com/hms-dbmi/cistrome-explorer/issues/26
             rowInfo = multivecTrack.tilesetInfo.row_infos.map(JSON.parse);
         } else {
             // TODO: remove this else clause.
-            //       see https://github.com/hms-dbmi/cistrome-higlass-wrapper/issues/26
+            //       see https://github.com/hms-dbmi/cistrome-explorer/issues/26
             rowInfo = fakedata[multivecTrack.id].tilesetInfo.rowInfo.slice(0, totalNumRows);
         }
         
