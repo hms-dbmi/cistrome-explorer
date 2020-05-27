@@ -26,6 +26,7 @@ export default function DataTable(props) {
         subtitle,
         isLoading = false,
         onCheckRows = null,
+        expoNotations = [],
         onClose
     } = props;
 
@@ -65,7 +66,11 @@ export default function DataTable(props) {
             </td>
         ) : null);
         const dataCells = columns.map((c, j) => {
-            return <td key={j}>{d[c]}</td>;
+            return (
+                <td key={j}>
+                    {expoNotations.includes(c) && +d[c] ? Number.parseFloat(d[c]).toExponential(2) : d[c]}
+                </td>
+            );
         });
         return <tr key={i}>{checkboxCell}{dataCells}</tr>;
     });
@@ -78,7 +83,14 @@ export default function DataTable(props) {
                 width: `calc(100% - ${margin * 2}px)`,
                 height: `calc(100% - ${margin * 2}px)`
             }}>
-            <h4 className="chw-table-title">{title}</h4>
+            <h4 className="cisvis-table-title">{title}</h4>
+            <span className="cisvis-table-subtitle">
+                {isLoading ? (
+                    <span className="cisvis-progress-ring" />
+                ) : (subtitle ? (
+                    <b>{subtitle}</b>
+                ) : null)}
+            </span>
             <span style={{ verticalAlign: "middle", display: "inline-block" }}>
                 <svg
                     className={`chw-button`}
@@ -90,13 +102,6 @@ export default function DataTable(props) {
                     <path d={CLOSE.path} fill="currentColor"/>
                 </svg>
             </span>
-            <span className="chw-table-subtitle">
-                {isLoading ? (
-                    <span className="chw-progress-ring" />
-                ) : (subtitle ? (
-                    <b>{subtitle}</b>
-                ) : null)}
-            </span>
             <div
                 style={{
                     height: "calc(100% - 40px)",
@@ -105,7 +110,7 @@ export default function DataTable(props) {
             >
                 {bodyRows ? (
                     <form>
-                        <table className="chw-table">
+                        <table className="cisvis-table">
                             <thead>
                                 {headRow}
                             </thead>
