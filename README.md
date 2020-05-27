@@ -56,5 +56,5 @@ yarn docs
 
 ### Related repositories
 
-- [HiGlass](http://higlass.io/)
+- [HiGlass](https://github.com/higlass/higlass)
 - [HiGlass Server](https://github.com/higlass/higlass-server) and our fork [Cistrome Explorer HiGlass Server](https://github.com/hms-dbmi/cistrome-explorer-higlass-server)
