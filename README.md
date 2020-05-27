@@ -50,3 +50,7 @@ yarn docs
 ### Creating and loading multivec files with JSON metadata
 
 - [Example](https://github.com/keller-mark/clodius-cistrome-example)
+
+
+### Other resources
+- [Video](https://drive.google.com/file/d/1SrtFHrEuJY5zHuPjPkBmPTxgZPRQ0qRR/view) & [Slides](https://drive.google.com/file/d/1Z4tO-lrClZY3P7_n2N3kar5YoQoMNVCh/view?usp=sharing) for [2020 ICTR virtual poster](https://ncihub.org/groups/itcr/2020_virtual_posters)
