@@ -6,15 +6,13 @@ import { CLOSE } from './utils/icons';
 
 /**
  * Component for data table.
- * @prop {number} margin The left position of this view. // TODO:
- * @prop {number} top The top position of this view.
- * @prop {number} width The width of this view.
- * @prop {number} height The height of this view.
+ * @prop {number} margin The gap between the inner table and the viewport.
  * @prop {array} rows Array of rows to render data table.
  * @prop {array} columns Array of column names in data table.
  * @prop {string} title A title for the table. Optional.
  * @prop {string} subtitle A subtitle for the table. Optional.
  * @prop {boolean} isLoading Whether the data is still loading, in which case show a spinner.
+ * @prop {array} expoNotations A list of columns names that need to use exponential notations.
  * @prop {(function|null)} onCheckRows If a function is provided, a checkbox will be shown for each row.
  * On change of any checkbox elements, an array of all checked row objects will be passed to the function. By default, null.
  */

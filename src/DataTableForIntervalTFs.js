@@ -60,8 +60,6 @@ export default function DataTableForIntervalTFs(props) {
                         return newRow;
                     });
                     const costomColumns = Object.values(customColumnMap);
-                    console.log(customRows);
-                    console.log(costomColumns);
                     setDataTableRows(customRows);
                     setDataTableColumns(costomColumns);
 
