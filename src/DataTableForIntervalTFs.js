@@ -56,21 +56,20 @@ export default function DataTableForIntervalTFs(props) {
         }
         setIsVisible(true);
         return (() => { didUnmount = true; });
-    }, [intervalParams]);
+    }, [intervalParams]);    
 
     return (requestStatus && isVisible ? (
-        <DataTable 
-            left={left}
-            top={top}
-            width={width}
-            height={height}
-            title={"TFs from Cistrome DB"}
-            subtitle={requestStatus.msg}
-            isLoading={requestStatus.isLoading}
-            rows={dataTableRows}
-            columns={dataTableColumns}
-            onCheckRows={() => {}}
-            onClose={() => setIsVisible(false)}
-        />
+        <div className="cisvis-data-table-bg">
+            <DataTable 
+                margin={100}
+                title={"TFs from Cistrome DB"}
+                subtitle={requestStatus.msg}
+                isLoading={requestStatus.isLoading}
+                rows={dataTableRows}
+                columns={dataTableColumns}
+                onCheckRows={() => {}}
+                onClose={() => setIsVisible(false)}
+            />
+        </div>
     ) : null);
 }

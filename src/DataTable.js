@@ -6,7 +6,7 @@ import { CLOSE } from './utils/icons';
 
 /**
  * Component for data table.
- * @prop {number} left The left position of this view.
+ * @prop {number} margin The left position of this view. // TODO:
  * @prop {number} top The top position of this view.
  * @prop {number} width The width of this view.
  * @prop {number} height The height of this view.
@@ -20,7 +20,7 @@ import { CLOSE } from './utils/icons';
  */
 export default function DataTable(props) {
     const {
-        left, top, width, height,
+        margin,
         rows = [], columns = [],
         title = "Data Preview",
         subtitle,
@@ -71,12 +71,13 @@ export default function DataTable(props) {
     });
 
     return (
-        <div
-            style={{
-                position: "absolute",
-                left, top, width, height
-            }}
-        >
+        <div 
+            className="cisvis-data-table-container"
+            style={{ 
+                margin,
+                width: `calc(100% - ${margin * 2}px)`,
+                height: `calc(100% - ${margin * 2}px)`
+            }}>
             <h4 className="chw-table-title">{title}</h4>
             <span style={{ verticalAlign: "middle", display: "inline-block" }}>
                 <svg
@@ -98,7 +99,7 @@ export default function DataTable(props) {
             </span>
             <div
                 style={{
-                    height: height - 40,
+                    height: "calc(100% - 40px)",
                     overflowY: "auto"
                 }}
             >
