@@ -5,10 +5,10 @@
         font-family: 'Lato', sans-serif;
         font-weight: normal;
         border-radius: 0px;
-        border-bottom: 2px solid lightgray;
+        border-bottom: 2px solid #999;
         padding-top: 10px;
         margin-bottom: 0px;
-        background: #F6F6F6;
+        background: #E5E5E5;
         height: 50px;
         .header {
             width: 50%;
@@ -18,7 +18,9 @@
             padding-left: 15px;
             padding-right: 15px;
             .cisvis-title {
-                color: black;
+                color: #666;
+                font-weight: bold;
+                font-family: "Inter", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
             }
             .viewconf-options {
                 margin-left: 10px;
