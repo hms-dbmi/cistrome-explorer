@@ -302,7 +302,6 @@ export default function TrackRowInfoVisDendrogram(props) {
                 node = node.parent;
             }
             subtree.reverse();
-            console.log(subtree);
             PubSub.publish(EVENT.CONTEXT_MENU, {
                 x: mouseViewportX,
                 y: mouseViewportY,

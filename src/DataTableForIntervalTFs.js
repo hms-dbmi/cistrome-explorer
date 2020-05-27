@@ -6,10 +6,6 @@ import { requestIntervalTFs } from './utils/cistrome.js';
 
 /**
  * Wrapper around <DataTable />, specific for showing the TF binding interval request results.
- * @prop {number} left The left position of this view.
- * @prop {number} top The top position of this view.
- * @prop {number} width The width of this view.
- * @prop {number} height The height of this view.
  * @prop {object} intervalParams The interval request parameters.
  * @prop {string} intervalParams.assembly
  * @prop {string} intervalParams.chrStartName
@@ -19,7 +15,6 @@ import { requestIntervalTFs } from './utils/cistrome.js';
  */
 export default function DataTableForIntervalTFs(props) {
     const {
-        left, top, width, height,
         intervalParams
     } = props;
 
@@ -43,8 +38,30 @@ export default function DataTableForIntervalTFs(props) {
             requestIntervalTFs(assembly, chrStartName, chrStartPos, chrEndName, chrEndPos)
                 .then(([rows, columns]) => {
                     if(didUnmount) return;
-                    setDataTableRows(rows);
-                    setDataTableColumns(columns);
+
+                    // TODO: Consider supporting multiple API queries.
+                    const customColumnMap = {
+                        GSM: "GEO/ENCODE ID",
+                        DCid: "CistromeDB ID",
+                        factor: "Factor",
+                        cellLine: "Cell Line",
+                        CellType: "Cell Type",
+                        species: "Species",
+                        OverlapRatio: "Overlap Ratio",
+                        OverlapPeakNumber: "Overlap Peak Number",
+                    }
+                    const customRows = rows.map(r => {
+                        const newRow = {};
+                        Object.keys(customColumnMap).forEach(k => {
+                            if(customColumnMap[k]) {
+                                newRow[customColumnMap[k]] = r[k];
+                            }
+                        });
+                        return newRow;
+                    });
+                    const costomColumns = Object.values(customColumnMap);
+                    setDataTableRows(customRows);
+                    setDataTableColumns(costomColumns);
 
                     const msg = `For interval ${chrStartName}:${chrStartPos}-${chrEndPos}`;
                     setRequestStatus({ msg, isLoading: false });
@@ -56,21 +73,21 @@ export default function DataTableForIntervalTFs(props) {
         }
         setIsVisible(true);
         return (() => { didUnmount = true; });
-    }, [intervalParams]);
+    }, [intervalParams]);    
 
     return (requestStatus && isVisible ? (
-        <DataTable 
-            left={left}
-            top={top}
-            width={width}
-            height={height}
-            title={"TFs from Cistrome DB"}
-            subtitle={requestStatus.msg}
-            isLoading={requestStatus.isLoading}
-            rows={dataTableRows}
-            columns={dataTableColumns}
-            onCheckRows={() => {}}
-            onClose={() => setIsVisible(false)}
-        />
+        <div className="cisvis-data-table-bg">
+            <DataTable 
+                margin={100}
+                title={"Factors from Cistrome DB"}
+                subtitle={requestStatus.msg}
+                isLoading={requestStatus.isLoading}
+                rows={dataTableRows}
+                columns={dataTableColumns}
+                expoNotations={["Overlap Ratio"]}
+                onCheckRows={undefined}
+                onClose={() => setIsVisible(false)}
+            />
+        </div>
     ) : null);
 }

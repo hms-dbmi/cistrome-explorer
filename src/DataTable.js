@@ -6,26 +6,25 @@ import { CLOSE } from './utils/icons';
 
 /**
  * Component for data table.
- * @prop {number} left The left position of this view.
- * @prop {number} top The top position of this view.
- * @prop {number} width The width of this view.
- * @prop {number} height The height of this view.
+ * @prop {number} margin The gap between the inner table and the viewport.
  * @prop {array} rows Array of rows to render data table.
  * @prop {array} columns Array of column names in data table.
  * @prop {string} title A title for the table. Optional.
  * @prop {string} subtitle A subtitle for the table. Optional.
  * @prop {boolean} isLoading Whether the data is still loading, in which case show a spinner.
+ * @prop {array} expoNotations A list of columns names that need to use exponential notations.
  * @prop {(function|null)} onCheckRows If a function is provided, a checkbox will be shown for each row.
  * On change of any checkbox elements, an array of all checked row objects will be passed to the function. By default, null.
  */
 export default function DataTable(props) {
     const {
-        left, top, width, height,
+        margin,
         rows = [], columns = [],
         title = "Data Preview",
         subtitle,
         isLoading = false,
         onCheckRows = null,
+        expoNotations = [],
         onClose
     } = props;
 
@@ -65,19 +64,31 @@ export default function DataTable(props) {
             </td>
         ) : null);
         const dataCells = columns.map((c, j) => {
-            return <td key={j}>{d[c]}</td>;
+            return (
+                <td key={j}>
+                    {expoNotations.includes(c) && +d[c] ? Number.parseFloat(d[c]).toExponential(2) : d[c]}
+                </td>
+            );
         });
         return <tr key={i}>{checkboxCell}{dataCells}</tr>;
     });
 
     return (
-        <div
-            style={{
-                position: "absolute",
-                left, top, width, height
-            }}
-        >
-            <h4 className="chw-table-title">{title}</h4>
+        <div 
+            className="cisvis-data-table-container"
+            style={{ 
+                margin,
+                width: `calc(100% - ${margin * 2}px)`,
+                height: `calc(100% - ${margin * 2}px)`
+            }}>
+            <h4 className="cisvis-table-title">{title}</h4>
+            <span className="cisvis-table-subtitle">
+                {isLoading ? (
+                    <span className="cisvis-progress-ring" />
+                ) : (subtitle ? (
+                    <b>{subtitle}</b>
+                ) : null)}
+            </span>
             <span style={{ verticalAlign: "middle", display: "inline-block" }}>
                 <svg
                     className={`chw-button`}
@@ -89,22 +100,15 @@ export default function DataTable(props) {
                     <path d={CLOSE.path} fill="currentColor"/>
                 </svg>
             </span>
-            <span className="chw-table-subtitle">
-                {isLoading ? (
-                    <span className="chw-progress-ring" />
-                ) : (subtitle ? (
-                    <b>{subtitle}</b>
-                ) : null)}
-            </span>
             <div
                 style={{
-                    height: height - 40,
+                    height: "calc(100% - 40px)",
                     overflowY: "auto"
                 }}
             >
                 {bodyRows ? (
                     <form>
-                        <table className="chw-table">
+                        <table className="cisvis-table">
                             <thead>
                                 {headRow}
                             </thead>

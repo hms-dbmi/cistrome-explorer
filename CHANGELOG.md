@@ -1,4 +1,12 @@
-## 0.3.0 - in progress
+## 0.4.0 - in progress
+
+### Added
+
+### Changed
+- Changed the table view to be shown as a modal view.
+- Updated format of API results (e.g., use consistent letter cases and use scientific notations for long numbers).
+
+## 0.3.0 - 05/27/20
 
 ### Added
 - Added real data (quality score for each sample) for quantitative bar charts.

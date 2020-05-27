@@ -218,7 +218,7 @@ export default function App() {
         <div className="app">
             <div className="header-container">
                 <div className="header">
-                    <span>Cistrome Explorer</span>
+                    <span className="cisvis-title">Cistrome Explorer</span>
                     <span className="viewconf-options">
                         <select 
                             onChange={e => setSelectedDemo(e.target.value)} 

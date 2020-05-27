@@ -311,8 +311,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             <svg ref={axisRef} 
                 style={{ 
                     pointerEvents: "none",
-                    position: "absolute", 
-                    zIndex: 2
+                    position: "absolute"
                 }}
             />
             <TrackRowInfoControl
