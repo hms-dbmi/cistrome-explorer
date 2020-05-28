@@ -84,7 +84,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             colorToInfo.push({
                 uniqueColor,
                 field,
-                value: d[field],
+                value: getAggregatedValue(d, field, "quantitative", aggFunction),
                 rowIndex: i,
                 color: null // This property is determined when first rendered.
             });
