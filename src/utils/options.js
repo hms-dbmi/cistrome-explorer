@@ -83,6 +83,11 @@ const baseSchema = {
                     "enum": ["nominal", "quantitative", "url", "tree"],
                     "description": "The data type of a field"
                 },
+                "aggFunction": {
+                    "type": "string",
+                    "enum": ["max", "min", "mean", "sum"],
+                    "description": "A funtion to apply when aggregating values"
+                },
                 "position": {
                     "type": "string",
                     "enum": ["left", "right"],

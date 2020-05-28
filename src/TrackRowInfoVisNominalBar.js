@@ -57,7 +57,7 @@ export default function TrackRowInfoVisNominalBar(props) {
     const [hoverValue, setHoverValue] = useState(null);
 
     // Data, layouts and styles
-    const { field } = fieldInfo;
+    const { field, aggFunction } = fieldInfo;
 
     const yScale = d3.scaleBand()
         .domain(range(transformedRowInfo.length))
@@ -88,9 +88,9 @@ export default function TrackRowInfoVisNominalBar(props) {
         // Render visual components for each row (i.e., bars and texts).
         const textAlign = isLeft ? "end" : "start";
         let aggregateStartIdx = -1, sameCategoriesNearby = 1;
-        console.log("transformedRowInfo", transformedRowInfo);
         transformedRowInfo.forEach((d, i) => {
-            const category = getAggregatedValue(d, field, "nominal");
+            const isAggregated = Array.isArray(d);
+            const category = getAggregatedValue(d, field, "nominal", aggFunction);
             // To aggregate bars, check if there is a same category on the next row.
             if(i + 1 < transformedRowInfo.length && category === transformedRowInfo[i+1][field]) {
                 if(aggregateStartIdx === -1) {
@@ -111,9 +111,16 @@ export default function TrackRowInfoVisNominalBar(props) {
             rect.fill = color;
 
             if(hoverValue && category === hoverValue) {
-                const hoverBgRectLeft = (isLeft ? barLeft - textAreaWidth : barLeft + barWidth)
+                const hoverBgRectLeft = (isLeft ? barLeft - textAreaWidth : barLeft + barWidth);
                 const hoverBgRect = two.makeRect(hoverBgRectLeft, barTop, textAreaWidth, barHeight);
                 hoverBgRect.fill = "#EBEBEB";
+            }
+
+            if(isAggregated) {
+                const aggIndicatorWidth = 2;
+                const aggIndicatorLeft = (isLeft ? barLeft - aggIndicatorWidth - 1: barLeft + barWidth + 1);
+                const aggIndicator = two.makeRect(aggIndicatorLeft, barTop + 0.5, aggIndicatorWidth, barHeight - 1);
+                aggIndicator.fill = "#333";
             }
 
             // Render text labels when the space is enough.
@@ -173,7 +180,7 @@ export default function TrackRowInfoVisNominalBar(props) {
             const y = yScale.invert(mouseY);
             let fieldVal;
             if(y !== undefined){
-                fieldVal = getAggregatedValue(transformedRowInfo[y], field, "nominal");
+                fieldVal = getAggregatedValue(transformedRowInfo[y], field, "nominal", aggFunction);
                 setHoverValue(fieldVal);
             } else {
                 setHoverValue(null);

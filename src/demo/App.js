@@ -202,9 +202,10 @@ const demos = {
         options: {
             rowInfoAttributes: [
                 // {field: "Hierarchical Clustering", type: "tree", position: "left"},
-                {field: "Tissue Type", type: "nominal", position: "left"},
-                // {field: ["Random 1", "Random 2"], type: "quantitative", position: "left"},
-                // {field: "id", type: "nominal", position: "right"},
+                {field: "Tissue Type", type: "nominal", position: "left", aggFunction: "sum"},
+                {field: "Random 1", type: "quantitative", position: "left", aggFunction: "mean"},
+                {field: ["Random 1", "Random 2"], type: "quantitative", position: "left", aggFunction: "mean"},
+                {field: "id", type: "nominal", position: "right", aggFunction: "sum"},
                 // {field: "Hierarchical Clustering", type: "tree", position: "right"}
             ],
             rowFilter: [ ],

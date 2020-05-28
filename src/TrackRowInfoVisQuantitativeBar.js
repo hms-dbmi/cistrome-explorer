@@ -12,6 +12,7 @@ import TrackRowInfoControl from './TrackRowInfoControl.js';
 import { rgbToHex, generateNextUniqueColor } from "./utils/color.js";
 import { getRetinaRatio } from './utils/canvas.js';
 import { modifyItemInArray } from "./utils/array.js";
+import { getAggregatedValue } from "./utils/aggregate.js";
 
 export const margin = 5;
 
@@ -59,7 +60,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
     const hiddenCanvasRef = useRef();
 
     // Data, layouts and styles
-    const { field } = fieldInfo;
+    const { field, aggFunction } = fieldInfo;
     const isStackedBar = Array.isArray(field);
     const axisHeight = 30;
     const textAreaWidth = 20;
@@ -106,7 +107,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             // Scales
             const valueExtent = [0, d3.extent(transformedRowInfo.map(d => {
                 let sum = 0;
-                field.forEach(f => sum += d[f]);
+                field.forEach(f => sum += getAggregatedValue(d, f, "quantitative", aggFunction));
                 return sum;
             }))[1]];   // Zero baseline
             xScale = xScale
@@ -119,11 +120,12 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             // Render visual components for each row (i.e., bars and texts).
             const textAlign = isLeft ? "end" : "start";
             transformedRowInfo.forEach((d, i) => {
+                const isAggregated = Array.isArray(d);
                 const barTop = yScale(i);
                 let currentBarLeft = (isLeft ? width : 0);
 
                 field.forEach(f => {
-                    const barWidth = xScale(d[f]);
+                    const barWidth = xScale(getAggregatedValue(d, f, "quantitative", aggFunction));
                     const infoForMouseEvent = colorToInfo.find(d => d.field === f && d.rowIndex === i);
                     const color = isHidden ? infoForMouseEvent.uniqueColor : colorScale(f);
                     
@@ -143,10 +145,17 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                     }
                 });
 
+                if(isAggregated) {
+                    const aggIndicatorWidth = 2;
+                    const aggIndicatorLeft = (isLeft ? currentBarLeft - aggIndicatorWidth - 1: currentBarLeft + 1);
+                    const aggIndicator = two.makeRect(aggIndicatorLeft, barTop + 0.5, aggIndicatorWidth, rowHeight - 1);
+                    aggIndicator.fill = "#333";
+                }
+
                 // Render text labels when the space is enough.
                 if(rowHeight >= fontSize && isTextLabel) {
                     let sum = 0;
-                    field.forEach(f => sum += d[f]);
+                    field.forEach(f => sum += getAggregatedValue(d, f, "quantitative", aggFunction));
                     let textLeft = (isLeft ? width - xScale(sum) - margin : xScale(sum) + margin);
                     const text = two.makeText(textLeft, barTop + rowHeight/2, textAreaWidth, rowHeight, sum);
                     text.fill = "black";
@@ -156,9 +165,10 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                     text.overflow = "ellipsis";
                 }
             });
+
         } else {
             // Scales
-            const valueExtent = [0, d3.extent(transformedRowInfo.map(d => d[field]))[1]];   // Zero baseline
+            const valueExtent = [0, d3.extent(transformedRowInfo.map(d => getAggregatedValue(d, field, "quantitative", aggFunction)))[1]];   // Zero baseline
             xScale = d3.scaleLinear()
                 .domain(valueExtent)
                 .range([0, barAreaWidth]);
@@ -169,19 +179,28 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             // Render visual components for each row (i.e., bars and texts).
             const textAlign = isLeft ? "end" : "start";
             transformedRowInfo.forEach((d, i) => {
+                const isAggregated = Array.isArray(d);
+                const value = getAggregatedValue(d, field, "quantitative", aggFunction);
                 const barTop = yScale(i);
-                const barWidth = xScale(d[field]);        
+                const barWidth = xScale(value);
                 const barLeft = (isLeft ? width - barWidth : 0);
                 const textLeft = (isLeft ? width - barWidth - margin : barWidth + margin);
                 const infoForMouseEvent = colorToInfo.find(d => d.field === field && d.rowIndex === i);
-                const color = isHidden ? infoForMouseEvent.uniqueColor : d3.interpolateViridis(colorScale(d[field]));;
+                const color = isHidden ? infoForMouseEvent.uniqueColor : d3.interpolateViridis(colorScale(value));;
 
                 const rect = two.makeRect(barLeft, barTop, barWidth, rowHeight);
                 rect.fill = color;
+                
+                if(isAggregated) {
+                    const aggIndicatorWidth = 2;
+                    const aggIndicatorLeft = (isLeft ? barLeft - aggIndicatorWidth - 1: barLeft + barWidth + 1);
+                    const aggIndicator = two.makeRect(aggIndicatorLeft, barTop + 0.5, aggIndicatorWidth, rowHeight - 1);
+                    aggIndicator.fill = "#333";
+                }
 
                 // Render text labels when the space is enough.
                 if(rowHeight >= fontSize && isTextLabel) {
-                    const text = two.makeText(textLeft, barTop + rowHeight/2, textAreaWidth, rowHeight, d[field]);
+                    const text = two.makeText(textLeft, barTop + rowHeight/2, textAreaWidth, rowHeight, value);
                     text.fill = d3.hsl(color).darker(3);
                     text.fontsize = fontSize;
                     text.align = textAlign;
