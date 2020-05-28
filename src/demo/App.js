@@ -188,20 +188,29 @@ const demos = {
         viewConfig: hgDemoViewConfig2,
         options: {
             rowInfoAttributes: [
+                {field: "Hierarchical Clustering", type: "tree", position: "left"},
+                {field: "Tissue Type", type: "nominal", position: "left"},
+                {field: ["Random 1", "Random 2"], type: "quantitative", position: "left"},
+                {field: "id", type: "nominal", position: "right"},
                 {field: "Hierarchical Clustering", type: "tree", position: "right"}
             ],
             rowFilter: [ ]
         }
     },
-    "Minimal Dataset (w/ Dendrogram Similarity Distance)": {
+    "Minimal Dataset (w/ Dendrogram and Aggregation)": {
         viewConfig: hgDemoViewConfig2b,
         options: {
             rowInfoAttributes: [
-                {field: "id", type: "nominal", position: "right"},
-                {field: "Hierarchical Clustering", type: "tree", position: "right"},
-                {field: "Hierarchical Clustering", type: "tree", position: "left"}
+                // {field: "Hierarchical Clustering", type: "tree", position: "left"},
+                {field: "Tissue Type", type: "nominal", position: "left"},
+                // {field: ["Random 1", "Random 2"], type: "quantitative", position: "left"},
+                // {field: "id", type: "nominal", position: "right"},
+                // {field: "Hierarchical Clustering", type: "tree", position: "right"}
             ],
-            rowFilter: [ ]
+            rowFilter: [ ],
+            rowAggregate: [
+                {field: "Tissue Type", type: "nominal", oneOf: ["Blood", "Bone Marrow"]}
+            ]
         }
     }
 };
@@ -212,7 +221,7 @@ function onViewConfigChange(viewConfigString) {
 
 export default function App() {
     
-    const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[0]);
+    const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[Object.keys(demos).length-1]); // TODO: revert this.
 
     return (
         <div className="app">

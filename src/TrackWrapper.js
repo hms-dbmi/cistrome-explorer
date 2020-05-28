@@ -103,7 +103,13 @@ export default function TrackWrapper(props) {
         console.log(e);
     }
 
-    const transformedRowInfo = (!selectedRows ? rowInfo : selectedRows.map(i => rowInfo[i]));
+    const transformedRowInfo = (!selectedRows ? rowInfo : selectedRows.map(
+        // For the full access of raw information in the visualization,
+        // we aggregate data in each visualization and not here.
+        indexOrIndices => Array.isArray(indexOrIndices)
+            ? rowInfo.filter((d, i) => indexOrIndices.includes(i))
+            : rowInfo[indexOrIndices]
+    ));
 
     // console.log("TrackWrapper.render");
     return (

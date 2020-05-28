@@ -27,6 +27,10 @@ const baseSchema = {
                     "type": "array",
                     "items": { "$ref": "#/definitions/filterInfo" }
                 },
+                "rowAggregate": {
+                    "type": "array",
+                    "items": { "$ref": "#/definitions/aggregateInfo" }
+                },
                 "rowHighlight": {
                     "type": "object",
                     "oneOf":[ 
@@ -145,6 +149,27 @@ const baseSchema = {
                     "type": "number",
                     "description": "A similarity threshold"
                 },
+            }
+        },
+        "aggregateInfo": {
+            "type": "object",
+            "oneOf":[ 
+                { "required": ["field", "type", "oneOf"] },
+            ],
+            "properties": {
+                "field": {
+                    "type": "string",
+                    "description": "The name of a data field"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": ["nominal"],    // TODO: Support other types as well.
+                    "description": "The data type of a field"
+                },
+                "oneOf": {
+                    "type": "array",
+                    "description": "An array of values of a field that should be aggregated"
+                }
             }
         },
         "zoomInfo": {
