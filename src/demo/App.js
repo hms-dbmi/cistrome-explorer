@@ -20,21 +20,28 @@ const demos = {
         viewConfig: hgDemoViewConfig1,
         options: {
             rowInfoAttributes: [
-                {field: "Hierarchical Clustering (Average)", type: "tree", position: "left"},
-                {field: "qc_frip", type: "quantitative", position: "left"},
-                {field: "qc_fastqc", type: "quantitative", position: "left"},
-                {field: "Metadata URL", type: "url", position: "left", title: "cid"},
-                {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right"},
-                {field: "Cell Type", type: "nominal", position: "right"},
-                {field: "Tissue Type", type: "nominal", position: "right"},
-                {field: "Species", type: "nominal", position: "right"}
+                // {field: "Hierarchical Clustering (Average)", type: "tree", position: "left"},
+                {field: ["qc_frip", "qc_fastqc"], type: "quantitative", position: "left", aggFunction: "mean"},
+                {field: "qc_frip", type: "quantitative", position: "left", aggFunction: "mean"},
+                {field: "qc_fastqc", type: "quantitative", position: "left", aggFunction: "mean"},
+                // {field: "Metadata URL", type: "url", position: "left", title: "cid"},
+                // {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right"},
+                {field: "Cell Type", type: "nominal", position: "right", aggFunction: "sum"},
+                {field: "Tissue Type", type: "nominal", position: "right", aggFunction: "sum"},
+                {field: "Species", type: "nominal", position: "right", aggFunction: "sum"}
             ],
-            rowSort: [
-                {field: "Tissue Type", type: "nominal", order: "ascending"},
-                {field: "qc_frip", type: "quantitative", order: "descending"}
+            rowAggregate: [
+                {field: "Cell Type", type: "nominal", oneOf: ["Fibroblast", "Epithelium"]},
+                {field: "Tissue Type", type: "nominal", oneOf: ["Blood"]}
             ],
+            // rowSort: [
+            //     {field: "Tissue Type", type: "nominal", order: "ascending"},
+            //     {field: "qc_frip", type: "quantitative", order: "descending"}
+            // ],
             rowFilter: [
-                {field: "Tissue Type", type: "nominal", notOneOf: ["None"]}
+                {field: "Tissue Type", type: "nominal", notOneOf: [
+                    "None", "Adipose", "Bone", "Bone Marrow", "Brain", "Breast", "Cervix", "Colon", "Connective Tissue", "Embryo"
+                ]}
             ]
         }
     },
@@ -222,7 +229,7 @@ function onViewConfigChange(viewConfigString) {
 
 export default function App() {
     
-    const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[Object.keys(demos).length-1]); // TODO: revert this.
+    const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[0]);
 
     return (
         <div className="app">

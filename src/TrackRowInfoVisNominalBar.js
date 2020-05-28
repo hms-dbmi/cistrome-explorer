@@ -92,7 +92,10 @@ export default function TrackRowInfoVisNominalBar(props) {
             const isAggregated = Array.isArray(d);
             const category = getAggregatedValue(d, field, "nominal", aggFunction);
             // To aggregate bars, check if there is a same category on the next row.
-            if(i + 1 < transformedRowInfo.length && category === transformedRowInfo[i+1][field]) {
+            if(
+                i + 1 < transformedRowInfo.length
+                && category === getAggregatedValue(transformedRowInfo[i+1], field, "nominal", aggFunction)
+            ) {
                 if(aggregateStartIdx === -1) {
                     aggregateStartIdx = i;
                 }

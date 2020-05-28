@@ -121,6 +121,8 @@
                 "minHeight": 100,
                 "colorbarPosition": "bottomLeft",
                 "zeroValueColor": "dimgray",
+                "selectRowsAggregationWithRelativeHeight": false,
+                "selectRowsAggregationMode": "mean",
                 "colorRange": [
                     "rgba(68,1,84,1)",
                     "rgba(68,2,85,1)",

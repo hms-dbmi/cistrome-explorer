@@ -157,12 +157,12 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                     let sum = 0;
                     field.forEach(f => sum += getAggregatedValue(d, f, "quantitative", aggFunction));
                     let textLeft = (isLeft ? width - xScale(sum) - margin : xScale(sum) + margin);
-                    const text = two.makeText(textLeft, barTop + rowHeight/2, textAreaWidth, rowHeight, sum);
+                    const text = two.makeText(textLeft, barTop + rowHeight/2, textAreaWidth, rowHeight, d3.format(".0f")(sum));
                     text.fill = "black";
                     text.fontsize = fontSize;
                     text.align = textAlign;
                     text.baseline = "middle";
-                    text.overflow = "ellipsis";
+                    text.overflow = "clip";
                 }
             });
 
@@ -180,7 +180,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             const textAlign = isLeft ? "end" : "start";
             transformedRowInfo.forEach((d, i) => {
                 const isAggregated = Array.isArray(d);
-                const value = getAggregatedValue(d, field, "quantitative", aggFunction);
+                const value = d3.format(".2f")(getAggregatedValue(d, field, "quantitative", aggFunction));
                 const barTop = yScale(i);
                 const barWidth = xScale(value);
                 const barLeft = (isLeft ? width - barWidth : 0);
@@ -200,12 +200,12 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
 
                 // Render text labels when the space is enough.
                 if(rowHeight >= fontSize && isTextLabel) {
-                    const text = two.makeText(textLeft, barTop + rowHeight/2, textAreaWidth, rowHeight, value);
+                    const text = two.makeText(textLeft, barTop + rowHeight/2, textAreaWidth, rowHeight, d3.format(".0f")(value));
                     text.fill = d3.hsl(color).darker(3);
                     text.fontsize = fontSize;
                     text.align = textAlign;
                     text.baseline = "middle";
-                    text.overflow = "ellipsis";
+                    text.overflow = "clip";
                 }
 
                 // Add other vis properties to colorToInfo for mouse events.
@@ -274,7 +274,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                     y: mouseViewportY,
                     content: <TooltipContent 
                         title={hoveredInfo.field}
-                        value={hoveredInfo.value}
+                        value={d3.format("~s")(hoveredInfo.value)}
                         color={hoveredInfo.color}
                     />
                 });
