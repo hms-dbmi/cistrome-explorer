@@ -13,6 +13,6 @@ conda env create -f environment.yml
 ## Start
 
 ```sh
-conda activate cistrome-explorer-notebook-env
+conda activate cistrome-explorer-notebooks
 jupyter notebook
 ```
