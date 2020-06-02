@@ -1,4 +1,8 @@
 .ipynb_checkpoints/
+__pycache__/
+*.csv
+*.arrow
+*.zarr
 *.txt
 *.mv5
 *.bed
