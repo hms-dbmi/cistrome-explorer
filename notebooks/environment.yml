@@ -1,0 +1,34 @@
+name: cistrome-explorer-notebooks
+channels:
+  - conda-forge
+  - bioconda
+  - scottx611x
+dependencies:
+  - python>=3.5
+  - numpy
+  - pandas
+  - requests
+  - h5py
+  - dask
+  - flake8
+  - autopep8
+  - pysam
+  - snakemake
+  - scipy
+  - jupyter
+  - nb_conda
+  - jq
+  - pybigwig
+  - pip
+  - pip:
+    - negspy
+    - slugid
+    - sortedcontainers
+    - nose
+    - cooler>=0.8.5
+    - click>=7
+    - pytest
+    - pytest-cov
+    - bumpversion
+    - pybbi>=0.2.0
+    - clodius
