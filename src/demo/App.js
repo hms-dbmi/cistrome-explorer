@@ -22,22 +22,20 @@ const demos = {
         options: {
             rowInfoAttributes: [
                 {field: "Hierarchical Clustering (Average)", type: "tree", position: "left"},
-                {field: "qc_frip", type: "quantitative", position: "left", aggFunction: "mean"},
-                {field: "qc_fastqc", type: "quantitative", position: "left", aggFunction: "mean"},
-                {field: "Metadata URL", type: "url", position: "left", title: "cid", aggFunction: "max"},
+                {field: "qc_frip", type: "quantitative", position: "left"},
+                {field: "qc_fastqc", type: "quantitative", position: "left"},
+                {field: "Metadata URL", type: "url", position: "left", title: "cid"},
                 {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right"},
-                {field: "Cell Type", type: "nominal", position: "right", aggFunction: "sum"},
-                {field: "Tissue Type", type: "nominal", position: "right", aggFunction: "sum"},
-                {field: "Species", type: "nominal", position: "right", aggFunction: "sum"}
+                {field: "Cell Type", type: "nominal", position: "right"},
+                {field: "Tissue Type", type: "nominal", position: "right"},
+                {field: "Species", type: "nominal", position: "right"}
             ],
             rowSort: [
                 {field: "Tissue Type", type: "nominal", order: "ascending"},
                 {field: "qc_frip", type: "quantitative", order: "descending"}
             ],
             rowFilter: [
-                {field: "Tissue Type", type: "nominal", notOneOf: [
-                    "None", "Adipose", "Bone", "Bone Marrow", "Brain", "Breast", "Cervix", "Colon", "Connective Tissue", "Embryo"
-                ]}
+                {field: "Tissue Type", type: "nominal", notOneOf: ["None"]}
             ]
         }
     },
