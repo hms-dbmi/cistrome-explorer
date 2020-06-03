@@ -179,8 +179,6 @@ export function getAggregatedRowInfo(rowInfo, rowAggregate) {
                     aggregatedRowInfo = notMatchings;
                     aggregatedRowInfo.push([matchingIndices, matchingRowInfos]);
                 });
-            } else {
-                // ...
             }
         });
     }
