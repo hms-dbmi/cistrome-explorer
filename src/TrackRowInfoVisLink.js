@@ -8,6 +8,7 @@ import { EVENT } from "./utils/constants.js";
 import { drawVisTitle } from "./utils/vis.js";
 import { TooltipContent, destroyTooltip } from "./Tooltip.js";
 import TrackRowInfoControl from './TrackRowInfoControl.js';
+import { getAggregatedValue } from "./utils/aggregate.js";
 
 const margin = 5;
 
@@ -52,7 +53,7 @@ export default function TrackRowInfoVisLink(props) {
     const [hoverIndex, setHoverIndex] = useState(null);
 
     // Data, layouts and styles
-    const { field, title } = fieldInfo;
+    const { field, title, aggFunction } = fieldInfo;
     const minTrackWidth = 40;
     const isTextLabel = width > minTrackWidth;
     
@@ -86,7 +87,7 @@ export default function TrackRowInfoVisLink(props) {
                 const textTop = yScale(i);
                 const textLeft = isLeft ? width - margin : margin;
                 const titleField = title ? title : field;
-                const diplayText = isTextLabel ? info[titleField] : "Link";
+                const diplayText = isTextLabel ? getAggregatedValue(info, titleField, "nominal", aggFunction) : "Link";
                 const text = two.makeText(textLeft, textTop + rowHeight/2, width, rowHeight, diplayText);
                 text.fill = "#23527C";
                 text.fontsize = fontSize;

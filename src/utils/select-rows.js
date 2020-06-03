@@ -111,7 +111,7 @@ export function selectRows(rowInfo, options) {
         sortOptions.forEach((d) => {
             const { field, type, order } = d;
             const isMultipleFields = Array.isArray(field);
-            const { aggFunction } = options.rowInfoAttributes.find(d => d.field === field);
+            const { aggFunction } = options.rowInfoAttributes?.find(d => d.field === field);
             if(type === "tree") {
                 // TODO: Support for aggregated rows.
                 const hierarchyData = matrixToTree(filteredRowInfo.map(d => d[1][field]));
