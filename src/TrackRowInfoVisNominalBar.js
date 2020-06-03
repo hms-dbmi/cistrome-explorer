@@ -66,7 +66,9 @@ export default function TrackRowInfoVisNominalBar(props) {
 
     const colorScale = useMemo(() => 
         d3.scaleOrdinal()
-            .domain(Array.from(new Set(aggregatedRowInfo.map(d => d[field]))).sort())
+            .domain(Array.from(new Set(
+                aggregatedRowInfo.map(d => getAggregatedValue(d, field, "nominal", aggFunction)))
+            ).sort())
             .range(d3.schemeTableau10),
     [aggregatedRowInfo]);
 
@@ -157,7 +159,7 @@ export default function TrackRowInfoVisNominalBar(props) {
 
         const notOneOf = Array.from(colorScale.domain());
         notOneOf.splice(notOneOf.indexOf(hoverValue), 1);
-
+        
         PubSub.publish(EVENT.CONTEXT_MENU, {
             x: mouseViewportX,
             y: mouseViewportY,
