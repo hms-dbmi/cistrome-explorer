@@ -20,12 +20,12 @@ const demos = {
         viewConfig: hgDemoViewConfig1,
         options: {
             rowInfoAttributes: [
-                // {field: "Hierarchical Clustering (Average)", type: "tree", position: "left"},
+                {field: "Hierarchical Clustering (Average)", type: "tree", position: "left"},
                 {field: ["qc_frip", "qc_fastqc"], type: "quantitative", position: "left", aggFunction: "mean"},
                 {field: "qc_frip", type: "quantitative", position: "left", aggFunction: "mean"},
                 {field: "qc_fastqc", type: "quantitative", position: "left", aggFunction: "mean"},
                 {field: "Metadata URL", type: "url", position: "left", title: "cid", aggFunction: "max"},
-                // {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right"},
+                {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right"},
                 {field: "Cell Type", type: "nominal", position: "right", aggFunction: "sum"},
                 {field: "Tissue Type", type: "nominal", position: "right", aggFunction: "sum"},
                 {field: "Species", type: "nominal", position: "right", aggFunction: "sum"}
@@ -34,10 +34,10 @@ const demos = {
                 {field: "Cell Type", type: "nominal", oneOf: ["Fibroblast", "Epithelium"]},
                 {field: "Tissue Type", type: "nominal", oneOf: ["Blood"]}
             ],
-            // rowSort: [
-            //     {field: "Tissue Type", type: "nominal", order: "ascending"},
-            //     {field: "qc_frip", type: "quantitative", order: "descending"}
-            // ],
+            rowSort: [
+                {field: "Tissue Type", type: "nominal", order: "ascending"},
+                {field: "qc_frip", type: "quantitative", order: "descending"}
+            ],
             rowFilter: [
                 {field: "Tissue Type", type: "nominal", notOneOf: [
                     "None", "Adipose", "Bone", "Bone Marrow", "Brain", "Breast", "Cervix", "Colon", "Connective Tissue", "Embryo"

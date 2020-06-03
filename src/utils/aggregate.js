@@ -14,7 +14,7 @@ export function getAggregatedValue(rowInfo, field, type, fn = "sum") {
     }
 
     // Aggregated values
-    if(type === "nominal") {
+    if(type === "nominal" || type === "link") {
         if(fn === "max") {
             const counts = {};
             rowInfo.forEach(d => {
@@ -34,6 +34,10 @@ export function getAggregatedValue(rowInfo, field, type, fn = "sum") {
         } else {
             return d3.sum(rowInfo.map(d => d[field]));
         } 
+    } else if(type === "tree") {
+        // `aggFunction` does not mean anything for `tree`.
+        // TODO: How to best aggregate?
+        return rowInfo.map(d => d[field]);
     }
-    return undefined;
+    return rowInfo.map(d => d[field]);
 }

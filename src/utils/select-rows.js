@@ -41,6 +41,10 @@ export function selectRows(rowInfo, options) {
                     filteredRowInfo = filteredRowInfo.filter(d => d[1][field] > minCutoff && d[1][field] < maxCutoff);
                 }
             } else if(type === "tree") {
+                if(options.rowAggregate && options.rowAggregate.length >= 1) {
+                    // TODO: How to best support aggregation for `tree`?
+                    return;
+                }
                 // `tree` type filter can have both the `subtree` and `minSimilarity` filters in a single `filterInfo`.
                 if(subtree) {
                     filteredRowInfo = filteredRowInfo.filter(d => d[1][field].reduce(
@@ -90,12 +94,13 @@ export function selectRows(rowInfo, options) {
             if(type === "nominal") {
                 oneOf.forEach(o => {
                     const matchings = transformedRowInfo.filter(t => t[1][field] === o);
+                    const notMatchings = transformedRowInfo.filter(t => t[1][field] !== o);
                     const matchingIndices = matchings.map(t => t[0]);
                     const matchingRowInfos = matchings.map(t => t[1]);
 
                     if(matchings?.length == 0) return;
 
-                    transformedRowInfo = transformedRowInfo.filter(t => t[1][field] !== o);
+                    transformedRowInfo = notMatchings;
                     transformedRowInfo.push([matchingIndices, matchingRowInfos]);
                 });
             } else {
@@ -111,9 +116,12 @@ export function selectRows(rowInfo, options) {
         sortOptions.forEach((d) => {
             const { field, type, order } = d;
             const isMultipleFields = Array.isArray(field);
-            const { aggFunction } = options.rowInfoAttributes?.find(d => d.field === field);
+            const aggFunction = options.rowInfoAttributes?.find(d => d.field === field)?.aggFunction;
             if(type === "tree") {
-                // TODO: Support for aggregated rows.
+                if(options.rowAggregate && options.rowAggregate.length >= 1) {
+                    // TODO: How to best support aggregation for `tree`?
+                    return;
+                }
                 const hierarchyData = matrixToTree(filteredRowInfo.map(d => d[1][field]));
                 const root = d3.hierarchy(hierarchyData);
                 const leaves = root.leaves().map(l => l.data.i);

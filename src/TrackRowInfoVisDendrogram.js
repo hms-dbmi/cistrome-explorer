@@ -66,7 +66,7 @@ export default function TrackRowInfoVisDendrogram(props) {
     const axisHeight = 30;
     const titleAreaWidth = 20;
     const visWidth = width - titleAreaWidth;
-    
+
     const initialMinSimBarLeft = useMemo(() => {
         return isLeft ? 20 : width - 20
     }, [isLeft, width]);
@@ -91,7 +91,11 @@ export default function TrackRowInfoVisDendrogram(props) {
 
     // Process the hierarchy data. Result will be null if the tree leaves
     // cannot be aligned based on the current rowInfo ordering.
-    const hierarchyData = matrixToTree(transformedRowInfo.map(d => d[field]));
+    const hierarchyData = matrixToTree(
+        transformedRowInfo.map(d => d[field])
+            // TODO: Remove below when we can aggregate `tree`
+            .filter(d => d !== undefined)
+    );
     const root = d3.hierarchy(hierarchyData);
     const leaves = root.leaves().map(l => l.data);
 
