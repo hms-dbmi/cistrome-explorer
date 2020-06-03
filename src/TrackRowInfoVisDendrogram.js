@@ -18,6 +18,7 @@ import { FILTER } from './utils/icons.js';
  * @prop {number} width The width of this view.
  * @prop {number} height The height of this view.
  * @prop {object[]} transformedRowInfo The `rowInfo` array after transforming by filtering and sorting according to the selected rows.
+ * @prop {object[]} aggregatedRowInfo The `rowInfo` array after aggregated based on `rowAggregate` options.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {object} filterInfo The options for filtering rows of the field used in this track.
  * @prop {boolean} isLeft Is this view on the left side of the track?
@@ -32,6 +33,7 @@ export default function TrackRowInfoVisDendrogram(props) {
     const {
         left, top, width, height,
         transformedRowInfo,
+        aggregatedRowInfo,
         fieldInfo,
         filterInfo,
         isLeft,
@@ -454,6 +456,7 @@ export default function TrackRowInfoVisDendrogram(props) {
                 searchLeft={left}
                 onFilterRows={onFilterRows}
                 transformedRowInfo={transformedRowInfo}
+                aggregatedRowInfo={aggregatedRowInfo}
                 filterButtonHighlit={showMinSimBar}
                 toggleMinSimBar={maxDistance && !cannotAlign ? () => {
                     // Show the minimum similarity bar only when similarity distance is available.

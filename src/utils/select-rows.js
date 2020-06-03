@@ -18,7 +18,7 @@ export function selectRows(rowInfo, options) {
      * Aggregate
      */ 
     // Aggregate rows in advance to apply filters to the aggregated rows.
-    let aggregatedRowInfo = getAggregatedRowInfo(rowInfo, options);
+    let aggregatedRowInfo = getAggregatedRowInfo(rowInfo, options.rowAggregate);
     // Hereafter, each datum of `aggregatedRowInfo` can be either [number, Object] or [number[], Object[]].
     
     /*
@@ -167,13 +167,13 @@ export function selectRows(rowInfo, options) {
  * Aggregate row information using `rowAggregate` options.
  * Data formats are changed from [number, Object] to [number[], Object[]] for aggregated rows.
  * @param {object[]} rowInfo The original/full default-ordered rowInfo array.
- * @param {object} options The track options object, containing sort/filter options.
+ * @param {object} rowAggregate The track option object for aggregating rows.
  * @returns {object[]} The aggregated `rowInfo`.
  */
-export function getAggregatedRowInfo(rowInfo, options) {
+export function getAggregatedRowInfo(rowInfo, rowAggregate) {
     let aggregatedRowInfo = Array.from(rowInfo.entries());
-    if(options.rowAggregate && options.rowAggregate.length > 0) {
-        const aggregateOptions = options.rowAggregate.slice().reverse();
+    if(rowAggregate && rowAggregate.length > 0) {
+        const aggregateOptions = rowAggregate.slice().reverse();
         aggregateOptions.forEach(d => {
             const { field, type, oneOf } = d;
             if(type === "nominal") {
@@ -207,10 +207,8 @@ export function getAggregatedRowInfo(rowInfo, options) {
  */
 export function highlightRowsFromSearch(rowInfo, field, type, conditions, options) {
     // Aggregation rows in advance to apply highlighting to the aggregated rows.
-    console.log(options);
-    const aggregatedRowInfo = getAggregatedRowInfo(rowInfo, options);
+    const aggregatedRowInfo = getAggregatedRowInfo(rowInfo, options.rowAggregate);
     const aggFunction = options.rowInfoAttributes?.find(d => d.field === field)?.aggFunction;
-    console.log(aggFunction);
     let newHighlitRows = [];
     if(conditions === "") {
         newHighlitRows = [];

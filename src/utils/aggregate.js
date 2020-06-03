@@ -24,7 +24,7 @@ export function getAggregatedValue(rowInfo, field, type, fn = "sum") {
             return topCategory;
         } else {
             const categories = Array.from(new Set(rowInfo.map(d => d[field])));
-            return categories.join();
+            return categories.join(", ");
         } 
     } else if(type === "quantitative") {
         if(fn === "max") {

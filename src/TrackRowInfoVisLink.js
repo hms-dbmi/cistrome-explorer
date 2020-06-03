@@ -19,6 +19,7 @@ const margin = 5;
  * @prop {number} width The width of this view.
  * @prop {number} height The height of this view.
  * @prop {object[]} transformedRowInfo The `rowInfo` array after transforming by filtering and sorting according to the selected rows.
+ * @prop {object[]} aggregatedRowInfo The `rowInfo` array after aggregated based on `rowAggregate` options.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  * @prop {string} titleSuffix The suffix of a title, information about sorting and filtering status.
@@ -38,6 +39,7 @@ export default function TrackRowInfoVisLink(props) {
         isShowControlButtons,
         rowInfo,
         transformedRowInfo,
+        aggregatedRowInfo,
         titleSuffix,
         sortInfo,
         filterInfo,
@@ -201,6 +203,7 @@ export default function TrackRowInfoVisLink(props) {
                 filterInfo={filterInfo}
                 rowInfo={rowInfo}
                 transformedRowInfo={transformedRowInfo}
+                aggregatedRowInfo={aggregatedRowInfo}
             />
         </div>
     );

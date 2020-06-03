@@ -8,6 +8,7 @@ import TrackRowZoomOverlay from './TrackRowZoomOverlay.js';
 // TODO: remove the below fakedata import.
 //       see https://github.com/hms-dbmi/cistrome-explorer/issues/26
 import fakedata from './demo/fakedata/index.js';
+import { getAggregatedRowInfo } from './utils/select-rows.js';
 
 /**
  * Wrapper component associated with a particular HiGlass track.
@@ -104,12 +105,13 @@ export default function TrackWrapper(props) {
     }
 
     const transformedRowInfo = (!selectedRows ? rowInfo : selectedRows.map(
-        // For the full access of raw information in the visualization,
-        // we aggregate data in each visualization and not here.
         indexOrIndices => Array.isArray(indexOrIndices)
             ? rowInfo.filter((d, i) => indexOrIndices.includes(i))
             : rowInfo[indexOrIndices]
     ));
+    
+    // Aggregated, but not filtered, `rowInfo`, being used for filtering interfaces.
+    const aggregatedRowInfo = getAggregatedRowInfo(rowInfo, options.rowAggregate).map(d => d[1]);
 
     // console.log("TrackWrapper.render");
     return (
@@ -118,6 +120,7 @@ export default function TrackWrapper(props) {
                 (<TrackRowInfo 
                     rowInfo={rowInfo}
                     transformedRowInfo={transformedRowInfo}
+                    aggregatedRowInfo={aggregatedRowInfo}
                     viewId={multivecTrackViewId}
                     trackId={multivecTrackTrackId}
                     trackX={trackX}
@@ -141,6 +144,7 @@ export default function TrackWrapper(props) {
                 (<TrackRowInfo
                     rowInfo={rowInfo}
                     transformedRowInfo={transformedRowInfo}
+                    aggregatedRowInfo={aggregatedRowInfo}
                     viewId={multivecTrackViewId}
                     trackId={multivecTrackTrackId}
                     trackX={trackX}

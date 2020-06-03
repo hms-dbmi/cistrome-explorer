@@ -27,6 +27,7 @@ export const margin = 5;
  * @prop {boolean} isShowControlButtons Determine if control buttons should be shown.
  * @prop {object[]} rowInfo Array of JSON objects, one object for each sample, without filtering/sorting based on selected rows.
  * @prop {object[]} transformedRowInfo The `rowInfo` array after transforming by filtering and sorting according to the selected rows.
+ * @prop {object[]} aggregatedRowInfo The `rowInfo` array after aggregated based on `rowAggregate` options.
  * @prop {string} titleSuffix The suffix of a title, information about sorting and filtering status.
  * @prop {object} sortInfo The options for sorting rows of the field used in this track.
  * @prop {object} filterInfo The options for filtering rows of the field used in this track.
@@ -44,6 +45,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
         isShowControlButtons,
         rowInfo,
         transformedRowInfo,
+        aggregatedRowInfo,
         titleSuffix,
         sortInfo,
         filterInfo,
@@ -348,6 +350,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                 filterInfo={filterInfo}
                 rowInfo={rowInfo}
                 transformedRowInfo={transformedRowInfo}
+                aggregatedRowInfo={aggregatedRowInfo}
             />
         </div>
     );

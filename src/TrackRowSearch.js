@@ -20,6 +20,7 @@ const MAX_NUM_SUGGESTIONS = 200;
  * @prop {function} onFilterRows The function to call when the filter should be applied.
  * @prop {function} onClose The function to call when the search field should be closed.
  * @prop {object[]} rowInfo Array of JSON objects, one object for each sample, without filtering/sorting based on selected rows.
+ * @prop {object[]} aggregatedRowInfo The `rowInfo` array after aggregated based on `rowAggregate` options.
  * @prop {object} filterInfo The options for filtering rows of the field used in this track.
  * @example
  * <TrackRowSearch/>
@@ -35,6 +36,7 @@ export default function TrackRowSearch(props) {
         onFilterRows,
         onClose,
         rowInfo,
+        aggregatedRowInfo,
         filterInfo
     } = props;
 
@@ -44,8 +46,7 @@ export default function TrackRowSearch(props) {
     const [suggestionIndex, setSuggestionIndex] = useState(undefined);
     const [offset, setOffset] = useState({x: 0, y: 0});
     const dragStartPos = useRef(null);
-    const [valueExtent, setValueExtent] = useState(d3.extent(rowInfo.map(d => getAggregatedValue(d, field, type, aggFunction))));
-    console.log(aggFunction);
+    const [valueExtent, setValueExtent] = useState(d3.extent(aggregatedRowInfo.map(d => getAggregatedValue(d, field, type, aggFunction))));
     const cutoffRange = useRef(valueExtent);
     const keywordUpperCase = keyword.toUpperCase();
     const [notOneOf, setNotOneOf] = useState(!filterInfo || type === "quantitative" ? [] : filterInfo.notOneOf); 
@@ -57,8 +58,8 @@ export default function TrackRowSearch(props) {
     const padding = 5;
     
     useEffect(() => {
-        setValueExtent(d3.extent(rowInfo.map(d => getAggregatedValue(d, field, type, aggFunction))));
-    }, [field, rowInfo]);
+        setValueExtent(d3.extent(aggregatedRowInfo.map(d => getAggregatedValue(d, field, type, aggFunction))));
+    }, [field, aggregatedRowInfo]);
 
     useEffect(() => {
         if(type === "nominal" || type === "link") {
@@ -73,7 +74,7 @@ export default function TrackRowSearch(props) {
     const suggestions = useMemo(() => {
         let result = [];
         if(!Array.isArray(field)) {
-            const fieldData = rowInfo.map(d => getAggregatedValue(d, field, type, aggFunction).toString());
+            const fieldData = aggregatedRowInfo.map(d => getAggregatedValue(d, field, type, aggFunction).toString());
             const fieldDataByKeyword = fieldData.filter(d => d.toUpperCase().includes(keywordUpperCase));
             const potentialResult = Array.from(new Set(fieldDataByKeyword));
             if(potentialResult.length < MAX_NUM_SUGGESTIONS) {
@@ -173,7 +174,7 @@ export default function TrackRowSearch(props) {
     }
 
     function onUnckeckAllClick() {
-        onFilterRows(field, type, rowInfo.map(d => getAggregatedValue(d, field, type, aggFunction).toString()), false);
+        onFilterRows(field, type, aggregatedRowInfo.map(d => getAggregatedValue(d, field, type, aggFunction).toString()), false);
     }
 
     function onFilterByKeyword() {

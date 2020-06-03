@@ -19,6 +19,7 @@ const LOCAL_EVENT_SEARCH_OPEN = "search-open";
  * @prop {function} onFilterRows The function to call upon a filter interaction.
  * @prop {function} toggleMinSimBar Toggle showing the minimum similarity bar in dendrogram.
  * @prop {object[]} rowInfo Array of JSON objects, one object for each sample, without filtering/sorting based on selected rows.
+ * @prop {object[]} aggregatedRowInfo The `rowInfo` array after aggregated based on `rowAggregate` options.
  * @prop {object} filterInfo The options for filtering rows of the field used in this track.
  */
 export default function TrackRowInfoControl(props){
@@ -34,6 +35,7 @@ export default function TrackRowInfoControl(props){
         onFilterRows,
         toggleMinSimBar,
         rowInfo,
+        aggregatedRowInfo,
         filterInfo
     } = props;
 
@@ -178,6 +180,7 @@ export default function TrackRowInfoControl(props){
                     onFilterRows={onFilterRows}
                     onClose={onSearchClose}
                     rowInfo={rowInfo}
+                    aggregatedRowInfo={aggregatedRowInfo}
                     filterInfo={filterInfo}
                 />
             ) : null}
