@@ -1,5 +1,6 @@
 import { matrixToTree } from './tree.js';
 import d3 from './d3.js';
+import { getAggregatedValue } from './aggregate.js';
 
 /**
  * Generate an array of selected row indices based on filter and sort options.
@@ -102,7 +103,7 @@ export function selectRows(rowInfo, options) {
             }
         });
     }
-    // Hereafter, datum of `transformedRowInfo` can be either [number, Object] or [number[], Object[]]
+    // Hereafter, each datum of `transformedRowInfo` can be either [number, Object] or [number[], Object[]]
 
     // Sort
     if(options.rowSort && options.rowSort.length > 0) {
@@ -110,6 +111,7 @@ export function selectRows(rowInfo, options) {
         sortOptions.forEach((d) => {
             const { field, type, order } = d;
             const isMultipleFields = Array.isArray(field);
+            const { aggFunction } = options.rowInfoAttributes.find(d => d.field === field);
             if(type === "tree") {
                 // TODO: Support for aggregated rows.
                 const hierarchyData = matrixToTree(filteredRowInfo.map(d => d[1][field]));
@@ -117,21 +119,23 @@ export function selectRows(rowInfo, options) {
                 const leaves = root.leaves().map(l => l.data.i);
                 transformedRowInfo = leaves.map((i) => transformedRowInfo[i]);
             } else if(type === "quantitative") {
-                // TODO: Support for aggregated rows.
                 transformedRowInfo.sort((a, b) => {
                     if(isMultipleFields) {
                         let sumA = 0, sumB = 0;
-                        field.forEach(f => sumA += a[1][f]);
-                        field.forEach(f => sumB += b[1][f]);
+                        field.forEach(f => sumA += getAggregatedValue(a[1], f, "quantitative", aggFunction));
+                        field.forEach(f => sumB += getAggregatedValue(b[1], f, "quantitative", aggFunction));
                         return (sumA - sumB) * (order === "ascending" ? 1 : -1);
                     } else {
-                        return (a[1][field] - b[1][field]) * (order === "ascending" ? 1 : -1);
+                        const valueA = getAggregatedValue(a[1], field, "quantitative", aggFunction);
+                        const valueB = getAggregatedValue(b[1], field, "quantitative", aggFunction);
+                        return (valueA - valueB) * (order === "ascending" ? 1 : -1);
                     }
                 });
             } else if(type === "nominal") {
-                // TODO: Support for aggregated rows.
                 transformedRowInfo.sort(function(a, b) {
-                    let compared = 0, categoryA = a[1][field].toString().toUpperCase(), categoryB = b[1][field].toString().toUpperCase();
+                    let compared = 0;
+                    const categoryA = getAggregatedValue(a[1], field, "nominal", aggFunction).toString().toUpperCase();
+                    const categoryB = getAggregatedValue(b[1], field, "nominal", aggFunction).toString().toUpperCase();
                     if(categoryA > categoryB) {
                         compared = 1;
                     } else {

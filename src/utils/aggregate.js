@@ -1,7 +1,7 @@
 import d3 from './d3.js';
 
 /**
- * Aggregate values using specified function, such as mean of quantitative values.
+ * Get aggregated values using specified function, such as a mean of quantitative values.
  * @param {object|array} rowInfo Object or array of objects containing information of rows.
  * @param {string} field The name of data field.
  * @param {string} type The type of data field.
