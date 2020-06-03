@@ -19,7 +19,6 @@ const MAX_NUM_SUGGESTIONS = 200;
  * @prop {function} onChange The function to call when the search keyword has changed.
  * @prop {function} onFilterRows The function to call when the filter should be applied.
  * @prop {function} onClose The function to call when the search field should be closed.
- * @prop {object[]} rowInfo Array of JSON objects, one object for each sample, without filtering/sorting based on selected rows.
  * @prop {object[]} aggregatedRowInfo The `rowInfo` array after aggregated based on `rowAggregate` options.
  * @prop {object} filterInfo The options for filtering rows of the field used in this track.
  * @example
@@ -35,7 +34,6 @@ export default function TrackRowSearch(props) {
         onChange,
         onFilterRows,
         onClose,
-        rowInfo,
         aggregatedRowInfo,
         filterInfo
     } = props;
@@ -151,7 +149,7 @@ export default function TrackRowSearch(props) {
 
     function onResetClick() {
         if(type === "nominal" || type == "link") {
-            onFilterRows(field, type, rowInfo.map(d => getAggregatedValue(d, field, type, aggFunction).toString()), true);
+            onFilterRows(field, type, aggregatedRowInfo.map(d => getAggregatedValue(d, field, type, aggFunction).toString()), true);
         } else if(type === "quantitative") {
             onFilterRows(field, type, [], true);
         }

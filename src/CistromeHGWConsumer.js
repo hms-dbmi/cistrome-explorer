@@ -86,7 +86,7 @@ export default function CistromeHGWConsumer(props) {
         const trackOptions = getTrackWrapperOptions(options, viewId, trackId);
         const rowInfo = context.state[viewId][trackId].rowInfo;
 
-        // Filter, aggregate, and sort
+        // Aggregate, filter, and sort
         const newSelectedRows = selectRows(rowInfo, trackOptions);
         setTrackSelectedRows(viewId, trackId, newSelectedRows);
         

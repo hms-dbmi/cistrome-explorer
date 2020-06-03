@@ -208,12 +208,12 @@ const demos = {
         viewConfig: hgDemoViewConfig2b,
         options: {
             rowInfoAttributes: [
-                // {field: "Hierarchical Clustering", type: "tree", position: "left"},
+                {field: "Hierarchical Clustering", type: "tree", position: "left"},
                 {field: "Tissue Type", type: "nominal", position: "left", aggFunction: "sum"},
                 {field: "Random 1", type: "quantitative", position: "left", aggFunction: "mean"},
                 {field: ["Random 1", "Random 2"], type: "quantitative", position: "left", aggFunction: "mean"},
                 {field: "id", type: "nominal", position: "right", aggFunction: "sum"},
-                // {field: "Hierarchical Clustering", type: "tree", position: "right"}
+                {field: "Hierarchical Clustering", type: "tree", position: "right"}
             ],
             rowFilter: [ ],
             rowAggregate: [

@@ -3,6 +3,7 @@ import PubSub from 'pubsub-js';
 
 import { SORT_ASC, SORT_DESC, FILTER, RESET, TOGGLE_ON } from './utils/icons.js';
 import TrackRowSearch from './TrackRowSearch.js';
+import { getAggregatedValue } from './utils/aggregate.js';
 
 const LOCAL_EVENT_SEARCH_OPEN = "search-open";
 
@@ -18,7 +19,6 @@ const LOCAL_EVENT_SEARCH_OPEN = "search-open";
  * @prop {function} onHighlightRows The function to call upon a search interaction.
  * @prop {function} onFilterRows The function to call upon a filter interaction.
  * @prop {function} toggleMinSimBar Toggle showing the minimum similarity bar in dendrogram.
- * @prop {object[]} rowInfo Array of JSON objects, one object for each sample, without filtering/sorting based on selected rows.
  * @prop {object[]} aggregatedRowInfo The `rowInfo` array after aggregated based on `rowAggregate` options.
  * @prop {object} filterInfo The options for filtering rows of the field used in this track.
  */
@@ -34,7 +34,6 @@ export default function TrackRowInfoControl(props){
         onHighlightRows,
         onFilterRows,
         toggleMinSimBar,
-        rowInfo,
         aggregatedRowInfo,
         filterInfo
     } = props;
@@ -86,7 +85,7 @@ export default function TrackRowInfoControl(props){
     }
     function onReset() {
         if(type === "nominal" || type == "link") {
-            onFilterRows(field, type, rowInfo.map(
+            onFilterRows(field, type, aggregatedRowInfo.map(
                 d => getAggregatedValue(d, field, "nominal", aggFunction).toString()
             ), true);
         } else if(type === "quantitative" || type == "tree") {
@@ -179,7 +178,6 @@ export default function TrackRowInfoControl(props){
                     onChange={onSearchChange}
                     onFilterRows={onFilterRows}
                     onClose={onSearchClose}
-                    rowInfo={rowInfo}
                     aggregatedRowInfo={aggregatedRowInfo}
                     filterInfo={filterInfo}
                 />

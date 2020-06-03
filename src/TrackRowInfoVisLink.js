@@ -37,7 +37,6 @@ export default function TrackRowInfoVisLink(props) {
         fieldInfo,
         isLeft,
         isShowControlButtons,
-        rowInfo,
         transformedRowInfo,
         aggregatedRowInfo,
         titleSuffix,
@@ -201,7 +200,6 @@ export default function TrackRowInfoVisLink(props) {
                 onHighlightRows={onHighlightRows}
                 onFilterRows={onFilterRows}
                 filterInfo={filterInfo}
-                rowInfo={rowInfo}
                 transformedRowInfo={transformedRowInfo}
                 aggregatedRowInfo={aggregatedRowInfo}
             />
