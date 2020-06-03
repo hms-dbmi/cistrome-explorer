@@ -4,6 +4,7 @@ import pkg from '../../package.json';
 import { CistromeHGW } from '../index.js';
 
 import hgDemoViewConfig1 from '../viewconfigs/horizontal-multivec-1.json';
+import hgDemoViewConfig1b from '../viewconfigs/horizontal-multivec-1b.json';
 import hgDemoViewConfig2 from '../viewconfigs/horizontal-multivec-2.json';
 import hgDemoViewConfig2b from '../viewconfigs/horizontal-multivec-2b.json';
 import hgDemoViewConfig6 from '../viewconfigs/horizontal-multivec-6.json';
@@ -18,6 +19,30 @@ import './App.scss';
 const demos = {
     "H3K27ac Demo (1 View, Center Track)": {
         viewConfig: hgDemoViewConfig1,
+        options: {
+            rowInfoAttributes: [
+                {field: "Hierarchical Clustering (Average)", type: "tree", position: "left"},
+                {field: "qc_frip", type: "quantitative", position: "left", aggFunction: "mean"},
+                {field: "qc_fastqc", type: "quantitative", position: "left", aggFunction: "mean"},
+                {field: "Metadata URL", type: "url", position: "left", title: "cid", aggFunction: "max"},
+                {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right"},
+                {field: "Cell Type", type: "nominal", position: "right", aggFunction: "sum"},
+                {field: "Tissue Type", type: "nominal", position: "right", aggFunction: "sum"},
+                {field: "Species", type: "nominal", position: "right", aggFunction: "sum"}
+            ],
+            rowSort: [
+                {field: "Tissue Type", type: "nominal", order: "ascending"},
+                {field: "qc_frip", type: "quantitative", order: "descending"}
+            ],
+            rowFilter: [
+                {field: "Tissue Type", type: "nominal", notOneOf: [
+                    "None", "Adipose", "Bone", "Bone Marrow", "Brain", "Breast", "Cervix", "Colon", "Connective Tissue", "Embryo"
+                ]}
+            ]
+        }
+    },
+    "H3K27ac Demo (1 View, Center Track, Rows Aggregated)": {
+        viewConfig: hgDemoViewConfig1b,
         options: {
             rowInfoAttributes: [
                 {field: "Hierarchical Clustering (Average)", type: "tree", position: "left"},
