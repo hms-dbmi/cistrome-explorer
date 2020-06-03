@@ -14,8 +14,17 @@ export function selectRows(rowInfo, options) {
         return null;
     }
     
-    // Filter
-    let filteredRowInfo = Array.from(rowInfo.entries());
+    /*
+     * Aggregate
+     */ 
+    // Aggregate rows in advance to apply filters to the aggregated rows.
+    let aggregatedRowInfo = getAggregatedRowInfo(rowInfo, options);
+    // Hereafter, each datum of `aggregatedRowInfo` can be either [number, Object] or [number[], Object[]].
+    
+    /*
+     * Filter
+     */
+    let filteredRowInfo = aggregatedRowInfo;
     if(options.rowFilter && options.rowFilter.length > 0) {
         let filterInfos = options.rowFilter;
 
@@ -24,21 +33,27 @@ export function selectRows(rowInfo, options) {
 
         filterInfos.forEach(info => {
             const { field, type, notOneOf, range, subtree, minSimilarity } = info;
+            const aggFunction = options.rowInfoAttributes?.find(d => d.field === field)?.aggFunction;
             const isMultipleFields = Array.isArray(field);
             if(type === "nominal") {
                 notOneOf.forEach(one => {
-                    filteredRowInfo = filteredRowInfo.filter(d => d[1][field].toString().toUpperCase() !== one.toUpperCase());
+                    filteredRowInfo = filteredRowInfo.filter(
+                        d => getAggregatedValue(d[1], field, "nominal", aggFunction).toString().toUpperCase() !== one.toUpperCase()
+                    );
                 })
             } else if(type === "quantitative") {
                 const [minCutoff, maxCutoff] = range;
                 if(isMultipleFields) {
                     filteredRowInfo = filteredRowInfo.filter(d => {
                         let sum = 0;
-                        field.forEach(f => sum += d[1][f]);
+                        field.forEach(f => sum += getAggregatedValue(d[1], f, "quantitative", aggFunction));
                         return sum > minCutoff && sum < maxCutoff;
                     });
                 } else {
-                    filteredRowInfo = filteredRowInfo.filter(d => d[1][field] > minCutoff && d[1][field] < maxCutoff);
+                    filteredRowInfo = filteredRowInfo.filter(
+                        d => getAggregatedValue(d[1], field, "quantitative", aggFunction) > minCutoff 
+                            && getAggregatedValue(d[1], field, "quantitative", aggFunction) < maxCutoff
+                    );
                 }
             } else if(type === "tree") {
                 if(options.rowAggregate && options.rowAggregate.length >= 1) {
@@ -85,32 +100,9 @@ export function selectRows(rowInfo, options) {
         return [];
     }
 
-    // Aggregate
-    // [number, Object] => [number[], Object[]] for aggregated rows
-    if(options.rowAggregate && options.rowAggregate.length > 0) {
-        const aggregateOptions = options.rowAggregate.slice().reverse();
-        aggregateOptions.forEach(d => {
-            const { field, type, oneOf } = d;
-            if(type === "nominal") {
-                oneOf.forEach(o => {
-                    const matchings = transformedRowInfo.filter(t => t[1][field] === o);
-                    const notMatchings = transformedRowInfo.filter(t => t[1][field] !== o);
-                    const matchingIndices = matchings.map(t => t[0]);
-                    const matchingRowInfos = matchings.map(t => t[1]);
-
-                    if(matchings?.length == 0) return;
-
-                    transformedRowInfo = notMatchings;
-                    transformedRowInfo.push([matchingIndices, matchingRowInfos]);
-                });
-            } else {
-                // ...
-            }
-        });
-    }
-    // Hereafter, each datum of `transformedRowInfo` can be either [number, Object] or [number[], Object[]]
-
-    // Sort
+    /*
+     * Sort
+     */
     if(options.rowSort && options.rowSort.length > 0) {
         let sortOptions = options.rowSort.slice().reverse();
         sortOptions.forEach((d) => {
@@ -155,7 +147,9 @@ export function selectRows(rowInfo, options) {
         });
     }
 
-    // Zoom
+    /* 
+     * Zoom
+     */
     if(options.rowZoom) {
         const { level: zoomLevel, top: zoomTop, numRows } = options.rowZoom;
         const rowUnit = 1.0 / numRows;
@@ -170,50 +164,91 @@ export function selectRows(rowInfo, options) {
 }
 
 /**
+ * Aggregate row information using `rowAggregate` options.
+ * Data formats are changed from [number, Object] to [number[], Object[]] for aggregated rows.
+ * @param {object[]} rowInfo The original/full default-ordered rowInfo array.
+ * @param {object} options The track options object, containing sort/filter options.
+ * @returns {object[]} The aggregated `rowInfo`.
+ */
+export function getAggregatedRowInfo(rowInfo, options) {
+    let aggregatedRowInfo = Array.from(rowInfo.entries());
+    if(options.rowAggregate && options.rowAggregate.length > 0) {
+        const aggregateOptions = options.rowAggregate.slice().reverse();
+        aggregateOptions.forEach(d => {
+            const { field, type, oneOf } = d;
+            if(type === "nominal") {
+                oneOf.forEach(o => {
+                    const matchings = aggregatedRowInfo.filter(t => t[1][field] === o);
+                    const notMatchings = aggregatedRowInfo.filter(t => t[1][field] !== o);
+                    const matchingIndices = matchings.map(t => t[0]);
+                    const matchingRowInfos = matchings.map(t => t[1]);
+
+                    if(matchings?.length == 0) return;
+
+                    aggregatedRowInfo = notMatchings;
+                    aggregatedRowInfo.push([matchingIndices, matchingRowInfos]);
+                });
+            } else {
+                // ...
+            }
+        });
+    }
+    return aggregatedRowInfo;
+}
+
+/**
  * Generate an array of highlighted row indices based on conditions.
  * @param {object[]} rowInfo The original/full default-ordered rowInfo array.
  * @param {string} field The attribute on which to search.
  * @param {string} type The data type contained in the field value.
  * @param {string|array} conditions The conditions to check for highlighting.
+ * @param {object} options The track options object, containing aggregation options.
  * @returns {number[]} The array of highlit indices.
  */
-export function highlightRowsFromSearch(rowInfo, field, type, conditions) {
+export function highlightRowsFromSearch(rowInfo, field, type, conditions, options) {
+    // Aggregation rows in advance to apply highlighting to the aggregated rows.
+    console.log(options);
+    const aggregatedRowInfo = getAggregatedRowInfo(rowInfo, options);
+    const aggFunction = options.rowInfoAttributes?.find(d => d.field === field)?.aggFunction;
+    console.log(aggFunction);
     let newHighlitRows = [];
     if(conditions === "") {
         newHighlitRows = [];
     } else if(type === "nominal") {
-        const rowsWithIndex = Array.from(rowInfo.entries());
-        const filteredRows = rowsWithIndex.filter(d => !d[1][field].toString().toUpperCase().includes(conditions.toUpperCase()));
+        const filteredRows = aggregatedRowInfo.filter(
+            d => !getAggregatedValue(d[1], field, 'nominal', aggFunction).toString().toUpperCase().includes(conditions.toUpperCase())
+        );
         newHighlitRows = filteredRows.map(d => d[0]);
     } else if(type === "quantitative") {
         const [minCutoff, maxCutoff] = conditions;
-        const rowsWithIndex = Array.from(rowInfo.entries());
         let filteredRows;
         if(Array.isArray(field)) {
-            filteredRows = rowsWithIndex.filter(d => {
+            filteredRows = aggregatedRowInfo.filter(d => {
                 let sum = 0;
-                field.forEach(f => sum += d[1][f]);
+                field.forEach(f => sum += getAggregatedValue(d[1], f, 'quantitative', aggFunction));
                 return sum < minCutoff || sum > maxCutoff;
             });
         } else {
-            filteredRows = rowsWithIndex.filter(d => d[1][field] < minCutoff || d[1][field] > maxCutoff);
+            filteredRows = aggregatedRowInfo.filter(
+                d => getAggregatedValue(d[1], field, 'quantitative', aggFunction) < minCutoff 
+                    || getAggregatedValue(d[1], field, 'quantitative', aggFunction) > maxCutoff
+            );
         }
         newHighlitRows = filteredRows.map(d => d[0]);
     } else if(type === "tree") {
         if(Array.isArray(conditions)) {
             const subtree = conditions;
-            const rowsWithIndex = Array.from(rowInfo.entries());
-            const filteredRows = rowsWithIndex.filter(d => d[1][field].reduce(
+            const filteredRows = aggregatedRowInfo.filter(
+                d => getAggregatedValue(d[1], field, 'tree', aggFunction).reduce(
                 // TODO: Remove `h === subtree[i]` when we always encode similarity distance in dendrogram.
                 (a, h, i) => a || (i < subtree.length && h !== subtree[i] && h.name !== subtree[i]), false)
             );
             newHighlitRows = filteredRows.map(d => d[0]);
         } else {
             const minSimilarity = conditions;
-            const rowsWithIndex = Array.from(rowInfo.entries());
-            const filteredRows = rowsWithIndex.filter(
+            const filteredRows = aggregatedRowInfo.filter(
                 // Note that leafs' `dist` values are zero.
-                d => d[1][field].map(d => d.dist).filter(d => d <= minSimilarity).length <= 1
+                d => getAggregatedValue(d[1], field, 'tree', aggFunction).map(d => d.dist).filter(d => d <= minSimilarity).length <= 1
             );
             newHighlitRows = filteredRows.map(d => d[0]);
         }

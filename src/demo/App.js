@@ -22,7 +22,7 @@ const demos = {
             rowInfoAttributes: [
                 {field: "Hierarchical Clustering (Average)", type: "tree", position: "left"},
                 {field: ["qc_frip", "qc_fastqc"], type: "quantitative", position: "left", aggFunction: "mean"},
-                {field: "qc_frip", type: "quantitative", position: "left", aggFunction: "mean"},
+                {field: "qc_frip", type: "quantitative", position: "left", aggFunction: "sum"},
                 {field: "qc_fastqc", type: "quantitative", position: "left", aggFunction: "mean"},
                 {field: "Metadata URL", type: "url", position: "left", title: "cid", aggFunction: "max"},
                 {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right"},
