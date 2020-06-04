@@ -164,13 +164,13 @@ export function selectRows(rowInfo, options) {
 export function getAggregatedRowInfo(rowInfo, rowAggregate) {
     let aggregatedRowInfo = Array.from(rowInfo.entries());
     if(rowAggregate && rowAggregate.length > 0) {
-        const aggregateOptions = rowAggregate.slice().reverse();
+        const aggregateOptions = rowAggregate;
         aggregateOptions.forEach(d => {
             const { field, type, oneOf } = d;
             if(type === "nominal") {
-                oneOf.forEach(o => {
-                    const matchings = aggregatedRowInfo.filter(t => t[1][field] === o);
-                    const notMatchings = aggregatedRowInfo.filter(t => t[1][field] !== o);
+                oneOf.forEach(one => {
+                    const matchings = aggregatedRowInfo.filter(t => t[1][field] === one);
+                    const notMatchings = aggregatedRowInfo.filter(t => t[1][field] !== one);
                     const matchingIndices = matchings.map(t => t[0]);
                     const matchingRowInfos = matchings.map(t => t[1]);
 
