@@ -8,3 +8,4 @@ __pycache__/
 *.mv5
 *.bed
 *.json
+data/

@@ -9,6 +9,7 @@ dependencies:
   - pandas
   - requests
   - h5py
+  - mpi4py
   - dask
   - flake8
   - autopep8
