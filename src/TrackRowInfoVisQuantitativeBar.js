@@ -128,7 +128,6 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             // Render visual components for each row (i.e., bars and texts).
             const textAlign = isLeft ? "end" : "start";
             transformedRowInfo.forEach((d, i) => {
-                const isAggregated = Array.isArray(d);
                 const barTop = yScale(i);
                 let currentBarLeft = (isLeft ? width : 0);
 
@@ -152,13 +151,6 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                         });
                     }
                 });
-
-                if(isAggregated) {
-                    const aggIndicatorWidth = 2;
-                    const aggIndicatorLeft = (isLeft ? currentBarLeft - aggIndicatorWidth - 1: currentBarLeft + 1);
-                    const aggIndicator = two.makeRect(aggIndicatorLeft, barTop + 0.5, aggIndicatorWidth, rowHeight - 1);
-                    aggIndicator.fill = "#333";
-                }
 
                 // Render text labels when the space is enough.
                 if(rowHeight >= fontSize && isTextLabel) {
@@ -187,7 +179,6 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             // Render visual components for each row (i.e., bars and texts).
             const textAlign = isLeft ? "end" : "start";
             transformedRowInfo.forEach((d, i) => {
-                const isAggregated = Array.isArray(d);
                 const value = numberFormatShort(aggValue(d, field));
                 const barTop = yScale(i);
                 const barWidth = xScale(value);
@@ -198,13 +189,6 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
 
                 const rect = two.makeRect(barLeft, barTop, barWidth, rowHeight);
                 rect.fill = color;
-                
-                if(isAggregated) {
-                    const aggIndicatorWidth = 2;
-                    const aggIndicatorLeft = (isLeft ? barLeft - aggIndicatorWidth - 1: barLeft + barWidth + 1);
-                    const aggIndicator = two.makeRect(aggIndicatorLeft, barTop + 0.5, aggIndicatorWidth, rowHeight - 1);
-                    aggIndicator.fill = "#333";
-                }
 
                 // Render text labels when the space is enough.
                 if(rowHeight >= fontSize && isTextLabel) {

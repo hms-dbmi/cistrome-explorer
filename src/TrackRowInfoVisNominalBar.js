@@ -92,7 +92,6 @@ export default function TrackRowInfoVisNominalBar(props) {
         const textAlign = isLeft ? "end" : "start";
         let aggregateStartIdx = -1, sameCategoriesNearby = 1;
         transformedRowInfo.forEach((d, i) => {
-            const isAggregated = Array.isArray(d);
             const category = aggValue(d);
             // To aggregate bars, check if there is a same category on the next row.
             if(
@@ -120,13 +119,6 @@ export default function TrackRowInfoVisNominalBar(props) {
                 const hoverBgRectLeft = (isLeft ? barLeft - textAreaWidth : barLeft + barWidth);
                 const hoverBgRect = two.makeRect(hoverBgRectLeft, barTop, textAreaWidth, barHeight);
                 hoverBgRect.fill = "#EBEBEB";
-            }
-
-            if(isAggregated) {
-                const aggIndicatorWidth = 2;
-                const aggIndicatorLeft = (isLeft ? barLeft - aggIndicatorWidth - 1: barLeft + barWidth + 1);
-                const aggIndicator = two.makeRect(aggIndicatorLeft, barTop + 0.5, aggIndicatorWidth, barHeight - 1);
-                aggIndicator.fill = "#333";
             }
 
             // Render text labels when the space is enough.
