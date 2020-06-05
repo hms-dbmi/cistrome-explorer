@@ -25,8 +25,8 @@ export const margin = 5;
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  * @prop {boolean} isShowControlButtons Determine if control buttons should be shown.
- * @prop {object[]} transformedRowInfo The `rowInfo` array after transforming by filtering and sorting according to the selected rows.
- * @prop {object[]} aggregatedRowInfo The `rowInfo` array after aggregated based on `rowAggregate` options.
+ * @prop {object[]} transformedRowInfo The `rowInfo` array after aggregating, filtering, and sorting rows.
+ * @prop {object[]} aggregatedRowInfo The `rowInfo` array after aggregating rows.
  * @prop {string} titleSuffix The suffix of a title, information about sorting and filtering status.
  * @prop {object} sortInfo The options for sorting rows of the field used in this track.
  * @prop {object} filterInfo The options for filtering rows of the field used in this track.
@@ -67,6 +67,9 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
     const barAreaWidth = width - textAreaWidth;
     const minTrackWidth = 40;
     const fontSize = 10;
+    const aggValue = (d, f) => getAggregatedValue(d, f, "quantitative", aggFunction);
+    const numberFormatShort = d3.format(".0f");
+    const numberFormatLong = d3.format(".2f");
 
     let xScale = d3.scaleLinear();
     const yScale = d3.scaleBand()
@@ -84,7 +87,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             colorToInfo.push({
                 uniqueColor,
                 field,
-                value: getAggregatedValue(d, field, "quantitative", aggFunction),
+                value: aggValue(d, field),
                 rowIndex: i,
                 color: null // This property is determined when first rendered.
             });
@@ -102,12 +105,12 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
         const titleText = isStackedBar ? field.join(" + ") : field;
 
         const isTextLabel = width > minTrackWidth;
-       
+
         if(isStackedBar) {
             // Scales
             const valueExtent = [0, d3.extent(transformedRowInfo.map(d => {
                 let sum = 0;
-                field.forEach(f => sum += getAggregatedValue(d, f, "quantitative", aggFunction));
+                field.forEach(f => sum += aggValue(d, f));
                 return sum;
             }))[1]];   // Zero baseline
             xScale = xScale
@@ -125,7 +128,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                 let currentBarLeft = (isLeft ? width : 0);
 
                 field.forEach(f => {
-                    const barWidth = xScale(getAggregatedValue(d, f, "quantitative", aggFunction));
+                    const barWidth = xScale(aggValue(d, f));
                     const infoForMouseEvent = colorToInfo.find(d => d.field === f && d.rowIndex === i);
                     const color = isHidden ? infoForMouseEvent.uniqueColor : colorScale(f);
                     
@@ -155,9 +158,9 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                 // Render text labels when the space is enough.
                 if(rowHeight >= fontSize && isTextLabel) {
                     let sum = 0;
-                    field.forEach(f => sum += getAggregatedValue(d, f, "quantitative", aggFunction));
+                    field.forEach(f => sum += aggValue(d, f));
                     let textLeft = (isLeft ? width - xScale(sum) - margin : xScale(sum) + margin);
-                    const text = two.makeText(textLeft, barTop + rowHeight/2, textAreaWidth, rowHeight, d3.format(".0f")(sum));
+                    const text = two.makeText(textLeft, barTop + rowHeight/2, textAreaWidth, rowHeight, numberFormatShort(sum));
                     text.fill = "black";
                     text.fontsize = fontSize;
                     text.align = textAlign;
@@ -168,7 +171,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
 
         } else {
             // Scales
-            const valueExtent = [0, d3.extent(transformedRowInfo.map(d => getAggregatedValue(d, field, "quantitative", aggFunction)))[1]];   // Zero baseline
+            const valueExtent = [0, d3.extent(transformedRowInfo.map(d => aggValue(d, field)))[1]];   // Zero baseline
             xScale = d3.scaleLinear()
                 .domain(valueExtent)
                 .range([0, barAreaWidth]);
@@ -180,7 +183,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             const textAlign = isLeft ? "end" : "start";
             transformedRowInfo.forEach((d, i) => {
                 const isAggregated = Array.isArray(d);
-                const value = d3.format(".2f")(getAggregatedValue(d, field, "quantitative", aggFunction));
+                const value = numberFormatShort(aggValue(d, field));
                 const barTop = yScale(i);
                 const barWidth = xScale(value);
                 const barLeft = (isLeft ? width - barWidth : 0);
@@ -200,7 +203,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
 
                 // Render text labels when the space is enough.
                 if(rowHeight >= fontSize && isTextLabel) {
-                    const text = two.makeText(textLeft, barTop + rowHeight/2, textAreaWidth, rowHeight, d3.format(".0f")(value));
+                    const text = two.makeText(textLeft, barTop + rowHeight/2, textAreaWidth, rowHeight, numberFormatShort(value));
                     text.fill = d3.hsl(color).darker(3);
                     text.fontsize = fontSize;
                     text.align = textAlign;
@@ -274,7 +277,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                     y: mouseViewportY,
                     content: <TooltipContent 
                         title={hoveredInfo.field}
-                        value={d3.format("~s")(hoveredInfo.value)}
+                        value={numberFormatLong(hoveredInfo.value)}
                         color={hoveredInfo.color}
                     />
                 });

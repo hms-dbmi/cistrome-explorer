@@ -104,21 +104,25 @@ export default function TrackWrapper(props) {
         console.log(e);
     }
 
+    // Transformed `rowInfo` after aggregating, filtering, and sorting rows.
+    // Each element of `transformedRowInfo` is either a JSON Object or an array of JSON Object
+    // containing information about a single row or multiple rows that are aggregated together, respectively.
     const transformedRowInfo = (!selectedRows ? rowInfo : selectedRows.map(
         indexOrIndices => Array.isArray(indexOrIndices)
             ? rowInfo.filter((d, i) => indexOrIndices.includes(i))
             : rowInfo[indexOrIndices]
     ));
     
-    // Aggregated, but not filtered, `rowInfo`, being used for filtering interfaces.
+    // Aggregated, but not filtered, `rowInfo`.
+    // This is being used for filtering interfaces since we want to allow users to filter data
+    // based on the aggregated rows, not on the original rows.
     const aggregatedRowInfo = getAggregatedRowInfo(rowInfo, options.rowAggregate).map(d => d[1]);
 
     // console.log("TrackWrapper.render");
     return (
         <div className="cistrome-hgw-track-wrapper">
             {leftAttrs.length !== 0 ? 
-                (<TrackRowInfo 
-                    rowInfo={rowInfo}
+                (<TrackRowInfo
                     transformedRowInfo={transformedRowInfo}
                     aggregatedRowInfo={aggregatedRowInfo}
                     viewId={multivecTrackViewId}
@@ -142,7 +146,6 @@ export default function TrackWrapper(props) {
                 />) : null}
             {rightAttrs.length !== 0 ? 
                 (<TrackRowInfo
-                    rowInfo={rowInfo}
                     transformedRowInfo={transformedRowInfo}
                     aggregatedRowInfo={aggregatedRowInfo}
                     viewId={multivecTrackViewId}

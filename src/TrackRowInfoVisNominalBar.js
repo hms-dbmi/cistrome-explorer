@@ -23,8 +23,8 @@ export const margin = 5;
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  * @prop {boolean} isShowControlButtons Determine if control buttons should be shown.
- * @prop {object[]} transformedRowInfo The `rowInfo` array after transforming by filtering and sorting according to the selected rows.
- * @prop {object[]} aggregatedRowInfo The `rowInfo` array after aggregated based on `rowAggregate` options.
+ * @prop {object[]} transformedRowInfo The `rowInfo` array after aggregating, filtering, and sorting rows.
+ * @prop {object[]} aggregatedRowInfo The `rowInfo` array after aggregating rows.
  * @prop {string} titleSuffix The suffix of a title, information about sorting and filtering status.
  * @prop {object} sortInfo The options for sorting rows of the field used in this track.
  * @prop {object} filterInfo The options for filtering rows of the field used in this track.
@@ -58,6 +58,7 @@ export default function TrackRowInfoVisNominalBar(props) {
 
     // Data, layouts and styles
     const { field, aggFunction } = fieldInfo;
+    const aggValue = d => getAggregatedValue(d, field, "nominal", aggFunction);
 
     const yScale = d3.scaleBand()
         .domain(range(transformedRowInfo.length))
@@ -67,7 +68,7 @@ export default function TrackRowInfoVisNominalBar(props) {
     const colorScale = useMemo(() => 
         d3.scaleOrdinal()
             .domain(Array.from(new Set(
-                aggregatedRowInfo.map(d => getAggregatedValue(d, field, "nominal", aggFunction)))
+                aggregatedRowInfo.map(d => aggValue(d)))
             ).sort())
             .range(d3.schemeTableau10),
     [aggregatedRowInfo]);
@@ -92,11 +93,11 @@ export default function TrackRowInfoVisNominalBar(props) {
         let aggregateStartIdx = -1, sameCategoriesNearby = 1;
         transformedRowInfo.forEach((d, i) => {
             const isAggregated = Array.isArray(d);
-            const category = getAggregatedValue(d, field, "nominal", aggFunction);
+            const category = aggValue(d);
             // To aggregate bars, check if there is a same category on the next row.
             if(
                 i + 1 < transformedRowInfo.length
-                && category === getAggregatedValue(transformedRowInfo[i+1], field, "nominal", aggFunction)
+                && category === aggValue(transformedRowInfo[i+1])
             ) {
                 if(aggregateStartIdx === -1) {
                     aggregateStartIdx = i;
@@ -185,7 +186,7 @@ export default function TrackRowInfoVisNominalBar(props) {
             const y = yScale.invert(mouseY);
             let fieldVal;
             if(y !== undefined){
-                fieldVal = getAggregatedValue(transformedRowInfo[y], field, "nominal", aggFunction);
+                fieldVal = aggValue(transformedRowInfo[y]);
                 setHoverValue(fieldVal);
             } else {
                 setHoverValue(null);

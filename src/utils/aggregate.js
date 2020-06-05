@@ -5,46 +5,49 @@ import d3 from './d3.js';
  * @param {object|array} rowInfo Object or array of objects containing information of rows.
  * @param {string} field The name of data field.
  * @param {string} type The type of data field.
- * @param {string} fn A function to aggregate values.
+ * @param {string} func A function to aggregate values.
  */
-export function getAggregatedValue(rowInfo, field, type, fn = "sum") {
+export function getAggregatedValue(rowInfo, field, type, func) {
     const isAggregated = Array.isArray(rowInfo);
     if(!isAggregated) {
         return rowInfo[field];
     }
+    const funcName = func ? func : "default";
 
-    // Aggregated values
-    if(type === "nominal" || type === "link") {
-        if(fn === "mostCommon" || fn === "leastCommon") {
-            const counts = {};
-            rowInfo.forEach(d => {
-                counts[d[field]] = 1 + (counts[d[field]] || 0);
-            });
-            const oneCategory = Object.keys(counts).reduce((a, b) => {
-                if(fn === "mostCommon") {
-                    return counts[a] > counts[b] ? a : b;
-                } else {
-                    return counts[a] > counts[b] ? b : a;
-                }
-            });
-            return oneCategory;
-        } else {
-            // "concat"
-            const categories = Array.from(new Set(rowInfo.map(d => d[field])));
-            return categories.join(", ");
-        } 
-    } else if(type === "quantitative") {
-        if(fn === "max") {
-            return d3.max(rowInfo.map(d => d[field]));
-        } else if(fn === "mean") {
-            return d3.mean(rowInfo.map(d => d[field]));
-        } else {
-            return d3.sum(rowInfo.map(d => d[field]));
-        } 
-    } else if(type === "tree") {
-        // `aggFunction` does not mean anything for `tree`.
-        // TODO: How to best aggregate?
+    // Mapping to the function that accepts an array of values and returns a single representative value.
+    const aggFuncMapping = {
+        quantitative: {
+            max: d3.max,
+            min: d3.min,
+            mean: d3.mean,
+            sum: d3.sum,
+            default: d3.mean
+        },
+        nominal: {
+            mostCommon: values => {
+                const counts = {};
+                values.forEach(d => { counts[d] = 1 + (counts[d] || 0) });
+                return Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
+            },
+            leastCommon: values => {
+                const counts = {};
+                values.forEach(d => { counts[d] = 1 + (counts[d] || 0) });
+                return Object.keys(counts).reduce((a, b) => counts[a] < counts[b] ? a : b);
+            },
+            concat: values => Array.from(new Set(values)).join(', '),
+            default: values => Array.from(new Set(values)).join(', ')
+        },
+        tree: {
+            // `aggFunction` does not mean anything for `tree`.
+            // TODO: How to best aggregate?
+            default: d => d
+        }
+    }
+
+    const aggregatedValue = aggFuncMapping?.[type]?.[funcName];
+    if(!aggregatedValue) {
+        console.warn(`The aggFunction is ill-defined for ${field}.`);
         return rowInfo.map(d => d[field]);
     }
-    return rowInfo.map(d => d[field]);
+    return aggregatedValue(rowInfo.map(d => d[field]));
 }

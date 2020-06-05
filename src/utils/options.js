@@ -85,7 +85,7 @@ const baseSchema = {
                 },
                 "aggFunction": {
                     "type": "string",
-                    "enum": ["max", "min", "mean", "sum"],
+                    "enum": ["max", "min", "mean", "sum", "mostCommon", "concat"],
                     "description": "A funtion to apply when aggregating values"
                 },
                 "position": {
@@ -158,9 +158,7 @@ const baseSchema = {
         },
         "aggregateInfo": {
             "type": "object",
-            "oneOf":[ 
-                { "required": ["field", "type", "oneOf"] },
-            ],
+            "required": ["field", "type"],
             "properties": {
                 "field": {
                     "type": "string",
@@ -168,7 +166,7 @@ const baseSchema = {
                 },
                 "type": {
                     "type": "string",
-                    "enum": ["nominal"],    // TODO: Support other types as well.
+                    "enum": ["nominal"], // TODO: Support other types as well.
                     "description": "The data type of a field"
                 },
                 "oneOf": {
