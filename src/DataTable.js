@@ -74,51 +74,25 @@ export default function DataTable(props) {
     });
 
     return (
-        <div 
-            className="cisvis-data-table-container"
-            style={{ 
-                margin,
-                width: `calc(100% - ${margin * 2}px)`,
-                height: `calc(100% - ${margin * 2}px)`
-            }}>
-            <h4 className="cisvis-table-title">{title}</h4>
-            <span className="cisvis-table-subtitle">
-                {isLoading ? (
-                    <span className="cisvis-progress-ring" />
-                ) : (subtitle ? (
-                    <b>{subtitle}</b>
-                ) : null)}
-            </span>
-            <span style={{ verticalAlign: "middle", display: "inline-block" }}>
-                <svg
-                    className={`chw-button`}
-                    style={{ color: "gray", background: "none" }}
-                    onClick={() => onClose()} 
-                    viewBox={CLOSE.viewBox}
-                >
-                    <title>Close data table</title>
-                    <path d={CLOSE.path} fill="currentColor"/>
-                </svg>
-            </span>
-            <div
-                style={{
-                    height: "calc(100% - 40px)",
-                    overflowY: "auto"
-                }}
-            >
-                {bodyRows ? (
-                    <form>
-                        <table className="cisvis-table">
-                            <thead>
-                                {headRow}
-                            </thead>
-                            <tbody>
-                                {bodyRows}
-                            </tbody>
-                        </table>
-                    </form>
-                ) : null}
-            </div>
+        <div
+            style={{
+                overflowY: "auto",
+                border: "1px solid lightgray",
+                background: "#f9f9f9"
+            }}
+        >
+            {bodyRows ? (
+                <form>
+                    <table className="cisvis-table">
+                        <thead>
+                            {headRow}
+                        </thead>
+                        <tbody>
+                            {bodyRows}
+                        </tbody>
+                    </table>
+                </form>
+            ) : null}
         </div>
     );
 }

@@ -1,0 +1,30 @@
+.cisvis-cistrome-toolkit-body {
+    height: calc(100% - 40px);
+    display: grid;
+    grid-template-columns: 350px auto;
+    grid-column-gap: 6px;
+    .cisvis-api-result-list {
+        border: 1px solid lightgray;
+        background: #f9f9f9;
+        .cisvis-api-result,
+        .cisvis-api-result-selected {
+            padding: 6px;
+            background: white;
+            border-left: 3px solid #3170AD;
+            outline: 1px solid lightgray;
+            .cisvis-api-parameter {
+                font-weight: bold;
+                padding: 2px 4px;
+                margin-right: 4px;
+                font-size: 90%;
+                color: #ffffff;
+                background-color: #adacac;
+                border-radius: 4px;
+            }
+        }
+        .cisvis-api-result-selected{
+            outline: 1px solid #00a3fe;
+            background: rgba(226, 241, 255, 1);
+        }
+    }
+}

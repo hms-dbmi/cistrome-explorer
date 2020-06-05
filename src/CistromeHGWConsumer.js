@@ -12,6 +12,7 @@ import TrackWrapper from './TrackWrapper.js';
 import ViewWrapper from './ViewWrapper.js';
 import Tooltip from './Tooltip.js';
 import ContextMenu, { destroyContextMenu } from './ContextMenu.js';
+import CistromeToolkit from './CistromeToolkit.js';
 
 import { 
     DEFAULT_OPTIONS_KEY,
@@ -497,6 +498,7 @@ export default function CistromeHGWConsumer(props) {
             ))}
             <Tooltip />
             <ContextMenu/>
+            <CistromeToolkit/>
         </div>
     );
 }
