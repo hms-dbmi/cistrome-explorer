@@ -115,7 +115,7 @@ export default function TrackWrapper(props) {
     
     // Aggregated, but not filtered, `rowInfo`.
     // This is being used for filtering interfaces since we want to allow users to filter data
-    // based on the aggregated rows, not on the original rows.
+    // based on the aggregated rows, not on the original and individual rows.
     const aggregatedRowInfo = getAggregatedRowInfo(rowInfo, options.rowAggregate).map(d => d[1]);
 
     // console.log("TrackWrapper.render");
@@ -123,8 +123,8 @@ export default function TrackWrapper(props) {
         <div className="cistrome-hgw-track-wrapper">
             {leftAttrs.length !== 0 ? 
                 (<TrackRowInfo
+                    rowInfo={aggregatedRowInfo}
                     transformedRowInfo={transformedRowInfo}
-                    aggregatedRowInfo={aggregatedRowInfo}
                     viewId={multivecTrackViewId}
                     trackId={multivecTrackTrackId}
                     trackX={trackX}
@@ -146,8 +146,8 @@ export default function TrackWrapper(props) {
                 />) : null}
             {rightAttrs.length !== 0 ? 
                 (<TrackRowInfo
+                    rowInfo={aggregatedRowInfo}
                     transformedRowInfo={transformedRowInfo}
-                    aggregatedRowInfo={aggregatedRowInfo}
                     viewId={multivecTrackViewId}
                     trackId={multivecTrackTrackId}
                     trackX={trackX}

@@ -25,8 +25,8 @@ export const margin = 5;
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  * @prop {boolean} isShowControlButtons Determine if control buttons should be shown.
+ * @prop {object[]} rowInfo The array of JSON Object containing row information.
  * @prop {object[]} transformedRowInfo The `rowInfo` array after aggregating, filtering, and sorting rows.
- * @prop {object[]} aggregatedRowInfo The `rowInfo` array after aggregating rows.
  * @prop {string} titleSuffix The suffix of a title, information about sorting and filtering status.
  * @prop {object} sortInfo The options for sorting rows of the field used in this track.
  * @prop {object} filterInfo The options for filtering rows of the field used in this track.
@@ -42,8 +42,8 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
         fieldInfo,
         isLeft,
         isShowControlButtons,
+        rowInfo,
         transformedRowInfo,
-        aggregatedRowInfo,
         titleSuffix,
         sortInfo,
         filterInfo,
@@ -349,8 +349,8 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                 onHighlightRows={onHighlightRows}
                 onFilterRows={onFilterRows}
                 filterInfo={filterInfo}
+                rowInfo={rowInfo}
                 transformedRowInfo={transformedRowInfo}
-                aggregatedRowInfo={aggregatedRowInfo}
             />
         </div>
     );

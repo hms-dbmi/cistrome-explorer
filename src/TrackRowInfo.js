@@ -9,8 +9,8 @@ import TrackRowInfoVis from "./TrackRowInfoVis.js";
  * @prop {number} trackY The track vertical offset.
  * @prop {number} trackWidth The track width.
  * @prop {number} trackHeight The track height.
+ * @prop {object[]} rowInfo The array of JSON Object containing row information.
  * @prop {object[]} transformedRowInfo The `rowInfo` array after aggregating, filtering, and sorting rows.
- * @prop {object[]} aggregatedRowInfo The `rowInfo` array after aggregating rows.
  * @prop {array} rowInfoAttributes Array of JSON object, one object for the names and types of each attribute.
  * @prop {string} rowInfoPosition The value of the `rowInfoPosition` option.
  * @prop {object} rowSort The options for sorting rows.
@@ -27,8 +27,8 @@ export default function TrackRowInfo(props) {
     const {
         trackX, trackY,
         trackWidth, trackHeight,
+        rowInfo,
         transformedRowInfo, 
-        aggregatedRowInfo,
         rowInfoAttributes,
         rowInfoPosition,
         rowSort,
@@ -92,8 +92,8 @@ export default function TrackRowInfo(props) {
                     height={d.height}
                     isLeft={isLeft}
                     fieldInfo={d.fieldInfo}
+                    rowInfo={rowInfo}
                     transformedRowInfo={transformedRowInfo}
-                    aggregatedRowInfo={aggregatedRowInfo}
                     rowSort={rowSort}
                     rowFilter={rowFilter}
                     rowHighlight={rowHighlight}

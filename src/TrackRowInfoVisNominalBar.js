@@ -23,8 +23,8 @@ export const margin = 5;
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  * @prop {boolean} isShowControlButtons Determine if control buttons should be shown.
+ * @prop {object[]} rowInfo The array of JSON Object containing row information.
  * @prop {object[]} transformedRowInfo The `rowInfo` array after aggregating, filtering, and sorting rows.
- * @prop {object[]} aggregatedRowInfo The `rowInfo` array after aggregating rows.
  * @prop {string} titleSuffix The suffix of a title, information about sorting and filtering status.
  * @prop {object} sortInfo The options for sorting rows of the field used in this track.
  * @prop {object} filterInfo The options for filtering rows of the field used in this track.
@@ -40,8 +40,8 @@ export default function TrackRowInfoVisNominalBar(props) {
         fieldInfo,
         isLeft,
         isShowControlButtons,
+        rowInfo,
         transformedRowInfo,
-        aggregatedRowInfo,
         titleSuffix,
         sortInfo,
         filterInfo,
@@ -68,10 +68,10 @@ export default function TrackRowInfoVisNominalBar(props) {
     const colorScale = useMemo(() => 
         d3.scaleOrdinal()
             .domain(Array.from(new Set(
-                aggregatedRowInfo.map(d => aggValue(d)))
+                rowInfo.map(d => aggValue(d)))
             ).sort())
             .range(d3.schemeTableau10),
-    [aggregatedRowInfo]);
+    [rowInfo]);
 
     const draw = useCallback((domElement) => {
         const two = new Two({
@@ -253,7 +253,7 @@ export default function TrackRowInfoVisNominalBar(props) {
                 onFilterRows={onFilterRows}
                 filterInfo={filterInfo}
                 transformedRowInfo={transformedRowInfo}
-                aggregatedRowInfo={aggregatedRowInfo}
+                rowInfo={rowInfo}
             />
         </div>
     );

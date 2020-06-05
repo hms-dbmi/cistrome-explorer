@@ -19,8 +19,8 @@ const fieldTypeToVisComponent = {
  * @prop {number} top The top position of this view.
  * @prop {number} width The width of this view.
  * @prop {number} height The height of this view.
+ * @prop {object[]} rowInfo The array of JSON Object containing row information.
  * @prop {object[]} transformedRowInfo The `rowInfo` array after aggregating, filtering, and sorting rows.
- * @prop {object[]} aggregatedRowInfo The `rowInfo` array after aggregating rows.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  * @prop {object} rowSort The options for sorting rows.
@@ -40,7 +40,6 @@ export default function TrackRowInfoVis(props) {
         isLeft,
         rowInfo,
         transformedRowInfo,
-        aggregatedRowInfo,
         rowSort,
         rowFilter,
         rowHighlight,
@@ -158,7 +157,7 @@ export default function TrackRowInfoVis(props) {
                     isShowControlButtons: isHovering,
                     fieldInfo,
                     transformedRowInfo,
-                    aggregatedRowInfo,
+                    rowInfo,
                     titleSuffix,
                     sortInfo,
                     filterInfo,

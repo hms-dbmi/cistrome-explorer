@@ -18,8 +18,8 @@ const margin = 5;
  * @prop {number} top The top position of this view.
  * @prop {number} width The width of this view.
  * @prop {number} height The height of this view.
+ * @prop {object[]} rowInfo The array of JSON Object containing row information.
  * @prop {object[]} transformedRowInfo The `rowInfo` array after aggregating, filtering, and sorting rows.
- * @prop {object[]} aggregatedRowInfo The `rowInfo` array after aggregating rows.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  * @prop {string} titleSuffix The suffix of a title, information about sorting and filtering status.
@@ -37,8 +37,8 @@ export default function TrackRowInfoVisLink(props) {
         fieldInfo,
         isLeft,
         isShowControlButtons,
+        rowInfo,
         transformedRowInfo,
-        aggregatedRowInfo,
         titleSuffix,
         sortInfo,
         filterInfo,
@@ -201,8 +201,8 @@ export default function TrackRowInfoVisLink(props) {
                 onHighlightRows={onHighlightRows}
                 onFilterRows={onFilterRows}
                 filterInfo={filterInfo}
+                rowInfo={rowInfo}
                 transformedRowInfo={transformedRowInfo}
-                aggregatedRowInfo={aggregatedRowInfo}
             />
         </div>
     );
