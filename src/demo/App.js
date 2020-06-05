@@ -47,11 +47,11 @@ const demos = {
                 {field: ["qc_frip", "qc_fastqc"], type: "quantitative", position: "left", aggFunction: "mean"},
                 {field: "qc_frip", type: "quantitative", position: "left", aggFunction: "mean"},
                 {field: "qc_fastqc", type: "quantitative", position: "left", aggFunction: "mean"},
-                {field: "Metadata URL", type: "url", position: "left", title: "cid", aggFunction: "max"},
+                {field: "Metadata URL", type: "url", position: "left", title: "cid", aggFunction: "mostCommon"},
                 {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right"},
-                {field: "Cell Type", type: "nominal", position: "right", aggFunction: "sum"},
-                {field: "Tissue Type", type: "nominal", position: "right", aggFunction: "sum"},
-                {field: "Species", type: "nominal", position: "right", aggFunction: "sum"}
+                {field: "Cell Type", type: "nominal", position: "right", aggFunction: "concat"},
+                {field: "Tissue Type", type: "nominal", position: "right", aggFunction: "concat"},
+                {field: "Species", type: "nominal", position: "right", aggFunction: "concat"}
             ],
             rowAggregate: [
                 {field: "Cell Type", type: "nominal", oneOf: ["Fibroblast", "Epithelium"]},
@@ -232,10 +232,10 @@ const demos = {
         options: {
             rowInfoAttributes: [
                 {field: "Hierarchical Clustering", type: "tree", position: "left"},
-                {field: "Tissue Type", type: "nominal", position: "left", aggFunction: "sum"},
+                {field: "Tissue Type", type: "nominal", position: "left", aggFunction: "concat"},
                 {field: "Random 1", type: "quantitative", position: "left", aggFunction: "mean"},
                 {field: ["Random 1", "Random 2"], type: "quantitative", position: "left", aggFunction: "mean"},
-                {field: "id", type: "nominal", position: "right", aggFunction: "sum"},
+                {field: "id", type: "nominal", position: "right", aggFunction: "concat"},
                 {field: "Hierarchical Clustering", type: "tree", position: "right"}
             ],
             rowFilter: [ ],

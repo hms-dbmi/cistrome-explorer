@@ -15,14 +15,21 @@ export function getAggregatedValue(rowInfo, field, type, fn = "sum") {
 
     // Aggregated values
     if(type === "nominal" || type === "link") {
-        if(fn === "max") {
+        if(fn === "mostCommon" || fn === "leastCommon") {
             const counts = {};
             rowInfo.forEach(d => {
                 counts[d[field]] = 1 + (counts[d[field]] || 0);
             });
-            const topCategory = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
-            return topCategory;
+            const oneCategory = Object.keys(counts).reduce((a, b) => {
+                if(fn === "mostCommon") {
+                    return counts[a] > counts[b] ? a : b;
+                } else {
+                    return counts[a] > counts[b] ? b : a;
+                }
+            });
+            return oneCategory;
         } else {
+            // "concat"
             const categories = Array.from(new Set(rowInfo.map(d => d[field])));
             return categories.join(", ");
         } 
