@@ -80,7 +80,7 @@ export default function TrackRowInfoVisNominalBar(props) {
             domElement
         });
 
-        const titleText = Array.isArray(field) ? field.join(" + ") : field;
+        const titleText = field;
         
         const textAreaWidth = width - 20;
         const barAreaWidth = width - textAreaWidth;

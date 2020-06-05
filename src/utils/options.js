@@ -85,7 +85,7 @@ const baseSchema = {
                 },
                 "aggFunction": {
                     "type": "string",
-                    "enum": ["max", "min", "mean", "sum", "mostCommon", "concat"],
+                    "enum": ["max", "min", "mean", "sum", "mostCommon", "concat", "count", "uniqueCount"],
                     "description": "A funtion to apply when aggregating values"
                 },
                 "position": {

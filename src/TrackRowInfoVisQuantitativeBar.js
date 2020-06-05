@@ -102,7 +102,12 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             domElement
         });
 
-        const titleText = isStackedBar ? field.join(" + ") : field;
+        let titleText = isStackedBar ? field.join(" + ") : field;
+        if(aggFunction === "count") {
+            // For `count` aggregation function, field name is not important since
+            // we are just counting rows.
+            titleText = "count";
+        }
 
         const isTextLabel = width > minTrackWidth;
 

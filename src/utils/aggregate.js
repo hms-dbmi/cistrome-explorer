@@ -10,7 +10,8 @@ import d3 from './d3.js';
 export function getAggregatedValue(rowInfo, field, type, func) {
     const isAggregated = Array.isArray(rowInfo);
     if(!isAggregated) {
-        return rowInfo[field];
+        // For counting values, we return a value `1`.
+        return func === "count" || func === "uniqueCount" ? 1 : rowInfo[field];
     }
     const funcName = func ? func : "default";
 
@@ -21,6 +22,7 @@ export function getAggregatedValue(rowInfo, field, type, func) {
             min: d3.min,
             mean: d3.mean,
             sum: d3.sum,
+            count: values => values.length,
             default: d3.mean
         },
         nominal: {
@@ -34,6 +36,8 @@ export function getAggregatedValue(rowInfo, field, type, func) {
                 values.forEach(d => { counts[d] = 1 + (counts[d] || 0) });
                 return Object.keys(counts).reduce((a, b) => counts[a] < counts[b] ? a : b);
             },
+            count: values => values.length,
+            uniqueCount: values => Array.from(new Set(values)).length,
             concat: values => Array.from(new Set(values)).join(', '),
             default: values => Array.from(new Set(values)).join(', ')
         },
