@@ -99,13 +99,13 @@ describe('Helper functions for producing arrays of row indices for track.options
         const aggregatedRowInfos = getAggregatedRowInfo(rowInfo, options.rowAggregate).map(d => d[1]);
         const aggregatedRowInfo = aggregatedRowInfos.find(d => Array.isArray(d));   // "Blood"
 
-        let aggregatedValue = getAggregatedValue(aggregatedRowInfo, "c1", "nominal", "sum");
+        let aggregatedValue = getAggregatedValue(aggregatedRowInfo, "c1", "nominal", "mostCommon");
         expect(aggregatedValue).toEqual("Blood");
         
-        aggregatedValue = getAggregatedValue(aggregatedRowInfo, "c2", "nominal", "sum");
+        aggregatedValue = getAggregatedValue(aggregatedRowInfo, "c2", "nominal", "concat");
         expect(aggregatedValue).toEqual("A, B");
         
-        aggregatedValue = getAggregatedValue(aggregatedRowInfo, "c2", "nominal", "max");
+        aggregatedValue = getAggregatedValue(aggregatedRowInfo, "c2", "nominal", "mostCommon");
         expect(aggregatedValue).toEqual("A");
         
         aggregatedValue = getAggregatedValue(aggregatedRowInfo, "r1", "quantitative", "max");
