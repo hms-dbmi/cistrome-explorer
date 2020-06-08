@@ -62,6 +62,7 @@ def bigwigs_to_multivec(
                 else:
                     print(f"{bw_file} not is_bigwig")
 
+    f.close()
 
 
 if __name__ == "__main__":

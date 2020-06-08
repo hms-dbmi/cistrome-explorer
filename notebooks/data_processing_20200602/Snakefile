@@ -1,12 +1,17 @@
+import os
 from os.path import join
 import json
 import requests
+import platform
 
 configfile: 'config.yml'
 
+# Check if this is running on O2
+is_o2 = (platform.system() == "Linux")
+
 # Directory / file constants
 SRC_DIR = "src"
-DATA_DIR = "data"
+DATA_DIR = ("data" if not is_o2 else join(os.sep, "n", "scratch3", "users", "m", "mk596", "cistrome-explorer", "data"))
 RAW_DIR = join(DATA_DIR, "raw")
 PROCESSED_DIR = join(DATA_DIR, "processed")
 
