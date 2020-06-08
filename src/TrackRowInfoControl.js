@@ -3,6 +3,7 @@ import PubSub from 'pubsub-js';
 
 import { SORT_ASC, SORT_DESC, FILTER, RESET, TOGGLE_ON } from './utils/icons.js';
 import TrackRowSearch from './TrackRowSearch.js';
+import { getAggregatedValue } from './utils/aggregate.js';
 
 const LOCAL_EVENT_SEARCH_OPEN = "search-open";
 
@@ -18,7 +19,7 @@ const LOCAL_EVENT_SEARCH_OPEN = "search-open";
  * @prop {function} onHighlightRows The function to call upon a search interaction.
  * @prop {function} onFilterRows The function to call upon a filter interaction.
  * @prop {function} toggleMinSimBar Toggle showing the minimum similarity bar in dendrogram.
- * @prop {object[]} rowInfo Array of JSON objects, one object for each sample, without filtering/sorting based on selected rows.
+ * @prop {object[]} rowInfo The array of JSON Object containing row information.
  * @prop {object} filterInfo The options for filtering rows of the field used in this track.
  */
 export default function TrackRowInfoControl(props){
@@ -42,7 +43,7 @@ export default function TrackRowInfoControl(props){
     const [searchTop, setSearchTop] = useState(null);
     const [searchLeft, setSearchLeft] = useState(null);
 
-    const { field, type, title } = fieldInfo;
+    const { field, type, title, aggFunction } = fieldInfo;
     const controlField = (type === "url" && title ? title : field);
     const controlType = (type === "url" ? "nominal" : type);
 
@@ -84,7 +85,9 @@ export default function TrackRowInfoControl(props){
     }
     function onReset() {
         if(type === "nominal" || type == "link") {
-            onFilterRows(field, type, rowInfo.map(d => d[field].toString()), true);
+            onFilterRows(field, type, rowInfo.map(
+                d => getAggregatedValue(d, field, "nominal", aggFunction).toString()
+            ), true);
         } else if(type === "quantitative" || type == "tree") {
             onFilterRows(field, type, [], true);
         }
@@ -106,7 +109,7 @@ export default function TrackRowInfoControl(props){
         });
     }
 
-    if(onHighlightRows) {
+    if(onHighlightRows && !Array.isArray(field)) {
         buttons.push({
             onClick: onSearchClick,
             icon: FILTER,
@@ -171,6 +174,7 @@ export default function TrackRowInfoControl(props){
                     left={searchLeft}
                     field={controlField}
                     type={controlType}
+                    aggFunction={aggFunction}
                     onChange={onSearchChange}
                     onFilterRows={onFilterRows}
                     onClose={onSearchClose}

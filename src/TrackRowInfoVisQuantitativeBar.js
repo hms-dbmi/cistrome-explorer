@@ -12,6 +12,7 @@ import TrackRowInfoControl from './TrackRowInfoControl.js';
 import { rgbToHex, generateNextUniqueColor } from "./utils/color.js";
 import { getRetinaRatio } from './utils/canvas.js';
 import { modifyItemInArray } from "./utils/array.js";
+import { getAggregatedValue } from "./utils/aggregate.js";
 
 export const margin = 5;
 
@@ -24,8 +25,8 @@ export const margin = 5;
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  * @prop {boolean} isShowControlButtons Determine if control buttons should be shown.
- * @prop {object[]} rowInfo Array of JSON objects, one object for each sample, without filtering/sorting based on selected rows.
- * @prop {object[]} transformedRowInfo The `rowInfo` array after transforming by filtering and sorting according to the selected rows.
+ * @prop {object[]} rowInfo The array of JSON Object containing row information.
+ * @prop {object[]} transformedRowInfo The `rowInfo` array after aggregating, filtering, and sorting rows.
  * @prop {string} titleSuffix The suffix of a title, information about sorting and filtering status.
  * @prop {object} sortInfo The options for sorting rows of the field used in this track.
  * @prop {object} filterInfo The options for filtering rows of the field used in this track.
@@ -59,13 +60,16 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
     const hiddenCanvasRef = useRef();
 
     // Data, layouts and styles
-    const { field } = fieldInfo;
+    const { field, aggFunction } = fieldInfo;
     const isStackedBar = Array.isArray(field);
     const axisHeight = 30;
     const textAreaWidth = 20;
     const barAreaWidth = width - textAreaWidth;
     const minTrackWidth = 40;
     const fontSize = 10;
+    const aggValue = (d, f) => getAggregatedValue(d, f, "quantitative", aggFunction);
+    const numberFormatShort = d3.format(".0f");
+    const numberFormatLong = d3.format(".2f");
 
     let xScale = d3.scaleLinear();
     const yScale = d3.scaleBand()
@@ -83,7 +87,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             colorToInfo.push({
                 uniqueColor,
                 field,
-                value: d[field],
+                value: aggValue(d, field),
                 rowIndex: i,
                 color: null // This property is determined when first rendered.
             });
@@ -98,15 +102,20 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             domElement
         });
 
-        const titleText = isStackedBar ? field.join(" + ") : field;
+        let titleText = isStackedBar ? field.join(" + ") : field;
+        if(aggFunction === "count") {
+            // For `count` aggregation function, field name is not important since
+            // we are just counting rows.
+            titleText = "count";
+        }
 
         const isTextLabel = width > minTrackWidth;
-       
+
         if(isStackedBar) {
             // Scales
             const valueExtent = [0, d3.extent(transformedRowInfo.map(d => {
                 let sum = 0;
-                field.forEach(f => sum += d[f]);
+                field.forEach(f => sum += aggValue(d, f));
                 return sum;
             }))[1]];   // Zero baseline
             xScale = xScale
@@ -123,7 +132,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                 let currentBarLeft = (isLeft ? width : 0);
 
                 field.forEach(f => {
-                    const barWidth = xScale(d[f]);
+                    const barWidth = xScale(aggValue(d, f));
                     const infoForMouseEvent = colorToInfo.find(d => d.field === f && d.rowIndex === i);
                     const color = isHidden ? infoForMouseEvent.uniqueColor : colorScale(f);
                     
@@ -146,19 +155,20 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                 // Render text labels when the space is enough.
                 if(rowHeight >= fontSize && isTextLabel) {
                     let sum = 0;
-                    field.forEach(f => sum += d[f]);
+                    field.forEach(f => sum += aggValue(d, f));
                     let textLeft = (isLeft ? width - xScale(sum) - margin : xScale(sum) + margin);
-                    const text = two.makeText(textLeft, barTop + rowHeight/2, textAreaWidth, rowHeight, sum);
+                    const text = two.makeText(textLeft, barTop + rowHeight/2, textAreaWidth, rowHeight, numberFormatShort(sum));
                     text.fill = "black";
                     text.fontsize = fontSize;
                     text.align = textAlign;
                     text.baseline = "middle";
-                    text.overflow = "ellipsis";
+                    text.overflow = "clip";
                 }
             });
+
         } else {
             // Scales
-            const valueExtent = [0, d3.extent(transformedRowInfo.map(d => d[field]))[1]];   // Zero baseline
+            const valueExtent = [0, d3.extent(transformedRowInfo.map(d => aggValue(d, field)))[1]];   // Zero baseline
             xScale = d3.scaleLinear()
                 .domain(valueExtent)
                 .range([0, barAreaWidth]);
@@ -169,24 +179,25 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             // Render visual components for each row (i.e., bars and texts).
             const textAlign = isLeft ? "end" : "start";
             transformedRowInfo.forEach((d, i) => {
+                const value = numberFormatShort(aggValue(d, field));
                 const barTop = yScale(i);
-                const barWidth = xScale(d[field]);        
+                const barWidth = xScale(value);
                 const barLeft = (isLeft ? width - barWidth : 0);
                 const textLeft = (isLeft ? width - barWidth - margin : barWidth + margin);
                 const infoForMouseEvent = colorToInfo.find(d => d.field === field && d.rowIndex === i);
-                const color = isHidden ? infoForMouseEvent.uniqueColor : d3.interpolateViridis(colorScale(d[field]));;
+                const color = isHidden ? infoForMouseEvent.uniqueColor : d3.interpolateViridis(colorScale(value));;
 
                 const rect = two.makeRect(barLeft, barTop, barWidth, rowHeight);
                 rect.fill = color;
 
                 // Render text labels when the space is enough.
                 if(rowHeight >= fontSize && isTextLabel) {
-                    const text = two.makeText(textLeft, barTop + rowHeight/2, textAreaWidth, rowHeight, d[field]);
+                    const text = two.makeText(textLeft, barTop + rowHeight/2, textAreaWidth, rowHeight, numberFormatShort(value));
                     text.fill = d3.hsl(color).darker(3);
                     text.fontsize = fontSize;
                     text.align = textAlign;
                     text.baseline = "middle";
-                    text.overflow = "ellipsis";
+                    text.overflow = "clip";
                 }
 
                 // Add other vis properties to colorToInfo for mouse events.
@@ -255,7 +266,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                     y: mouseViewportY,
                     content: <TooltipContent 
                         title={hoveredInfo.field}
-                        value={hoveredInfo.value}
+                        value={numberFormatLong(hoveredInfo.value)}
                         color={hoveredInfo.color}
                     />
                 });

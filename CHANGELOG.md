@@ -1,10 +1,13 @@
 ## 0.4.0 - in progress
 
 ### Added
+- Added row aggregation options (e.g., `rowAggregate`) to aggregate rows based on nominal fields metadata.
+- Added visual indicators (vertical black bars) to show which rows are aggregated.
 
 ### Changed
 - Changed the table view to be shown as a modal view.
 - Updated format of API results (e.g., use consistent letter cases and use scientific notations for long numbers).
+- Filtering information in range sliders and keyword search boxes is based on the aggregated values (`aggregatedRowInfo`), instead of original `rowInfo`.
 
 ## 0.3.0 - 05/27/20
 

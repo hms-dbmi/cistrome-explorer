@@ -17,7 +17,8 @@ import { FILTER } from './utils/icons.js';
  * @prop {number} top The top position of this view.
  * @prop {number} width The width of this view.
  * @prop {number} height The height of this view.
- * @prop {object[]} transformedRowInfo The `rowInfo` array after transforming by filtering and sorting according to the selected rows.
+ * @prop {object[]} rowInfo The array of JSON Object containing row information.
+ * @prop {object[]} transformedRowInfo The `rowInfo` array after aggregating, filtering, and sorting rows.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {object} filterInfo The options for filtering rows of the field used in this track.
  * @prop {boolean} isLeft Is this view on the left side of the track?
@@ -31,6 +32,7 @@ import { FILTER } from './utils/icons.js';
 export default function TrackRowInfoVisDendrogram(props) {
     const {
         left, top, width, height,
+        rowInfo,
         transformedRowInfo,
         fieldInfo,
         filterInfo,
@@ -66,7 +68,7 @@ export default function TrackRowInfoVisDendrogram(props) {
     const axisHeight = 30;
     const titleAreaWidth = 20;
     const visWidth = width - titleAreaWidth;
-    
+
     const initialMinSimBarLeft = useMemo(() => {
         return isLeft ? 20 : width - 20
     }, [isLeft, width]);
@@ -91,7 +93,11 @@ export default function TrackRowInfoVisDendrogram(props) {
 
     // Process the hierarchy data. Result will be null if the tree leaves
     // cannot be aligned based on the current rowInfo ordering.
-    const hierarchyData = matrixToTree(transformedRowInfo.map(d => d[field]));
+    const hierarchyData = matrixToTree(
+        transformedRowInfo.map(d => d[field])
+            // TODO: Remove below when we can aggregate `tree`
+            .filter(d => d !== undefined)
+    );
     const root = d3.hierarchy(hierarchyData);
     const leaves = root.leaves().map(l => l.data);
 
@@ -449,6 +455,7 @@ export default function TrackRowInfoVisDendrogram(props) {
                 searchTop={top}
                 searchLeft={left}
                 onFilterRows={onFilterRows}
+                rowInfo={rowInfo}
                 transformedRowInfo={transformedRowInfo}
                 filterButtonHighlit={showMinSimBar}
                 toggleMinSimBar={maxDistance && !cannotAlign ? () => {

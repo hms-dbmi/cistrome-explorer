@@ -8,6 +8,7 @@ import { EVENT } from "./utils/constants.js";
 import { drawVisTitle } from "./utils/vis.js";
 import { TooltipContent, destroyTooltip } from "./Tooltip.js";
 import TrackRowInfoControl from './TrackRowInfoControl.js';
+import { getAggregatedValue } from "./utils/aggregate.js";
 
 const margin = 5;
 
@@ -17,7 +18,8 @@ const margin = 5;
  * @prop {number} top The top position of this view.
  * @prop {number} width The width of this view.
  * @prop {number} height The height of this view.
- * @prop {object[]} transformedRowInfo The `rowInfo` array after transforming by filtering and sorting according to the selected rows.
+ * @prop {object[]} rowInfo The array of JSON Object containing row information.
+ * @prop {object[]} transformedRowInfo The `rowInfo` array after aggregating, filtering, and sorting rows.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  * @prop {string} titleSuffix The suffix of a title, information about sorting and filtering status.
@@ -52,9 +54,10 @@ export default function TrackRowInfoVisLink(props) {
     const [hoverIndex, setHoverIndex] = useState(null);
 
     // Data, layouts and styles
-    const { field, title } = fieldInfo;
+    const { field, title, aggFunction } = fieldInfo;
     const minTrackWidth = 40;
     const isTextLabel = width > minTrackWidth;
+    const aggValue = (d, f) => getAggregatedValue(d, f, "nominal", aggFunction);
     
     const fontSize = 10;
     const textAlign = isLeft ? "end" : "start";
@@ -86,7 +89,7 @@ export default function TrackRowInfoVisLink(props) {
                 const textTop = yScale(i);
                 const textLeft = isLeft ? width - margin : margin;
                 const titleField = title ? title : field;
-                const diplayText = isTextLabel ? info[titleField] : "Link";
+                const diplayText = isTextLabel ? aggValue(info, titleField) : "Link";
                 const text = two.makeText(textLeft, textTop + rowHeight/2, width, rowHeight, diplayText);
                 text.fill = "#23527C";
                 text.fontsize = fontSize;
@@ -126,7 +129,7 @@ export default function TrackRowInfoVisLink(props) {
             const y = yScale.invert(mouseY);
             let fieldVal;
             if(y !== undefined) {
-                fieldVal = transformedRowInfo[y][field];
+                fieldVal = aggValue(transformedRowInfo[y], field);
                 setHoverIndex(y);
             } else {
                 setHoverIndex(null);

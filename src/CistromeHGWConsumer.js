@@ -85,8 +85,8 @@ export default function CistromeHGWConsumer(props) {
         }
         const trackOptions = getTrackWrapperOptions(options, viewId, trackId);
         const rowInfo = context.state[viewId][trackId].rowInfo;
-        
-        // Filter and sort
+
+        // Aggregate, filter, and sort
         const newSelectedRows = selectRows(rowInfo, trackOptions);
         setTrackSelectedRows(viewId, trackId, newSelectedRows);
         
@@ -96,7 +96,7 @@ export default function CistromeHGWConsumer(props) {
             const condition = type === "nominal" ? 
                 trackOptions.rowHighlight.contains :
                 trackOptions.rowHighlight.range;
-            const newHighlitRows = highlightRowsFromSearch(rowInfo, field, type, condition);
+            const newHighlitRows = highlightRowsFromSearch(rowInfo, field, type, condition, trackOptions);
             setHighlitRows(viewId, trackId, newHighlitRows);
         }
     }, [options]);
@@ -224,9 +224,10 @@ export default function CistromeHGWConsumer(props) {
         const highlightKey = getHighlightKeyByFieldType(type, condition);
         const newRowHighlight = { field, type, [highlightKey]: condition };
         const newOptions = updateWrapperOptions(options, newRowHighlight, "rowHighlight", viewId, trackId, { isReplace: true });
+        const trackOptions = getTrackWrapperOptions(newOptions, viewId, trackId);
 
         // Notice: Highlighting options are specified only in the wrapper options.
-        const newHighlitRows = highlightRowsFromSearch(context.state[viewId][trackId].rowInfo, field, type, condition);
+        const newHighlitRows = highlightRowsFromSearch(context.state[viewId][trackId].rowInfo, field, type, condition, trackOptions);
         setHighlitRows(viewId, trackId, newHighlitRows);
         setOptions(newOptions);
     }, [options]);

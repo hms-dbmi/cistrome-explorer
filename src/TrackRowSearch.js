@@ -4,6 +4,7 @@ import d3 from "./utils/d3.js";
 
 import './TrackRowSearch.scss';
 import RangeSlider from "./RangeSlider.js";
+import { getAggregatedValue } from "./utils/aggregate.js";
 
 const MAX_NUM_SUGGESTIONS = 200;
 
@@ -14,10 +15,11 @@ const MAX_NUM_SUGGESTIONS = 200;
  * @prop {number} left The left coordinate.
  * @prop {string} field The name of field related to the wrapper track.
  * @prop {string} type The type of field related to the wrapper track.
+ * @prop {string} aggFunction The function to apply upon row aggregation.
  * @prop {function} onChange The function to call when the search keyword has changed.
  * @prop {function} onFilterRows The function to call when the filter should be applied.
  * @prop {function} onClose The function to call when the search field should be closed.
- * @prop {object[]} rowInfo Array of JSON objects, one object for each sample, without filtering/sorting based on selected rows.
+ * @prop {object[]} rowInfo The array of JSON Object containing row information.
  * @prop {object} filterInfo The options for filtering rows of the field used in this track.
  * @example
  * <TrackRowSearch/>
@@ -28,6 +30,7 @@ export default function TrackRowSearch(props) {
         isLeft,
         top, left,
         field, type,
+        aggFunction,
         onChange,
         onFilterRows,
         onClose,
@@ -41,7 +44,7 @@ export default function TrackRowSearch(props) {
     const [suggestionIndex, setSuggestionIndex] = useState(undefined);
     const [offset, setOffset] = useState({x: 0, y: 0});
     const dragStartPos = useRef(null);
-    const [valueExtent, setValueExtent] = useState(d3.extent(rowInfo.map(d => d[field])));
+    const [valueExtent, setValueExtent] = useState(d3.extent(rowInfo.map(d => getAggregatedValue(d, field, type, aggFunction))));
     const cutoffRange = useRef(valueExtent);
     const keywordUpperCase = keyword.toUpperCase();
     const [notOneOf, setNotOneOf] = useState(!filterInfo || type === "quantitative" ? [] : filterInfo.notOneOf); 
@@ -53,7 +56,7 @@ export default function TrackRowSearch(props) {
     const padding = 5;
     
     useEffect(() => {
-        setValueExtent(d3.extent(rowInfo.map(d => d[field])));
+        setValueExtent(d3.extent(rowInfo.map(d => getAggregatedValue(d, field, type, aggFunction))));
     }, [field, rowInfo]);
 
     useEffect(() => {
@@ -69,7 +72,7 @@ export default function TrackRowSearch(props) {
     const suggestions = useMemo(() => {
         let result = [];
         if(!Array.isArray(field)) {
-            const fieldData = rowInfo.map(d => d[field].toString());
+            const fieldData = rowInfo.map(d => getAggregatedValue(d, field, type, aggFunction).toString());
             const fieldDataByKeyword = fieldData.filter(d => d.toUpperCase().includes(keywordUpperCase));
             const potentialResult = Array.from(new Set(fieldDataByKeyword));
             if(potentialResult.length < MAX_NUM_SUGGESTIONS) {
@@ -146,7 +149,7 @@ export default function TrackRowSearch(props) {
 
     function onResetClick() {
         if(type === "nominal" || type == "link") {
-            onFilterRows(field, type, rowInfo.map(d => d[field].toString()), true);
+            onFilterRows(field, type, rowInfo.map(d => getAggregatedValue(d, field, type, aggFunction).toString()), true);
         } else if(type === "quantitative") {
             onFilterRows(field, type, [], true);
         }
@@ -169,7 +172,7 @@ export default function TrackRowSearch(props) {
     }
 
     function onUnckeckAllClick() {
-        onFilterRows(field, type, rowInfo.map(d => d[field].toString()), false);
+        onFilterRows(field, type, rowInfo.map(d => getAggregatedValue(d, field, type, aggFunction).toString()), false);
     }
 
     function onFilterByKeyword() {

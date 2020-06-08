@@ -1,8 +1,9 @@
 /* eslint-env node */
 
 import { 
-    selectRows
+    selectRows, getAggregatedRowInfo
 } from './select-rows.js';
+import { getAggregatedValue } from './aggregate.js';
 
 describe('Helper functions for producing arrays of row indices for track.options.selectRows', () => {
     it('Should produce correct selectRows array after sorting on quantitative attribute', () => {
@@ -65,6 +66,118 @@ describe('Helper functions for producing arrays of row indices for track.options
         expect(selectedRows.slice(0, 5)).toContain(7);
         expect(selectedRows.slice(0, 5)).toContain(13);
         expect(selectedRows.slice(0, 5)).toContain(14);
+    });
+
+    it('Should aggregate rows properly after using nominal attribute', () => {
+        const rowInfo = [
+            {"c1":"Blood", "r1":1, "c2":"A"},
+            {"c1":"Blood", "r1":2, "c2":"B"},
+            {"c1":"Blood", "r1":3, "c2":"A"},
+            {"c1":"Blood", "r1":4, "c2":"B"},
+            {"c1":"Blood", "r1":5, "c2":"A"},
+            {"c1":"Bone Marrow", "r1":10, "c2":"A"},
+            {"c1":"Bone Marrow", "r1":11, "c2":"B"},
+            {"c1":"Bone Marrow", "r1":12, "c2":"A"},
+            {"c1":"Bone Marrow", "r1":13, "c2":"B"},
+            {"c1":"Bone Marrow", "r1":14, "c2":"A"},
+            {"c1":"Liver", "r1":100, "c2":"A"},
+            {"c1":"Liver", "r1":101, "c2":"B"},
+            {"c1":"Tonsil", "r1":1000, "c2":"A"},
+            {"c1":"Tonsil", "r1":1001, "c2":"B"},
+            {"c1":"Fetal Liver", "r1":10000, "c2":"A"},
+        ];
+        const options = {
+            rowAggregate: [{
+                field: "c1",
+                type: "nominal",
+                oneOf: ["Blood"]
+            }]
+        };
+        const selectedRows = selectRows(rowInfo, options);
+        expect(selectedRows).toEqual([5,6,7,8,9,10,11,12,13,14,[0,1,2,3,4]]);
+
+        const aggregatedRowInfos = getAggregatedRowInfo(rowInfo, options.rowAggregate).map(d => d[1]);
+        const aggregatedRowInfo = aggregatedRowInfos.find(d => Array.isArray(d));   // "Blood"
+
+        let aggregatedValue = getAggregatedValue(aggregatedRowInfo, "c1", "nominal", "sum");
+        expect(aggregatedValue).toEqual("Blood");
+        
+        aggregatedValue = getAggregatedValue(aggregatedRowInfo, "c2", "nominal", "sum");
+        expect(aggregatedValue).toEqual("A, B");
+        
+        aggregatedValue = getAggregatedValue(aggregatedRowInfo, "c2", "nominal", "max");
+        expect(aggregatedValue).toEqual("A");
+        
+        aggregatedValue = getAggregatedValue(aggregatedRowInfo, "r1", "quantitative", "max");
+        expect(aggregatedValue).toEqual(5);
+
+        aggregatedValue = getAggregatedValue(aggregatedRowInfo, "r1", "quantitative", "mean");
+        expect(aggregatedValue).toEqual(3);
+    });
+
+    it('Should produce correct selectRows array after aggregating, filtering, and sorting', () => {
+        const rowInfo = [
+            {"c1":"Blood", "r1":1, "c2":"A"},
+            {"c1":"Blood", "r1":2, "c2":"B"},
+            {"c1":"Blood", "r1":3, "c2":"A"},
+            {"c1":"Blood", "r1":4, "c2":"B"},
+            {"c1":"Blood", "r1":5, "c2":"A"},
+            {"c1":"Bone Marrow", "r1":10, "c2":"A"},
+            {"c1":"Bone Marrow", "r1":11, "c2":"B"},
+            {"c1":"Bone Marrow", "r1":12, "c2":"A"},
+            {"c1":"Bone Marrow", "r1":13, "c2":"B"},
+            {"c1":"Bone Marrow", "r1":14, "c2":"A"},
+            {"c1":"Liver", "r1":100, "c2":"A"},
+            {"c1":"Liver", "r1":101, "c2":"B"},
+            {"c1":"Tonsil", "r1":1000, "c2":"A"},
+            {"c1":"Tonsil", "r1":1001, "c2":"B"},
+            {"c1":"Fetal Liver", "r1":10000, "c2":"A"},
+        ];
+        const options = {
+            rowInfoAttributes: [{
+                field: "c1",
+                type: "nominal",
+                aggFunction: "sum"
+            },
+            {
+                field: "c2",
+                type: "nominal",
+                aggFunction: "sum"
+            },
+            {
+                field: "r1",
+                type: "quantitative",
+                aggFunction: "sum"
+            }],
+            rowAggregate: [{
+                field: "c1",
+                type: "nominal",
+                oneOf: ["Blood"]
+            },
+            {
+                field: "c2",
+                type: "nominal",
+                oneOf: ["A"]
+            }],
+            rowFilter: [{
+                field: "c2",
+                type: "nominal",
+                notOneOf: ["B"]
+            }],
+            rowSort: [{
+                field: "r1",
+                order: "descending",
+                type: "quantitative"
+            }]
+        };
+        const selectedRows = selectRows(rowInfo, options);
+        expect(selectedRows).toEqual([[5,7,9,10,12,14],[0,1,2,3,4]]);
+
+        const aggregatedRowInfos = getAggregatedRowInfo(rowInfo, options.rowAggregate).map(d => d[1]);
+        const aggregatedRowInfo = aggregatedRowInfos.find(d => Array.isArray(d)); // "Blood"
+
+        const aggregatedValue = getAggregatedValue(aggregatedRowInfo, "r1", "quantitative", "mean");
+        expect(aggregatedValue).toEqual(3);
     });
 
     it('Should produce correct selectRows array after filtering on tree attribute using `substree`', () => {
