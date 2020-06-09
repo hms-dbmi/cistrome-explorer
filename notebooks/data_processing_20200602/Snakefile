@@ -26,16 +26,32 @@ rule all:
     input:
         expand(join(PROCESSED_DIR, "{group_name}.multires.mv5"), group_name=GROUP_NAMES),
 
-rule bigwigs_to_multivec:
+rule manifest_to_multivec:
     input:
         bigwigs=lambda w: expand(join(RAW_DIR, "{cid}.bw"), cid=config["groups"][w.group_name]),
-        metadata=lambda w: expand(join(RAW_DIR, "{cid}.metadata.json"), cid=config["groups"][w.group_name])
+        metadata=lambda w: expand(join(RAW_DIR, "{cid}.metadata.json"), cid=config["groups"][w.group_name]),
+        manifest=join(RAW_DIR, "{group_name}.manifest.json")
     output:
-        join(PROCESSED_DIR, "{group_name}.multires.mv5")
+        multivec=join(PROCESSED_DIR, "{group_name}.multires.mv5")
     params:
-        starting_resolution=1000
+        starting_resolution=1000,
+        script=join(SRC_DIR, "manifest_to_multivec.py")
+    shell:
+        """
+        python {params.script} \
+            -i {input.manifest} \
+            -o {output.multivec} \
+            -s {params.starting_resolution}
+        """
+
+rule bigwigs_to_manifest:
+    input:
+        bigwigs=lambda w: expand(join(RAW_DIR, "{cid}.bw"), cid=config["groups"][w.group_name]),
+        metadata=lambda w: expand(join(RAW_DIR, "{cid}.metadata.json"), cid=config["groups"][w.group_name]),
+    output:
+        join(RAW_DIR, "{group_name}.manifest.json")
     script:
-        join(SRC_DIR, "bigwigs_to_multivec.py")
+        join(SRC_DIR, "bigwigs_to_manifest.py")
 
 rule download_bigwig:
     input:

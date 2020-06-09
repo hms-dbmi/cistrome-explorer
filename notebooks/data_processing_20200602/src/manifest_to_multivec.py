@@ -1,8 +1,10 @@
-import bbi
 import h5py
+import bbi
 import negspy.coordinates as nc
 import numpy as np
 import math
+import argparse
+import json
 
 def bigwigs_to_multivec(
     input_bigwig_files,
@@ -66,10 +68,20 @@ def bigwigs_to_multivec(
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Create a multivec file.')
+    parser.add_argument('-i', '--input', type=str, required=True, help='The input manifest JSON file.')
+    parser.add_argument('-o', '--output', type=str, required=True, help='The output multivec file.')
+    parser.add_argument('-s', '--starting-resolution', type=int, default=1000, help='The starting resolution.')
+    args = parser.parse_args()
+
+    with open(args.input) as f:
+        manifest_json = json.load(f)
+        input_bigwig_files = manifest_json['input_bigwig_files']
+        input_metadata_files = manifest_json['input_metadata_files']
 
     bigwigs_to_multivec(
-        list(snakemake.input["bigwigs"]),
-        list(snakemake.input["metadata"]),
-        snakemake.output[0],
-        snakemake.params["starting_resolution"]
+        input_bigwig_files,
+        input_metadata_files,
+        args.output,
+        args.starting_resolution
     )
