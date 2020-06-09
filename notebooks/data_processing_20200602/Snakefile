@@ -38,7 +38,7 @@ rule manifest_to_multivec:
         script=join(SRC_DIR, "manifest_to_multivec.py")
     shell:
         """
-        python {params.script} \
+        mpiexec -n 4 python {params.script} \
             -i {input.manifest} \
             -o {output.multivec} \
             -s {params.starting_resolution}

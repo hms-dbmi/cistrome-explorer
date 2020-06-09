@@ -1,3 +1,4 @@
+from mpi4py import MPI
 import h5py
 import bbi
 import negspy.coordinates as nc
@@ -6,6 +7,12 @@ import math
 import argparse
 import json
 
+comm = MPI.COMM_WORLD
+size = comm.Get_size()
+rank = comm.Get_rank()  # The process ID (integer 0-3 for 4-process run)
+
+print(f"process {rank} / {size}")
+
 def bigwigs_to_multivec(
     input_bigwig_files,
     input_metadata_files,
@@ -13,9 +20,13 @@ def bigwigs_to_multivec(
     starting_resolution
 ):
 
-    f = h5py.File(output_file, 'w')
+    f = h5py.File(output_file, 'w', driver='mpio', comm=comm)
 
     num_samples = len(input_bigwig_files)
+
+    # Compute the start and end sample indices for this MPI process
+    rank_start = math.floor(rank / size * num_samples)
+    rank_end = math.floor((rank + 1) / size * num_samples)
 
     # Zip the input to create (bw, metadata) tuples
     zipped_input = zip(input_bigwig_files, input_metadata_files)
@@ -50,7 +61,7 @@ def bigwigs_to_multivec(
             chr_dataset = resolution_values_group.create_dataset(chr_name, chr_shape, dtype="f4")
 
             # Fill in dataset for each resolution
-            for bw_index, bw_file in enumerate(input_bigwig_files):
+            for bw_index, bw_file in enumerate(input_bigwig_files[rank_start:rank_end]):
 
                 if bbi.is_bigwig(bw_file):
                     chromsizes = bbi.chromsizes(bw_file)
