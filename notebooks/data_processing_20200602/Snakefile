@@ -35,7 +35,7 @@ rule manifest_to_multivec:
         multivec=join(PROCESSED_DIR, "{group_name}.multires.mv5")
     params:
         starting_resolution=1000,
-        script=join(SRC_DIR, "manifest_to_multivec.py")
+        script=join(SRC_DIR, "manifest_to_multivec_h5py.py")
     shell:
         """
         python {params.script} \

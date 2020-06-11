@@ -19,7 +19,7 @@ dependencies:
   - jupyter
   - nb_conda
   - jq
-  - pybigwig
+  - tqdm
   - pip
   - pip:
     - negspy

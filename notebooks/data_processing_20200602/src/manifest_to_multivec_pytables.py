@@ -1,10 +1,14 @@
-import h5py
+import tables
 import bbi
 import negspy.coordinates as nc
 import numpy as np
 import math
 import argparse
 import json
+
+atom_i8 = tables.Atom.from_dtype(np.dtype('i8'))
+atom_f4 = tables.Atom.from_dtype(np.dtype('f4'), dflt=np.nan)
+atom_S23 = tables.Atom.from_dtype(np.dtype('S23'))
 
 
 def p2f(x):
@@ -14,9 +18,6 @@ def p2f(x):
         return float(x)
     return x
 
-
-
-
 def bigwigs_to_multivec(
     input_bigwig_files,
     input_metadata_files,
@@ -24,7 +25,7 @@ def bigwigs_to_multivec(
     starting_resolution
 ):
 
-    f = h5py.File(output_file, 'w')
+    f = tables.open_file(output_file, mode='w')
 
     num_samples = len(input_bigwig_files)
 
@@ -32,12 +33,13 @@ def bigwigs_to_multivec(
     zipped_input = zip(input_bigwig_files, input_metadata_files)
 
     # Create level zero groups
-    info_group = f.create_group("info")
-    resolutions_group = f.create_group("resolutions")
-    chroms_group = f.create_group("chroms") # TODO: rename to "chromosomes"
+    info_group = f.create_group("/", "info")
+    resolutions_group = f.create_group("/", "resolutions")
+    chroms_group = f.create_group("/", "chroms") # TODO: rename to "chromosomes"
 
     # Set info attributes
-    info_group.attrs['tile-size'] = 256
+    # Note: switched this to tile_size from tile-size
+    f.set_node_attr(info_group, 'tile_size', 256)
 
     # Prepare to fill in chroms dataset
     chromosomes = nc.get_chromorder('hg38')
@@ -46,8 +48,8 @@ def bigwigs_to_multivec(
     chroms_name_arr = np.array(chromosomes, dtype="S23")
 
     # Fill in chroms dataset entries "length" and "name"
-    chroms_group.create_dataset("length", data=chroms_length_arr)
-    chroms_group.create_dataset("name", data=chroms_name_arr)
+    f.create_array(chroms_group, "length", obj=chroms_length_arr, atom=atom_i8)
+    f.create_array(chroms_group, "name", obj=chroms_name_arr, atom=atom_S23)
 
     
     # Prepare to fill in resolutions dataset
@@ -57,12 +59,12 @@ def bigwigs_to_multivec(
     # Create dataset for each resolution
     for resolution in resolutions:
         # Create each resolution group
-        resolution_group = resolutions_group.create_group(str(resolution))
-        resolution_values_group = resolution_group.create_group("values") # TODO: remove the unnecessary "values" layer
+        resolution_group = f.create_group(resolutions_group, str(resolution))
+        resolution_values_group = f.create_group(resolution_group, "values") # TODO: remove the unnecessary "values" layer
         
         for chr_name, chr_len in zip(chromosomes, chroms_length_arr):
             chr_shape = (math.ceil(chr_len / resolution), num_samples)
-            chr_dataset = resolution_values_group.create_dataset(chr_name, chr_shape, dtype="f4", fillvalue=np.nan, compression='gzip')
+            chr_dataset = f.create_array(resolution_values_group, chr_name, shape=chr_shape, atom=atom_f4)
 
             # Fill in dataset for each resolution
             for bw_index, bw_file in enumerate(input_bigwig_files):
@@ -78,12 +80,13 @@ def bigwigs_to_multivec(
                         #print(f"{bw_file} does not have {chr_name}")
                 else:
                     print(f"{bw_file} not is_bigwig")
+            f.flush()
     
     # Append metadata to the top resolution row_infos attribute.
     row_infos = []
     for metadata_index, metadata_file in enumerate(input_metadata_files):
-        with open(metadata_file) as f:
-            metadata_json = json.load(f)
+        with open(metadata_file) as mf:
+            metadata_json = json.load(mf)
         
         try:
             treats_0 = metadata_json["treats"][0]
@@ -138,7 +141,9 @@ def bigwigs_to_multivec(
 
         row_infos.append(row_info)
     row_infos_encoded = [ str(json.dumps(r)).encode() for r in row_infos ]
-    resolutions_group[str(lowest_resolution)].attrs["row_infos"] = row_infos_encoded
+    # TODO: how to deal with list attributes in pytables? by default they get converted to pickles...
+    f.set_node_attr(resolution_group, 'row_infos', row_infos_encoded)
+
 
     f.close()
 
