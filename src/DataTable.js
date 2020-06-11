@@ -1,8 +1,7 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 
 import "./TrackRowInfoControl.scss";
 import "./DataTable.scss";
-import { CLOSE } from './utils/icons';
 
 /**
  * Component for data table.
@@ -30,6 +29,8 @@ export default function DataTable(props) {
 
     // Store the currently-checked row indices in a mutable set object.
     const checkedRowIndicesRef = useRef(new Set());
+    
+    const [selectedRows, setSelectedRows] = useState([]);
 
     const handleInputChange = useCallback((event) => {
         if(!event || !event.target) return;
@@ -70,7 +71,15 @@ export default function DataTable(props) {
                 </td>
             );
         });
-        return <tr key={i}>{checkboxCell}{dataCells}</tr>;
+        return (
+            <tr 
+                key={i}
+                className={selectedRows.includes(i) ? 'data-table-row-selected' : 'data-table-row'}
+                onClick={() => { setSelectedRows([i]) }}
+            >
+                {checkboxCell}{dataCells}
+            </tr>
+        );
     });
 
     return (
@@ -78,7 +87,8 @@ export default function DataTable(props) {
             style={{
                 overflowY: "auto",
                 border: "1px solid lightgray",
-                background: "#f9f9f9"
+                background: "#f9f9f9",
+                padding: '1px'
             }}
         >
             {bodyRows ? (

@@ -5,6 +5,7 @@ import DataTable from "./DataTable.js";
 import { requestIntervalTFs } from './utils/cistrome.js';
 import { CLOSE } from './utils/icons.js';
 import './CistromeToolkit.scss';
+import { REQUEST_HISTORY_SAMPLE } from "./utils/toolkit.js";
 
 export function destroyCistromeToolkit() {
     PubSub.publish(EVENT.CISTROME_TOOLKIT, {
@@ -30,9 +31,8 @@ export default function CistromeToolkit() {
     const [intervalParams, setIntervalParams] = useState(undefined);
     const [isVisible, setIsVisible] = useState(false);
     const [requestStatus, setRequestStatus] = useState(undefined);
-    const [dataTableRows, setDataTableRows] = useState([]);
-    const [dataTableColumns, setDataTableColumns] = useState([]);
-    const [requestHistory, setRequestHistory] = useState([]);
+    const [requestHistory, setRequestHistory] = useState(REQUEST_HISTORY_SAMPLE);   // Use `REQUEST_HISTORY_SAMPLE` in `/utils` to debug.
+    const [selectedRequest, setSelectedRequest] = useState(undefined); // TODO:
 
     useEffect(() => {
         const cistromeToolkitToken = PubSub.subscribe(EVENT.CISTROME_TOOLKIT, (msg, data) => {
@@ -83,8 +83,8 @@ export default function CistromeToolkit() {
                         return newRow;
                     });
                     const costomColumns = Object.values(customColumnMap);
-                    setDataTableRows(customRows);
-                    setDataTableColumns(costomColumns);
+                    // setDataTableRows(customRows);
+                    // setDataTableColumns(costomColumns);
 
                     const msg = `For interval ${chrStartName}:${chrStartPos}-${chrEndPos}`;
                     setRequestStatus({ msg, isLoading: false });
@@ -95,11 +95,13 @@ export default function CistromeToolkit() {
                             && d.chrEndName === chrEndName && d.chrEndPos === chrEndPos
                     }) === undefined;
                     if(isNew) {
-                        setRequestHistory([...requestHistory, {
+                        const newHistory = [...requestHistory, {
                             parameter: intervalParams,
                             columns: costomColumns,
                             rows: customRows
-                        }]);
+                        }];
+                        setRequestHistory(newHistory);
+                        setSelectedRequest(newHistory.length - 1);
                     }
                 })
                 .catch((msg) => {
@@ -119,22 +121,24 @@ export default function CistromeToolkit() {
                 chrEndPos
             } = d.parameter;
             return (
-                // TODO: Enable Selection.
-                <div className={i === 0 ? "cisvis-api-result-selected" : "cisvis-api-result"}>
+                <div 
+                    key={JSON.stringify(d.parameter) + i}
+                    className={i === selectedRequest ? "cisvis-api-result-selected" : "cisvis-api-result"}
+                    onClick={() => { setSelectedRequest(i) }}
+                >
                     <div style={{ marginBottom: 4 }}>
-                        <span className="cisvis-api-parameter">{"SPECIES"}</span> <b>{assembly}</b>
+                        <span className="cisvis-api-parameter">{"SPECIES"}</span>
+                        <b>{assembly}</b>
                     </div>
                     <div>
                         <span className="cisvis-api-parameter">{"INTERVAL"}</span>
-                        <b>
-                            {`${chrStartName}:${chrStartPos.toLocaleString('en')}-${chrEndPos.toLocaleString('en') }`}
-                        </b>
+                        <b>{`${chrStartName}:${chrStartPos.toLocaleString('en')}-${chrEndPos.toLocaleString('en') }`}</b>
                     </div>
                 </div>
             );
         });
-    }, [requestHistory]);
-    console.log(requestHistory);
+    }, [requestHistory, selectedRequest]);
+    
     return (isVisible ? (
         <div className="cisvis-data-table-bg">
             <div 
@@ -175,12 +179,14 @@ export default function CistromeToolkit() {
                     <div className="cisvis-api-result-list">
                         {listOfResultsRequested}
                     </div>
-                    <DataTable 
-                        rows={dataTableRows}
-                        columns={dataTableColumns}
-                        expoNotations={["Overlap Ratio"]}
-                        onCheckRows={undefined}
-                    />
+                    {selectedRequest !== undefined ?
+                        <DataTable 
+                            columns={requestHistory[selectedRequest].columns}
+                            rows={requestHistory[selectedRequest].rows}
+                            expoNotations={["Overlap Ratio"]}
+                            onCheckRows={undefined}
+                        />
+                        : null}
                 </div>
             </div>
         </div>
