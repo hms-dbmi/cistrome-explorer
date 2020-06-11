@@ -10,6 +10,22 @@
         box-shadow: 0px 0px 30px 0px #444;
         border-radius: 3px;
         padding: 30px;
+        .toolkit-btn-add-track,
+        .toolkit-btn-add-track-active {
+            cursor: not-allowed;
+            color: lightgray;
+            right: 130px;
+            top: 140px;
+            padding: 4px;
+            font-weight: bold;
+            position: absolute;
+            display: flex;
+            align-items: center;
+        }
+        .toolkit-btn-add-track-active {
+            cursor: pointer;
+            color: #4d4c4c;
+        }
     }
 }
 

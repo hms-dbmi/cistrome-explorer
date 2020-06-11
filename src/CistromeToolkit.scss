@@ -7,15 +7,13 @@
         border: 1px solid lightgray;
         background: white;
         overflow-y: auto;
+        padding: 1px;
         .cisvis-api-result,
         .cisvis-api-result-selected {
             cursor: pointer;
             padding: 6px;
             background: white;
             border-bottom: 1px solid lightgray;
-            margin-left: 1px;
-            margin-right: 1px;
-            margin-top: 1px;
             .cisvis-api-parameter {
                 font-weight: bold;
                 padding: 2px 4px;

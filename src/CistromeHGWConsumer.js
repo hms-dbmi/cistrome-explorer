@@ -377,6 +377,18 @@ export default function CistromeHGWConsumer(props) {
         setOptions(newOptions);
     }, [options]);
 
+    // Callback function for adding a BigWig track.
+    const onAddBigWigTrack = useCallback((server, tilesetUid, position) => {
+        if(muiltivecTrackIds && muiltivecTrackIds.length !== 0 && muiltivecTrackIds[0].viewId) {
+            addNewTrack({
+                type: 'horizontal-bar',
+                server,
+                tilesetUid,
+                height: 20,
+            }, muiltivecTrackIds[0].viewId, position);
+        }
+    }, [muiltivecTrackIds]);
+
     // Do initial processing of the options prop.
     useEffect(() => {
         setOptions(processWrapperOptions(optionsRaw));
@@ -499,7 +511,12 @@ export default function CistromeHGWConsumer(props) {
             ))}
             <Tooltip />
             <ContextMenu/>
-            <CistromeToolkit/>
+            <CistromeToolkit
+                // TODO: After we build DB for cistrome bigwig files, uncomment the following code.
+                // onAddTrack={(server, tilesetUid, position) => { 
+                //     onAddBigWigTrack(server, tilesetUid, position);
+                // }}
+            />
         </div>
     );
 }

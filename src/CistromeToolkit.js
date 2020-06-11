@@ -3,7 +3,7 @@ import PubSub from 'pubsub-js';
 import { EVENT } from './utils/constants.js';
 import DataTable from "./DataTable.js";
 import { requestIntervalTFs } from './utils/cistrome.js';
-import { CLOSE } from './utils/icons.js';
+import { CLOSE, PLUS } from './utils/icons.js';
 import './CistromeToolkit.scss';
 import { REQUEST_HISTORY_SAMPLE } from "./utils/toolkit.js";
 
@@ -17,6 +17,7 @@ export function destroyCistromeToolkit() {
 /**
  * Wrapper around <DataTable />, specific for showing the TF binding interval request results.
  * Subscribes to 'cistrome-toolkit' event via `PubSub`.
+ * @prop {function} onAddTrack A function to call when adding tracks with selected rows.
  * @prop {object} intervalParams The interval request parameters.
  * @prop {string} intervalParams.assembly
  * @prop {string} intervalParams.chrStartName
@@ -26,13 +27,17 @@ export function destroyCistromeToolkit() {
  * @example
  * <CistromeToolkit/>
  */
-export default function CistromeToolkit() {
+export default function CistromeToolkit(props) {
+    const {
+        onAddTrack
+    } = props;
 
     const [intervalParams, setIntervalParams] = useState(undefined);
     const [isVisible, setIsVisible] = useState(false);
     const [requestStatus, setRequestStatus] = useState(undefined);
-    const [requestHistory, setRequestHistory] = useState(REQUEST_HISTORY_SAMPLE);   // Use `REQUEST_HISTORY_SAMPLE` in `/utils` to debug.
-    const [selectedRequest, setSelectedRequest] = useState(undefined); // TODO:
+    const [requestHistory, setRequestHistory] = useState([]);   // Use `REQUEST_HISTORY_SAMPLE` in `/utils` to debug.
+    const [selectedRequest, setSelectedRequest] = useState(undefined);
+    const [selectedRows, setSelectedRows] = useState([]);
 
     useEffect(() => {
         const cistromeToolkitToken = PubSub.subscribe(EVENT.CISTROME_TOOLKIT, (msg, data) => {
@@ -44,6 +49,11 @@ export default function CistromeToolkit() {
             PubSub.unsubscribe(cistromeToolkitToken);
         };
     });
+
+    useEffect(() => {
+        // Reset row selection upon new request selection.
+        setSelectedRows([]);
+    }, [selectedRequest]);
 
     useEffect(() => {
         let didUnmount = false;
@@ -83,8 +93,6 @@ export default function CistromeToolkit() {
                         return newRow;
                     });
                     const costomColumns = Object.values(customColumnMap);
-                    // setDataTableRows(customRows);
-                    // setDataTableColumns(costomColumns);
 
                     const msg = `For interval ${chrStartName}:${chrStartPos}-${chrEndPos}`;
                     setRequestStatus({ msg, isLoading: false });
@@ -158,6 +166,30 @@ export default function CistromeToolkit() {
                         <b>{requestStatus?.msg}</b>
                     ) : null)}
                 </span>
+                {onAddTrack ?
+                    <span
+                        className={selectedRows && selectedRows.length > 0 
+                            ? 'toolkit-btn-add-track-active'
+                            : 'toolkit-btn-add-track'}
+                        title={selectedRows && selectedRows.length > 0 ? null : 'select rows in the data table'}
+                        onClick={() => { 
+                            // TODO: Change this to add a track based on actual data after we build DB.
+                            // Currently, this button is not shown.
+                            onAddTrack(
+                                'https://resgen.io/api/v1',
+                                'Hygs6CEVR2mCnGlsHK93zQ',
+                                'top'
+                            );
+                            setIsVisible(false);
+                        }}
+                    >
+                        <svg className="chw-button-sm chw-button-static"
+                            viewBox={PLUS.viewBox}>
+                            <path d={PLUS.path} fill="currentColor"/>
+                        </svg>
+                        Add HiGlass tracks with selected rows
+                    </span>
+                : null}
                 <span style={{ 
                     verticalAlign: "middle", 
                     display: "inline-block", 
@@ -166,9 +198,9 @@ export default function CistromeToolkit() {
                     top: 105 
                 }}>
                     <svg
-                        className={`chw-button`}
+                        className={'chw-button'}
                         style={{ color: "gray", background: "none" }}
-                        onClick={() => setIsVisible(false)} 
+                        onClick={() => setIsVisible(false)}
                         viewBox={CLOSE.viewBox}
                     >
                         <title>Close data table</title>
@@ -183,8 +215,10 @@ export default function CistromeToolkit() {
                         <DataTable 
                             columns={requestHistory[selectedRequest].columns}
                             rows={requestHistory[selectedRequest].rows}
+                            selectedRows={selectedRows}
                             expoNotations={["Overlap Ratio"]}
                             onCheckRows={undefined}
+                            onSelect={(selectedRows) => { setSelectedRows(selectedRows) }}
                         />
                         : null}
                 </div>
