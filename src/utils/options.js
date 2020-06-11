@@ -27,6 +27,10 @@ const baseSchema = {
                     "type": "array",
                     "items": { "$ref": "#/definitions/filterInfo" }
                 },
+                "rowAggregate": {
+                    "type": "array",
+                    "items": { "$ref": "#/definitions/aggregateInfo" }
+                },
                 "rowHighlight": {
                     "type": "object",
                     "oneOf":[ 
@@ -78,6 +82,11 @@ const baseSchema = {
                     "type": "string",
                     "enum": ["nominal", "quantitative", "url", "tree"],
                     "description": "The data type of a field"
+                },
+                "aggFunction": {
+                    "type": "string",
+                    "enum": ["max", "min", "mean", "sum", "mostCommon", "leastCommon", "concat", "count", "uniqueCount"],
+                    "description": "A funtion to apply when aggregating values"
                 },
                 "position": {
                     "type": "string",
@@ -145,6 +154,25 @@ const baseSchema = {
                     "type": "number",
                     "description": "A similarity threshold"
                 },
+            }
+        },
+        "aggregateInfo": {
+            "type": "object",
+            "required": ["field", "type"],
+            "properties": {
+                "field": {
+                    "type": "string",
+                    "description": "The name of a data field"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": ["nominal"], // TODO: Support other types as well.
+                    "description": "The data type of a field"
+                },
+                "oneOf": {
+                    "type": "array",
+                    "description": "An array of values of a field that should be aggregated"
+                }
             }
         },
         "zoomInfo": {
