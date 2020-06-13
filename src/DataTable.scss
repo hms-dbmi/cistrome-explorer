@@ -6,10 +6,26 @@
     width: 100%;
     height: 100%;
     .cisvis-data-table-container{
-        background: white;
+        background: #f5f5f5;
         box-shadow: 0px 0px 30px 0px #444;
-        border-radius: 20px;
+        border-radius: 3px;
         padding: 30px;
+        .toolkit-btn-add-track,
+        .toolkit-btn-add-track-active {
+            cursor: not-allowed;
+            color: lightgray;
+            right: 130px;
+            top: 140px;
+            padding: 4px;
+            font-weight: bold;
+            position: absolute;
+            display: flex;
+            align-items: center;
+        }
+        .toolkit-btn-add-track-active {
+            cursor: pointer;
+            color: #4d4c4c;
+        }
     }
 }
 
@@ -22,8 +38,13 @@
     thead {
         border-bottom: 1px solid black;
     }
-    tbody tr:hover {
-        background: rgb(233, 233, 233);
+    .data-table-row,
+    .data-table-row-selected {
+        cursor: pointer;
+    }
+    .data-table-row-selected {
+        outline: 1px solid #00a3fe;
+        background: #e2f1ff;
     }
     th {
         height: 30px;

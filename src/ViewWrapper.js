@@ -1,8 +1,9 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import d3 from './utils/d3.js';
 import uuidv4 from 'uuid/v4';
+import PubSub from "pubsub-js";
+import { EVENT } from './utils/constants.js';
 import ViewColumnBrush from './ViewColumnBrush.js';
-import DataTableForIntervalTFs from './DataTableForIntervalTFs.js';
 import { resolveIntervalCoordinates } from './utils/genome.js';
 import { getRange } from './utils/viewport.js';
 import { ARROW_H } from './utils/icons.js';
@@ -37,8 +38,6 @@ export default function ViewWrapper(props) {
     const [brushEndX, setBrushEndX] = useState(null);
     const [chrName, setChrName] = useState("");
     const [chrPos, setChrPos] = useState("");
-    
-    const [requestedIntervalParams, setRequestedIntervalParams] = useState(null);
 
     const brushBarHeight = 24;
 
@@ -184,7 +183,10 @@ export default function ViewWrapper(props) {
                                     multivecTrack={multivecTrack}
                                     onViewportRemove={onViewportRemove}
                                     onRequestIntervalTFs={(intervalParams) => {
-                                        setRequestedIntervalParams(intervalParams);
+                                        PubSub.publish(EVENT.CISTROME_TOOLKIT, {
+                                            intervalParams,
+                                            isVisible: true
+                                        });
                                     }}
                                 />
                             ) : null;
@@ -230,17 +232,6 @@ export default function ViewWrapper(props) {
                         </div>
                     : null}
                 </div>
-            </div>
-            <div>
-                {requestedIntervalParams ? 
-                    <DataTableForIntervalTFs
-                        left={0}
-                        top={0}
-                        width={width}
-                        height={600}
-                        intervalParams={requestedIntervalParams}
-                    />
-                : null}
             </div>
         </div>
     ) : null;

@@ -3,6 +3,10 @@ import pkg from '../../package.json';
 
 import { CistromeHGW } from '../index.js';
 
+import PubSub from "pubsub-js";
+import { EVENT } from '../utils/constants.js';
+import { TABLE } from '../utils/icons.js';
+
 import hgDemoViewConfig1 from '../viewconfigs/horizontal-multivec-1.json';
 import hgDemoViewConfig1b from '../viewconfigs/horizontal-multivec-1b.json';
 import hgDemoViewConfig2 from '../viewconfigs/horizontal-multivec-2.json';
@@ -276,6 +280,17 @@ export default function App() {
                         </select>
                     </span>
                     <span className="header-info">
+                        <span style={{ cursor: 'pointer' }} onClick={() => 
+                            PubSub.publish(EVENT.CISTROME_TOOLKIT, {
+                                isVisible: true
+                            })
+                        }>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+                                viewBox={TABLE.viewBox}>
+                                <title>CistromeToolkit</title>
+                                <path fill="#666" d={TABLE.path}/>
+                            </svg>
+                        </span>
                         <span>
                             <a href={`${pkg.homepage}/docs/`} target="_blank">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
