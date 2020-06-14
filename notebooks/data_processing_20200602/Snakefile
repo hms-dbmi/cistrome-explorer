@@ -20,27 +20,28 @@ SAMPLE_DATA_URL = "http://dc2.cistrome.org/api/datahub/{cid}"
 SAMPLE_METADATA_URL = "http://dc2.cistrome.org/api/inspector?id={cid}"
 
 GROUP_NAMES = config["groups"].keys()
+FILETYPE = config.get("filetype", "mv5")
 
 # Rules
 rule all:
     input:
-        expand(join(PROCESSED_DIR, "{group_name}.multires.mv5"), group_name=GROUP_NAMES),
+        expand(join(PROCESSED_DIR, f"{{group_name}}.multires.{FILETYPE}"), group_name=GROUP_NAMES),
 
-rule manifest_to_multivec:
+rule manifest_to_outfile:
     input:
         bigwigs=lambda w: expand(join(RAW_DIR, "{cid}.bw"), cid=config["groups"][w.group_name]),
         metadata=lambda w: expand(join(RAW_DIR, "{cid}.metadata.json"), cid=config["groups"][w.group_name]),
         manifest=join(RAW_DIR, "{group_name}.manifest.json")
     output:
-        multivec=join(PROCESSED_DIR, "{group_name}.multires.mv5")
+        join(PROCESSED_DIR, f"{{group_name}}.multires.{FILETYPE}")
     params:
         starting_resolution=1000,
-        script=join(SRC_DIR, "manifest_to_multivec_h5py.py")
+        script=join(SRC_DIR, f"manifest_to_{FILETYPE}.py")
     shell:
         """
         python {params.script} \
             -i {input.manifest} \
-            -o {output.multivec} \
+            -o {output} \
             -s {params.starting_resolution}
         """
 

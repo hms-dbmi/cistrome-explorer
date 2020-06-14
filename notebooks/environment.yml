@@ -20,6 +20,7 @@ dependencies:
   - nb_conda
   - jq
   - tqdm
+  - zarr
   - pip
   - pip:
     - negspy

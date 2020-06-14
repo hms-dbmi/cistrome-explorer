@@ -1,6 +1,6 @@
 
 ```
-snakemake --cores 2
+snakemake --cores 2 --config filetype=zarr # or filetype=mv5
 ```
 
 ## Using parallel hdf5 via h5py and mpi4py
