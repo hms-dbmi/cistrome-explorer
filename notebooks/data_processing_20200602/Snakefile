@@ -22,6 +22,8 @@ SAMPLE_METADATA_URL = "http://dc2.cistrome.org/api/inspector?id={cid}"
 GROUP_NAMES = config["groups"].keys()
 FILETYPE = config.get("filetype", "mv5")
 
+OUTFILE_WRAPPER = directory if FILETYPE == "zarr" else (lambda x: x)
+
 # Rules
 rule all:
     input:
@@ -33,7 +35,7 @@ rule manifest_to_outfile:
         metadata=lambda w: expand(join(RAW_DIR, "{cid}.metadata.json"), cid=config["groups"][w.group_name]),
         manifest=join(RAW_DIR, "{group_name}.manifest.json")
     output:
-        join(PROCESSED_DIR, f"{{group_name}}.multires.{FILETYPE}")
+        OUTFILE_WRAPPER(join(PROCESSED_DIR, f"{{group_name}}.multires.{FILETYPE}"))
     params:
         starting_resolution=1000,
         script=join(SRC_DIR, f"manifest_to_{FILETYPE}.py")
