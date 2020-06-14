@@ -8,7 +8,7 @@ dependencies:
   - numpy
   - pandas
   - requests
-  - h5py
+  #- h5py
   - mpi4py
   - dask
   - flake8
@@ -19,6 +19,7 @@ dependencies:
   - jupyter
   - nb_conda
   - jq
+  - pyyaml
   - tqdm
   - zarr
   - pip

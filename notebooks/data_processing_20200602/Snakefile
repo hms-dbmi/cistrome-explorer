@@ -19,9 +19,9 @@ PROCESSED_DIR = join(DATA_DIR, "processed")
 SAMPLE_DATA_URL = "http://dc2.cistrome.org/api/datahub/{cid}"
 SAMPLE_METADATA_URL = "http://dc2.cistrome.org/api/inspector?id={cid}"
 
+# Process the config
 GROUP_NAMES = config["groups"].keys()
 FILETYPE = config.get("filetype", "mv5")
-
 OUTFILE_WRAPPER = directory if FILETYPE == "zarr" else (lambda x: x)
 
 # Rules

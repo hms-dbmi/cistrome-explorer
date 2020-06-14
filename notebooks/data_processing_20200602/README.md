@@ -1,6 +1,18 @@
 
 ```
-snakemake --cores 2 --config filetype=zarr # or filetype=mv5
+snakemake --cores 2 --config filetype=mv5
+# or
+snakemake --cores 2 --config filetype=zarr
+```
+
+## Using pybbi with `summary="sum"`
+
+Until version `0.2.3` is pushed to PyPI, install from source to get the changes added in pull request https://github.com/nvictus/pybbi/pull/12
+
+```sh
+git clone git@github.com:nvictus/pybbi.git
+cd pybbi
+pip install -e .
 ```
 
 ## Using parallel hdf5 via h5py and mpi4py
@@ -30,7 +42,7 @@ python setup.py install
 
 ### On macOS
 
-Download hdf5 1.12.0 source code from https://www.hdfgroup.org/downloads/hdf5/source-code/ and unzip
+Download hdf5 1.10.6 source code from https://www.hdfgroup.org/downloads/hdf5/source-code/ and un-tar-gz
 
 ```sh
 brew install openmpi
@@ -39,7 +51,9 @@ brew install openmpi
 mkdir -p ~/software/hdf5
 
 brew info openmpi # Use this to find the CC value for the next line.
-CC=/usr/local/Cellar/open-mpi/4.0.3/bin/mpicc ./configure --enable-parallel --enable-shared --prefix=~/software/hdf5
+
+# In the downloaded hdf5-1.10.6 source directory:
+CC=/usr/local/Cellar/open-mpi/4.0.3/bin/mpicc ./configure --enable-parallel --enable-shared --prefix=$HOME/software/hdf5
 make
 export NPROCS=3 # https://github.com/open-mpi/ompi/issues/6497
 make check
@@ -49,7 +63,12 @@ make install
 git clone git@github.com:h5py/h5py.git
 
 cd h5py
-python setup.py configure --hdf5=~/software/hdf5
+export CC=/usr/local/Cellar/open-mpi/4.0.3/bin/mpicc
+python setup.py configure --hdf5=$HOME/software/hdf5
 python setup.py configure --mpi
 python setup.py install
+cd ..
+python
+>>> import h5py
+>>> h5py.get_config().mpi # Check whether MPI has been enabled, should return True
 ```
