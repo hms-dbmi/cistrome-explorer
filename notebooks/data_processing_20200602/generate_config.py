@@ -95,7 +95,7 @@ def generate_config():
         for factor in tqdm(specie_factors):
             factor_bio_sources = get_bio_sources_by_species_and_factor(specie, factor)
             for bio_source_type, bio_source_id in factor_bio_sources:
-                name = f"{specie}__{factor}__{bio_source_type}_{bio_source_id}"
+                name = f"{specie}__{factor}__{bio_source_type}__{bio_source_id}".replace(" ", "_")
                 cids = get_cids(specie, factor, bio_source_type, bio_source_id)
                 
                 config["groups"][name] = cids

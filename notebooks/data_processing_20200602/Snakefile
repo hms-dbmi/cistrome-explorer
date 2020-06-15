@@ -20,7 +20,9 @@ SAMPLE_DATA_URL = "http://dc2.cistrome.org/api/datahub/{cid}"
 SAMPLE_METADATA_URL = "http://dc2.cistrome.org/api/inspector?id={cid}"
 
 # Process the config
-GROUP_NAMES = config["groups"].keys()
+#GROUP_NAMES = config["groups"].keys() # TODO: do not hard-code
+GROUP_NAMES = ['Homo_sapiens__GATA6__cl__Caco-2', 'Homo_sapiens__HNF4A__cl__Caco-2', 'Homo_sapiens__HNF4A__ct__Epithelium']
+
 FILETYPE = config.get("filetype", "mv5")
 OUTFILE_WRAPPER = directory if FILETYPE == "zarr" else (lambda x: x)
 
