@@ -56,6 +56,9 @@ def get_factors_by_species(specie):
     if r.ok:
         response_json = r.json()
         return response_json["factors"]
+    else:
+        print(f"Error: get_factors_by_species({specie})")
+        return []
 
 def get_bio_sources_by_species_and_factor(specie, factor):
     params = initial_params.copy()
@@ -68,8 +71,9 @@ def get_bio_sources_by_species_and_factor(specie, factor):
     if r.ok:
         response_json = r.json()
         return response_json["cellinfos"]
-
-
+    else:
+        print(f"Error: get_bio_sources_by_species_and_factor({specie}, {factor})")
+        return []
 
 def generate_config():
 
@@ -88,15 +92,14 @@ def generate_config():
     for specie in all_species:
         print(specie)
         specie_factors = get_factors_by_species(specie)
-        for factor in specie_factors:
-            print(factor)
+        for factor in tqdm(specie_factors):
             factor_bio_sources = get_bio_sources_by_species_and_factor(specie, factor)
-            print(factor_bio_sources)
             for bio_source_type, bio_source_id in factor_bio_sources:
                 name = f"{specie}__{factor}__{bio_source_type}_{bio_source_id}"
                 cids = get_cids(specie, factor, bio_source_type, bio_source_id)
                 
                 config["groups"][name] = cids
+    return config
 
 
 if __name__ == "__main__":
