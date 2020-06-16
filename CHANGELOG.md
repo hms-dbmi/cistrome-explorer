@@ -8,6 +8,7 @@
 - Changed the table view to be shown as a modal view.
 - Updated format of API results (e.g., use consistent letter cases and use scientific notations for long numbers).
 - Filtering information in range sliders and keyword search boxes is based on the aggregated values (`aggregatedRowInfo`), instead of original `rowInfo`.
+- Fixed a SVG export bug which caused visualizations to be exported from previous datasets (corresponding to previous `options` prop values in the demo).
 
 ## 0.3.0 - 05/27/20
 

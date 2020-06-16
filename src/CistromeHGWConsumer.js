@@ -200,6 +200,11 @@ export default function CistromeHGWConsumer(props) {
         drawRef.current[key] = { draw, options };
     }, [drawRef]);
 
+    // Clear the drawRegister object when the options prop changes.
+    useEffect(() => {
+        drawRef.current = {};
+    }, [drawRef, optionsRaw]);
+
     // Listen for the `createSVG` event.
     useEffect(() => {
         hgRef.current.api.on('createSVG', (svg) => {
