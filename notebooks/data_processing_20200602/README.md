@@ -1,9 +1,19 @@
 
-```
+Generate multivec files from CistromeDB bigWig files:
+```sh
+conda activate cistrome-explorer-notebooks
 snakemake --cores 2 --config filetype=mv5
 # or
 snakemake --cores 2 --config filetype=zarr
 ```
+
+Ingest the processed multivec files with `higlass-server`:
+```sh
+conda activate higlass-server
+bash higlass_ingest.sh path/to/higlass-server # fill in this path
+```
+
+# Setup
 
 ## Using pybbi with `summary="sum"`
 
