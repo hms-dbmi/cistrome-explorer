@@ -18,6 +18,11 @@ const _fakedata = {
             rowInfo: rowInfo1
         }
     },
+    "cistrome-track-1b": {
+        tilesetInfo: {
+            rowInfo: rowInfo1
+        }
+    },
     "cistrome-track-2": {
         tilesetInfo: {
             rowInfo: rowInfo2

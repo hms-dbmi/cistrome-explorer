@@ -49,6 +49,8 @@ toc:
 - resolveIntervalCoordinates
 - selectRows
 - highlightRowsFromSearch
+- getAggregatedRowInfo
+- getAggregatedValue
 - insertItemToArray
 - modifyItemInArray
 - removeItemFromArray

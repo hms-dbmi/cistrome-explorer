@@ -12,7 +12,8 @@ export const TRACK_TYPE = Object.freeze({
  */
 export const EVENT = Object.freeze({
     TOOLTIP: "tooltip",
-    CONTEXT_MENU: "context-menu"
+    CONTEXT_MENU: "context-menu",
+    CISTROME_TOOLKIT: "cistrome-toolkit"
 });
 
 /*

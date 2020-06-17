@@ -3,7 +3,12 @@ import pkg from '../../package.json';
 
 import { CistromeHGW } from '../index.js';
 
+import PubSub from "pubsub-js";
+import { EVENT } from '../utils/constants.js';
+import { TABLE } from '../utils/icons.js';
+
 import hgDemoViewConfig1 from '../viewconfigs/horizontal-multivec-1.json';
+import hgDemoViewConfig1b from '../viewconfigs/horizontal-multivec-1b.json';
 import hgDemoViewConfig2 from '../viewconfigs/horizontal-multivec-2.json';
 import hgDemoViewConfig2b from '../viewconfigs/horizontal-multivec-2b.json';
 import hgDemoViewConfig6 from '../viewconfigs/horizontal-multivec-6.json';
@@ -36,6 +41,36 @@ const demos = {
             ],
             rowFilter: [
                 {field: "Tissue Type", type: "nominal", notOneOf: ["None"]}
+            ]
+        }
+    },
+    "H3K27ac Demo (1 View, Center Track, Rows Aggregated)": {
+        viewConfig: hgDemoViewConfig1b,
+        options: {
+            rowInfoAttributes: [
+                {field: "Hierarchical Clustering (Average)", type: "tree", position: "left"},
+                {field: ["qc_frip", "qc_fastqc"], type: "quantitative", position: "left", aggFunction: "mean"},
+                {field: "qc_frip", type: "quantitative", position: "left", aggFunction: "mean"},
+                {field: "qc_fastqc", type: "quantitative", position: "left", aggFunction: "mean"},
+                {field: "id", type: "quantitative", position: "left", aggFunction: "count"},
+                {field: "Metadata URL", type: "url", position: "left", title: "cid", aggFunction: "mostCommon"},
+                {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right"},
+                {field: "Cell Type", type: "nominal", position: "right", aggFunction: "concat"},
+                {field: "Tissue Type", type: "nominal", position: "right", aggFunction: "concat"},
+                {field: "Species", type: "nominal", position: "right", aggFunction: "concat"}
+            ],
+            rowAggregate: [
+                {field: "Cell Type", type: "nominal", oneOf: ["Fibroblast", "Epithelium"]},
+                {field: "Tissue Type", type: "nominal", oneOf: ["Blood"]}
+            ],
+            rowSort: [
+                {field: "Tissue Type", type: "nominal", order: "ascending"},
+                {field: "qc_frip", type: "quantitative", order: "descending"}
+            ],
+            rowFilter: [
+                {field: "Tissue Type", type: "nominal", notOneOf: [
+                    "None", "Adipose", "Bone", "Bone Marrow", "Brain", "Breast", "Cervix", "Colon", "Connective Tissue", "Embryo"
+                ]}
             ]
         }
     },
@@ -189,20 +224,30 @@ const demos = {
         viewConfig: hgDemoViewConfig2,
         options: {
             rowInfoAttributes: [
+                {field: "Hierarchical Clustering", type: "tree", position: "left"},
+                {field: "Tissue Type", type: "nominal", position: "left"},
+                {field: ["Random 1", "Random 2"], type: "quantitative", position: "left"},
+                {field: "id", type: "nominal", position: "right"},
                 {field: "Hierarchical Clustering", type: "tree", position: "right"}
             ],
             rowFilter: [ ]
         }
     },
-    "Minimal Dataset (w/ Dendrogram Similarity Distance)": {
+    "Minimal Dataset (w/ Dendrogram and Aggregation)": {
         viewConfig: hgDemoViewConfig2b,
         options: {
             rowInfoAttributes: [
-                {field: "id", type: "nominal", position: "right"},
-                {field: "Hierarchical Clustering", type: "tree", position: "right"},
-                {field: "Hierarchical Clustering", type: "tree", position: "left"}
+                {field: "Hierarchical Clustering", type: "tree", position: "left"},
+                {field: "Tissue Type", type: "nominal", position: "left", aggFunction: "concat"},
+                {field: "Random 1", type: "quantitative", position: "left", aggFunction: "mean"},
+                {field: ["Random 1", "Random 2"], type: "quantitative", position: "left", aggFunction: "mean"},
+                {field: "id", type: "nominal", position: "right", aggFunction: "concat"},
+                {field: "Hierarchical Clustering", type: "tree", position: "right"}
             ],
-            rowFilter: [ ]
+            rowFilter: [ ],
+            rowAggregate: [
+                {field: "Tissue Type", type: "nominal", oneOf: ["Blood", "Bone Marrow"]}
+            ]
         }
     },
     "Aggregation": {
@@ -255,6 +300,17 @@ export default function App() {
                         </select>
                     </span>
                     <span className="header-info">
+                        <span style={{ cursor: 'pointer' }} onClick={() => 
+                            PubSub.publish(EVENT.CISTROME_TOOLKIT, {
+                                isVisible: true
+                            })
+                        }>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+                                viewBox={TABLE.viewBox}>
+                                <title>CistromeToolkit</title>
+                                <path fill="#666" d={TABLE.path}/>
+                            </svg>
+                        </span>
                         <span>
                             <a href={`${pkg.homepage}/docs/`} target="_blank">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"

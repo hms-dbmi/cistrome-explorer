@@ -12,6 +12,7 @@ import TrackWrapper from './TrackWrapper.js';
 import ViewWrapper from './ViewWrapper.js';
 import Tooltip from './Tooltip.js';
 import ContextMenu, { destroyContextMenu } from './ContextMenu.js';
+import CistromeToolkit from './CistromeToolkit.js';
 
 import { 
     DEFAULT_OPTIONS_KEY,
@@ -85,8 +86,8 @@ export default function CistromeHGWConsumer(props) {
         }
         const trackOptions = getTrackWrapperOptions(options, viewId, trackId);
         const rowInfo = context.state[viewId][trackId].rowInfo;
-        
-        // Filter and sort
+
+        // Aggregate, filter, and sort
         const newSelectedRows = selectRows(rowInfo, trackOptions);
         setTrackSelectedRows(viewId, trackId, newSelectedRows);
         
@@ -96,7 +97,7 @@ export default function CistromeHGWConsumer(props) {
             const condition = type === "nominal" ? 
                 trackOptions.rowHighlight.contains :
                 trackOptions.rowHighlight.range;
-            const newHighlitRows = highlightRowsFromSearch(rowInfo, field, type, condition);
+            const newHighlitRows = highlightRowsFromSearch(rowInfo, field, type, condition, trackOptions);
             setHighlitRows(viewId, trackId, newHighlitRows);
         }
     }, [options]);
@@ -199,6 +200,11 @@ export default function CistromeHGWConsumer(props) {
         drawRef.current[key] = { draw, options };
     }, [drawRef]);
 
+    // Clear the drawRegister object when the options prop changes.
+    useEffect(() => {
+        drawRef.current = {};
+    }, [drawRef, optionsRaw]);
+
     // Listen for the `createSVG` event.
     useEffect(() => {
         hgRef.current.api.on('createSVG', (svg) => {
@@ -224,9 +230,10 @@ export default function CistromeHGWConsumer(props) {
         const highlightKey = getHighlightKeyByFieldType(type, condition);
         const newRowHighlight = { field, type, [highlightKey]: condition };
         const newOptions = updateWrapperOptions(options, newRowHighlight, "rowHighlight", viewId, trackId, { isReplace: true });
+        const trackOptions = getTrackWrapperOptions(newOptions, viewId, trackId);
 
         // Notice: Highlighting options are specified only in the wrapper options.
-        const newHighlitRows = highlightRowsFromSearch(context.state[viewId][trackId].rowInfo, field, type, condition);
+        const newHighlitRows = highlightRowsFromSearch(context.state[viewId][trackId].rowInfo, field, type, condition, trackOptions);
         setHighlitRows(viewId, trackId, newHighlitRows);
         setOptions(newOptions);
     }, [options]);
@@ -375,6 +382,18 @@ export default function CistromeHGWConsumer(props) {
         setOptions(newOptions);
     }, [options]);
 
+    // Callback function for adding a BigWig track.
+    const onAddBigWigTrack = useCallback((server, tilesetUid, position) => {
+        if(muiltivecTrackIds && muiltivecTrackIds.length !== 0 && muiltivecTrackIds[0].viewId) {
+            addNewTrack({
+                type: 'horizontal-bar',
+                server,
+                tilesetUid,
+                height: 20,
+            }, muiltivecTrackIds[0].viewId, position);
+        }
+    }, [muiltivecTrackIds]);
+
     // Do initial processing of the options prop.
     useEffect(() => {
         setOptions(processWrapperOptions(optionsRaw));
@@ -497,6 +516,12 @@ export default function CistromeHGWConsumer(props) {
             ))}
             <Tooltip />
             <ContextMenu/>
+            <CistromeToolkit
+                // TODO: After we build DB for cistrome bigwig files, uncomment the following code.
+                // onAddTrack={(server, tilesetUid, position) => { 
+                //     onAddBigWigTrack(server, tilesetUid, position);
+                // }}
+            />
         </div>
     );
 }

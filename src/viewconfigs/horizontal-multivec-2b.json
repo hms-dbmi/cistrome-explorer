@@ -124,7 +124,9 @@
                 "labelShowAssembly": true,
                 "colorbarBackgroundColor": "#ffffff",
                 "scaleStartPercent": "0.00000",
-                "scaleEndPercent": "1.00000"
+                "scaleEndPercent": "1.00000",
+                "selectRowsAggregationWithRelativeHeight": false,
+                "selectRowsAggregationMode": "mean"
               },
               "width": 1607,
               "height": 482
