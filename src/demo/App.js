@@ -16,7 +16,6 @@ import hgDemoViewConfig7 from '../viewconfigs/horizontal-multivec-7.json';
 import hgDemoViewConfig8 from '../viewconfigs/horizontal-multivec-8.json';
 import hgDemoViewConfig9 from '../viewconfigs/horizontal-multivec-9.json';
 import hgDemoViewConfig10 from '../viewconfigs/horizontal-multivec-10.json';
-import hgDemoViewConfig11 from '../viewconfigs/horizontal-multivec-11.json';
 import hgDemoViewConfigApril2020 from '../viewconfigs/meeting-2020-04-29.json';
 
 import './App.scss';
@@ -249,26 +248,7 @@ const demos = {
                 {field: "Tissue Type", type: "nominal", oneOf: ["Blood", "Bone Marrow"]}
             ]
         }
-    },
-    "Aggregation": {
-        viewConfig: hgDemoViewConfig11,
-        options: {
-            rowInfoAttributes: [
-                {field: "treats__0__species__name", type: "nominal", position: "right", title: "Species"},
-                {field: "treats__0__tissue_type__name", type: "nominal", position: "right"},
-                {field: "treats__0__cell_type__name", type: "nominal", position: "right"},
-                {field: "treats__0__cell_line__name", type: "nominal", position: "right"},
-                {field: "treats__0__factor__name", type: "nominal", position: "right"},
-                {field: "id", type: "nominal", position: "left"}
-            ],
-            rowSort: [
-                
-            ],
-            rowFilter: [
-                
-            ]
-        }
-    },
+    }
 };
 
 function onViewConfigChange(viewConfigString) {
