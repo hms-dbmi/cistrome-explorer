@@ -250,7 +250,7 @@ const demos = {
             ]
         }
     },
-    "Aggregation": {
+    "Demo 06/17/20": {
         viewConfig: hgDemoViewConfig11,
         options: {
             rowInfoAttributes: [

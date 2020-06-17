@@ -101,8 +101,8 @@
           "center": [
             {
               "type": "horizontal-multivec",
-              "uid": "cistrome-track-1",
-              "tilesetUid": "Homo_sapiens__GATA6__cl__Caco-2",
+              "uid": "cistrome-aggregation-test-track-1",
+              "tilesetUid": "Homo_sapiens__HNF4A__ct__Epithelium",
               "server": "http://localhost:9000/api/v1",
               "options": {
                 "labelPosition": "hidden",
@@ -112,7 +112,7 @@
                 "trackBorderWidth": 0,
                 "trackBorderColor": "black",
                 "heatmapValueScaling": "log",
-                "name": "Homo_sapiens__GATA6__cl__Caco-2",
+                "name": "Homo_sapiens__HNF4A__ct__Epithelium",
                 "labelLeftMargin": 0,
                 "labelRightMargin": 0,
                 "labelTopMargin": 0,
@@ -395,7 +395,7 @@
           "x": 0,
           "y": 0
         },
-        "uid": "cistrome-view-1"
+        "uid": "cistrome-aggregation-test-view"
       }
     ],
     "zoomLocks": {

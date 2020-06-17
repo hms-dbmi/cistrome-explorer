@@ -383,14 +383,15 @@ export default function CistromeHGWConsumer(props) {
     }, [options]);
 
     // Callback function for adding a BigWig track.
-    const onAddBigWigTrack = useCallback((server, tilesetUid, position) => {
+    const onAddBigWigTrack = useCallback((cistromeDataConfig) => {
+        const { species, factor, biologicalSourceType, biologicalSourceName } = cistromeDataConfig;
         if(muiltivecTrackIds && muiltivecTrackIds.length !== 0 && muiltivecTrackIds[0].viewId) {
             addNewTrack({
-                type: 'horizontal-bar',
-                server,
-                tilesetUid,
-                height: 20,
-            }, muiltivecTrackIds[0].viewId, position);
+                type: 'horizontal-multivec',
+                server: 'http://localhost:9000/api/v1',
+                tilesetUid: `${species}__${factor}__${biologicalSourceType}__${biologicalSourceName}`.replace(" ", "_"),
+                height: 100,
+            }, muiltivecTrackIds[0].viewId, 'top');
         }
     }, [muiltivecTrackIds]);
 
@@ -518,9 +519,7 @@ export default function CistromeHGWConsumer(props) {
             <ContextMenu/>
             <CistromeToolkit
                 // TODO: After we build DB for cistrome bigwig files, uncomment the following code.
-                // onAddTrack={(server, tilesetUid, position) => { 
-                //     onAddBigWigTrack(server, tilesetUid, position);
-                // }}
+                onAddTrack={onAddBigWigTrack}
             />
         </div>
     );

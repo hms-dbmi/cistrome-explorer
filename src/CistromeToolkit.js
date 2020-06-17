@@ -39,6 +39,8 @@ export default function CistromeToolkit(props) {
     const [selectedRequest, setSelectedRequest] = useState(undefined);
     const [selectedRows, setSelectedRows] = useState([]);
 
+    const [checkedRows, setCheckedRows] = useState([]);
+
     useEffect(() => {
         const cistromeToolkitToken = PubSub.subscribe(EVENT.CISTROME_TOOLKIT, (msg, data) => {
             setIntervalParams(data.intervalParams);
@@ -54,6 +56,17 @@ export default function CistromeToolkit(props) {
         // Reset row selection upon new request selection.
         setSelectedRows([]);
     }, [selectedRequest]);
+
+    useEffect(() => {
+        if(checkedRows.length > 0) {
+            onAddTrack({
+                species: checkedRows[checkedRows.length - 1]["Species"],
+                factor: checkedRows[checkedRows.length - 1]["Factor"],
+                biologicalSourceType: "cl",
+                biologicalSourceName: checkedRows[checkedRows.length - 1]["Cell Line"],
+            });
+        }
+    }, [checkedRows])
 
     useEffect(() => {
         let didUnmount = false;
@@ -217,7 +230,7 @@ export default function CistromeToolkit(props) {
                             rows={requestHistory[selectedRequest].rows}
                             selectedRows={selectedRows}
                             expoNotations={["Overlap Ratio"]}
-                            onCheckRows={undefined}
+                            onCheckRows={(checkedRows) => setCheckedRows(checkedRows)}
                             onSelect={(selectedRows) => { setSelectedRows(selectedRows) }}
                         />
                         : null}
