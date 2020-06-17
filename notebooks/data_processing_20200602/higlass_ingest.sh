@@ -14,6 +14,6 @@ for D in $(ls -1 ./data/processed | sort); do
             --uid $TILESET_UID \
             --filename ./data/processed/$D \
             --filetype multivec \
-            --datatype matrix
+            --coordSystem hg38
     fi
 done
