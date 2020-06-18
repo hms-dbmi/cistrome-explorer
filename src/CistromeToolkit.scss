@@ -15,6 +15,7 @@
         background: #f5f5f5;
         box-shadow: 0px 0px 10px 0px #888;
         padding: 30px;
+        overflow-x: auto;
         .cisvis-table-title {
             font-weight: bold;
             display: inline-block;
@@ -51,7 +52,7 @@
         .cisvis-cistrome-toolkit-body {
             height: calc(100% - 40px);
             display: grid;
-            grid-template-columns: 350px auto;
+            grid-template-columns: 350px 350px auto;
             grid-column-gap: 6px;
             grid-template-rows: 30px auto;
             .cisvis-api-result-header {
@@ -61,6 +62,56 @@
                 padding: 5px;
                 border: 1px solid lightgray;
                 border-bottom: none;
+            }
+            .cisvis-api-request {
+                border: 1px solid lightgray;
+                background: white;
+                overflow-y: auto;
+                padding: 1px;
+                .api-config-view,
+                .api-config-view-selected {
+                    cursor: pointer;
+                    padding: 12px 8px 12px 8px;
+                    background: white;
+                    border-bottom: 1px solid lightgray;
+                    transition: height 0.2s ease-out;
+                    .api-search-button,
+                    .api-search-button-disabled {
+                        cursor: pointer;
+                        color: black;
+                        width: 100%;
+                        height: 30px;
+                        padding: 6px;
+                        font-weight: bold;
+                        text-align: center;
+                    }
+                    .api-search-button-disabled {
+                        cursor: not-allowed;
+                        color: gray;
+                    }
+                    .api-title {
+                        font-weight: bold;
+                        text-transform: uppercase;
+                    }
+                    .api-subtitle {
+                        color: gray;
+                        margin-bottom: 12px;
+                    }
+                    input {
+                        padding: 3px;
+                    }
+                    select, input {
+                        width: 94%;
+                        margin-left: 3%;
+                        margin-top: 6px;
+                        margin-bottom: 6px;
+                        height: 22px;
+                    }
+                }
+                .api-config-view-selected {
+                    outline: 1px solid #00a3fe;
+                    background: #e2f1ff;
+                }
             }
             .cisvis-api-result-list {
                 border: 1px solid lightgray;
@@ -90,4 +141,8 @@
             }
         }
     }
+}
+
+.cistrome-api-text-input {
+    width: 200px;
 }

@@ -5,13 +5,9 @@ import "./DataTable.scss";
 
 /**
  * Component for data table.
- * @prop {number} margin The gap between the inner table and the viewport.
  * @prop {array} rows Array of rows to render data table.
  * @prop {array} columns Array of column names in data table.
  * @prop {array} selectedRows Array of rows selected by a user.
- * @prop {string} title A title for the table. Optional.
- * @prop {string} subtitle A subtitle for the table. Optional.
- * @prop {boolean} isLoading Whether the data is still loading, in which case show a spinner.
  * @prop {array} expoNotations A list of columns names that need to use exponential notations.
  * @prop {(function|null)} onCheckRows If a function is provided, a checkbox will be shown for each row.
  * @prop {function} onSelect A function to call upon the selection on rows in a data table.
@@ -19,15 +15,11 @@ import "./DataTable.scss";
  */
 export default function DataTable(props) {
     const {
-        margin,
-        rows = [], columns = [],
+        rows = [], 
+        columns = [],
         selectedRows,
-        title = "Data Preview",
-        subtitle,
-        isLoading = false,
         onCheckRows = null,
         expoNotations = [],
-        onClose,
         onSelect
     } = props;
 
@@ -91,7 +83,7 @@ export default function DataTable(props) {
             style={{
                 overflowY: "auto",
                 border: "1px solid lightgray",
-                background: "#f9f9f9",
+                background: "white",
                 padding: '1px'
             }}
         >

@@ -1,10 +1,17 @@
 import React, { useEffect, useRef, useCallback, useState, useMemo } from "react";
 import PubSub from 'pubsub-js';
+import d3 from './utils/d3.js';
 import { EVENT } from './utils/constants.js';
 import DataTable from "./DataTable.js";
-import { requestIntervalTFs } from './utils/cistrome.js';
-import { CLOSE, PLUS } from './utils/icons.js';
-import d3 from './utils/d3.js';
+import { CLOSE, SEARCH, PLUS } from './utils/icons.js';
+import { 
+    CISTROME_DBTOOLKIT_SPECIES, 
+    CISTROME_DBTOOLKIT_PEAK_NUMBERS, 
+    CISTROME_DBTOOLKIT_GENE_DISTANCE,
+    requestIntervalTFs, 
+    requestGeneTFs, 
+    validateGeneParams 
+} from './utils/cistrome.js';
 import './CistromeToolkit.scss';
 import { REQUEST_HISTORY_SAMPLE } from "./utils/toolkit.js";
 
@@ -36,20 +43,39 @@ export default function CistromeToolkit(props) {
     const resizerRef = useRef(null);
     const dragY = useRef(null);
 
-    const [isVisible, setIsVisible] = useState(false);
-    const [height, setHeight] = useState(600);
-    const [intervalParams, setIntervalParams] = useState(undefined);
+    const [isVisible, setIsVisible] = useState(true); // TODO: Debugging,...
+    const [height, setHeight] = useState(800);
     const [requestStatus, setRequestStatus] = useState(undefined);
     const [requestHistory, setRequestHistory] = useState([]);   // Use `REQUEST_HISTORY_SAMPLE` in `/utils` to debug.
+
+    // API parameters
+    const [latestIntervalParams, setLatestIntervalParams] = useState({
+        assembly: CISTROME_DBTOOLKIT_SPECIES[0],
+        chrStartName: undefined,
+        chrStartPos: undefined,
+        chrEndName: undefined,
+        chrEndPos: undefined
+    });
+    const [latestGeneParams, setLatestGeneParams] = useState({
+        assembly: CISTROME_DBTOOLKIT_SPECIES[0],
+        distance: CISTROME_DBTOOLKIT_GENE_DISTANCE[0],
+        gene: ''
+    });
+    const [latestPeaksetParams, setLatestPeaksetParams] = useState({
+        // TODO: Support this
+    });
+    const [isLatestGeneParamsReady, setIsLatestGeneParamsReady] = useState(false);
+
+    // Selected rows
+    const [selectedAPI, setSelectedAPI] = useState(undefined);  // 0: Interval, 1: Gene, 2: Peak
     const [selectedRequest, setSelectedRequest] = useState(undefined);
     const [selectedRows, setSelectedRows] = useState([]);
 
     useEffect(() => {
         const cistromeToolkitToken = PubSub.subscribe(EVENT.CISTROME_TOOLKIT, (msg, data) => {
-            setIntervalParams(data.intervalParams);
+            setLatestIntervalParams(data.intervalParams);
             setIsVisible(data.isVisible ? data.isVisible : !isVisible);
         });
-
         return () => {
             PubSub.unsubscribe(cistromeToolkitToken);
         };
@@ -60,9 +86,17 @@ export default function CistromeToolkit(props) {
         setSelectedRows([]);
     }, [selectedRequest]);
 
+    // Check if parameters for each API is ready and can make a good URL
+    // useEffect(() => {
+    //     setIsLatestIntervalParamsReady(validateIntervalParams().success);
+    // }, [latestIntervalParams]);
+    useEffect(() => {
+        setIsLatestGeneParamsReady(validateGeneParams(latestGeneParams).success);
+    }, [latestGeneParams]);
+
     useEffect(() => {
         let didUnmount = false;
-        if(intervalParams) {
+        if(latestIntervalParams) {
             setRequestStatus({ msg: "Receiving Cistrome DB API response...", isLoading: true });
 
             const {
@@ -71,7 +105,7 @@ export default function CistromeToolkit(props) {
                 chrStartPos, 
                 chrEndName, 
                 chrEndPos
-            } = intervalParams;
+            } = latestIntervalParams;
 
             requestIntervalTFs(assembly, chrStartName, chrStartPos, chrEndName, chrEndPos)
                 .then(([rows, columns]) => {
@@ -109,7 +143,7 @@ export default function CistromeToolkit(props) {
                     }) === undefined;
                     if(isNew) {
                         const newHistory = [...requestHistory, {
-                            parameter: intervalParams,
+                            parameter: latestIntervalParams,
                             columns: costomColumns,
                             rows: customRows
                         }];
@@ -123,7 +157,7 @@ export default function CistromeToolkit(props) {
                 });
         }
         return (() => { didUnmount = true; });
-    }, [intervalParams]);
+    }, [latestIntervalParams]);
     
     // Set up the d3-drag handler functions (started, ended, dragged).
     const started = useCallback(() => {
@@ -138,8 +172,13 @@ export default function CistromeToolkit(props) {
     const dragged = useCallback(() => {
         const event = d3.event;
         const diff = event.sourceEvent.clientY - dragY.current;
-        setHeight(height - diff);
-    }, [dragY]);
+        setHeight(
+            Math.max(
+                Math.min(height - diff, window.innerHeight),
+                400
+            )
+        );
+    }, [dragY, height]);
 
     // Detect drag events for the resize element.
     useEffect(() => {
@@ -154,6 +193,133 @@ export default function CistromeToolkit(props) {
 
         return () => d3.select(resizer).on(".drag", null);
     }, [resizerRef, started, dragged, ended]);
+
+    const ApiRequestConfigViews = useMemo(() => {
+        const speciesSelection = (
+            <>
+                <div>Species</div>
+                <select
+                    defaultValue={CISTROME_DBTOOLKIT_SPECIES[0]}
+                    disabled={true}
+                >
+                    {CISTROME_DBTOOLKIT_SPECIES.map(d => (
+                        <option key={d} value={d}>
+                            {d}
+                        </option>
+                    ))}
+                </select>
+            </>
+        );
+        const searchButton = (isReady, onClick) => (
+            <div 
+                className={isReady ? 'api-search-button' : 'api-search-button-disabled'}
+                onClick={onClick}
+            >
+                <svg className="chw-button-sm chw-button-static" 
+                    style={{ top: '.3em', position: 'relative' }}
+                    viewBox={SEARCH.viewBox}>
+                    <path d={SEARCH.path} fill="currentColor"/>
+                </svg>
+                Search
+            </div>  
+        );
+
+        return (
+            <>
+                {/* Search by Interval */}
+                <div 
+                    className={selectedAPI === 0 ? 'api-config-view-selected' : 'api-config-view'}
+                    onClick={() => { setSelectedAPI(0) }}
+                    style={{ borderLeft: '4px solid #2C77B1' }}
+                >
+                    <div className='api-title'>Search by Interval</div>
+                    <div className='api-subtitle'>What factors bind in your interval?</div>
+                    {speciesSelection}
+                    <div>Interval</div>
+                    <input
+                        className="cistrome-api-text-input"
+                        type="text"
+                        placeholder="ch6:151690496-152103274"
+                        onChange={e => {
+                            // TODO: parse input
+                        }}
+                    />
+                    {selectedAPI === 0 ? searchButton(false, () => {}) : null}
+                </div>
+                {/* Search By Gene */}
+                <div 
+                    className={selectedAPI === 1 ? 'api-config-view-selected' : 'api-config-view'}
+                    style={{ borderLeft: '4px solid #D6641E' }}
+                    onClick={() => { setSelectedAPI(1) }}
+                >
+                    <div className='api-title'>Search by Gene</div>
+                    <div className='api-subtitle'>What factors regulate your gene?</div>
+                    {speciesSelection}
+                    <div>Distance</div>    
+                    <select
+                        defaultValue={CISTROME_DBTOOLKIT_GENE_DISTANCE[0]}
+                        onChange={e => setLatestGeneParams({
+                            ...latestGeneParams,
+                            distance: e.target.value
+                        })} 
+                    >
+                        {CISTROME_DBTOOLKIT_GENE_DISTANCE.map(d => (
+                            <option key={d} value={d}>
+                                {d}
+                            </option>
+                        ))}
+                    </select>
+                    <div>Gene</div>
+                    <input
+                        className="cistrome-api-text-input"
+                        type="text"
+                        placeholder="GAPDH or NM_001289746" // TODO: confirm if GAPDH works as well
+                        onChange={e => setLatestGeneParams({
+                            ...latestGeneParams,
+                            gene: e.target.value
+                        })}
+                    />
+                    {selectedAPI === 1 ? searchButton(isLatestGeneParamsReady, () => {
+                        requestGeneTFs(latestGeneParams)
+                            .then(([rows, columns]) => {
+                                console.log(rows, columns)
+                                // TODO:
+                            })
+                    }) : null}
+                </div>
+                {/* Search by Peak Set */}
+                <div
+                    className={selectedAPI === 2 ? 'api-config-view-selected' : 'api-config-view'}
+                    onClick={() => { setSelectedAPI(2) }}
+                    style={{ borderLeft: '4px solid #2B9F78' }}
+                >
+                    <div className='api-title'>Search by Peak Set</div>
+                    <div className='api-subtitle'>What factors have a significant binding overlap with your peak set?</div>
+                    {speciesSelection}
+                    <div>Peak Number of Cistrome Sample to Use</div>
+                    <select
+                        defaultValue={CISTROME_DBTOOLKIT_PEAK_NUMBERS[0]}
+                        onChange={e => setPeakNumber(e.target.value)} 
+                    >
+                        {CISTROME_DBTOOLKIT_PEAK_NUMBERS.map(d => (
+                            <option key={d} value={d}>
+                                {d}
+                            </option>
+                        ))}
+                    </select>
+                    <div>Bed File</div>  
+                    <input
+                        className="cistrome-api-text-input"
+                        type="file"
+                        onChange={() => {
+                            // TODO:
+                        }}
+                    />
+                    {selectedAPI === 2 ? searchButton(false, () => {}) : null}
+                </div>
+            </>
+        );
+    }); // TODO: side effects
 
     const listOfResultsRequested = useMemo(() => {
         return requestHistory.map((d, i) => {
@@ -240,21 +406,23 @@ export default function CistromeToolkit(props) {
                     </svg>
                 </span>
                 <div className="cisvis-cistrome-toolkit-body">
+                    <div className='cisvis-api-result-header'>API Request</div>
                     <div className='cisvis-api-result-header'>Request History</div>
                     <div className='cisvis-api-result-header'>Selected Result Table</div>
+                    <div className="cisvis-api-request">
+                        {ApiRequestConfigViews}
+                    </div>
                     <div className="cisvis-api-result-list">
                         {listOfResultsRequested}
                     </div>
-                    {selectedRequest !== undefined ?
-                        <DataTable 
-                            columns={requestHistory[selectedRequest].columns}
-                            rows={requestHistory[selectedRequest].rows}
-                            selectedRows={selectedRows}
-                            expoNotations={["Overlap Ratio"]}
-                            onCheckRows={undefined}
-                            onSelect={(selectedRows) => { setSelectedRows(selectedRows) }}
-                        />
-                        : null}
+                    <DataTable 
+                        columns={selectedRequest ? requestHistory[selectedRequest].columns : []}
+                        rows={selectedRequest ? requestHistory[selectedRequest].rows : []}
+                        selectedRows={selectedRows}
+                        expoNotations={["Overlap Ratio"]}
+                        onCheckRows={undefined}
+                        onSelect={(selectedRows) => { setSelectedRows(selectedRows) }}
+                    />
                 </div>
             </div>
         </div>
