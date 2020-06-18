@@ -6,12 +6,16 @@ import platform
 
 configfile: 'config.yml'
 
+O2_USER = config.get("user", None)
+
 # Check if this is running on O2
-is_o2 = (platform.system() == "Linux")
+IS_O2 = (platform.system() == "Linux" and O2_USER != None)
+
+print("This is", ("" if IS_O2 else "not"), "running on O2")
 
 # Directory / file constants
 SRC_DIR = "src"
-DATA_DIR = ("data" if not is_o2 else join(os.sep, "n", "scratch3", "users", "m", "mk596", "cistrome-explorer", "data"))
+DATA_DIR = ("data" if not IS_O2 else join(os.sep, "n", "scratch3", "users", O2_USER[0], O2_USER, "cistrome-explorer", "data"))
 RAW_DIR = join(DATA_DIR, "raw")
 PROCESSED_DIR = join(DATA_DIR, "processed")
 

@@ -1,7 +1,7 @@
 
 Generate multivec files from CistromeDB bigWig files:
 ```sh
-conda activate cistrome-explorer-notebooks
+conda activate cistrome-to-multivec-pipeline
 snakemake --cores 2 --config filetype=mv5
 # or
 snakemake --cores 2 --config filetype=zarr
@@ -15,11 +15,19 @@ bash higlass_ingest.sh path/to/higlass-server # fill in this path
 
 # Setup
 
+## Conda environment
+
+```sh
+conda env create -f environment.yml
+conda activate cistrome-to-multivec-pipeline
+```
+
 ## Using pybbi with `summary="sum"`
 
 Until version `0.2.3` is pushed to PyPI, install from source to get the changes added in pull request https://github.com/nvictus/pybbi/pull/12
 
 ```sh
+cd path/to/pybbi-parent
 git clone git@github.com:nvictus/pybbi.git
 cd pybbi
 pip install -e .
@@ -41,6 +49,7 @@ which h5cc # doesn't work for some reason - but the hdf5 dir is /n/app/hdf5/1.12
 
 # CC="mpicc" HDF5_MPI="ON" HDF5_DIR=/n/app/hdf5/1.12.0.parallel pip install --no-binary=h5py h5py # doesn't work since pip h5py not compatible with 1.12.0
 
+cd path/to/h5py-parent
 # Clone h5py so that the latest code with support for hdf5 v1.12.0 (since not yet on pip).
 git clone git@github.com:h5py/h5py.git
 
@@ -69,6 +78,7 @@ export NPROCS=3 # https://github.com/open-mpi/ompi/issues/6497
 make check
 make install
 
+cd path/to/h5py-parent
 # Clone h5py so that the latest code with support for hdf5 v1.12.0 (since not yet on pip).
 git clone git@github.com:h5py/h5py.git
 
@@ -80,5 +90,5 @@ python setup.py install
 cd ..
 python
 >>> import h5py
->>> h5py.get_config().mpi # Check whether MPI has been enabled, should return True
+>>> h5py.get_config().mpi # Should return True if MPI has been enabled
 ```
