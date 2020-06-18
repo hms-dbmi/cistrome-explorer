@@ -282,7 +282,7 @@ export default function App() {
                     <span className="header-info">
                         <span style={{ cursor: 'pointer' }} onClick={() => 
                             PubSub.publish(EVENT.CISTROME_TOOLKIT, {
-                                isVisible: true
+                                // Toggle visibility
                             })
                         }>
                             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"

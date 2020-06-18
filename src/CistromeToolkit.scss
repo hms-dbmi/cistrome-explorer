@@ -1,32 +1,93 @@
-.cisvis-cistrome-toolkit-body {
-    height: calc(100% - 40px);
-    display: grid;
-    grid-template-columns: 350px auto;
-    grid-column-gap: 6px;
-    .cisvis-api-result-list {
-        border: 1px solid lightgray;
-        background: white;
-        overflow-y: auto;
-        padding: 1px;
-        .cisvis-api-result,
-        .cisvis-api-result-selected {
-            cursor: pointer;
-            padding: 6px;
-            background: white;
-            border-bottom: 1px solid lightgray;
-            .cisvis-api-parameter {
-                font-weight: bold;
-                padding: 2px 4px;
-                margin-right: 4px;
-                font-size: 90%;
-                color: #ffffff;
-                background-color: #adacac;
-                border-radius: 4px;
+.cisvis-data-table-bg { 
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    transition: height 0.2s ease-out;
+    .cisvis-data-table-header {
+        height: 2px;
+        background: #666;
+        cursor: ns-resize;
+    }
+    .cisvis-data-table-container{
+        width: 100%;
+        height: 100%;
+        background: #f5f5f5;
+        box-shadow: 0px 0px 10px 0px #888;
+        padding: 30px;
+        .cisvis-table-title {
+            font-weight: bold;
+            display: inline-block;
+            margin-right: 14px;
+        }
+        .cisvis-table-subtitle {
+            display: inline-block;
+            color: gray;
+            position: relative;
+            .cisvis-progress-ring {
+                display: inline-block;
+                left: auto;
+                margin-left: 2px;
+                margin-right: 6px;
+                top: 4px;
             }
         }
-        .cisvis-api-result-selected{
-            outline: 1px solid #00a3fe;
-            background: #e2f1ff;
+        .toolkit-btn-add-track,
+        .toolkit-btn-add-track-active {
+            cursor: not-allowed;
+            color: lightgray;
+            right: 130px;
+            top: 140px;
+            padding: 4px;
+            font-weight: bold;
+            position: absolute;
+            display: flex;
+            align-items: center;
+        }
+        .toolkit-btn-add-track-active {
+            cursor: pointer;
+            color: #4d4c4c;
+        }
+        .cisvis-cistrome-toolkit-body {
+            height: calc(100% - 40px);
+            display: grid;
+            grid-template-columns: 350px auto;
+            grid-column-gap: 6px;
+            grid-template-rows: 30px auto;
+            .cisvis-api-result-header {
+                background: gray;
+                font-weight: bold;
+                color: white;
+                padding: 5px;
+                border: 1px solid lightgray;
+                border-bottom: none;
+            }
+            .cisvis-api-result-list {
+                border: 1px solid lightgray;
+                background: white;
+                overflow-y: auto;
+                padding: 1px;
+                .cisvis-api-result,
+                .cisvis-api-result-selected {
+                    cursor: pointer;
+                    padding: 6px;
+                    background: white;
+                    border-bottom: 1px solid lightgray;
+                    .cisvis-api-parameter {
+                        font-weight: bold;
+                        padding: 2px 4px;
+                        margin-right: 4px;
+                        font-size: 90%;
+                        color: #ffffff;
+                        background-color: #adacac;
+                        border-radius: 4px;
+                    }
+                }
+                .cisvis-api-result-selected{
+                    outline: 1px solid #00a3fe;
+                    background: #e2f1ff;
+                }
+            }
         }
     }
 }

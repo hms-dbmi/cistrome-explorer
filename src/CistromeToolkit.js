@@ -1,9 +1,10 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useRef, useCallback, useState, useMemo } from "react";
 import PubSub from 'pubsub-js';
 import { EVENT } from './utils/constants.js';
 import DataTable from "./DataTable.js";
 import { requestIntervalTFs } from './utils/cistrome.js';
 import { CLOSE, PLUS } from './utils/icons.js';
+import d3 from './utils/d3.js';
 import './CistromeToolkit.scss';
 import { REQUEST_HISTORY_SAMPLE } from "./utils/toolkit.js";
 
@@ -32,8 +33,12 @@ export default function CistromeToolkit(props) {
         onAddTrack
     } = props;
 
-    const [intervalParams, setIntervalParams] = useState(undefined);
+    const resizerRef = useRef(null);
+    const dragY = useRef(null);
+
     const [isVisible, setIsVisible] = useState(false);
+    const [height, setHeight] = useState(600);
+    const [intervalParams, setIntervalParams] = useState(undefined);
     const [requestStatus, setRequestStatus] = useState(undefined);
     const [requestHistory, setRequestHistory] = useState([]);   // Use `REQUEST_HISTORY_SAMPLE` in `/utils` to debug.
     const [selectedRequest, setSelectedRequest] = useState(undefined);
@@ -42,7 +47,7 @@ export default function CistromeToolkit(props) {
     useEffect(() => {
         const cistromeToolkitToken = PubSub.subscribe(EVENT.CISTROME_TOOLKIT, (msg, data) => {
             setIntervalParams(data.intervalParams);
-            setIsVisible(data.isVisible);
+            setIsVisible(data.isVisible ? data.isVisible : !isVisible);
         });
 
         return () => {
@@ -120,6 +125,36 @@ export default function CistromeToolkit(props) {
         return (() => { didUnmount = true; });
     }, [intervalParams]);
     
+    // Set up the d3-drag handler functions (started, ended, dragged).
+    const started = useCallback(() => {
+        const event = d3.event;
+        dragY.current = event.sourceEvent.clientY;
+    }, [dragY])
+
+    const ended = useCallback(() => {
+        dragY.current = null;
+    }, [dragY])
+
+    const dragged = useCallback(() => {
+        const event = d3.event;
+        const diff = event.sourceEvent.clientY - dragY.current;
+        setHeight(height - diff);
+    }, [dragY]);
+
+    // Detect drag events for the resize element.
+    useEffect(() => {
+        const resizer = resizerRef.current;
+
+        const drag = d3.drag()
+            .on("start", started)
+            .on("drag", dragged)
+            .on("end", ended);
+
+        d3.select(resizer).call(drag);
+
+        return () => d3.select(resizer).on(".drag", null);
+    }, [resizerRef, started, dragged, ended]);
+
     const listOfResultsRequested = useMemo(() => {
         return requestHistory.map((d, i) => {
             const {
@@ -147,24 +182,21 @@ export default function CistromeToolkit(props) {
         });
     }, [requestHistory, selectedRequest]);
     
-    return (isVisible ? (
-        <div className="cisvis-data-table-bg">
-            <div 
-                className="cisvis-data-table-container"
-                style={{ 
-                    margin: 100,
-                    width: `calc(100% - ${100 * 2}px)`,
-                    height: `calc(100% - ${100 * 2}px)`
-                }}>
+    return (
+        <div className="cisvis-data-table-bg"
+            style={{
+                height: isVisible ? `${height}px` : 0
+            }}
+        >
+            <div className='cisvis-data-table-header' ref={resizerRef}/>
+            <div className="cisvis-data-table-container">
                 <h4 className="cisvis-table-title">
                     CistromeDB Toolkit
                 </h4>
                 <span className="cisvis-table-subtitle">
                     {requestStatus?.isLoading ? (
                         <span className="cisvis-progress-ring" />
-                    ) : (requestStatus?.msg ? (
-                        <b>{requestStatus?.msg}</b>
-                    ) : null)}
+                    ) : null}
                 </span>
                 {onAddTrack ?
                     <span
@@ -194,8 +226,8 @@ export default function CistromeToolkit(props) {
                     verticalAlign: "middle", 
                     display: "inline-block", 
                     position: "absolute", 
-                    right: 105, 
-                    top: 105 
+                    right: 15, 
+                    top: 15
                 }}>
                     <svg
                         className={'chw-button'}
@@ -208,6 +240,8 @@ export default function CistromeToolkit(props) {
                     </svg>
                 </span>
                 <div className="cisvis-cistrome-toolkit-body">
+                    <div className='cisvis-api-result-header'>Request History</div>
+                    <div className='cisvis-api-result-header'>Selected Result Table</div>
                     <div className="cisvis-api-result-list">
                         {listOfResultsRequested}
                     </div>
@@ -224,5 +258,5 @@ export default function CistromeToolkit(props) {
                 </div>
             </div>
         </div>
-    ) : null);
+    );
 }
