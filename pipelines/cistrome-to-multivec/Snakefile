@@ -1,0 +1,87 @@
+import os
+from os.path import join
+import json
+import requests
+import platform
+
+configfile: 'config.yml'
+
+O2_USER = config.get("user", None)
+
+# Check if this is running on O2
+IS_O2 = (platform.system() == "Linux" and O2_USER != None)
+
+print("This is", ("" if IS_O2 else "not"), "running on O2")
+
+# Directory / file constants
+SRC_DIR = "src"
+DATA_DIR = ("data" if not IS_O2 else join(os.sep, "n", "scratch3", "users", O2_USER[0], O2_USER, "cistrome-explorer", "data"))
+RAW_DIR = join(DATA_DIR, "raw")
+PROCESSED_DIR = join(DATA_DIR, "processed")
+
+# URL constants
+SAMPLE_DATA_URL = "http://dc2.cistrome.org/api/datahub/{cid}"
+SAMPLE_METADATA_URL = "http://dc2.cistrome.org/api/inspector?id={cid}"
+
+# Process the config
+#GROUP_NAMES = config["groups"].keys() # TODO: do not hard-code
+GROUP_NAMES = ['Homo_sapiens__GATA6__cl__Caco-2', 'Homo_sapiens__HNF4A__cl__Caco-2', 'Homo_sapiens__HNF4A__ct__Epithelium']
+
+FILETYPE = config.get("filetype", "mv5")
+OUTFILE_WRAPPER = directory if FILETYPE == "zarr" else (lambda x: x)
+
+# Rules
+rule all:
+    input:
+        expand(join(PROCESSED_DIR, f"{{group_name}}.multires.{FILETYPE}"), group_name=GROUP_NAMES),
+
+rule manifest_to_outfile:
+    input:
+        bigwigs=lambda w: expand(join(RAW_DIR, "{cid}.bw"), cid=config["groups"][w.group_name]),
+        metadata=lambda w: expand(join(RAW_DIR, "{cid}.metadata.json"), cid=config["groups"][w.group_name]),
+        manifest=join(RAW_DIR, "{group_name}.manifest.json")
+    output:
+        OUTFILE_WRAPPER(join(PROCESSED_DIR, f"{{group_name}}.multires.{FILETYPE}"))
+    params:
+        starting_resolution=1000,
+        script=join(SRC_DIR, f"manifest_to_{FILETYPE}.py")
+    shell:
+        """
+        python {params.script} \
+            -i {input.manifest} \
+            -o {output} \
+            -s {params.starting_resolution}
+        """
+
+rule bigwigs_to_manifest:
+    input:
+        bigwigs=lambda w: expand(join(RAW_DIR, "{cid}.bw"), cid=config["groups"][w.group_name]),
+        metadata=lambda w: expand(join(RAW_DIR, "{cid}.metadata.json"), cid=config["groups"][w.group_name]),
+    output:
+        join(RAW_DIR, "{group_name}.manifest.json")
+    script:
+        join(SRC_DIR, "bigwigs_to_manifest.py")
+
+rule download_bigwig:
+    input:
+        join(RAW_DIR, "{cid}.data.json")
+    output:
+        join(RAW_DIR, "{cid}.bw")
+    shell:
+        '''
+        curl -L -o {output} $(cat {input} | jq '.[0].url' -r)
+        '''
+
+rule download_bigwig_metadata:
+    output:
+        metadata_json=join(RAW_DIR, "{cid}.metadata.json"),
+        data_json=join(RAW_DIR, "{cid}.data.json")
+    params:
+        sample_metadata_url=lambda w: SAMPLE_METADATA_URL.format(cid=w.cid),
+        sample_data_url=lambda w: SAMPLE_DATA_URL.format(cid=w.cid)
+    shell:
+        '''
+        curl -L -o {output.data_json} {params.sample_data_url} && \
+        curl -L -o {output.metadata_json} {params.sample_metadata_url}
+        '''
+

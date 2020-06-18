@@ -1,4 +1,0 @@
-
-```
-snakemake --cores 2
-```
