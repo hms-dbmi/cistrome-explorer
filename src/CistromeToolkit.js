@@ -3,7 +3,7 @@ import PubSub from 'pubsub-js';
 import d3 from './utils/d3.js';
 import { EVENT } from './utils/constants.js';
 import DataTable from "./DataTable.js";
-import { CLOSE, SEARCH, PLUS, EXPAND, COMPRESS } from './utils/icons.js';
+import { CLOSE, SEARCH, PLUS, EXPAND, COMPRESS, TABLE } from './utils/icons.js';
 import { 
     CISTROME_DBTOOLKIT_CHROMOSOMES,
     CISTROME_DBTOOLKIT_SPECIES, 
@@ -401,7 +401,13 @@ export default function CistromeToolkit(props) {
             <div className='cisvis-data-table-header' ref={resizerRef}/>
             <div className="cisvis-data-table-container">
                 <h4 className="cisvis-table-title">
-                    CistromeDB Toolkit
+                    <span style={{ position: 'relative', top: 5 }}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+                            viewBox={TABLE.viewBox}>
+                            <path fill="#666" d={TABLE.path}/>
+                        </svg>
+                    </span>
+                    {' CistromeDB Toolkit'}
                 </h4>
                 <span className="cisvis-table-subtitle">
                     {requestStatus?.isLoading ? (
@@ -460,10 +466,10 @@ export default function CistromeToolkit(props) {
                         className={'chw-button'}
                         style={{ color: "gray", background: "none" }}
                         onClick={() => setIsVisible(false)}
-                        viewBox={COMPRESS.viewBox}
+                        viewBox={CLOSE.viewBox}
                     >
                         <title>Close Cistrome Toolkit</title>
-                        <path d={COMPRESS.path} fill="currentColor"/>
+                        <path d={CLOSE.path} fill="currentColor"/>
                     </svg>
                 </span>
                 <div className="cisvis-cistrome-toolkit-body">
