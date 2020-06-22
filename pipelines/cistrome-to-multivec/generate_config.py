@@ -24,7 +24,6 @@ def get_cids(specie, factor, bio_source_type, bio_source_id):
     params = initial_params.copy()
     params['species'] = specie
     params['factors'] = factor
-    params['cellinfos'] = f"{bio_source_type}_{bio_source_id}"
 
     url = CISTROME_DB_BASE_URL + urllib.parse.urlencode(params)
 
@@ -42,8 +41,8 @@ def get_cids(specie, factor, bio_source_type, bio_source_id):
             page_url = CISTROME_DB_BASE_URL + urllib.parse.urlencode(page_params)
             page_r = requests.get(page_url)
             if page_r.ok:
-                page_response_json = r.json()
-                cids += [ d["id"] for d in response_json["datasets"] ]
+                page_response_json = page_r.json()
+                cids += [ d["id"] for d in page_response_json["datasets"] ]
     return cids
 
 def get_factors_by_species(specie):
@@ -93,12 +92,10 @@ def generate_config():
         print(specie)
         specie_factors = get_factors_by_species(specie)
         for factor in tqdm(specie_factors):
-            factor_bio_sources = get_bio_sources_by_species_and_factor(specie, factor)
-            for bio_source_type, bio_source_id in factor_bio_sources:
-                name = f"{specie}__{factor}__{bio_source_type}__{bio_source_id}".replace(" ", "_")
-                cids = get_cids(specie, factor, bio_source_type, bio_source_id)
+            name = f"{specie}__{factor}__all".replace(" ", "_")
+            cids = get_cids(specie, factor, None, None)
                 
-                config["groups"][name] = cids
+            config["groups"][name] = cids
     return config
 
 
