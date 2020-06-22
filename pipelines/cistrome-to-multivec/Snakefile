@@ -25,7 +25,7 @@ SAMPLE_METADATA_URL = "http://dc2.cistrome.org/api/inspector?id={cid}"
 
 # Process the config
 #GROUP_NAMES = config["groups"].keys() # TODO: uncomment
-GROUP_NAMES = ['Homo_sapiens__GATA6__all', 'Homo_sapiens__HNF4A__all', 'Homo_sapiens__H3K27ac__all']
+GROUP_NAMES = ['Homo_sapiens__BTAF1__all', 'Homo_sapiens__PHF8__all', 'Homo_sapiens__SMAD3__all', 'Homo_sapiens__H3K27ac__all']
 
 FILETYPE = config.get("filetype", "mv5")
 OUTFILE_WRAPPER = directory if FILETYPE == "zarr" else (lambda x: x)

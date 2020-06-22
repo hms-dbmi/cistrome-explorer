@@ -43,7 +43,8 @@ def get_cids(specie, factor, bio_source_type, bio_source_id):
             if page_r.ok:
                 page_response_json = page_r.json()
                 cids += [ d["id"] for d in page_response_json["datasets"] ]
-    return cids
+    # Use a set to eliminate duplicates
+    return list(set(cids))
 
 def get_factors_by_species(specie):
     params = initial_params.copy()
