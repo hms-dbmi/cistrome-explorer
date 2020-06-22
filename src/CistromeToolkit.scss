@@ -70,7 +70,6 @@
                 padding: 1px;
                 .api-config-view,
                 .api-config-view-selected {
-                    cursor: pointer;
                     padding: 12px 8px 12px 8px;
                     background: white;
                     border-bottom: 1px solid lightgray;
@@ -125,6 +124,9 @@
                     background: white;
                     border-bottom: 1px solid lightgray;
                     .cisvis-api-parameter {
+                        margin-bottom: 4px;
+                    }
+                    .cisvis-api-parameter span {
                         font-weight: bold;
                         padding: 2px 4px;
                         margin-right: 4px;

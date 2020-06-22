@@ -1,3 +1,29 @@
+/*
+ * Types for Cistrome DB Toolkit API.
+ */
+export const CISTROME_API_TYPES = Object.freeze({
+    INTERVAL: 'INTERVAL',
+    GENE: 'GENE',
+    PEAKSET: 'PEAKSET'
+});
+
+/*
+ * Color mapping for different types of Cistrome DB Toolkit API.
+ */
+export const CISTROME_API_COLORS = Object.freeze({
+    INTERVAL: '#2C77B1',
+    GENE: '#D6641E',
+    PEAKSET: '#2B9F78'
+});
+
+/*
+ * Options for the parameters of Cistrome DB APIs.
+ */
+export const CISTROME_DBTOOLKIT_CHROMOSOMES = [
+    'chr1', 'chr2', 'chr3', 'chr4', 'chr5', 'chr6', 'chr7', 'chr8', 'chr9', 'chr10',
+    'chr11', 'chr12', 'chr13', 'chr14', 'chr15', 'chr16', 'chr17', 'chr18', 'chr19', 'chr20', 
+    'chr21', 'chr22', 'chrX', 'chrY',
+];
 export const CISTROME_DBTOOLKIT_SPECIES = ["hg38", "mm10"];
 export const CISTROME_DBTOOLKIT_GENE_DISTANCE = ['1kb', '10kb', '100kb'];
 export const CISTROME_DBTOOLKIT_PEAK_NUMBERS = [
@@ -5,7 +31,57 @@ export const CISTROME_DBTOOLKIT_PEAK_NUMBERS = [
     'Top 10k peaks according to peak enrichment',
     'All peaks in each sample'
 ];
+
 export const CISTROME_DBTOOLKIT_MAX_INTERVAL_SIZE = 2000000;
+
+/**
+ * Get a table with readable column names for an API result table.
+ * @param {string} apiType Type of Cistrome DB Toolkit API (`CISTROME_API_TYPES`).
+ * @returns {[array, array]} An array of column names and an array of JSON object for row information.
+ */
+export function getReadableTable(apiType, originalRows) {
+    const readableColumns = {
+        [CISTROME_API_TYPES.INTERVAL]: {
+            GSM: "GEO/ENCODE ID",
+            DCid: "CistromeDB ID",
+            factor: "Factor",
+            cellLine: "Cell Line",
+            CellType: "Cell Type",
+            species: "Species",
+            OverlapRatio: "Overlap Ratio",
+            OverlapPeakNumber: "Overlap Peak Number",
+        },
+        [CISTROME_API_TYPES.GENE]: {
+            cellLine: 'Cell Line',
+            RP: 'Regulatory Potential',
+            DCid: "CistromeDB ID",
+            Tissue: 'Tissue',
+            CellType: 'CellType',
+            factor: 'Factor',
+            GSM: 'GEO/ENCODE ID',
+            species: 'Species'
+        },
+        [CISTROME_API_TYPES.PEAKSET]: {
+            // TODO: Add here
+        }
+    };
+    if(!Object.values(CISTROME_API_TYPES).includes(apiType) || !readableColumns[apiType]) {
+        console.warn("Unsupported Cistrome API");
+        return [];
+    }
+    const columns = Object.values(readableColumns[apiType]);
+    const rows = originalRows.map(d => {
+        // Change key names using the readable columns
+        const newRow = {};
+        Object.keys(readableColumns[apiType]).forEach(c => {
+            if(readableColumns[apiType][c]) {
+                newRow[readableColumns[apiType][c]] = d[c];
+            }
+        });
+        return newRow;
+    });
+    return [columns, rows];
+}
 
 /**
  * Check if interval request parameters are valid, and will be able to generate a good API url.
@@ -33,6 +109,7 @@ export function validateIntervalParams({ assembly, chrStartName, chrStartPos, ch
         msg = "Success";
         success = true;
     }
+    // console.log({ msg, success, }, { assembly, chrStartName, chrStartPos, chrEndName, chrEndPos });
     return { msg, success };
 }
 
@@ -60,7 +137,33 @@ export function validateGeneParams({ assembly, gene, distance }) {
         msg = "Success";
         success = true;
     }
-    console.log({msg, success});
+    // console.log({msg, success});
+    return { msg, success };
+}
+
+/**
+ * Check if peak set request parameters are valid, and will be able to generate a good API url.
+ * @param {string} assembly
+ * @param {string} gene
+ * @param {number} distance
+ * @returns {object} Status object, for example `{ msg: "Some error", success: false }`.
+ */
+export function validatePeaksetParams({ assembly, tpeak, bedFile }) {
+    let msg;
+    let success = false;
+    if(!assembly) {
+        msg = "No assembly value found.";
+    } else if (!CISTROME_DBTOOLKIT_SPECIES.includes(assembly)) {
+        msg = "Unsupported assembly encountered.";
+    } else if(!CISTROME_DBTOOLKIT_PEAK_NUMBERS.includes(tpeak)) {
+        msg = "Unsupported Peak Number encounered.";
+    } else if(!bedFile) {
+        msg = "No bed file suggested.";
+    } else {
+        msg = "Success";
+        success = true;
+    }
+    console.log({ msg, success, }, { assembly, tpeak, bedFile });
     return { msg, success };
 }
 
@@ -89,6 +192,24 @@ export function makeDBToolkitGeneAPIURL(assembly, gene, distance) {
     return `http://dbtoolkit.cistrome.org/api_gene?species=${assembly}&factor=tf&transcript=${gene}&distance=${distance.replace('b', '')}`;
 }
 
+// TODO:
+export function makeDBToolkitPeakSetAPIURL() {
+    return `http://dbtoolkit.cistrome.org/api_similar`;
+}
+
+/**
+ * 
+ * @param {string} apiType Type of Cistrome DB Toolkit API (`CISTROME_API_TYPES`).
+ * @param {*} parameter Parameter required for API request
+ */
+export function requestDBToolkitAPI(apiType, parameter) {
+    return {
+        [CISTROME_API_TYPES.INTERVAL]: () => requestByInterval(parameter),
+        [CISTROME_API_TYPES.GENE]: () => requestByGene(parameter),
+        [CISTROME_API_TYPES.PEAKSET]: () => requestByPeakset(parameter)
+    }[apiType]();
+}
+
 /**
  * Make an API request for Cistrome DB Toolkit interval information.
  * @param {string} assembly
@@ -98,7 +219,7 @@ export function makeDBToolkitGeneAPIURL(assembly, gene, distance) {
  * @param {number} chrEndPos
  * @returns {Promise} On success, promise resolves with the following array: `[rows, columns]`.
  */
-export function requestIntervalTFs(assembly, chrStartName, chrStartPos, chrEndName, chrEndPos) {
+export function requestByInterval({ assembly, chrStartName, chrStartPos, chrEndName, chrEndPos }) {
     const { 
         msg: validationMsg, 
         success: validationSuccess
@@ -149,10 +270,54 @@ export function requestIntervalTFs(assembly, chrStartName, chrStartPos, chrEndNa
  * @param {string} distance
  * @returns {Promise} On success, promise resolves with the following array: `[rows, columns]`.
  */
-export function requestGeneTFs({ assembly, gene, distance }) {
+export function requestByGene({ assembly, gene, distance }) {
     const url = makeDBToolkitGeneAPIURL(assembly, gene, distance);
     return fetch(url)
         .then((response) => {
+            if (!response.ok) {
+                return new Promise((resolve, reject) => {
+                    reject(`Error: ${response.statusText}`);
+                });
+            }
+            return response.json();
+        })
+        .then((data) => {
+            const keys = Object.keys(data);
+
+            return new Promise((resolve, reject) => {
+                if(keys.length === 0) {
+                    reject(`No data found for gene ${gene}`);
+                }
+                // Generate data for table.
+                const rows = keys.map(k => data[k]);
+                const filteredRows = rows.slice(0, rows.length < 100 ? rows.length : 100);
+                const columns = Object.keys(data[keys[0]]);
+                resolve([filteredRows, columns]);
+            });
+        })
+        .catch(error => {
+            return new Promise((resolve, reject) => {
+                reject(`Error: ${error.message}`);
+            });
+        });
+}
+
+/**
+ * Make an API request for Cistrome DB Toolkit peak set information.
+ * @param {string} assembly
+ * @param {string} tpeak
+ * @param {string} bedFile
+ * @returns {Promise} On success, promise resolves with the following array: `[rows, columns]`.
+ */
+export function requestByPeakset({ assembly, tpeak, bedFile }) {
+    return fetch('http://dbtoolkit.cistrome.org/api_similar', {
+        method: 'POST',
+        body: JSON.stringify({"species": assembly, "tpeak": tpeak, "factor": "tf", "csrfmiddlewaretoken": 'vaL3t70PVyIjBkGuOKPm6dxZkrcXkMim'}),
+        files: {'peak': bedFile},
+        cookies: {'csrftoken': 'vaL3t70PVyIjBkGuOKPm6dxZkrcXkMim'}
+    })
+        .then((response) => {
+            console.log(response);
             if (!response.ok) {
                 return new Promise((resolve, reject) => {
                     reject(`Error: ${response.statusText}`);
