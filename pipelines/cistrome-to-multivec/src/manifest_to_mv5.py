@@ -33,7 +33,8 @@ def bigwigs_to_multivec(
     info_group.attrs['tile-size'] = 256
 
     # Prepare to fill in chroms dataset
-    chromosomes = nc.get_chromorder('hg38')
+    #chromosomes = nc.get_chromorder('hg38') # TODO: uncomment
+    chromosomes = ['chr8']
     num_chromosomes = len(chromosomes)
     chroms_length_arr = np.array([ nc.get_chrominfo('hg38').chrom_lengths[x] for x in chromosomes ], dtype="i8")
     chroms_name_arr = np.array(chromosomes, dtype="S23")
