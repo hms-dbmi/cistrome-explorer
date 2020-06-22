@@ -34,7 +34,7 @@ def bigwigs_to_multivec(
 
     # Prepare to fill in chroms dataset
     #chromosomes = nc.get_chromorder('hg38') # TODO: uncomment
-    chromosomes = ['chr8']
+    chromosomes = ['chr1']
     num_chromosomes = len(chromosomes)
     chroms_length_arr = np.array([ nc.get_chrominfo('hg38').chrom_lengths[x] for x in chromosomes ], dtype="i8")
     chroms_name_arr = np.array(chromosomes, dtype="S23")
