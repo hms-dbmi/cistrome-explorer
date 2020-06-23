@@ -22,7 +22,9 @@ CISTROME_DB_BASE_URL = "http://dc2.cistrome.org/api/main_filter_ng?"
 
 DENYLIST = {
     6413,
-    51200
+    51200,
+    94002,
+    43368,
 }
 
 def get_cids(specie, factor, bio_source_type, bio_source_id):
