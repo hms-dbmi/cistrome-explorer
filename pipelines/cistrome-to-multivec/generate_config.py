@@ -20,6 +20,11 @@ initial_params = {
 
 CISTROME_DB_BASE_URL = "http://dc2.cistrome.org/api/main_filter_ng?"
 
+DENYLIST = {
+    6413,
+    51200
+}
+
 def get_cids(specie, factor, bio_source_type, bio_source_id):
     params = initial_params.copy()
     params['species'] = specie
@@ -44,7 +49,7 @@ def get_cids(specie, factor, bio_source_type, bio_source_id):
                 page_response_json = page_r.json()
                 cids += [ d["id"] for d in page_response_json["datasets"] ]
     # Use a set to eliminate duplicates
-    return list(set(cids))
+    return list(set(cids) - DENYLIST)
 
 def get_factors_by_species(specie):
     params = initial_params.copy()
