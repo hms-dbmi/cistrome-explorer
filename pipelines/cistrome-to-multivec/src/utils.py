@@ -15,18 +15,20 @@ def metadata_json_to_row_info(metadata_json):
             for k in keys:
                 curr_d = curr_d[k]
 
-            if type(curr_d) != expected_type:
+            if curr_d == None:
+                return None
+            elif type(curr_d) != expected_type:
                 try:
                     curr_d = expected_type(curr_d)
                     return curr_d
                 except ValueError:
-                    return np.nan
+                    return None
             return curr_d
         except KeyError:
-            return np.nan
+            return None
         except IndexError:
-            return np.nan
-        return np.nan
+            return None
+        return None
 
     # Flatten the metadata object
     row_info = {
