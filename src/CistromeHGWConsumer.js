@@ -389,7 +389,7 @@ export default function CistromeHGWConsumer(props) {
             addNewTrack({
                 type: 'horizontal-multivec',
                 server: 'http://localhost:9000/api/v1',
-                tilesetUid: `${species}__${factor}__${biologicalSourceType}__${biologicalSourceName}`.replace(" ", "_"),
+                tilesetUid: `${species}__${factor}__all`.replace(" ", "_"),
                 height: 100,
             }, muiltivecTrackIds[0].viewId, 'top');
         }

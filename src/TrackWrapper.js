@@ -71,9 +71,8 @@ export default function TrackWrapper(props) {
     // Attempt to obtain metadata values from the `tilesetInfo` field of the track.
     let rowInfo = [];
     try {
-       
-        rowInfo = multivecTrack.tilesetInfo.row_infos.map(JSON.parse);
-      
+        
+        rowInfo = multivecTrack.tilesetInfo.row_infos;
         
         if(!context.state[multivecTrackViewId] || !context.state[multivecTrackViewId][multivecTrackTrackId]) {
             context.dispatch({

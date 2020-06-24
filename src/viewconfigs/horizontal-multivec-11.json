@@ -8,8 +8,8 @@
     "views": [
       {
         "initialXDomain": [
-          1519062851.8000524,
-          1519113017.5327234
+          0,
+          250000000
         ],
         "initialYDomain": [
           1519062851.8000524,
@@ -102,7 +102,7 @@
             {
               "type": "horizontal-multivec",
               "uid": "cistrome-aggregation-test-track-1",
-              "tilesetUid": "Homo_sapiens__HNF4A__ct__Epithelium",
+              "tilesetUid": "Homo_sapiens__H3K27ac__all",
               "server": "http://localhost:9000/api/v1",
               "options": {
                 "labelPosition": "hidden",
@@ -112,7 +112,7 @@
                 "trackBorderWidth": 0,
                 "trackBorderColor": "black",
                 "heatmapValueScaling": "log",
-                "name": "Homo_sapiens__HNF4A__ct__Epithelium",
+                "name": "Homo_sapiens__H3K27ac__all",
                 "labelLeftMargin": 0,
                 "labelRightMargin": 0,
                 "labelTopMargin": 0,
@@ -121,6 +121,7 @@
                 "minHeight": 100,
                 "colorbarPosition": "bottomLeft",
                 "zeroValueColor": "dimgray",
+                "selectRowsAggregationMethod": "server",
                 "colorRange": [
                     "rgba(68,1,84,1)",
                     "rgba(68,2,85,1)",

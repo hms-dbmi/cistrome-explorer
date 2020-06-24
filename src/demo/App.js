@@ -266,6 +266,9 @@ const demos = {
             ],
             rowFilter: [
                 
+            ],
+            rowAggregate: [
+                {field: "treats__0__tissue_type__name", type: "nominal"}
             ]
         }
     },
@@ -277,7 +280,7 @@ function onViewConfigChange(viewConfigString) {
 
 export default function App() {
     
-    const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[0]);
+    const [selectedDemo, setSelectedDemo] = useState("Demo 06/17/20");
 
     return (
         <div className="app">
