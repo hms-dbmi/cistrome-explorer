@@ -77,8 +77,12 @@ def bigwigs_to_multivec(
         else:
             print(f"{bw_file} not is_bigwig")
 
-
         f.flush()
+
+    f.close()
+
+    max_mem = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+    print(max_mem)
     
     # Append metadata to the top resolution row_infos attribute.
     row_infos = []
@@ -88,13 +92,14 @@ def bigwigs_to_multivec(
         row_info = metadata_json_to_row_info(metadata_json)
         row_infos.append(row_info)
     
-    row_infos_encoded = [ str(json.dumps(r)).encode() for r in row_infos ]
-    resolutions_group[str(lowest_resolution)].attrs["row_infos"] = row_infos_encoded
+    row_infos_encoded = str(json.dumps(row_infos))
+    
+    f = h5py.File(output_file, 'r+')
 
+    info_group = f["info"]
+    info_group["row_infos"] = row_infos_encoded
+    
     f.close()
-
-    max_mem = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
-    print(max_mem)
 
 
 if __name__ == "__main__":
