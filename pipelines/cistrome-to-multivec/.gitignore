@@ -1,0 +1,12 @@
+.ipynb_checkpoints/
+.snakemake/
+__pycache__/
+*.csv
+*.arrow
+*.zarr
+*.txt
+*.mv5
+*.bed
+*.bw
+*.json
+data/

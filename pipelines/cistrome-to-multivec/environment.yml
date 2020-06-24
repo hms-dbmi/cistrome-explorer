@@ -1,4 +1,4 @@
-name: cistrome-explorer-notebooks
+name: cistrome-to-multivec-pipeline
 channels:
   - conda-forge
   - bioconda
@@ -18,6 +18,10 @@ dependencies:
   - scipy
   - jupyter
   - nb_conda
+  - jq
+  - pyyaml
+  - tqdm
+  - zarr
   - pip
   - pip:
     - negspy
@@ -29,5 +33,5 @@ dependencies:
     - pytest
     - pytest-cov
     - bumpversion
-    - pybbi>=0.2.2
+    - pybbi>=0.2.0
     - clodius

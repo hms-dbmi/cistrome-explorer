@@ -27,16 +27,21 @@ def bigwigs_to_multivec(
     # Create level zero groups
     info_group = f.create_group("info")
     resolutions_group = f.create_group("resolutions")
-    chroms_group = f.create_group("chroms") # TODO: rename to "chromosomes"
+    # TODO: rename to "chromosomes" in updated schema
+    chroms_group = f.create_group("chroms")
 
     # Set info attributes
     info_group.attrs['tile-size'] = 256
 
     # Prepare to fill in chroms dataset
     chromosomes = nc.get_chromorder('hg38')
+    chromosomes = chromosomes[:25] # TODO: should more than chr1-chrM be used?
     num_chromosomes = len(chromosomes)
     chroms_length_arr = np.array([ nc.get_chrominfo('hg38').chrom_lengths[x] for x in chromosomes ], dtype="i8")
     chroms_name_arr = np.array(chromosomes, dtype="S23")
+
+    chromosomes_set = set(chromosomes)
+    chrom_name_to_length = dict(zip(chromosomes, chroms_length_arr))
 
     # Fill in chroms dataset entries "length" and "name"
     chroms_group.create_dataset("length", data=chroms_length_arr)
@@ -50,7 +55,8 @@ def bigwigs_to_multivec(
     # Create each resolution group.
     for resolution in resolutions:
         resolution_group = resolutions_group.create_group(str(resolution))
-        resolution_values_group = resolution_group.create_group("values") # TODO: remove the unnecessary "values" layer
+        # TODO: remove the unnecessary "values" layer in updated schema
+        resolution_values_group = resolution_group.create_group("values")
         
         # Create each chromosome dataset.
         for chr_name, chr_len in zip(chromosomes, chroms_length_arr):
@@ -61,23 +67,25 @@ def bigwigs_to_multivec(
     for bw_index, bw_file in tqdm(list(enumerate(input_bigwig_files)), desc='bigwigs'):
         if bbi.is_bigwig(bw_file):
             chromsizes = bbi.chromsizes(bw_file)
+            matching_chromosomes = set(chromsizes.keys()).intersection(chromosomes_set)
 
             # Fill in data for each resolution of a bigwig file.
             for resolution in resolutions:
                 # Fill in data for each chromosome of a resolution of a bigwig file.
-                for chr_name, chr_len in zip(chromosomes, chroms_length_arr):
-                    if chr_name in chromsizes.keys():
-                        chr_shape = (math.ceil(chr_len / resolution), num_samples)
-                        arr = bbi.fetch(bw_file, chr_name, 0, chr_len, chr_shape[0], summary="sum")
-                        resolutions_group[str(resolution)]["values"][chr_name][:,bw_index] = arr
-            else:
-                pass
-                #print(f"{bw_file} does not have {chr_name}")
+                for chr_name in matching_chromosomes:
+                    chr_len = chrom_name_to_length[chr_name]
+                    chr_shape = (math.ceil(chr_len / resolution), num_samples)
+                    arr = bbi.fetch(bw_file, chr_name, 0, chr_len, chr_shape[0], summary="sum")
+                    resolutions_group[str(resolution)]["values"][chr_name][:,bw_index] = arr
         else:
             print(f"{bw_file} not is_bigwig")
 
-
         f.flush()
+
+    f.close()
+
+    max_mem = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+    print(max_mem)
     
     # Append metadata to the top resolution row_infos attribute.
     row_infos = []
@@ -87,13 +95,14 @@ def bigwigs_to_multivec(
         row_info = metadata_json_to_row_info(metadata_json)
         row_infos.append(row_info)
     
-    row_infos_encoded = [ str(json.dumps(r)).encode() for r in row_infos ]
-    resolutions_group[str(lowest_resolution)].attrs["row_infos"] = row_infos_encoded
+    row_infos_encoded = str(json.dumps(row_infos))
+    
+    f = h5py.File(output_file, 'r+')
 
+    info_group = f["info"]
+    info_group["row_infos"] = row_infos_encoded
+    
     f.close()
-
-    max_mem = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
-    print(max_mem)
 
 
 if __name__ == "__main__":
