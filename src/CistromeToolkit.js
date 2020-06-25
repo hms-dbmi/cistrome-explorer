@@ -48,7 +48,7 @@ export default function CistromeToolkit(props) {
     const resizerRef = useRef(null);
     const dragY = useRef(null);
 
-    const [isVisible, setIsVisible] = useState(true); // TODO: To debug
+    const [isVisible, setIsVisible] = useState(false);
     const [height, setHeight] = useState(800);
 
     const [requestStatus, setRequestStatus] = useState(undefined);
