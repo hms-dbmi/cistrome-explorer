@@ -139,6 +139,7 @@ export default function CistromeToolkit(props) {
 
     function runCistromeToolkitAPI(apiType, parameter = undefined) {
         if(!parameter) {
+            // If `parameter` is `undefined`, we get a parameter from the previous parameter setting.
             parameter = {
                 [CISTROME_API_TYPES.INTERVAL]: latestIntervalParams,
                 [CISTROME_API_TYPES.GENE]: latestGeneParams,
@@ -185,7 +186,7 @@ export default function CistromeToolkit(props) {
         );
     }, [dragY, height]);
 
-    // Detect drag events for the resize element.
+    // Detect drag events to resize the view.
     useEffect(() => {
         const resizer = resizerRef.current;
 
@@ -199,6 +200,7 @@ export default function CistromeToolkit(props) {
         return () => d3.select(resizer).on(".drag", null);
     }, [resizerRef, started, dragged, ended]);
 
+    // This panel shows different configurations for requesting individual APIs
     const APIConfigurationViews = useMemo(() => {
         const searchButton = (isReady, onClick) => (
             <div 
@@ -373,6 +375,7 @@ export default function CistromeToolkit(props) {
         );
     });
 
+    // List of API results requested previously
     const listOfResultsRequested = useMemo(() => {
         return requestHistory.map((d, i) => {
             const { api } = d;
