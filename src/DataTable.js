@@ -70,7 +70,7 @@ export default function DataTable(props) {
                 <tr 
                     key={i}
                     className={selectedRows.includes(i) ? 'data-table-row-selected' : 'data-table-row'}
-                    onClick={() => { onSelect([i]) }}
+                    onClick={() => onSelect([i])}
                 >
                     {checkboxCell}{dataCells}
                 </tr>

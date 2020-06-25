@@ -3,14 +3,12 @@ import PubSub from 'pubsub-js';
 import d3 from './utils/d3.js';
 import { EVENT } from './utils/constants.js';
 import DataTable from "./DataTable.js";
-import { CLOSE, SEARCH, PLUS, EXPAND, COMPRESS, TABLE } from './utils/icons.js';
+import { CLOSE, SEARCH, PLUS, EXPAND, TABLE, EXTERNAL_LINK, QUESTION_MARK } from './utils/icons.js';
 import { 
     CISTROME_DBTOOLKIT_CHROMOSOMES,
     CISTROME_DBTOOLKIT_SPECIES, 
     CISTROME_DBTOOLKIT_PEAK_NUMBERS, 
     CISTROME_DBTOOLKIT_GENE_DISTANCE,
-    requestByInterval, 
-    requestByGene, 
     validateGeneParams, 
     CISTROME_API_TYPES,
     getReadableTable,
@@ -20,7 +18,7 @@ import {
     validatePeaksetParams
 } from './utils/cistrome.js';
 import './CistromeToolkit.scss';
-import { REQUEST_HISTORY_SAMPLE } from "./utils/toolkit.js";
+import { TooltipContent, destroyTooltip } from "./Tooltip.js";
 
 export function destroyCistromeToolkit() {
     PubSub.publish(EVENT.CISTROME_TOOLKIT, {
@@ -54,7 +52,7 @@ export default function CistromeToolkit(props) {
     const [height, setHeight] = useState(800);
 
     const [requestStatus, setRequestStatus] = useState(undefined);
-    const [requestHistory, setRequestHistory] = useState([]);   // Use `REQUEST_HISTORY_SAMPLE` in `/utils` to debug.
+    const [requestHistory, setRequestHistory] = useState([]);
     const [selectedRequestIndex, setSelectedRequestIndex] = useState(undefined); // Index of `requestHistory`
     const [selectedRowIndexes, setSelectedRowIndexes] = useState([]);
 
@@ -150,7 +148,7 @@ export default function CistromeToolkit(props) {
         if(parameter) {
             setRequestStatus({ msg: "Receiving Cistrome DB API response...", isLoading: true });
             requestDBToolkitAPI(apiType, parameter)
-                .then(([rows, columns]) => {
+                .then(([rows]) => {
                     const [customColumns, customRows] = getReadableTable(apiType, rows);
                     setRequestStatus({ msg: 'Finished receiving API response', isLoading: false });
                     addRequestHistory(
@@ -161,7 +159,6 @@ export default function CistromeToolkit(props) {
                     );
                 })
                 .catch((msg) => {
-                    console.log(parameter, msg); // TODO:
                     setRequestStatus({ msg, isLoading: false });
                 });
         }
@@ -203,22 +200,6 @@ export default function CistromeToolkit(props) {
     }, [resizerRef, started, dragged, ended]);
 
     const APIConfigurationViews = useMemo(() => {
-        const speciesSelection = (
-            // Add this to each API when we start supporting other assemblies than `hg38`
-            <>
-                <div>Species</div>
-                <select
-                    defaultValue={CISTROME_DBTOOLKIT_SPECIES[0]}
-                    disabled={true}
-                >
-                    {CISTROME_DBTOOLKIT_SPECIES.map(d => (
-                        <option key={d} value={d}>
-                            {d}
-                        </option>
-                    ))}
-                </select>
-            </>
-        );
         const searchButton = (isReady, onClick) => (
             <div 
                 className={isReady ? 'api-search-button' : 'api-search-button-disabled'}
@@ -232,6 +213,29 @@ export default function CistromeToolkit(props) {
                 Search
             </div>  
         );
+        
+        const tooltipHelpInfo = {
+            'distance': e => {
+                PubSub.publish(EVENT.TOOLTIP, {
+                    x: e.clientX,
+                    y: e.clientY,
+                    content: <TooltipContent
+                        title={'Half-decay Distance to Transcription Start Site'}
+                        value={'This is the relative distance that the distribution of RP calculation function is decreased to half of the highest value at TSS'}
+                    />
+                });
+            },
+            'bedfile': (e) => {
+                PubSub.publish(EVENT.TOOLTIP, {
+                    x: e.clientX,
+                    y: e.clientY,
+                    content: <TooltipContent
+                        title={'Bed File'}
+                        value={'Three columns are required (i.e., chromosome, start site, end site), and tab delimited, maximum of 50,000 peaks'}
+                    />
+                });
+            }
+        }
 
         return (
             <>
@@ -264,7 +268,7 @@ export default function CistromeToolkit(props) {
                         type="text"
                         placeholder="151690496"
                         value={latestIntervalParams.chrStartPos}
-                        onChange={e => { setLatestIntervalParams({ ...latestIntervalParams, chrStartPos: e.target.value }) }}
+                        onChange={e => setLatestIntervalParams({ ...latestIntervalParams, chrStartPos: e.target.value })}
                     />
                     <div>End Position</div>
                     <input
@@ -272,7 +276,7 @@ export default function CistromeToolkit(props) {
                         type="text"
                         placeholder="152103274"
                         value={latestIntervalParams.chrEndPos}
-                        onChange={e => { setLatestIntervalParams({ ...latestIntervalParams, chrEndPos: e.target.value }) }}
+                        onChange={e => setLatestIntervalParams({ ...latestIntervalParams, chrEndPos: e.target.value })}
                     />
                     {searchButton(isLatestIntervalParamsReady, () => runCistromeToolkitAPI(CISTROME_API_TYPES.INTERVAL))}
                 </div>
@@ -283,10 +287,23 @@ export default function CistromeToolkit(props) {
                 >
                     <div className='api-title'>Search by Gene</div>
                     <div className='api-subtitle'>What factors regulate your gene?</div>
-                    <div>Distance</div>    
+                    <div>
+                        {'Half-decay Distance '}
+                        <span 
+                            style={{ position: 'relative', top: 3 }}
+                            onMouseEnter={e => tooltipHelpInfo.distance(e)}
+                            onMouseMove={e => tooltipHelpInfo.distance(e)}
+                            onMouseLeave={() => destroyTooltip()}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                viewBox={QUESTION_MARK.viewBox}>
+                                <path fill="#666" d={QUESTION_MARK.path}/>
+                            </svg>
+                        </span>
+                    </div>
                     <select
                         defaultValue={latestGeneParams.distance}
-                        onChange={e => { setLatestGeneParams({ ...latestGeneParams, distance: e.target.value }) }} 
+                        onChange={e => setLatestGeneParams({ ...latestGeneParams, distance: e.target.value })} 
                     >
                         {CISTROME_DBTOOLKIT_GENE_DISTANCE.map(d => (
                             <option key={d} value={d}>
@@ -299,7 +316,7 @@ export default function CistromeToolkit(props) {
                         className="cistrome-api-text-input"
                         type="text"
                         placeholder="GAPDH or NM_001289746"
-                        onChange={e => { setLatestGeneParams({ ...latestGeneParams, gene: e.target.value }) }}
+                        onChange={e => setLatestGeneParams({ ...latestGeneParams, gene: e.target.value })}
                     />
                     {searchButton(isLatestGeneParamsReady, () => runCistromeToolkitAPI(CISTROME_API_TYPES.GENE))}
                 </div>
@@ -313,7 +330,7 @@ export default function CistromeToolkit(props) {
                     <div>Peak Number of Cistrome Sample to Use</div>
                     <select
                         defaultValue={latestPeaksetParams.tpeak[0]}
-                        onChange={e => { setLatestPeaksetParams({ ...latestPeaksetParams, tpeak: e.target.value }) }} 
+                        onChange={e => setLatestPeaksetParams({ ...latestPeaksetParams, tpeak: e.target.value })} 
                     >
                         {CISTROME_DBTOOLKIT_PEAK_NUMBERS.map(d => (
                             <option key={d} value={d}>
@@ -321,7 +338,20 @@ export default function CistromeToolkit(props) {
                             </option>
                         ))}
                     </select>
-                    <div>Bed File</div>  
+                    <div>
+                        {'Bed File '}
+                        <span 
+                            style={{ position: 'relative', top: 3 }}
+                            onMouseEnter={e => tooltipHelpInfo.bedfile(e)}
+                            onMouseMove={e => tooltipHelpInfo.bedfile(e)}
+                            onMouseLeave={() => destroyTooltip()}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                viewBox={QUESTION_MARK.viewBox}>
+                                <path fill="#666" d={QUESTION_MARK.path}/>
+                            </svg>
+                        </span>
+                    </div>  
                     <input
                         className="cistrome-api-text-input"
                         type="file"
@@ -329,7 +359,12 @@ export default function CistromeToolkit(props) {
                             const bedFile = e.target.files[0];
                             console.log(bedFile)
                             if(bedFile) {
-                                setLatestPeaksetParams({ ...latestPeaksetParams, bedFile });
+                                let reader = new FileReader();
+                                reader.onload = () => {
+                                    console.log('reader', reader.result)
+                                    setLatestPeaksetParams({ ...latestPeaksetParams, bedFile: new Blob([reader.result]) });
+                                };
+                                reader.readAsArrayBuffer(bedFile);
                             }
                         }}
                     />
@@ -349,7 +384,7 @@ export default function CistromeToolkit(props) {
                         key={JSON.stringify(d.parameter) + i}
                         className={i === selectedRequestIndex ? "cisvis-api-result-selected" : "cisvis-api-result"}
                         style={{ borderLeft: `4px solid ${CISTROME_API_COLORS[api]}` }}
-                        onClick={() => { setSelectedRequestIndex(i) }}
+                        onClick={() => setSelectedRequestIndex(i)}
                     >
                         <div className='cisvis-api-parameter'>
                             <span>{"SPECIES"}</span>
@@ -369,7 +404,7 @@ export default function CistromeToolkit(props) {
                         key={JSON.stringify(d.parameter) + i}
                         className={i === selectedRequestIndex ? "cisvis-api-result-selected" : "cisvis-api-result"}
                         style={{ borderLeft: `4px solid ${CISTROME_API_COLORS[api]}` }}
-                        onClick={() => { setSelectedRequestIndex(i) }}
+                        onClick={() => setSelectedRequestIndex(i)}
                     >
                         <div className='cisvis-api-parameter'>
                             <span>{"SPECIES"}</span>
@@ -407,7 +442,18 @@ export default function CistromeToolkit(props) {
                             <path fill="#666" d={TABLE.path}/>
                         </svg>
                     </span>
-                    {' CistromeDB Toolkit'}
+                    {' CistromeDB Toolkit '}
+                    <span style={{ position: 'relative', top: 6 }}>
+                        <svg
+                            className={'chw-button'}
+                            style={{ color: "gray", background: "none" }}
+                            onClick={() => window.open('http://dbtoolkit.cistrome.org')}
+                            viewBox={EXTERNAL_LINK.viewBox}
+                        >
+                            <title>Open Cistrome DB Toolkit</title>
+                            <path d={EXTERNAL_LINK.path} fill="currentColor"/>
+                        </svg>
+                    </span>
                 </h4>
                 <span className="cisvis-table-subtitle">
                     {requestStatus?.isLoading ? (

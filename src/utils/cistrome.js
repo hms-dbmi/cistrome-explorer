@@ -103,13 +103,16 @@ export function validateIntervalParams({ assembly, chrStartName, chrStartPos, ch
         msg = "Not enough chromosome parameters.";
     } else if(chrStartName !== chrEndName) {
         msg = "Interval spans across more than one chromosome.";
+    } else if(!+chrStartPos || !+chrEndPos) {
+        msg = "Genomic position is not a numeric value";
+    } else if(+chrStartPos < 0 || +chrEndPos < 0) {
+        msg = "Genomic position cannot be a negative value";
     } else if(chrEndPos - chrStartPos > CISTROME_DBTOOLKIT_MAX_INTERVAL_SIZE) {
         msg = "Search requires interval < 2 Mb";
     } else {
         msg = "Success";
         success = true;
     }
-    // console.log({ msg, success, }, { assembly, chrStartName, chrStartPos, chrEndName, chrEndPos });
     return { msg, success };
 }
 
@@ -137,7 +140,6 @@ export function validateGeneParams({ assembly, gene, distance }) {
         msg = "Success";
         success = true;
     }
-    // console.log({msg, success});
     return { msg, success };
 }
 
@@ -163,7 +165,8 @@ export function validatePeaksetParams({ assembly, tpeak, bedFile }) {
         msg = "Success";
         success = true;
     }
-    console.log({ msg, success, }, { assembly, tpeak, bedFile });
+    // TODO: We do not support this API yet
+    success = false;
     return { msg, success };
 }
 
@@ -193,8 +196,8 @@ export function makeDBToolkitGeneAPIURL(assembly, gene, distance) {
 }
 
 // TODO:
-export function makeDBToolkitPeakSetAPIURL() {
-    return `http://dbtoolkit.cistrome.org/api_similar`;
+export function makeDBToolkitPeakSetAPIURL(assembly, tpeak) {
+    return `http://dbtoolkit.cistrome.org/api_similar?species=hm38&factor=tf&tpeak=1k&csrfmiddlewaretoken=vaL3t70PVyIjBkGuOKPm6dxZkrcXkMim`;
 }
 
 /**
@@ -310,11 +313,24 @@ export function requestByGene({ assembly, gene, distance }) {
  * @returns {Promise} On success, promise resolves with the following array: `[rows, columns]`.
  */
 export function requestByPeakset({ assembly, tpeak, bedFile }) {
+    const formData = new FormData();
+    formData.append('species', 'hg38');
+    formData.append('tpeak', '1k');
+    formData.append('factor', 'tf');
+    formData.append('csrfmiddlewaretoken', 'vaL3t70PVyIjBkGuOKPm6dxZkrcXkMim');
+    formData.append('peak', bedFile);
+    formData.append('csrftoken', 'vaL3t70PVyIjBkGuOKPm6dxZkrcXkMim')
+
     return fetch('http://dbtoolkit.cistrome.org/api_similar', {
         method: 'POST',
-        body: JSON.stringify({"species": assembly, "tpeak": tpeak, "factor": "tf", "csrfmiddlewaretoken": 'vaL3t70PVyIjBkGuOKPm6dxZkrcXkMim'}),
-        files: {'peak': bedFile},
-        cookies: {'csrftoken': 'vaL3t70PVyIjBkGuOKPm6dxZkrcXkMim'}
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            "species": "hg38", "tpeak": "1k", "factor": "tf", "csrfmiddlewaretoken": 'vaL3t70PVyIjBkGuOKPm6dxZkrcXkMim',
+            'peak': bedFile, 'csrftoken': 'vaL3t70PVyIjBkGuOKPm6dxZkrcXkMim'
+        }),
+        // body: formData // Use `FormData` instead.
     })
         .then((response) => {
             console.log(response);
