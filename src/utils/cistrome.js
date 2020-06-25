@@ -62,7 +62,7 @@ export function getReadableTable(apiType, originalRows) {
             species: 'Species'
         },
         [CISTROME_API_TYPES.PEAKSET]: {
-            // TODO: Add here
+            // TODO: Support Peak Set API
         }
     };
     if(!Object.values(CISTROME_API_TYPES).includes(apiType) || !readableColumns[apiType]) {
@@ -193,11 +193,6 @@ export function makeDBToolkitIntervalAPIURL(assembly, chrStartName, chrStartPos,
 export function makeDBToolkitGeneAPIURL(assembly, gene, distance) {
     // In API, 'b' is not included in the unit for distance, so here we are removing 'b' (e.g., 10kb => 10k)
     return `http://dbtoolkit.cistrome.org/api_gene?species=${assembly}&factor=tf&transcript=${gene}&distance=${distance.replace('b', '')}`;
-}
-
-// TODO:
-export function makeDBToolkitPeakSetAPIURL(assembly, tpeak) {
-    return `http://dbtoolkit.cistrome.org/api_similar?species=hm38&factor=tf&tpeak=1k&csrfmiddlewaretoken=vaL3t70PVyIjBkGuOKPm6dxZkrcXkMim`;
 }
 
 /**

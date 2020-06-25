@@ -123,11 +123,11 @@ export default function CistromeToolkit(props) {
                 && d1.chrEndPos === d2.chrEndPos
             ),
             [CISTROME_API_TYPES.GENE]: (d1, d2) => (
-                d1.assembly === d2.assembly,
-                d1.distance === d2.distance,
-                d1.gene === d2.gene
+                d1.assembly === d2.assembly
+                & d1.distance === d2.distance
+                & d1.gene === d2.gene
             )
-            // TODO:
+            // TODO: Support Peak Set API
         }
         const isRequestNew = (undefined === requestHistory.find(d => isIdentical[api](d.parameter, parameter)));
         if(isRequestNew) {
@@ -323,7 +323,7 @@ export default function CistromeToolkit(props) {
                     className={'api-config-view'}
                     style={{ 
                         borderLeft: `4px solid ${CISTROME_API_COLORS.PEAKSET}`,
-                        // visibility: 'hidden' // TODO: Show after we provide this functionality
+                        visibility: 'hidden' // TODO: Support Peak Set API
                     }}
                 >
                     <div className='api-title'>Search by Peak Set</div>
@@ -421,7 +421,7 @@ export default function CistromeToolkit(props) {
                 );
             }
             else {
-                // TODO: peak set
+                // TODO: Support Peak Set API
             }
         });
     }, [requestHistory, selectedRequestIndex]);
@@ -512,14 +512,14 @@ export default function CistromeToolkit(props) {
                         rows={selectedRequestIndex !== undefined ? requestHistory[selectedRequestIndex].rows : []}
                         selectedRows={selectedRowIndexes}
                         expoNotations={["Overlap Ratio", 'Regulatory Potential']}
-                        onButton={() => {
+                        onButton={onAddTrack ? () => {
                             // TODO: Change this to add a track based on actual data after we build DB.
                             onAddTrack(
                                 'https://resgen.io/api/v1',
                                 'Hygs6CEVR2mCnGlsHK93zQ',
                                 'top'
                             );
-                        }}
+                        } : null}
                     />
                 </div>
             </div>

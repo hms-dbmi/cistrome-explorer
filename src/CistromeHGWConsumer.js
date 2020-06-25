@@ -518,9 +518,9 @@ export default function CistromeHGWConsumer(props) {
             <ContextMenu/>
             <CistromeToolkit
                 // TODO: After we build DB for cistrome bigwig files, uncomment the following code.
-                onAddTrack={(server, tilesetUid, position) => { 
-                    onAddBigWigTrack(server, tilesetUid, position);
-                }}
+                // onAddTrack={(server, tilesetUid, position) => { 
+                //     onAddBigWigTrack(server, tilesetUid, position);
+                // }}
             />
         </div>
     );
