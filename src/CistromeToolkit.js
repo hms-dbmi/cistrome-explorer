@@ -3,7 +3,8 @@ import PubSub from 'pubsub-js';
 import d3 from './utils/d3.js';
 import { EVENT } from './utils/constants.js';
 import DataTable from "./DataTable.js";
-import { CLOSE, SEARCH, PLUS, EXPAND, TABLE, EXTERNAL_LINK, QUESTION_MARK } from './utils/icons.js';
+import { CLOSE, SEARCH, EXPAND, TABLE, EXTERNAL_LINK, QUESTION_MARK } from './utils/icons.js';
+import { TooltipContent, destroyTooltip } from "./Tooltip.js";
 import { 
     CISTROME_DBTOOLKIT_CHROMOSOMES,
     CISTROME_DBTOOLKIT_SPECIES, 
@@ -18,7 +19,7 @@ import {
     validatePeaksetParams
 } from './utils/cistrome.js';
 import './CistromeToolkit.scss';
-import { TooltipContent, destroyTooltip } from "./Tooltip.js";
+import { stackOffsetNone } from "d3";
 
 export function destroyCistromeToolkit() {
     PubSub.publish(EVENT.CISTROME_TOOLKIT, {
@@ -48,12 +49,12 @@ export default function CistromeToolkit(props) {
     const resizerRef = useRef(null);
     const dragY = useRef(null);
 
-    const [isVisible, setIsVisible] = useState(true); // TODO: Debugging,...
+    const [isVisible, setIsVisible] = useState(true); // TODO: To debug
     const [height, setHeight] = useState(800);
 
     const [requestStatus, setRequestStatus] = useState(undefined);
     const [requestHistory, setRequestHistory] = useState([]);
-    const [selectedRequestIndex, setSelectedRequestIndex] = useState(undefined); // Index of `requestHistory`
+    const [selectedRequestIndex, setSelectedRequestIndex] = useState(undefined);
     const [selectedRowIndexes, setSelectedRowIndexes] = useState([]);
 
     // API parameters
@@ -248,7 +249,6 @@ export default function CistromeToolkit(props) {
                     <div className='api-subtitle'>What factors bind in your interval?</div>
                     <div>Chromosome</div>    
                     <select
-                        defaultValue={latestIntervalParams.chrStartName}
                         value={latestIntervalParams.chrStartName}
                         onChange={e => setLatestIntervalParams({ 
                             ...latestIntervalParams, 
@@ -302,7 +302,7 @@ export default function CistromeToolkit(props) {
                         </span>
                     </div>
                     <select
-                        defaultValue={latestGeneParams.distance}
+                        value={latestGeneParams.distance}
                         onChange={e => setLatestGeneParams({ ...latestGeneParams, distance: e.target.value })} 
                     >
                         {CISTROME_DBTOOLKIT_GENE_DISTANCE.map(d => (
@@ -323,13 +323,16 @@ export default function CistromeToolkit(props) {
                 {/* Search by Peak Set */}
                 <div
                     className={'api-config-view'}
-                    style={{ borderLeft: `4px solid ${CISTROME_API_COLORS.PEAKSET}` }}
+                    style={{ 
+                        borderLeft: `4px solid ${CISTROME_API_COLORS.PEAKSET}`,
+                        // visibility: 'hidden' // TODO: Show after we provide this functionality
+                    }}
                 >
                     <div className='api-title'>Search by Peak Set</div>
                     <div className='api-subtitle'>What factors have a significant binding overlap with your peak set?</div>
                     <div>Peak Number of Cistrome Sample to Use</div>
                     <select
-                        defaultValue={latestPeaksetParams.tpeak[0]}
+                        value={latestPeaksetParams.tpeak[0]}
                         onChange={e => setLatestPeaksetParams({ ...latestPeaksetParams, tpeak: e.target.value })} 
                     >
                         {CISTROME_DBTOOLKIT_PEAK_NUMBERS.map(d => (
@@ -357,11 +360,9 @@ export default function CistromeToolkit(props) {
                         type="file"
                         onChange={e => {
                             const bedFile = e.target.files[0];
-                            console.log(bedFile)
                             if(bedFile) {
                                 let reader = new FileReader();
                                 reader.onload = () => {
-                                    console.log('reader', reader.result)
                                     setLatestPeaksetParams({ ...latestPeaksetParams, bedFile: new Blob([reader.result]) });
                                 };
                                 reader.readAsArrayBuffer(bedFile);
@@ -372,7 +373,7 @@ export default function CistromeToolkit(props) {
                 </div>
             </>
         );
-    }); // TODO: side effects
+    });
 
     const listOfResultsRequested = useMemo(() => {
         return requestHistory.map((d, i) => {
@@ -460,30 +461,6 @@ export default function CistromeToolkit(props) {
                         <span className="cisvis-progress-ring" />
                     ) : null}
                 </span>
-                {onAddTrack ?
-                    <span
-                        className={selectedRowIndexes && selectedRowIndexes.length > 0 
-                            ? 'toolkit-btn-add-track-active'
-                            : 'toolkit-btn-add-track'}
-                        title={selectedRowIndexes && selectedRowIndexes.length > 0 ? null : 'select rows in the data table'}
-                        onClick={() => { 
-                            // TODO: Change this to add a track based on actual data after we build DB.
-                            // Currently, this button is not shown.
-                            onAddTrack(
-                                'https://resgen.io/api/v1',
-                                'Hygs6CEVR2mCnGlsHK93zQ',
-                                'top'
-                            );
-                            setIsVisible(false);
-                        }}
-                    >
-                        <svg className="chw-button-sm chw-button-static"
-                            viewBox={PLUS.viewBox}>
-                            <path d={PLUS.path} fill="currentColor"/>
-                        </svg>
-                        Add HiGlass tracks with selected rows
-                    </span>
-                : null}
                 <span style={{ 
                     verticalAlign: "middle", 
                     display: "inline-block", 
@@ -533,8 +510,14 @@ export default function CistromeToolkit(props) {
                         rows={selectedRequestIndex !== undefined ? requestHistory[selectedRequestIndex].rows : []}
                         selectedRows={selectedRowIndexes}
                         expoNotations={["Overlap Ratio", 'Regulatory Potential']}
-                        onCheckRows={undefined}
-                        onSelect={(selectedRows) => { setSelectedRowIndexes(selectedRows) }}
+                        onButton={() => {
+                            // TODO: Change this to add a track based on actual data after we build DB.
+                            onAddTrack(
+                                'https://resgen.io/api/v1',
+                                'Hygs6CEVR2mCnGlsHK93zQ',
+                                'top'
+                            );
+                        }}
                     />
                 </div>
             </div>
