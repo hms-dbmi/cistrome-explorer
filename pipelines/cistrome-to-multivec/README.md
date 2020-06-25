@@ -5,6 +5,8 @@ conda activate cistrome-to-multivec-pipeline
 snakemake --cores 2 --config filetype=mv5
 # or
 snakemake --cores 2 --config filetype=zarr
+# or, if on O2
+snakemake --cores 2 --config filetype=mv5 user={your_o2_username}
 ```
 
 Ingest the processed multivec files with `higlass-server`:
