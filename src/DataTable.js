@@ -32,7 +32,7 @@ export default function DataTable(props) {
 
     const bodyRows = useMemo(() => { 
         return rows.map((d, i) => {
-            const checkboxCell = (onButton ? (
+            const buttonCell = (onButton ? (
                 <td>
                     <span 
                         style={{ position: 'relative', top: 3 }}
@@ -57,7 +57,7 @@ export default function DataTable(props) {
             });
             return (
                 <tr key={i} className={'data-table-row'}>
-                    {checkboxCell}{dataCells}
+                    {buttonCell}{dataCells}
                 </tr>
             );
         })

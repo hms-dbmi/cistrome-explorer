@@ -19,7 +19,6 @@ import {
     validatePeaksetParams
 } from './utils/cistrome.js';
 import './CistromeToolkit.scss';
-import { stackOffsetNone } from "d3";
 
 export function destroyCistromeToolkit() {
     PubSub.publish(EVENT.CISTROME_TOOLKIT, {
@@ -85,7 +84,7 @@ export default function CistromeToolkit(props) {
     useEffect(() => {
         const cistromeToolkitToken = PubSub.subscribe(EVENT.CISTROME_TOOLKIT, (msg, data) => {
             setIsVisible(data.isVisible !== undefined ? data.isVisible : !isVisible); // When undefined, toggle visibility
-            // Only Interval API supports interactive request from HiGlass tracks
+            // Only Interval API supports interactive request using HiGlass tracks
             if(validateIntervalParams(data.intervalParams).success) {
                 setLatestIntervalParams(data.intervalParams);
                 runCistromeToolkitAPI(CISTROME_API_TYPES.INTERVAL, data.intervalParams);
@@ -130,7 +129,7 @@ export default function CistromeToolkit(props) {
             )
             // TODO:
         }
-        const isRequestNew = undefined === requestHistory.find(d => isIdentical[api](d, parameter));
+        const isRequestNew = (undefined === requestHistory.find(d => isIdentical[api](d.parameter, parameter)));
         if(isRequestNew) {
             const history = [{ api, parameter, columns, rows }, ...requestHistory];
             setRequestHistory(history);
@@ -214,7 +213,6 @@ export default function CistromeToolkit(props) {
                 Search
             </div>  
         );
-        
         const tooltipHelpInfo = {
             'distance': e => {
                 PubSub.publish(EVENT.TOOLTIP, {
@@ -429,7 +427,7 @@ export default function CistromeToolkit(props) {
     }, [requestHistory, selectedRequestIndex]);
     
     return (
-        <div className="cisvis-data-table-bg"
+        <div className={dragY.current ? "cisvis-data-table-bg-no-transition" : "cisvis-data-table-bg"}
             style={{
                 height: isVisible ? `${height}px` : 0
             }}
@@ -457,6 +455,10 @@ export default function CistromeToolkit(props) {
                     </span>
                 </h4>
                 <span className="cisvis-table-subtitle">
+                    {requestStatus?.isLoading && requestStatus?.msg ? 
+                        <b>{requestStatus?.msg}</b>
+                    : null}
+                    &nbsp;&nbsp;
                     {requestStatus?.isLoading ? (
                         <span className="cisvis-progress-ring" />
                     ) : null}
