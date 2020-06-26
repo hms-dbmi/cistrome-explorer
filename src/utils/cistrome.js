@@ -171,7 +171,7 @@ export function validatePeaksetParams({ assembly, tpeak, bedFile }) {
 }
 
 /**
- *  Generate a URL for the cistrome DB toolkit API for interval search.
+ * Generate a URL for the cistrome DB toolkit API for interval search.
  * @param {string} assembly
  * @param {string} chrStartName
  * @param {number} chrStartPos
@@ -184,7 +184,7 @@ export function makeDBToolkitIntervalAPIURL(assembly, chrStartName, chrStartPos,
 }
 
 /**
- *  Generate a URL for the cistrome DB toolkit API gene search.
+ * Generate a URL for the cistrome DB toolkit API gene search.
  * @param {string} assembly
  * @param {string} gene
  * @param {string} distance
@@ -196,9 +196,9 @@ export function makeDBToolkitGeneAPIURL(assembly, gene, distance) {
 }
 
 /**
- * 
+ * Make an API request for Cistrome DB Toolkit based on the API type.
  * @param {string} apiType Type of Cistrome DB Toolkit API (`CISTROME_API_TYPES`).
- * @param {*} parameter Parameter required for API request
+ * @param {Object} parameter Parameter required for API request.
  */
 export function requestDBToolkitAPI(apiType, parameter) {
     return {
@@ -328,7 +328,6 @@ export function requestByPeakset({ assembly, tpeak, bedFile }) {
         // body: formData // Use `FormData` instead.
     })
         .then((response) => {
-            console.log(response);
             if (!response.ok) {
                 return new Promise((resolve, reject) => {
                     reject(`Error: ${response.statusText}`);

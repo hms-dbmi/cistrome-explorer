@@ -10,13 +10,13 @@ import {
     CISTROME_DBTOOLKIT_SPECIES, 
     CISTROME_DBTOOLKIT_PEAK_NUMBERS, 
     CISTROME_DBTOOLKIT_GENE_DISTANCE,
-    validateGeneParams, 
     CISTROME_API_TYPES,
-    getReadableTable,
     CISTROME_API_COLORS,
+    getReadableTable,
+    validateGeneParams, 
     validateIntervalParams,
-    requestDBToolkitAPI,
-    validatePeaksetParams
+    validatePeaksetParams,
+    requestDBToolkitAPI
 } from './utils/cistrome.js';
 import './CistromeToolkit.scss';
 
@@ -226,7 +226,7 @@ export default function CistromeToolkit(props) {
                     />
                 });
             },
-            'bedfile': (e) => {
+            'bedfile': e => {
                 PubSub.publish(EVENT.TOOLTIP, {
                     x: e.clientX,
                     y: e.clientY,
