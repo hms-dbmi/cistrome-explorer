@@ -202,10 +202,10 @@ export function makeDBToolkitGeneAPIURL(assembly, gene, distance) {
  */
 export function requestDBToolkitAPI(apiType, parameter) {
     return {
-        [CISTROME_API_TYPES.INTERVAL]: () => requestByInterval(parameter),
-        [CISTROME_API_TYPES.GENE]: () => requestByGene(parameter),
-        [CISTROME_API_TYPES.PEAKSET]: () => requestByPeakset(parameter)
-    }[apiType]();
+        [CISTROME_API_TYPES.INTERVAL]: requestByInterval,
+        [CISTROME_API_TYPES.GENE]: requestByGene,
+        [CISTROME_API_TYPES.PEAKSET]: requestByPeakset
+    }[apiType](parameter);
 }
 
 /**
