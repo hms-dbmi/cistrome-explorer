@@ -62,7 +62,7 @@ export default function ViewColumnBrush(props) {
     const { 
         msg: intervalInvalidMsg, 
         success: intervalValid 
-    } = validateIntervalParams(assembly, chrStartName, chrStartPos, chrEndName, chrEndPos);
+    } = validateIntervalParams({ assembly, chrStartName, chrStartPos, chrEndName, chrEndPos });
 
     if(end === null && start === null) {
         // Do not show range when they are ourside.

@@ -7,7 +7,7 @@ toc:
 - CistromeHGWConsumer
 - InfoProvider
 - DataTable
-- DataTableForIntervalTFs
+- CistromeToolkit
 - ContextMenu
 - Tooltip
 - TooltipContent
@@ -58,9 +58,13 @@ toc:
 - matrixToTree
 - matrixToTreeWithDistance
 - createReducer
+- getReadableTable
 - validateIntervalParams
+- validateGeneParams
 - makeDBToolkitIntervalAPIURL
-- requestIntervalTFs
+- makeDBToolkitGeneAPIURL
+- requestByInterval
+- requestByGene
 - componentToHex
 - rgbToHex
 - generateNextUniqueColor

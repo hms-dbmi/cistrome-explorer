@@ -1,54 +1,29 @@
-import React, { useCallback, useRef, useMemo } from 'react';
+import React, { useMemo } from 'react';
 
 import "./TrackRowInfoControl.scss";
 import "./DataTable.scss";
+import { PLUS } from './utils/icons';
 
 /**
  * Component for data table.
- * @prop {number} margin The gap between the inner table and the viewport.
  * @prop {array} rows Array of rows to render data table.
  * @prop {array} columns Array of column names in data table.
- * @prop {array} selectedRows Array of rows selected by a user.
- * @prop {string} title A title for the table. Optional.
- * @prop {string} subtitle A subtitle for the table. Optional.
- * @prop {boolean} isLoading Whether the data is still loading, in which case show a spinner.
  * @prop {array} expoNotations A list of columns names that need to use exponential notations.
- * @prop {(function|null)} onCheckRows If a function is provided, a checkbox will be shown for each row.
- * @prop {function} onSelect A function to call upon the selection on rows in a data table.
- * On change of any checkbox elements, an array of all checked row objects will be passed to the function. By default, null.
+ * @prop {(function|null)} onButton If a function is provided, a `+` button will be shown for each row.
  */
 export default function DataTable(props) {
     const {
-        margin,
-        rows = [], columns = [],
-        selectedRows,
-        title = "Data Preview",
-        subtitle,
-        isLoading = false,
-        onCheckRows = null,
-        expoNotations = [],
-        onClose,
-        onSelect
+        rows = [], 
+        columns = [],
+        onButton = null,
+        expoNotations = []
     } = props;
-
-    // Store the currently-checked row indices in a mutable set object.
-    const checkedRowIndicesRef = useRef(new Set());
-
-    const handleInputChange = useCallback((event) => {
-        if(!event || !event.target) return;
-        const target = event.target;
-        if(target.checked) {
-            checkedRowIndicesRef.current.add(target.value);
-        } else {
-            checkedRowIndicesRef.current.delete(target.value);
-        }
-        const checkedRows = Array.from(checkedRowIndicesRef.current).map(i => rows[i]);
-        onCheckRows(checkedRows);
-    }, [rows, columns, onCheckRows]);
 
     const headRow = (
         <tr>
-            {onCheckRows ? (<th></th>) : null}
+            {onButton && columns.length > 0 ? 
+                <th>Add Track</th> 
+            : null}
             {columns.map((c, j) => (
                 <th key={j}>{c}</th>
             ))}
@@ -57,14 +32,20 @@ export default function DataTable(props) {
 
     const bodyRows = useMemo(() => { 
         return rows.map((d, i) => {
-            const checkboxCell = (onCheckRows ? (
+            const buttonCell = (onButton ? (
                 <td>
-                    <input
-                        type="checkbox"
-                        name="data-table-checkbox"
-                        value={i}
-                        onChange={handleInputChange}
-                    />
+                    <span 
+                        style={{ position: 'relative', top: 3 }}
+                        onClick={onButton}
+                    >
+                        <svg className="chw-button"
+                            style={{ color: "#808080", background: "none" }}
+                            xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                            viewBox={PLUS.viewBox}>
+                            <title>Add HiGlass Track</title>
+                            <path fill="currentColor" d={PLUS.path}/>
+                        </svg>
+                    </span>
                 </td>
             ) : null);
             const dataCells = columns.map((c, j) => {
@@ -75,23 +56,19 @@ export default function DataTable(props) {
                 );
             });
             return (
-                <tr 
-                    key={i}
-                    className={selectedRows.includes(i) ? 'data-table-row-selected' : 'data-table-row'}
-                    onClick={() => { onSelect([i]) }}
-                >
-                    {checkboxCell}{dataCells}
+                <tr key={i} className={'data-table-row'}>
+                    {buttonCell}{dataCells}
                 </tr>
             );
         })
-    }, [selectedRows, expoNotations, onCheckRows]);
+    }, [expoNotations, onButton]);
 
     return (
         <div
             style={{
                 overflowY: "auto",
                 border: "1px solid lightgray",
-                background: "#f9f9f9",
+                background: "white",
                 padding: '1px'
             }}
         >
