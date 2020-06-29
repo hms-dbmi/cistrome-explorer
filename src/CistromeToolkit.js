@@ -115,21 +115,6 @@ export default function CistromeToolkit(props) {
     }, [latestPeaksetParams]);
 
     function addRequestHistory(api, parameter, columns, rows) {
-        // const isIdentical = {
-        //     [CISTROME_API_TYPES.INTERVAL]: (d1, d2) => (
-        //         d1.assembly === d2.assembly 
-        //         && d1.chrStartName === d2.chrStartName 
-        //         && d1.chrStartPos === d2.chrStartPos
-        //         && d1.chrEndName === d2.chrEndName 
-        //         && d1.chrEndPos === d2.chrEndPos
-        //     ),
-        //     [CISTROME_API_TYPES.GENE]: (d1, d2) => (
-        //         d1.assembly === d2.assembly
-        //         & d1.distance === d2.distance
-        //         & d1.gene === d2.gene
-        //     )
-        //     // TODO: Support Peak Set API
-        // }
         const isRequestNew = (undefined === requestHistory.find(d => isEqual(d.parameter, parameter)));
         if(isRequestNew) {
             const history = [{ api, parameter, columns, rows }, ...requestHistory];
