@@ -5,6 +5,7 @@ import { EVENT } from './utils/constants.js';
 import DataTable from "./DataTable.js";
 import { CLOSE, SEARCH, EXPAND, TABLE, EXTERNAL_LINK, QUESTION_MARK } from './utils/icons.js';
 import { TooltipContent, destroyTooltip } from "./Tooltip.js";
+import isEqual from "lodash/isEqual";
 import { 
     CISTROME_DBTOOLKIT_CHROMOSOMES,
     CISTROME_DBTOOLKIT_SPECIES, 
@@ -114,22 +115,22 @@ export default function CistromeToolkit(props) {
     }, [latestPeaksetParams]);
 
     function addRequestHistory(api, parameter, columns, rows) {
-        const isIdentical = {
-            [CISTROME_API_TYPES.INTERVAL]: (d1, d2) => (
-                d1.assembly === d2.assembly 
-                && d1.chrStartName === d2.chrStartName 
-                && d1.chrStartPos === d2.chrStartPos
-                && d1.chrEndName === d2.chrEndName 
-                && d1.chrEndPos === d2.chrEndPos
-            ),
-            [CISTROME_API_TYPES.GENE]: (d1, d2) => (
-                d1.assembly === d2.assembly
-                & d1.distance === d2.distance
-                & d1.gene === d2.gene
-            )
-            // TODO: Support Peak Set API
-        }
-        const isRequestNew = (undefined === requestHistory.find(d => isIdentical[api](d.parameter, parameter)));
+        // const isIdentical = {
+        //     [CISTROME_API_TYPES.INTERVAL]: (d1, d2) => (
+        //         d1.assembly === d2.assembly 
+        //         && d1.chrStartName === d2.chrStartName 
+        //         && d1.chrStartPos === d2.chrStartPos
+        //         && d1.chrEndName === d2.chrEndName 
+        //         && d1.chrEndPos === d2.chrEndPos
+        //     ),
+        //     [CISTROME_API_TYPES.GENE]: (d1, d2) => (
+        //         d1.assembly === d2.assembly
+        //         & d1.distance === d2.distance
+        //         & d1.gene === d2.gene
+        //     )
+        //     // TODO: Support Peak Set API
+        // }
+        const isRequestNew = (undefined === requestHistory.find(d => isEqual(d.parameter, parameter)));
         if(isRequestNew) {
             const history = [{ api, parameter, columns, rows }, ...requestHistory];
             setRequestHistory(history);
