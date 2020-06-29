@@ -36,7 +36,7 @@ export default function DataTable(props) {
                 <td>
                     <span 
                         style={{ position: 'relative', top: 3 }}
-                        onClick={() => onButton()}
+                        onClick={onButton}
                     >
                         <svg className={'chw-button'}
                             style={{ color: "#808080", background: "none" }}
