@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useCallback, useState, useMemo } from "react"
 import PubSub from 'pubsub-js';
 import d3 from '../utils/d3.js';
 import { EVENT } from '../utils/constants.js';
-import DataTable from "../DataTable.js";
+import DataTable from "./DataTable.js";
 import { CLOSE, SEARCH, EXPAND, TABLE, EXTERNAL_LINK, QUESTION_MARK } from '../utils/icons.js';
 import { TooltipContent, destroyTooltip } from "../Tooltip.js";
 import isEqual from "lodash/isEqual";
@@ -29,8 +29,7 @@ export function destroyCistromeToolkit() {
 }
 
 /**
- * Wrapper around <DataTable />, specific for showing the TF binding interval request results.
- * Subscribes to 'cistrome-toolkit' event via `PubSub`.
+ * UI component for Cistrome Toolkit to make queries for APIs and see result tables.
  * @prop {function} onAddTrack A function to call when adding tracks with selected rows.
  * @prop {object} intervalParams The interval request parameters.
  * @prop {string} intervalParams.assembly

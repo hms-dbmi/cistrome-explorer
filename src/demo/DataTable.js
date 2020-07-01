@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 
 import "./TrackRowInfoControl.scss";
 import "./DataTable.scss";
-import { PLUS } from './utils/icons';
+import { PLUS } from '../utils/icons';
 
 /**
  * Component for data table.
