@@ -197,7 +197,7 @@ const baseSchema = {
 };
 
 const optionsArraySchema = merge(cloneDeep(baseSchema), {
-    "title": "CistromeHGW wOptions (array)",
+    "title": "HiGlassWithMetadata wOptions (array)",
     "type": "array",
     "items": {
         "type": "object",
@@ -211,7 +211,7 @@ const optionsArraySchema = merge(cloneDeep(baseSchema), {
 });
 
 const optionsObjectSchema = merge(cloneDeep(baseSchema), {
-    "title": "CistromeHGW wOptions (object)",
+    "title": "HiGlassWithMetadata wOptions (object)",
     "type": "object",
     "$ref": "#/definitions/trackOptions",
     "definitions": {
@@ -245,7 +245,7 @@ export function getHighlightKeyByFieldType(type, condition) {
 }
 
 /**
- * Validate the CistromeHGW `options` prop.
+ * Validate the HiGlassWithMetadata `options` prop.
  * @param {(object|object[]|null)} optionsRaw The raw value of the options prop.
  * @returns {boolean} True if the options prop value was valid.
  */
@@ -268,7 +268,7 @@ export function validateWrapperOptions(optionsRaw) {
 }
 
 /**
- * Process the CistromeHGW `options` prop by mapping track IDs to objects containing values for all possible option attributes.
+ * Process the HiGlassWithMetadata `options` prop by mapping track IDs to objects containing values for all possible option attributes.
  * @param {(object|object[]|null)} optionsRaw The raw value of the options prop.
  * @returns {object} A processed options object, mapping track IDs to options objects, and merging with defaults.
  */

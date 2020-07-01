@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import pkg from '../../package.json';
 
-import { CistromeHGW } from '../index.js';
+import { HiGlassWithMetadata } from '../index.js';
+import CistromeToolkit from '../CistromeToolkit.js';
 
 import PubSub from "pubsub-js";
 import { EVENT } from '../utils/constants.js';
@@ -18,7 +19,7 @@ import hgDemoViewConfig9 from '../viewconfigs/horizontal-multivec-9.json';
 import hgDemoViewConfig10 from '../viewconfigs/horizontal-multivec-10.json';
 import hgDemoViewConfigApril2020 from '../viewconfigs/meeting-2020-04-29.json';
 
-import './App.scss';
+import './CistromeExplorer.scss';
 
 const demos = {
     "H3K27ac Demo (1 View, Center Track)": {
@@ -255,12 +256,12 @@ function onViewConfigChange(viewConfigString) {
     console.log("View config changed");
 }
 
-export default function App() {
+export default function CistromeExplorer() {
     
     const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[0]);
 
     return (
-        <div className="app">
+        <div className="cistrome-explorer">
             <div className="header-container">
                 <div className="header">
                     <span className="cisvis-title">Cistrome Explorer</span>
@@ -313,12 +314,18 @@ export default function App() {
                 </div>
             </div>
 
-            <div className="cistrome-explorer">
-                <div className="container">
-                    <CistromeHGW 
+            <div className="visualization-container">
+                <div className="visualization">
+                    <HiGlassWithMetadata 
                         viewConfig={demos[selectedDemo].viewConfig}
                         options={demos[selectedDemo].options}
                         onViewConfigChange={onViewConfigChange}
+                    />
+                    <CistromeToolkit
+                        // TODO: After we build DB for cistrome bigwig files, uncomment the following code.
+                        // onAddTrack={(server, tilesetUid, position) => { 
+                        //     onAddBigWigTrack(server, tilesetUid, position);
+                        // }}
                     />
                 </div>
             </div>

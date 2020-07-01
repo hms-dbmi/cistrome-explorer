@@ -1,5 +1,4 @@
-.app {
-    text-align: center;
+.cistrome-explorer {
     height: 100vh;
     .header-container{
         font-family: 'Lato', sans-serif;
@@ -55,12 +54,12 @@
             }
         }
     } // End of header-container
-    .cistrome-explorer {
+    .visualization-container {
         width: 100%;
         height: calc(100% - 50px);
         padding-top: 10px;
         overflow-x: auto;
-        .container {
+        .visualization {
             border: 0px solid gray;
             width: 50%;
             position: relative;
