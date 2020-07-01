@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import pkg from '../../package.json';
 
 import { HiGlassWithMetadata } from '../index.js';
-import CistromeToolkit from '../CistromeToolkit.js';
+import CistromeToolkit from './CistromeToolkit.js';
 
 import PubSub from "pubsub-js";
 import { EVENT } from '../utils/constants.js';

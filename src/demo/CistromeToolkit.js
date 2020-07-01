@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useCallback, useState, useMemo } from "react";
 import PubSub from 'pubsub-js';
-import d3 from './utils/d3.js';
-import { EVENT } from './utils/constants.js';
-import DataTable from "./DataTable.js";
-import { CLOSE, SEARCH, EXPAND, TABLE, EXTERNAL_LINK, QUESTION_MARK } from './utils/icons.js';
-import { TooltipContent, destroyTooltip } from "./Tooltip.js";
+import d3 from '../utils/d3.js';
+import { EVENT } from '../utils/constants.js';
+import DataTable from "../DataTable.js";
+import { CLOSE, SEARCH, EXPAND, TABLE, EXTERNAL_LINK, QUESTION_MARK } from '../utils/icons.js';
+import { TooltipContent, destroyTooltip } from "../Tooltip.js";
 import isEqual from "lodash/isEqual";
 import { 
     CISTROME_DBTOOLKIT_CHROMOSOMES,
@@ -18,7 +18,7 @@ import {
     validateIntervalParams,
     validatePeaksetParams,
     requestDBToolkitAPI
-} from './utils/cistrome.js';
+} from '../utils/cistrome.js';
 import './CistromeToolkit.scss';
 
 export function destroyCistromeToolkit() {
