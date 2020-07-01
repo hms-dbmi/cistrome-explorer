@@ -1,8 +1,6 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import d3 from './utils/d3.js';
 import uuidv4 from 'uuid/v4';
-import PubSub from "pubsub-js";
-import { EVENT } from './utils/constants.js';
 import ViewColumnBrush from './ViewColumnBrush.js';
 import { resolveIntervalCoordinates } from './utils/genome.js';
 import { getRange } from './utils/viewport.js';
