@@ -2,29 +2,29 @@ import React, { useRef, useState, useEffect, useCallback, useMemo } from "react"
 import { CLOSE, FILTER, RESET, SEARCH, SQUARE_CHECK, SQUARE } from './utils/icons.js';
 import d3 from "./utils/d3.js";
 
-import './TrackRowSearch.scss';
+import './TrackRowFilter.scss';
 import RangeSlider from "./RangeSlider.js";
 import { getAggregatedValue } from "./utils/aggregate.js";
 
 const MAX_NUM_SUGGESTIONS = 200;
 
 /**
- * Text field to serach for keywords.
+ * Component to help determining rows to filter.
  * @prop {boolean} isLeft Is this view on the left side of the HiGlass track?
  * @prop {number} top The top coordinate.
  * @prop {number} left The left coordinate.
  * @prop {string} field The name of field related to the wrapper track.
  * @prop {string} type The type of field related to the wrapper track.
  * @prop {string} aggFunction The function to apply upon row aggregation.
- * @prop {function} onChange The function to call when the search keyword has changed.
+ * @prop {function} onChange The function to call when the search keyword or value range has changed.
  * @prop {function} onFilterRows The function to call when the filter should be applied.
- * @prop {function} onClose The function to call when the search field should be closed.
+ * @prop {function} onClose The function to call when filter component should be closed.
  * @prop {object[]} rowInfo The array of JSON Object containing row information.
  * @prop {object} filterInfo The options for filtering rows of the field used in this track.
  * @example
- * <TrackRowSearch/>
+ * <TrackRowFilter/>
  */
-export default function TrackRowSearch(props) {
+export default function TrackRowFilter(props) {
 
     const {
         isLeft,
@@ -156,7 +156,7 @@ export default function TrackRowSearch(props) {
         setKeyword("");
     }
 
-    function onSearchClose() {
+    function onFilterClose() {
         onChange("");
         onClose();
         setKeyword("");
@@ -236,7 +236,7 @@ export default function TrackRowSearch(props) {
                 break;
             case 'Esc':
             case 'Escape':
-                onSearchClose(); 
+                onFilterClose(); 
                 break;
         }
     }
@@ -287,14 +287,14 @@ export default function TrackRowSearch(props) {
 
     return (
         <div
-            className="chw-search"
+            className="chw-filter"
             style={{
                 display: ((left !== null && top !== null) ? 'flex' : 'none'),
                 left: left - (width + padding * 2) / 2 + offset.x,
                 top: top - (height + padding * 2) - 80 + offset.y,
             }}
         >
-            <div className="chw-search-box"
+            <div className="chw-filter-box"
                 style={{
                     padding: padding,
                     paddingLeft: '0px'
@@ -313,7 +313,7 @@ export default function TrackRowSearch(props) {
                 {type === "nominal" || type === "link" ?
                     <input
                         ref={keywordInputRef}
-                        className="chw-search-box-input"
+                        className="chw-filter-box-input"
                         type="text"
                         name="default name"
                         placeholder="Search"
@@ -330,7 +330,7 @@ export default function TrackRowSearch(props) {
                         valueExtent={valueExtent}
                         onChange={onRangeChange}
                         onFilter={onFilterByRange}
-                        onClose={onSearchClose}
+                        onClose={onFilterClose}
                     />
                 }
                 {type === "quantitative" ?
@@ -355,14 +355,14 @@ export default function TrackRowSearch(props) {
                     : null
                 }
                 <svg className="chw-button-sm"
-                    onClick={onSearchClose} viewBox={CLOSE.viewBox}>
-                    <title>Close search box</title>
+                    onClick={onFilterClose} viewBox={CLOSE.viewBox}>
+                    <title>Close filter component</title>
                     <path d={CLOSE.path} fill="currentColor"/>
                 </svg>
             </div>   
             {type === "nominal" || type === "link" ?
                 <div 
-                    className="chw-search-suggestions"
+                    className="chw-filter-suggestions"
                     style={{
                         top: (padding + height),
                         left: "45px",
@@ -376,7 +376,7 @@ export default function TrackRowSearch(props) {
                         {suggestions.map((d, i) => (
                             <li
                                 key={d}
-                                className={"chw-search-suggestion-text " + (i === suggestionIndex ? "active-suggestion" : "")}
+                                className={"chw-filter-suggestion-text " + (i === suggestionIndex ? "active-suggestion" : "")}
                                 onClick={() => onSuggestionEnter(d)}
                                 onMouseEnter={() => setSuggestionIndex(i)}
                                 onMouseLeave={() => setSuggestionIndex(undefined)}
