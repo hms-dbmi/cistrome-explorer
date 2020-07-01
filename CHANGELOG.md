@@ -1,5 +1,10 @@
 ## 0.5.0 - in progress
 
+### Added
+
+### Changed
+- Moved `CistromeToolkit` to the sibling of `CistromeHGW`.
+
 ## 0.4.0
 
 ### Added

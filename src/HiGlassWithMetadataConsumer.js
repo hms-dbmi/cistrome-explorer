@@ -59,13 +59,15 @@ const hgOptionsBase = {
  * @prop {object} viewConfig A HiGlass viewConfig object.
  * @prop {(object|object[])} options Options for the wrapper component.
  * @prop {function} onViewConfigChange A function to call upon change of the HiGlass view config. Optional.
+ * @prop {function} onGenomicIntervalSearch A function to call upon searching for TFs by using the selected interval. Optional.
  */
 export default function HiGlassWithMetadataConsumer(props) {
 
     const {
         viewConfig,
         options: optionsRaw,
-        onViewConfigChange: onViewConfigChangeProp
+        onViewConfigChange: onViewConfigChangeProp,
+        onGenomicIntervalSearch
     } = props;
 
     const hgRef = useRef();
@@ -510,6 +512,7 @@ export default function HiGlassWithMetadataConsumer(props) {
                             onViewConfig(newViewConfig);
                         });
                     }}
+                    onGenomicIntervalSearch={onGenomicIntervalSearch}
                     drawRegister={drawRegister}
                 />
             ))}

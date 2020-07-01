@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 
-import "./TrackRowInfoControl.scss";
+import "../TrackRowInfoControl.scss";
 import "./DataTable.scss";
 import { PLUS } from '../utils/icons';
 

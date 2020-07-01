@@ -4,8 +4,6 @@ import pkg from '../../package.json';
 import { HiGlassWithMetadata } from '../index.js';
 import CistromeToolkit from './CistromeToolkit.js';
 
-import PubSub from "pubsub-js";
-import { EVENT } from '../utils/constants.js';
 import { TABLE } from '../utils/icons.js';
 
 import hgDemoViewConfig1 from '../viewconfigs/horizontal-multivec-1.json';
@@ -259,6 +257,10 @@ function onViewConfigChange(viewConfigString) {
 export default function CistromeExplorer() {
     
     const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[0]);
+    
+    // Toolkit-related
+    const [isToolkitVisible, setIsToolkitVisible] = useState(false);
+    const [toolkitParams, setToolkitParams] = useState(undefined);
 
     return (
         <div className="cistrome-explorer">
@@ -282,9 +284,7 @@ export default function CistromeExplorer() {
                     </span>
                     <span className="header-info">
                         <span style={{ cursor: 'pointer' }} onClick={() => 
-                            PubSub.publish(EVENT.CISTROME_TOOLKIT, {
-                                // Toggle visibility
-                            })
+                            setIsToolkitVisible(!isToolkitVisible)
                         }>
                             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
                                 viewBox={TABLE.viewBox}>
@@ -320,8 +320,15 @@ export default function CistromeExplorer() {
                         viewConfig={demos[selectedDemo].viewConfig}
                         options={demos[selectedDemo].options}
                         onViewConfigChange={onViewConfigChange}
+                        onGenomicIntervalSearch={(params) => {
+                            setIsToolkitVisible(true);
+                            setToolkitParams({...params});
+                        }}
                     />
                     <CistromeToolkit
+                        isVisible={isToolkitVisible}
+                        onClose={() => setIsToolkitVisible(false)}
+                        intervalAPIParams={toolkitParams}
                         // TODO: After we build DB for cistrome bigwig files, uncomment the following code.
                         // onAddTrack={(server, tilesetUid, position) => { 
                         //     onAddBigWigTrack(server, tilesetUid, position);
