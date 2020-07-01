@@ -46,6 +46,7 @@ export default function CistromeToolkit(props) {
         onAddTrack
     } = props;
 
+    const toolkitRef = useRef(null);
     const resizerRef = useRef(null);
     const dragY = useRef(null);
 
@@ -62,8 +63,8 @@ export default function CistromeToolkit(props) {
         assembly: CISTROME_DBTOOLKIT_SPECIES[0],
         chrStartName: CISTROME_DBTOOLKIT_CHROMOSOMES[0],
         chrEndName: CISTROME_DBTOOLKIT_CHROMOSOMES[0],
-        chrStartPos: undefined,
-        chrEndPos: undefined
+        chrStartPos: '',
+        chrEndPos: ''
     });
     const [latestGeneParams, setLatestGeneParams] = useState({
         assembly: CISTROME_DBTOOLKIT_SPECIES[0],
@@ -81,12 +82,18 @@ export default function CistromeToolkit(props) {
     const [isLatestGeneParamsReady, setIsLatestGeneParamsReady] = useState(false);
     const [isLatestPeaksetParamsReady, setIsLatestPeaksetParamsReady] = useState(false);
 
+    useEffect(() => {
+        if(isVisible) {
+            toolkitRef.current.focus()
+        }
+    }, [isVisible]);
+
     // Subscribing PubSub events
     useEffect(() => {
         const cistromeToolkitToken = PubSub.subscribe(EVENT.CISTROME_TOOLKIT, (msg, data) => {
             setIsVisible(data.isVisible !== undefined ? data.isVisible : !isVisible); // When undefined, toggle visibility
             // Only Interval API supports interactive request using HiGlass tracks
-            if(validateIntervalParams(data.intervalParams).success) {
+            if(data.intervalParams && validateIntervalParams(data.intervalParams).success) {
                 setLatestIntervalParams(data.intervalParams);
                 runCistromeToolkitAPI(CISTROME_API_TYPES.INTERVAL, data.intervalParams);
             }
@@ -416,7 +423,16 @@ export default function CistromeToolkit(props) {
     }, [requestHistory, selectedRequestIndex]);
     
     return (
-        <div className={dragY.current ? "cisvis-data-table-bg-no-transition" : "cisvis-data-table-bg"}
+        <div ref={toolkitRef}
+            className={dragY.current ? "cisvis-data-table-bg-no-transition" : "cisvis-data-table-bg"}
+            tabIndex="0"
+            onKeyDown={e => {
+                if(
+                    (e.key === 'Esc' || e.key === 'Escape') && isVisible
+                ) {
+                    setIsVisible(false);
+                }
+            }}
             style={{
                 height: isVisible ? `${height}px` : 0
             }}
