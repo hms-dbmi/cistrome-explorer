@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import PubSub from 'pubsub-js';
 
 import { SORT_ASC, SORT_DESC, FILTER, RESET, TOGGLE_ON } from './utils/icons.js';
-import TrackRowSearch from './TrackRowSearch.js';
+import TrackRowFilter from './TrackRowFilter.js';
 import { getAggregatedValue } from './utils/aggregate.js';
 
 const LOCAL_EVENT_SEARCH_OPEN = "search-open";
@@ -168,7 +168,7 @@ export default function TrackRowInfoControl(props){
                 })}
             </div>
             {isSearching ? (
-                <TrackRowSearch
+                <TrackRowFilter
                     isLeft={isLeft}
                     top={searchTop}
                     left={searchLeft}

@@ -1,4 +1,6 @@
-## 0.4.0 - in progress
+## 0.5.0 - in progress
+
+## 0.4.0
 
 ### Added
 - Added row aggregation options (e.g., `rowAggregate`) to aggregate rows based on nominal fields metadata.
@@ -10,6 +12,8 @@
 - Filtering information in range sliders and keyword search boxes is based on the aggregated values (`aggregatedRowInfo`), instead of original `rowInfo`.
 - Fixed a SVG export bug which caused visualizations to be exported from previous datasets (corresponding to previous `options` prop values in the demo).
 - Updaetd a Cistrome DB Toolkit view to show two APIs with the history of request and data tables of each request.
+- Fixed z-index between track resizer, filtering box, and toolkit.
+- Rename the keyword search box (`TrackRowSearch` => `TrackRowFilter`).
 
 ## 0.3.0 - 05/27/20
 

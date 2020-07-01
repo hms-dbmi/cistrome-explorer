@@ -2,11 +2,12 @@
     transition: height 0.2s ease-out;
 }
 .cisvis-data-table-bg-no-transition,
-.cisvis-data-table-bg { 
+.cisvis-data-table-bg {
     position: fixed;
     left: 0;
     bottom: 0;
     width: 100%;
+    z-index: 3;
     .cisvis-data-table-header {
         height: 3px;
         background: #666;
