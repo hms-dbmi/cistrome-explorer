@@ -25,7 +25,6 @@ import './CistromeToolkit.scss';
  * UI component for Cistrome Toolkit to make queries for APIs and see result tables.
  * @prop {boolean} isVisible Should this view visible?
  * @prop {function} onAddTrack A function to call when adding tracks with selected rows.
- * @prop {function} onClose A function to call when closing the Toolkit view.
  * @prop {object} intervalAPIParams A JSON object that stores parameters for interval search API.
  * @example
  * <CistromeToolkit
@@ -35,8 +34,7 @@ import './CistromeToolkit.scss';
  */
 export default function CistromeToolkit(props) {
     const {
-        isVisible,
-        onClose,
+        isVisible: initIsVisible,
         onAddTrack,
         intervalAPIParams
     } = props;
@@ -44,12 +42,19 @@ export default function CistromeToolkit(props) {
     const toolkitRef = useRef(null);
     const resizerRef = useRef(null);
     const dragY = useRef(null);
-
+    
+    const [isVisible, setIsVisible] = useState(initIsVisible);
     const [height, setHeight] = useState(800);
+
     const [requestStatus, setRequestStatus] = useState(undefined);
     const [requestHistory, setRequestHistory] = useState([]);
     const [selectedRequestIndex, setSelectedRequestIndex] = useState(undefined);
     const [selectedRowIndexes, setSelectedRowIndexes] = useState([]);
+
+    // Update the visibility when outside of `CistromeToolkit` asks to.
+    useEffect(() => {
+        setIsVisible(initIsVisible);
+    }, [initIsVisible]);
 
     // API parameters
     const [latestIntervalParams, setLatestIntervalParams] = useState({
@@ -81,13 +86,12 @@ export default function CistromeToolkit(props) {
         }
     }, [isVisible]);
 
+    // An Interval API can be called outside of `CistromeToolkit`
     useEffect(() => {
-        // An Interval API can be called outside of `CistromeToolkit`
-        if(intervalAPIParams && isVisible) {
-            if(intervalAPIParams && validateIntervalParams(intervalAPIParams).success) {
-                setLatestIntervalParams(intervalAPIParams);
-                runCistromeToolkitAPI(CISTROME_API_TYPES.INTERVAL, intervalAPIParams);
-            } 
+        if(intervalAPIParams && validateIntervalParams(intervalAPIParams).success) {
+            setIsVisible(true);
+            setLatestIntervalParams(intervalAPIParams);
+            runCistromeToolkitAPI(CISTROME_API_TYPES.INTERVAL, intervalAPIParams);
         }
     }, [intervalAPIParams]);
 
@@ -418,7 +422,7 @@ export default function CistromeToolkit(props) {
                 if(
                     (e.key === 'Esc' || e.key === 'Escape') && isVisible
                 ) {
-                    onClose();
+                    setIsVisible(false);
                 }
             }}
             style={{
@@ -483,7 +487,7 @@ export default function CistromeToolkit(props) {
                     <svg
                         className={'chw-button'}
                         style={{ color: "gray", background: "none" }}
-                        onClick={onClose}
+                        onClick={() => setIsVisible(false)}
                         viewBox={CLOSE.viewBox}
                     >
                         <title>Close Cistrome Toolkit</title>

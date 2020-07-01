@@ -320,14 +320,10 @@ export default function CistromeExplorer() {
                         viewConfig={demos[selectedDemo].viewConfig}
                         options={demos[selectedDemo].options}
                         onViewConfigChange={onViewConfigChange}
-                        onGenomicIntervalSearch={(params) => {
-                            setIsToolkitVisible(true);
-                            setToolkitParams({...params});
-                        }}
+                        onGenomicIntervalSearch={setToolkitParams}
                     />
                     <CistromeToolkit
                         isVisible={isToolkitVisible}
-                        onClose={() => setIsToolkitVisible(false)}
                         intervalAPIParams={toolkitParams}
                         // TODO: After we build DB for cistrome bigwig files, uncomment the following code.
                         // onAddTrack={(server, tilesetUid, position) => { 
