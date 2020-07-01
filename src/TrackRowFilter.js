@@ -16,7 +16,7 @@ const MAX_NUM_SUGGESTIONS = 200;
  * @prop {string} field The name of field related to the wrapper track.
  * @prop {string} type The type of field related to the wrapper track.
  * @prop {string} aggFunction The function to apply upon row aggregation.
- * @prop {function} onChange The function to call when the search keyword or range has changed.
+ * @prop {function} onChange The function to call when the search keyword or has changed.
  * @prop {function} onFilterRows The function to call when the filter should be applied.
  * @prop {function} onClose The function to call when the search field should be closed.
  * @prop {object[]} rowInfo The array of JSON Object containing row information.
@@ -289,7 +289,7 @@ export default function TrackRowFilter(props) {
       <div
         className="cisvis-filter"
         style={{
-          display: left !== null && top !== null ? "flex" : "none",
+          display: ((left !== null && top !== null) ? "flex" : "none"),
           left: left - (width + padding * 2) / 2 + offset.x,
           top: top - (height + padding * 2) - 80 + offset.y,
         }}
@@ -298,13 +298,11 @@ export default function TrackRowFilter(props) {
           className="cisvis-filter-box"
           style={{
             padding: padding,
-            paddingLeft: "0px",
+            paddingLeft: "0px"
           }}
         >
           <div ref={moverRef} className="chw-button-drag">
-            <div />
-            <div />
-            <div />
+            <div/><div/><div/>
           </div>
           {type === "nominal" || type === "link" ? (
             <svg
