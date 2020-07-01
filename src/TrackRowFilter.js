@@ -2,29 +2,29 @@ import React, { useRef, useState, useEffect, useCallback, useMemo } from "react"
 import { CLOSE, FILTER, RESET, SEARCH, SQUARE_CHECK, SQUARE } from './utils/icons.js';
 import d3 from "./utils/d3.js";
 
-import './TrackRowSearch.scss';
+import "./TrackRowFilter.scss";
 import RangeSlider from "./RangeSlider.js";
 import { getAggregatedValue } from "./utils/aggregate.js";
 
 const MAX_NUM_SUGGESTIONS = 200;
 
 /**
- * Text field to serach for keywords.
+ * Component to determine rows to filter.
  * @prop {boolean} isLeft Is this view on the left side of the HiGlass track?
  * @prop {number} top The top coordinate.
  * @prop {number} left The left coordinate.
  * @prop {string} field The name of field related to the wrapper track.
  * @prop {string} type The type of field related to the wrapper track.
  * @prop {string} aggFunction The function to apply upon row aggregation.
- * @prop {function} onChange The function to call when the search keyword has changed.
+ * @prop {function} onChange The function to call when the search keyword or range has changed.
  * @prop {function} onFilterRows The function to call when the filter should be applied.
  * @prop {function} onClose The function to call when the search field should be closed.
  * @prop {object[]} rowInfo The array of JSON Object containing row information.
  * @prop {object} filterInfo The options for filtering rows of the field used in this track.
  * @example
- * <TrackRowSearch/>
+ * <TrackRowFilter/>
  */
-export default function TrackRowSearch(props) {
+export default function TrackRowFilter(props) {
 
     const {
         isLeft,
@@ -156,7 +156,7 @@ export default function TrackRowSearch(props) {
         setKeyword("");
     }
 
-    function onSearchClose() {
+    function onFilterClose() {
         onChange("");
         onClose();
         setKeyword("");
@@ -236,7 +236,7 @@ export default function TrackRowSearch(props) {
                 break;
             case 'Esc':
             case 'Escape':
-                onSearchClose(); 
+                onFilterClose(); 
                 break;
         }
     }
@@ -286,111 +286,131 @@ export default function TrackRowSearch(props) {
     }
 
     return (
+      <div
+        className="cisvis-filter"
+        style={{
+          display: left !== null && top !== null ? "flex" : "none",
+          left: left - (width + padding * 2) / 2 + offset.x,
+          top: top - (height + padding * 2) - 80 + offset.y,
+        }}
+      >
         <div
-            className="chw-search"
-            style={{
-                display: ((left !== null && top !== null) ? 'flex' : 'none'),
-                left: left - (width + padding * 2) / 2 + offset.x,
-                top: top - (height + padding * 2) - 80 + offset.y,
-            }}
+          className="cisvis-filter-box"
+          style={{
+            padding: padding,
+            paddingLeft: "0px",
+          }}
         >
-            <div className="chw-search-box"
-                style={{
-                    padding: padding,
-                    paddingLeft: '0px'
-                }}>
-                <div ref={moverRef} className="chw-button-drag">
-                    <div/><div/><div/>
-                </div>
-                {type === "nominal" || type === "link" ?
-                    <svg className="chw-button-sm chw-button-static" 
-                        style={{ color: "gray", marginLeft: "0px" }}
-                        viewBox={SEARCH.viewBox}>
-                        <path d={SEARCH.path} fill="currentColor"/>
-                    </svg>
-                    : null
-                }
-                {type === "nominal" || type === "link" ?
-                    <input
-                        ref={keywordInputRef}
-                        className="chw-search-box-input"
-                        type="text"
-                        name="default name"
-                        placeholder="Search"
-                        onChange={onKeywordChange}
-                        onKeyDown={onKeyDown}
-                        style={{ 
-                            width, 
-                            height 
-                        }}
-                    />
-                    : <RangeSlider
-                        isRight={!isLeft}
-                        height={height}
-                        valueExtent={valueExtent}
-                        onChange={onRangeChange}
-                        onFilter={onFilterByRange}
-                        onClose={onSearchClose}
-                    />
-                }
-                {type === "quantitative" ?
-                    <svg className="chw-button-sm"
-                        onClick={onFilterClick} viewBox={FILTER.viewBox}>
-                        <title>Filter rows by the range of values</title>
-                        <path d={FILTER.path} fill="currentColor"/>
-                    </svg>
-                    : null
-                }
-                <svg className="chw-button-sm"
-                    onClick={onResetClick} viewBox={type === "quantitative" ? RESET.viewBox : SQUARE_CHECK.viewBox}>
-                    <title>Remove all filters</title>
-                    <path d={type === "quantitative" ? RESET.path : SQUARE_CHECK.path} fill="currentColor"/>
-                </svg>
-                {type === "nominal" || type === "link" ?
-                    <svg className="chw-button-sm"
-                        onClick={onUnckeckAllClick} viewBox={SQUARE.viewBox}>
-                        <title>Unckeck all categories</title>
-                        <path d={SQUARE.path} fill="currentColor"/>
-                    </svg>
-                    : null
-                }
-                <svg className="chw-button-sm"
-                    onClick={onSearchClose} viewBox={CLOSE.viewBox}>
-                    <title>Close search box</title>
-                    <path d={CLOSE.path} fill="currentColor"/>
-                </svg>
-            </div>   
-            {type === "nominal" || type === "link" ?
-                <div 
-                    className="chw-search-suggestions"
-                    style={{
-                        top: (padding + height),
-                        left: "45px",
-                        width,
-                        maxHeight: maxHeight,
-                        overflow: "auto",
-                        visibility: suggestions.length > 0 ? "visible" : "collapse"
-                    }}
-                >
-                    <ul>
-                        {suggestions.map((d, i) => (
-                            <li
-                                key={d}
-                                className={"chw-search-suggestion-text " + (i === suggestionIndex ? "active-suggestion" : "")}
-                                onClick={() => onSuggestionEnter(d)}
-                                onMouseEnter={() => setSuggestionIndex(i)}
-                                onMouseLeave={() => setSuggestionIndex(undefined)}
-                            >
-                                <SuggestionWithHighlight
-                                    text={d}
-                                    target={keywordUpperCase}
-                                />
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-                : null
+          <div ref={moverRef} className="chw-button-drag">
+            <div />
+            <div />
+            <div />
+          </div>
+          {type === "nominal" || type === "link" ? (
+            <svg
+              className="chw-button-sm chw-button-static"
+              style={{ color: "gray", marginLeft: "0px" }}
+              viewBox={SEARCH.viewBox}
+            >
+              <path d={SEARCH.path} fill="currentColor" />
+            </svg>
+          ) : null}
+          {type === "nominal" || type === "link" ? (
+            <input
+              ref={keywordInputRef}
+              className="cisvis-filter-box-input"
+              type="text"
+              name="default name"
+              placeholder="Search"
+              onChange={onKeywordChange}
+              onKeyDown={onKeyDown}
+              style={{
+                width,
+                height,
+              }}
+            />
+          ) : (
+            <RangeSlider
+              isRight={!isLeft}
+              height={height}
+              valueExtent={valueExtent}
+              onChange={onRangeChange}
+              onFilter={onFilterByRange}
+              onClose={onFilterClose}
+            />
+          )}
+          {type === "quantitative" ? (
+            <svg
+              className="chw-button-sm"
+              onClick={onFilterClick}
+              viewBox={FILTER.viewBox}
+            >
+              <title>Filter rows by the range of values</title>
+              <path d={FILTER.path} fill="currentColor" />
+            </svg>
+          ) : null}
+          <svg
+            className="chw-button-sm"
+            onClick={onResetClick}
+            viewBox={
+              type === "quantitative" ? RESET.viewBox : SQUARE_CHECK.viewBox
             }
+          >
+            <title>Remove all filters</title>
+            <path
+              d={type === "quantitative" ? RESET.path : SQUARE_CHECK.path}
+              fill="currentColor"
+            />
+          </svg>
+          {type === "nominal" || type === "link" ? (
+            <svg
+              className="chw-button-sm"
+              onClick={onUnckeckAllClick}
+              viewBox={SQUARE.viewBox}
+            >
+              <title>Unckeck all categories</title>
+              <path d={SQUARE.path} fill="currentColor" />
+            </svg>
+          ) : null}
+          <svg
+            className="chw-button-sm"
+            onClick={onFilterClose}
+            viewBox={CLOSE.viewBox}
+          >
+            <title>Close filter component</title>
+            <path d={CLOSE.path} fill="currentColor" />
+          </svg>
         </div>
+        {type === "nominal" || type === "link" ? (
+          <div
+            className="cisvis-filter-suggestions"
+            style={{
+              top: padding + height,
+              left: "45px",
+              width,
+              maxHeight: maxHeight,
+              overflow: "auto",
+              visibility: suggestions.length > 0 ? "visible" : "collapse",
+            }}
+          >
+            <ul>
+              {suggestions.map((d, i) => (
+                <li
+                  key={d}
+                  className={
+                    "cisvis-filter-suggestion-text " +
+                    (i === suggestionIndex ? "active-suggestion" : "")
+                  }
+                  onClick={() => onSuggestionEnter(d)}
+                  onMouseEnter={() => setSuggestionIndex(i)}
+                  onMouseLeave={() => setSuggestionIndex(undefined)}
+                >
+                  <SuggestionWithHighlight text={d} target={keywordUpperCase} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+      </div>
     );
 }

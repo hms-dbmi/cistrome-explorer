@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import PubSub from 'pubsub-js';
 
 import { SORT_ASC, SORT_DESC, FILTER, RESET, TOGGLE_ON } from './utils/icons.js';
-import TrackRowSearch from './TrackRowSearch.js';
+import TrackRowFilter from "./TrackRowFilter.js";
 import { getAggregatedValue } from './utils/aggregate.js';
 
 const LOCAL_EVENT_SEARCH_OPEN = "search-open";
@@ -137,51 +137,55 @@ export default function TrackRowInfoControl(props){
     }
 
     return (
-        <div>
-            <div ref={divRef}
-                className={"chw-button-sm-container-vertical"}
-                style={{
-                    top: "4px",
-                    left: "4px",
-                    visibility: isVisible ? "visible" : "hidden"
-                }}>
-                {buttons.map((button, i) => {
-                    let positionClass = "chw-button-middle";
-                    if(buttons.length > 1) {
-                        if(i === 0) {
-                            positionClass = "chw-button-top"
-                        } else if(i === buttons.length - 1) {
-                            positionClass = "chw-button-bottom"
-                        }
-                    }
-                    return (
-                        <svg 
-                            key={button.title}
-                            className={`${button.highlit ? "chw-button-sm-hl" : "chw-button-sm"} ${positionClass}`}
-                            onClick={button.onClick} 
-                            viewBox={button.icon.viewBox}
-                        >
-                            <title>{button.title}</title>
-                            <path d={button.icon.path} fill="currentColor"/>
-                        </svg>
-                    );
-                })}
-            </div>
-            {isSearching ? (
-                <TrackRowSearch
-                    isLeft={isLeft}
-                    top={searchTop}
-                    left={searchLeft}
-                    field={controlField}
-                    type={controlType}
-                    aggFunction={aggFunction}
-                    onChange={onSearchChange}
-                    onFilterRows={onFilterRows}
-                    onClose={onSearchClose}
-                    rowInfo={rowInfo}
-                    filterInfo={filterInfo}
-                />
-            ) : null}
+      <div>
+        <div
+          ref={divRef}
+          className={"chw-button-sm-container-vertical"}
+          style={{
+            top: "4px",
+            left: "4px",
+            visibility: isVisible ? "visible" : "hidden",
+          }}
+        >
+          {buttons.map((button, i) => {
+            let positionClass = "chw-button-middle";
+            if (buttons.length > 1) {
+              if (i === 0) {
+                positionClass = "chw-button-top";
+              } else if (i === buttons.length - 1) {
+                positionClass = "chw-button-bottom";
+              }
+            }
+            return (
+              <svg
+                key={button.title}
+                className={`${
+                  button.highlit ? "chw-button-sm-hl" : "chw-button-sm"
+                } ${positionClass}`}
+                onClick={button.onClick}
+                viewBox={button.icon.viewBox}
+              >
+                <title>{button.title}</title>
+                <path d={button.icon.path} fill="currentColor" />
+              </svg>
+            );
+          })}
         </div>
-    )
+        {isSearching ? (
+          <TrackRowFilter
+            isLeft={isLeft}
+            top={searchTop}
+            left={searchLeft}
+            field={controlField}
+            type={controlType}
+            aggFunction={aggFunction}
+            onChange={onSearchChange}
+            onFilterRows={onFilterRows}
+            onClose={onSearchClose}
+            rowInfo={rowInfo}
+            filterInfo={filterInfo}
+          />
+        ) : null}
+      </div>
+    );
 }

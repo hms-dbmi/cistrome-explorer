@@ -19,7 +19,7 @@ toc:
 - TrackRowInfoVisLink
 - TrackRowInfoVisNominalBar
 - TrackRowInfoVisQuantitativeBar
-- TrackRowSearch
+- TrackRowFilter
 - TrackRowZoomOverlay
 - RangeSlider
 - TrackWrapper
