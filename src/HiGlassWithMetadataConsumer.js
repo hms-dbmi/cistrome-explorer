@@ -12,7 +12,6 @@ import TrackWrapper from './TrackWrapper.js';
 import ViewWrapper from './ViewWrapper.js';
 import Tooltip from './Tooltip.js';
 import ContextMenu, { destroyContextMenu } from './ContextMenu.js';
-import CistromeToolkit from './CistromeToolkit.js';
 
 import { 
     DEFAULT_OPTIONS_KEY,
@@ -37,7 +36,7 @@ import {
 } from './utils/viewconf.js';
 import { wrapSvg } from './utils/wrap-svg.js';
 
-import './CistromeHGWConsumer.scss';
+import './HiGlassWithMetadataConsumer.scss';
 import cloneDeep from 'lodash/cloneDeep';
 import { removeItemFromArray, modifyItemInArray, insertItemToArray } from './utils/array.js';
 
@@ -56,17 +55,19 @@ const hgOptionsBase = {
 };
 
 /**
- * CistromeHGW passes its props through, and wraps this component with the context provider.
+ * HiGlassWithMetadata passes its props through, and wraps this component with the context provider.
  * @prop {object} viewConfig A HiGlass viewConfig object.
  * @prop {(object|object[])} options Options for the wrapper component.
  * @prop {function} onViewConfigChange A function to call upon change of the HiGlass view config. Optional.
+ * @prop {function} onGenomicIntervalSearch A function to call upon searching for TFs by using the selected interval. Optional.
  */
-export default function CistromeHGWConsumer(props) {
+export default function HiGlassWithMetadataConsumer(props) {
 
     const {
         viewConfig,
         options: optionsRaw,
-        onViewConfigChange: onViewConfigChangeProp
+        onViewConfigChange: onViewConfigChangeProp,
+        onGenomicIntervalSearch
     } = props;
 
     const hgRef = useRef();
@@ -457,7 +458,7 @@ export default function CistromeHGWConsumer(props) {
         );
     }, [viewConfig]);
 
-    //console.log("CistromeHGWConsumer.render");
+    //console.log("HiGlassWithMetadataConsumer.render");
     return (
         <div className="chw-root">
             {hgComponent}
@@ -511,17 +512,12 @@ export default function CistromeHGWConsumer(props) {
                             onViewConfig(newViewConfig);
                         });
                     }}
+                    onGenomicIntervalSearch={onGenomicIntervalSearch}
                     drawRegister={drawRegister}
                 />
             ))}
             <Tooltip />
             <ContextMenu/>
-            <CistromeToolkit
-                // TODO: After we build DB for cistrome bigwig files, uncomment the following code.
-                // onAddTrack={(server, tilesetUid, position) => { 
-                //     onAddBigWigTrack(server, tilesetUid, position);
-                // }}
-            />
         </div>
     );
 }

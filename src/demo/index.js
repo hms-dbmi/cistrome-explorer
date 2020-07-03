@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App.js';
+import CistromeExplorer from './CistromeExplorer.js';
 
 import './index.scss';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<CistromeExplorer />, document.getElementById('root'));

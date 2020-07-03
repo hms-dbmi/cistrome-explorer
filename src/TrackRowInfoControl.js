@@ -5,10 +5,10 @@ import { SORT_ASC, SORT_DESC, FILTER, RESET, TOGGLE_ON } from './utils/icons.js'
 import TrackRowFilter from './TrackRowFilter.js';
 import { getAggregatedValue } from './utils/aggregate.js';
 
-const LOCAL_EVENT_SEARCH_OPEN = "search-open";
+const LOCAL_EVENT_FILTER_OPEN = "filter-open";
 
 /**
- * Component with control buttons for each vertical track (for sorting, searching, etc).
+ * Component with control buttons for each vertical track (for sorting, filtering, etc).
  * @prop {boolean} isLeft Is this view on the left side of the HiGlass track?
  * @prop {boolean} isVisible The visibility of the control.
  * @prop {object} fieldInfo JSON object of the name and type of an attribute.
@@ -39,24 +39,24 @@ export default function TrackRowInfoControl(props){
     } = props;
 
     const divRef = useRef();
-    const [isSearching, setIsSearching] = useState(false);
-    const [searchTop, setSearchTop] = useState(null);
-    const [searchLeft, setSearchLeft] = useState(null);
+    const [isFiltering, setIsFiltering] = useState(false);
+    const [filterTop, setFilterTop] = useState(null);
+    const [FilterLeft, setFilterLeft] = useState(null);
 
     const { field, type, title, aggFunction } = fieldInfo;
     const controlField = (type === "url" && title ? title : field);
     const controlType = (type === "url" ? "nominal" : type);
 
-    // Subscribe to the search open events of other TrackRowInfoControl components,
-    // so that only one search is open at a time.
+    // Subscribe to the filter open events of other TrackRowInfoControl components,
+    // so that only one filter is open at a time.
     useEffect(() => {
-        const searchOpenToken = PubSub.subscribe(LOCAL_EVENT_SEARCH_OPEN, (msg, otherDivRef) => {
+        const filterOpenToken = PubSub.subscribe(LOCAL_EVENT_FILTER_OPEN, (msg, otherDivRef) => {
             if(divRef !== otherDivRef) {
-                setIsSearching(false);
+                setIsFiltering(false);
             }
         });
 
-        return () => PubSub.unsubscribe(searchOpenToken);
+        return () => PubSub.unsubscribe(filterOpenToken);
     })
 
     function onSortAscClick() {
@@ -65,19 +65,19 @@ export default function TrackRowInfoControl(props){
     function onSortDescClick() {
         onSortRows(controlField, controlType, "descending");
     }
-    function onSearchClick(event) {
+    function onFilterClick(event) {
         const parentRect = divRef.current.getBoundingClientRect();
         
-        setIsSearching(true);
-        setSearchTop(event.clientY - parentRect.y);
-        setSearchLeft(event.clientX - parentRect.x);
+        setIsFiltering(true);
+        setFilterTop(event.clientY - parentRect.y);
+        setFilterLeft(event.clientX - parentRect.x);
 
-        PubSub.publish(LOCAL_EVENT_SEARCH_OPEN, divRef);
+        PubSub.publish(LOCAL_EVENT_FILTER_OPEN, divRef);
     }
-    function onSearchClose() {
-        setIsSearching(false);
+    function onFilterClose() {
+        setIsFiltering(false);
     }
-    function onSearchChange(value) {
+    function onFilterChange(value) {
         onHighlightRows(controlField, controlType, value);
     }
     function onToggleMinSimBar() {
@@ -111,7 +111,7 @@ export default function TrackRowInfoControl(props){
 
     if(onHighlightRows && !Array.isArray(field)) {
         buttons.push({
-            onClick: onSearchClick,
+            onClick: onFilterClick,
             icon: FILTER,
             title: "Filter rows",
             highlit: filterButtonHighlit
@@ -167,17 +167,17 @@ export default function TrackRowInfoControl(props){
                     );
                 })}
             </div>
-            {isSearching ? (
+            {isFiltering ? (
                 <TrackRowFilter
                     isLeft={isLeft}
-                    top={searchTop}
-                    left={searchLeft}
+                    top={filterTop}
+                    left={FilterLeft}
                     field={controlField}
                     type={controlType}
                     aggFunction={aggFunction}
-                    onChange={onSearchChange}
+                    onChange={onFilterChange}
                     onFilterRows={onFilterRows}
-                    onClose={onSearchClose}
+                    onClose={onFilterClose}
                     rowInfo={rowInfo}
                     filterInfo={filterInfo}
                 />

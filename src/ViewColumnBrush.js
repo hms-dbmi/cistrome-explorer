@@ -90,37 +90,40 @@ export default function ViewColumnBrush(props) {
                         color: "gray"
                     }}>
                     {/* Cistrome DB API Button */}
-                    <svg className={"chw-button-sm chw-button-middle"} 
-                        style={{ height: "100%" }}
-                        onMouseOver={(e) => {
-                            PubSub.publish(EVENT.TOOLTIP, {
-                                x: e.clientX,
-                                y: e.clientY,
-                                content: <TooltipContent 
-                                    title="Search bind TFs from Cistrome DB"
-                                    value={!intervalValid ? 
-                                        intervalInvalidMsg 
-                                        : `${chrStartName}:${chrStartPos}-${chrEndPos}`
-                                    }
-                                    warning={!intervalValid}
-                                />
-                            });
-                        }}
-                        onMouseLeave={() => destroyTooltip()}
-                        onClick={() => {
-                            if(intervalValid) {
-                                onRequestIntervalTFs({
-                                    assembly,
-                                    chrStartName,
-                                    chrStartPos,
-                                    chrEndName,
-                                    chrEndPos
+                    {onRequestIntervalTFs ? 
+                        // Show the search icon only when `onIntervalSearch` is defined.
+                        <svg className={"chw-button-sm chw-button-middle"} 
+                            style={{ height: "100%" }}
+                            onMouseOver={(e) => {
+                                PubSub.publish(EVENT.TOOLTIP, {
+                                    x: e.clientX,
+                                    y: e.clientY,
+                                    content: <TooltipContent 
+                                        title="Search bind TFs from Cistrome DB"
+                                        value={!intervalValid ? 
+                                            intervalInvalidMsg 
+                                            : `${chrStartName}:${chrStartPos}-${chrEndPos}`
+                                        }
+                                        warning={!intervalValid}
+                                    />
                                 });
-                            }
-                        }}
-                        viewBox={SEARCH.viewBox}>
-                        <path d={SEARCH.path} fill="currentColor"/>
-                    </svg>
+                            }}
+                            onMouseLeave={() => destroyTooltip()}
+                            onClick={() => {
+                                if(intervalValid) {
+                                    onRequestIntervalTFs({
+                                        assembly,
+                                        chrStartName,
+                                        chrStartPos,
+                                        chrEndName,
+                                        chrEndPos
+                                    });
+                                }
+                            }}
+                            viewBox={SEARCH.viewBox}>
+                            <path d={SEARCH.path} fill="currentColor"/>
+                        </svg>
+                        : null}
                     {/* Close Button */}
                     <svg className={"chw-button-sm chw-button-middle"}
                         style={{ height: "100%" }}

@@ -15,7 +15,7 @@ const BUILD_DIR = 'build-pkg';
 const OUTPUT_CSS = 'index.css';
 
 const outputDefaults = {
-    name: 'CistromeHGW',
+    name: 'HiGlassWithMetadata',
     sourcemap: true,
     globals: {
         higlass: 'hglib'

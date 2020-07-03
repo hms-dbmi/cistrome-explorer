@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useCallback, useState, useMemo } from "react";
 import PubSub from 'pubsub-js';
-import d3 from './utils/d3.js';
-import { EVENT } from './utils/constants.js';
+import d3 from '../utils/d3.js';
+import { EVENT } from '../utils/constants.js';
 import DataTable from "./DataTable.js";
-import { CLOSE, SEARCH, EXPAND, TABLE, EXTERNAL_LINK, QUESTION_MARK } from './utils/icons.js';
-import { TooltipContent, destroyTooltip } from "./Tooltip.js";
+import { CLOSE, SEARCH, EXPAND, TABLE, EXTERNAL_LINK, QUESTION_MARK } from '../utils/icons.js';
+import { TooltipContent, destroyTooltip } from "../Tooltip.js";
 import isEqual from "lodash/isEqual";
 import { 
     CISTROME_DBTOOLKIT_CHROMOSOMES,
@@ -18,38 +18,32 @@ import {
     validateIntervalParams,
     validatePeaksetParams,
     requestDBToolkitAPI
-} from './utils/cistrome.js';
+} from '../utils/cistrome.js';
 import './CistromeToolkit.scss';
 
-export function destroyCistromeToolkit() {
-    PubSub.publish(EVENT.CISTROME_TOOLKIT, {
-        intervalParams: undefined,
-        isVisible: false
-    });
-}
-
 /**
- * Wrapper around <DataTable />, specific for showing the TF binding interval request results.
- * Subscribes to 'cistrome-toolkit' event via `PubSub`.
+ * UI component for Cistrome Toolkit to make queries for APIs and see result tables.
+ * @prop {boolean} isVisible Should this view visible?
  * @prop {function} onAddTrack A function to call when adding tracks with selected rows.
- * @prop {object} intervalParams The interval request parameters.
- * @prop {string} intervalParams.assembly
- * @prop {string} intervalParams.chrStartName
- * @prop {number} intervalParams.chrStartPos
- * @prop {string} intervalParams.chrEndName
- * @prop {number} intervalParams.chrEndPos
+ * @prop {object} intervalAPIParams A JSON object that stores parameters for interval search API.
  * @example
- * <CistromeToolkit/>
+ * <CistromeToolkit
+ *  isVisible={true}
+ *  onAddTrack={null}
+ * />
  */
 export default function CistromeToolkit(props) {
     const {
-        onAddTrack
+        isVisible: initIsVisible,
+        onAddTrack,
+        intervalAPIParams
     } = props;
 
+    const toolkitRef = useRef(null);
     const resizerRef = useRef(null);
     const dragY = useRef(null);
-
-    const [isVisible, setIsVisible] = useState(false);
+    
+    const [isVisible, setIsVisible] = useState(initIsVisible);
     const [height, setHeight] = useState(800);
 
     const [requestStatus, setRequestStatus] = useState(undefined);
@@ -57,13 +51,18 @@ export default function CistromeToolkit(props) {
     const [selectedRequestIndex, setSelectedRequestIndex] = useState(undefined);
     const [selectedRowIndexes, setSelectedRowIndexes] = useState([]);
 
+    // Update the visibility when outside of `CistromeToolkit` asks to.
+    useEffect(() => {
+        setIsVisible(initIsVisible);
+    }, [initIsVisible]);
+
     // API parameters
     const [latestIntervalParams, setLatestIntervalParams] = useState({
         assembly: CISTROME_DBTOOLKIT_SPECIES[0],
         chrStartName: CISTROME_DBTOOLKIT_CHROMOSOMES[0],
         chrEndName: CISTROME_DBTOOLKIT_CHROMOSOMES[0],
-        chrStartPos: undefined,
-        chrEndPos: undefined
+        chrStartPos: '',
+        chrEndPos: ''
     });
     const [latestGeneParams, setLatestGeneParams] = useState({
         assembly: CISTROME_DBTOOLKIT_SPECIES[0],
@@ -81,20 +80,20 @@ export default function CistromeToolkit(props) {
     const [isLatestGeneParamsReady, setIsLatestGeneParamsReady] = useState(false);
     const [isLatestPeaksetParamsReady, setIsLatestPeaksetParamsReady] = useState(false);
 
-    // Subscribing PubSub events
     useEffect(() => {
-        const cistromeToolkitToken = PubSub.subscribe(EVENT.CISTROME_TOOLKIT, (msg, data) => {
-            setIsVisible(data.isVisible !== undefined ? data.isVisible : !isVisible); // When undefined, toggle visibility
-            // Only Interval API supports interactive request using HiGlass tracks
-            if(validateIntervalParams(data.intervalParams).success) {
-                setLatestIntervalParams(data.intervalParams);
-                runCistromeToolkitAPI(CISTROME_API_TYPES.INTERVAL, data.intervalParams);
-            }
-        });
-        return () => {
-            PubSub.unsubscribe(cistromeToolkitToken);
-        };
-    });
+        if(isVisible) {
+            toolkitRef.current.focus();
+        }
+    }, [isVisible]);
+
+    // An Interval API can be called outside of `CistromeToolkit`
+    useEffect(() => {
+        if(intervalAPIParams && validateIntervalParams(intervalAPIParams).success) {
+            setIsVisible(true);
+            setLatestIntervalParams(intervalAPIParams);
+            runCistromeToolkitAPI(CISTROME_API_TYPES.INTERVAL, intervalAPIParams);
+        }
+    }, [intervalAPIParams]);
 
     // Reset the row selection upon mouse click on other history
     useEffect(() => {
@@ -416,7 +415,16 @@ export default function CistromeToolkit(props) {
     }, [requestHistory, selectedRequestIndex]);
     
     return (
-        <div className={dragY.current ? "cisvis-data-table-bg-no-transition" : "cisvis-data-table-bg"}
+        <div ref={toolkitRef}
+            className={dragY.current ? "cisvis-data-table-bg-no-transition" : "cisvis-data-table-bg"}
+            tabIndex="0"
+            onKeyDown={e => {
+                if(
+                    (e.key === 'Esc' || e.key === 'Escape') && isVisible
+                ) {
+                    setIsVisible(false);
+                }
+            }}
             style={{
                 height: isVisible ? `${height}px` : 0
             }}

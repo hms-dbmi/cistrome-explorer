@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { InfoProvider } from './utils/contexts.js';
-import CistromeHGWConsumer from "./CistromeHGWConsumer.js";
+import HiGlassWithMetadataConsumer from "./HiGlassWithMetadataConsumer.js";
 
 /**
  * Cistrome HiGlass Wrapper, a React component that wraps around HiGlass 
@@ -10,17 +10,17 @@ import CistromeHGWConsumer from "./CistromeHGWConsumer.js";
  * @prop {(object|object[])} options Options for the wrapper component.
  * @prop {function} onViewConfigChange A function to call upon change of the HiGlass view config. Optional.
  * @example
- * <CistromeHGW
+ * <HiGlassWithMetadata
  *  viewConfig={higlassViewConfig}
  *  options={wrapperOptions}
  * />
  */
-export default function CistromeHGW(props) {
+export default function HiGlassWithMetadata(props) {
     
-    console.log("CistromeHGW.render");
+    console.log("HiGlassWithMetadata.render");
     return (
         <InfoProvider>
-            <CistromeHGWConsumer {...props} />
+            <HiGlassWithMetadataConsumer {...props} />
         </InfoProvider>
     );
 }

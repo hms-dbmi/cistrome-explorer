@@ -1,5 +1,5 @@
-import CistromeHGW from './CistromeHGW.js';
+import HiGlassWithMetadata from './HiGlassWithMetadata.js';
 
 export {
-    CistromeHGW
+    HiGlassWithMetadata
 };

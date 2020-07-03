@@ -1,6 +1,10 @@
 .cisvis-data-table-bg {
     transition: height 0.2s ease-out;
 }
+.cisvis-data-table-bg-no-transition:focus,
+.cisvis-data-table-bg:focus {
+    outline: none;
+}
 .cisvis-data-table-bg-no-transition,
 .cisvis-data-table-bg {
     position: fixed;

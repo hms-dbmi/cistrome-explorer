@@ -1,8 +1,6 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import d3 from './utils/d3.js';
 import uuidv4 from 'uuid/v4';
-import PubSub from "pubsub-js";
-import { EVENT } from './utils/constants.js';
 import ViewColumnBrush from './ViewColumnBrush.js';
 import { resolveIntervalCoordinates } from './utils/genome.js';
 import { getRange } from './utils/viewport.js';
@@ -16,6 +14,7 @@ import './ViewWrapper.scss';
  * @prop {object} multivecTrack A object of `horizontal-multivec` track in the same view.
  * @prop {function} onSelectGenomicInterval The function to call upon selection of a genomic interval.
  * @prop {function} onViewportRemove The function to call upon removing a viewport track.
+ * @prop {function} onGenomicIntervalSearch A function to call upon searching for TFs by using the selected interval. Optional.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function ViewWrapper(props) {
@@ -26,6 +25,7 @@ export default function ViewWrapper(props) {
         multivecTrack,
         onSelectGenomicInterval,
         onViewportRemove,
+        onGenomicIntervalSearch,
         drawRegister
     } = props;
     
@@ -182,12 +182,7 @@ export default function ViewWrapper(props) {
                                     viewportTrack={viewportTrack}
                                     multivecTrack={multivecTrack}
                                     onViewportRemove={onViewportRemove}
-                                    onRequestIntervalTFs={(intervalParams) => {
-                                        PubSub.publish(EVENT.CISTROME_TOOLKIT, {
-                                            intervalParams,
-                                            isVisible: true
-                                        });
-                                    }}
+                                    onRequestIntervalTFs={onGenomicIntervalSearch}
                                 />
                             ) : null;
                         }))
