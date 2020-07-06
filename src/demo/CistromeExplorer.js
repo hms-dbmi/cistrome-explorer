@@ -4,7 +4,7 @@ import pkg from '../../package.json';
 import { HiGlassWithMetadata } from '../index.js';
 import CistromeToolkit from './CistromeToolkit.js';
 
-import { TABLE } from '../utils/icons.js';
+import { UNDO, REDO, TABLE } from '../utils/icons.js';
 
 import hgDemoViewConfig1 from '../viewconfigs/horizontal-multivec-1.json';
 import hgDemoViewConfig1b from '../viewconfigs/horizontal-multivec-1b.json';
@@ -281,6 +281,24 @@ export default function CistromeExplorer() {
                                 </option>
                             ))}
                         </select>
+                    </span>
+                    <span className="header-control">
+                        <span style={{ cursor: 'pointer' }} onClick={() => {}}>
+                            Undo
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                viewBox={UNDO.viewBox}>
+                                <title>Undo</title>
+                                <path fill="#666" d={UNDO.path}/>
+                            </svg>
+                        </span>
+                        <span style={{ cursor: 'pointer' }} onClick={() => {}}>
+                            Redo
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                viewBox={REDO.viewBox}>
+                                <title>Redo</title>
+                                <path fill="#666" d={REDO.path}/>
+                            </svg>
+                        </span>
                     </span>
                     <span className="header-info">
                         <span style={{ cursor: 'pointer' }} onClick={() => 
