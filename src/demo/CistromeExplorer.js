@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import pkg from '../../package.json';
 
 import { HiGlassMeta } from '../index.js';
@@ -18,6 +18,8 @@ import hgDemoViewConfig10 from '../viewconfigs/horizontal-multivec-10.json';
 import hgDemoViewConfigApril2020 from '../viewconfigs/meeting-2020-04-29.json';
 
 import './CistromeExplorer.scss';
+import { diffViewOptions } from '../utils/view-history';
+import { processWrapperOptions } from '../utils/options';
 
 const demos = {
     "H3K27ac Demo (1 View, Center Track)": {
@@ -254,19 +256,72 @@ export default function CistromeExplorer() {
     
     const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[0]);
     
+    // Undo and redo
+    const [undoable, setUndoable] = useState(false);
+    const [redoable, setRedoable] = useState(false);
+
+    // History of view updates
+    const MAX_HISTORY_LENGTH = 50;  // How many previous interactions (views) should be recorded?
+    const [viewHistory, setViewHistory] = useState([{
+        // The most recent view will be stored at the start of this array.
+        viewConfig: Object.values(demos)[0].viewConfig,
+        options: processWrapperOptions(Object.values(demos)[0].options)
+    }]);
+    const [indexOfCurrentView, setIndexOfCurrentView] = useState(0);
+
     // Toolkit-related
     const [isToolkitVisible, setIsToolkitVisible] = useState(false);
     const [toolkitParams, setToolkitParams] = useState(undefined);
 
+    // When a user select a different demo, initialize the view history.
+    useEffect(() => {
+        setViewHistory([{
+            viewConfig: demos[selectedDemo].viewConfig,
+            options: processWrapperOptions(demos[selectedDemo].options)
+        }]);
+        setIndexOfCurrentView(0);
+    }, [selectedDemo]);
+
+    useEffect(() => {
+        setUndoable(indexOfCurrentView !== viewHistory.length - 1);
+        setRedoable(indexOfCurrentView !== 0);
+    }, [viewHistory, indexOfCurrentView]);
+
     /**
-     * Calls when either `viewConfig` or `options` is updated interactively.
-     * @param {object} viewoptions A JSON object that contains updated visualization specs for `HiGlassMeta`.
-     * @param {object} viewoptions.higlass A JSON object that contains the view configuration spec for `HiGlass`, `viewConfig`.
-     * @param {object} viewoptions.higlassmeta A JSON object that contains options for the metadata visualizations in `HiGlassMeta`.
+     * This function is being called when either `viewConfig` or `options` is updated interactively.
+     * @param {object} viewOptions A JSON object that contains updated visualization specs for `HiGlassMeta`.
+     * @param {object} viewoptions.viewConfig A JSON object that contains the view configuration spec for `HiGlass`, `viewConfig`.
+     * @param {object} viewoptions.options A JSON object that contains options for the metadata visualizations in `HiGlassMeta`.
      */
-    function onViewChanged(viewoptions) {
-        console.log("Viewoptions updated", viewoptions);
+    function onViewChanged(viewOptions) {        
+        // Make sure not to update the history if there is no difference.
+        if(!diffViewOptions(viewOptions, viewHistory[indexOfCurrentView])) {
+            return;
+        }
+        console.log("View updated", viewOptions);
+
+        // Update the view history
+        const newViewHistory = viewHistory.slice();
+        if(indexOfCurrentView !== 0) {
+            // This means a user ever have clicked on the `Undo` button, 
+            // and we want to overwrite the recent history.
+            newViewHistory.splice(0, indexOfCurrentView);
+        }
+        // A recent view is added at the start of the array.
+        newViewHistory.unshift({
+            viewConfig: viewOptions.viewConfig,
+            options: viewOptions.options
+        });
+        // Remove the tail to make the length of the array be less than or equal to the threshold.
+        if(newViewHistory.length > MAX_HISTORY_LENGTH) { 
+            newViewHistory.splice(MAX_HISTORY_LENGTH - 1);
+        }
+        setViewHistory(newViewHistory);
+        setIndexOfCurrentView(0);
     }
+
+    // console.log('indexOfCurrentView', indexOfCurrentView);
+    // console.log('viewHistory', viewHistory);
 
     return (
         <div className="cistrome-explorer">
@@ -289,7 +344,18 @@ export default function CistromeExplorer() {
                         </select>
                     </span>
                     <span className="header-control">
-                        <span style={{ cursor: 'pointer' }} onClick={() => {}}>
+                        <span 
+                            style={{ 
+                                cursor: undoable ? 'pointer' : 'not-allowed',
+                                color: undoable ? 'white' : '#999'
+                            }} 
+                            onClick={() => {
+                                if(undoable) {
+                                    console.log("undo", viewHistory, indexOfCurrentView + 1);
+                                    setIndexOfCurrentView(indexOfCurrentView + 1);
+                                }
+                            }}
+                        >
                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
                                 viewBox={UNDO.viewBox}>
                                 <title>Undo</title>
@@ -297,7 +363,18 @@ export default function CistromeExplorer() {
                             </svg>
                             {" Undo"}
                         </span>
-                        <span style={{ cursor: 'pointer' }} onClick={() => {}}>
+                        <span 
+                            style={{ 
+                                cursor: redoable ? 'pointer' : 'not-allowed',
+                                color: redoable ? 'white' : '#999'
+                            }} 
+                            onClick={() => {
+                                if(redoable) {
+                                    console.log("redo", viewHistory, indexOfCurrentView - 1);
+                                    setIndexOfCurrentView(indexOfCurrentView - 1);
+                                }
+                            }}
+                        >
                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
                                 viewBox={REDO.viewBox}>
                                 <title>Redo</title>
@@ -341,8 +418,8 @@ export default function CistromeExplorer() {
             <div className="visualization-container">
                 <div className="visualization">
                     <HiGlassMeta 
-                        viewConfig={demos[selectedDemo].viewConfig}
-                        options={demos[selectedDemo].options}
+                        viewConfig={viewHistory[indexOfCurrentView].viewConfig}
+                        options={viewHistory[indexOfCurrentView].options}
                         onViewChanged={onViewChanged}
                         onGenomicIntervalSearch={setToolkitParams}
                     />

@@ -65,7 +65,7 @@ export default function HiGlassMetaConsumer(props) {
 
     const {
         viewConfig: initViewConfig,
-        options: optionsRaw,
+        options: initOptions,
         onViewChanged,
         onGenomicIntervalSearch
     } = props;
@@ -74,7 +74,8 @@ export default function HiGlassMetaConsumer(props) {
     const drawRef = useRef({});
 
     const [viewConfig, setViewConfig] = useState(initViewConfig);
-    const [options, setOptions] = useState({});
+
+    const [options, setOptions] = useState(processWrapperOptions(initOptions)); // 'Processed' options
     const [muiltivecTrackIds, setMultivecTrackIds] = useState([]);
     const [viewportTrackIds, setViewportTrackIds] = useState({});
     const [isWheelListening, setIsWheelListening] = useState(false);
@@ -83,17 +84,31 @@ export default function HiGlassMetaConsumer(props) {
 
     // Update `viewConfig` when outside of this class forces to do so.
     useEffect(() => {
-        setViewConfig(initViewConfig);    
+        if(!isEqual(viewConfig, initViewConfig)) {
+            console.log('init ViewConfig Changed');
+            // Update only when there is any change
+            setViewConfig(initViewConfig);
+        }
     }, [initViewConfig]);
 
-    // Call `onViewChanged` upon either `viewConfig` or `options` changes.
+    // Update options when raw options are updated outside of this class.
     useEffect(() => {
-        onViewChanged({
-            higlass: viewConfig,
-            higlassmeta: options
-        });
-    }, [viewConfig, options]);
+        if(!isEqual(options, processWrapperOptions(initOptions))) {
+            console.log('init Options Changed');
+            // Update only when there is any change
+            setOptions(processWrapperOptions(initOptions));
+        }
+    }, [initOptions]);
 
+    // Call `onViewChanged` upon either `viewConfig` or `options` changes.
+    // TODO: should we replace viewConfig, options to a single object so that we do not call the function when a viewConfig or an options are updated.
+    useEffect(() => {
+        if(onViewChanged) {
+            onViewChanged({ viewConfig, options });
+        }
+    }, [onViewChanged, viewConfig, options]);
+
+    // This function is called right after loading `rowInfo`.
     // Set initial sorting, filtering, and highlighting.
     const onMetadataLoad = useCallback((viewId, trackId) => {
         if(!context.state[viewId] || !context.state[viewId][trackId]) {
@@ -124,6 +139,7 @@ export default function HiGlassMetaConsumer(props) {
      * to sibling `viewport-projection-horizontal` track IDs.
      */
     const onViewConfig = useCallback((newViewConfig) => {
+        console.log('onViewConfig');
         const newTrackIds = getHMTrackIdsFromViewConfig(newViewConfig);
         
         // Add viewport projection horizontal track IDs for each view.
@@ -131,7 +147,6 @@ export default function HiGlassMetaConsumer(props) {
         Array.from(new Set(newTrackIds.map(d => d.viewId))).forEach((viewId) => {    
             newViewportTrackIds[viewId] = getSiblingVPHTrackIdsFromViewConfig(newViewConfig, viewId);
         });
-
         for(let trackIds of newTrackIds) {
             const newSelectedRows = getHMSelectedRowsFromViewConfig(newViewConfig, trackIds.viewId, trackIds.trackId);
             if(
@@ -139,6 +154,7 @@ export default function HiGlassMetaConsumer(props) {
                 || !context.state[trackIds.viewId][trackIds.trackId] 
                 || !isEqual(newSelectedRows, context.state[trackIds.viewId][trackIds.trackId].selectedRows)
             ) {
+                console.log("here");
                 context.dispatch({
                     type: ACTION.SELECT_ROWS,
                     viewId: trackIds.viewId,
@@ -149,6 +165,7 @@ export default function HiGlassMetaConsumer(props) {
         }
         setMultivecTrackIds(newTrackIds);
         setViewportTrackIds(newViewportTrackIds);
+        setViewConfig(newViewConfig);
     }, []);
 
     // Function to get a track object from the higlass API.
@@ -196,7 +213,9 @@ export default function HiGlassMetaConsumer(props) {
     const setTrackSelectedRows = useCallback((viewId, trackId, selectedRows) => {
         const currViewConfig = hgRef.current.api.getViewConfig();
         const newViewConfig = updateViewConfigOnSelectRowsByTrack(currViewConfig, selectedRows, viewId, trackId);
+        console.log('EVER CALLED????? 11111111');
         hgRef.current.api.setViewConfig(newViewConfig).then(() => {
+            console.log('setViewConfig().then()'); // TODO: This is not called properly.
             onViewConfig(newViewConfig);
         });
     }, [hgRef]);
@@ -218,7 +237,7 @@ export default function HiGlassMetaConsumer(props) {
     // Clear the drawRegister object when the options prop changes.
     useEffect(() => {
         drawRef.current = {};
-    }, [drawRef, optionsRaw]);
+    }, [drawRef, initOptions]);
 
     // Listen for the `createSVG` event.
     useEffect(() => {
@@ -238,6 +257,7 @@ export default function HiGlassMetaConsumer(props) {
         
         setTrackSelectedRows(viewId, trackId, newSelectedRows);
         setOptions(newOptions);
+        console.log('onSortRows');
     }, [options]);
 
     // Callback function for searching and highlighting.
@@ -409,11 +429,6 @@ export default function HiGlassMetaConsumer(props) {
         }
     }, [muiltivecTrackIds]);
 
-    // Do initial processing of the options prop.
-    useEffect(() => {
-        setOptions(processWrapperOptions(optionsRaw));
-    }, [optionsRaw]);
-
     // Destroy the context menu upon any click.
     useEffect(() => {
         const clickHandler = () => { destroyContextMenu() };
@@ -445,17 +460,19 @@ export default function HiGlassMetaConsumer(props) {
     useEffect(() => {
         hgRef.current.api.on('viewConfig', (newViewConfigString) => {
             const newViewConfig = JSON.parse(newViewConfigString);
+            console.log('on(viewConfi)');
             onViewConfig(newViewConfig);
         });         
 
         return () => hgRef.current.api.off('viewConfig');
-    }, [hgRef, onViewChanged]);
+    }, [hgRef]);
 
     // We only want to render HiGlass once.
     const hgComponent = useMemo(() => {
         const hgOptions = {
             ...hgOptionsBase,
             onViewConfLoaded: () => {
+                // TODO: Is this duplicately called w/ the above `on('viewConfig')` api?
                 onViewConfig(initViewConfig);
             }
         };
@@ -529,7 +546,7 @@ export default function HiGlassMetaConsumer(props) {
                     drawRegister={drawRegister}
                 />
             ))}
-            <Tooltip />
+            <Tooltip/>
             <ContextMenu/>
         </div>
     );
