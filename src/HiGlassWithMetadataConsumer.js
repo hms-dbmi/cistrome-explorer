@@ -58,7 +58,7 @@ const hgOptionsBase = {
  * HiGlassWithMetadata passes its props through, and wraps this component with the context provider.
  * @prop {object} viewConfig A HiGlass viewConfig object.
  * @prop {(object|object[])} options Options for the wrapper component.
- * @prop {function} onViewConfigChange A function to call upon change of the HiGlass view config. Optional.
+ * @prop {function} onViewChanged A function to call upon change of the view config and option. Optional.
  * @prop {function} onGenomicIntervalSearch A function to call upon searching for TFs by using the selected interval. Optional.
  */
 export default function HiGlassWithMetadataConsumer(props) {
@@ -66,7 +66,7 @@ export default function HiGlassWithMetadataConsumer(props) {
     const {
         viewConfig,
         options: optionsRaw,
-        onViewConfigChange: onViewConfigChangeProp,
+        onViewChanged,
         onGenomicIntervalSearch
     } = props;
 
@@ -432,11 +432,11 @@ export default function HiGlassWithMetadataConsumer(props) {
         hgRef.current.api.on('viewConfig', (newViewConfigString) => {
             const newViewConfig = JSON.parse(newViewConfigString);
             onViewConfig(newViewConfig);
-            onViewConfigChangeProp(newViewConfigString);
+            onViewChanged(newViewConfigString);
         });         
 
         return () => hgRef.current.api.off('viewConfig');
-    }, [hgRef, onViewConfigChangeProp]);
+    }, [hgRef, onViewChanged]);
 
     // We only want to render HiGlass once.
     const hgComponent = useMemo(() => {

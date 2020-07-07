@@ -8,7 +8,8 @@ import HiGlassWithMetadataConsumer from "./HiGlassWithMetadataConsumer.js";
  * to provide visualization features for cistrome data.
  * @prop {object} viewConfig A HiGlass viewConfig object.
  * @prop {(object|object[])} options Options for the wrapper component.
- * @prop {function} onViewConfigChange A function to call upon change of the HiGlass view config. Optional.
+ * @prop {function} onViewChanged A function to call upon change of the view config and option. Optional.
+ * @prop {function} onGenomicIntervalSearch A function to call upon searching for TFs by using the selected interval. Optional.
  * @example
  * <HiGlassWithMetadata
  *  viewConfig={higlassViewConfig}
