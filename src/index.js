@@ -1,5 +1,5 @@
-import HiGlassWithMetadata from './HiGlassWithMetadata.js';
+import HiGlassMeta from './HiGlassMeta.js';
 
 export {
-    HiGlassWithMetadata
+    HiGlassMeta
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { InfoProvider } from './utils/contexts.js';
-import HiGlassWithMetadataConsumer from "./HiGlassWithMetadataConsumer.js";
+import HiGlassMetaConsumer from "./HiGlassMetaConsumer.js";
 
 /**
  * Cistrome HiGlass Wrapper, a React component that wraps around HiGlass 
@@ -11,17 +11,17 @@ import HiGlassWithMetadataConsumer from "./HiGlassWithMetadataConsumer.js";
  * @prop {function} onViewChanged A function to call upon change of the view config and option. Optional.
  * @prop {function} onGenomicIntervalSearch A function to call upon searching for TFs by using the selected interval. Optional.
  * @example
- * <HiGlassWithMetadata
+ * <HiGlassMeta
  *  viewConfig={higlassViewConfig}
  *  options={wrapperOptions}
  * />
  */
-export default function HiGlassWithMetadata(props) {
+export default function HiGlassMeta(props) {
     
-    console.log("HiGlassWithMetadata.render");
+    console.log("HiGlassMeta.render");
     return (
         <InfoProvider>
-            <HiGlassWithMetadataConsumer {...props} />
+            <HiGlassMetaConsumer {...props} />
         </InfoProvider>
     );
 }

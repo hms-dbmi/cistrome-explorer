@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import pkg from '../../package.json';
 
-import { HiGlassWithMetadata } from '../index.js';
+import { HiGlassMeta } from '../index.js';
 import CistromeToolkit from './CistromeToolkit.js';
 
 import { UNDO, REDO, TABLE, DOCUMENT, GITHUB } from '../utils/icons.js';
@@ -250,10 +250,6 @@ const demos = {
     }
 };
 
-function onViewChanged(viewConfigString) {
-    console.log("View config changed");
-}
-
 export default function CistromeExplorer() {
     
     const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[0]);
@@ -261,6 +257,16 @@ export default function CistromeExplorer() {
     // Toolkit-related
     const [isToolkitVisible, setIsToolkitVisible] = useState(false);
     const [toolkitParams, setToolkitParams] = useState(undefined);
+
+    /**
+     * Calls when either `viewConfig` or `options` is updated interactively.
+     * @param {object} viewoptions A JSON object that contains updated visualization specs for `HiGlassMeta`.
+     * @param {object} viewoptions.higlass A JSON object that contains the view configuration spec for `HiGlass`, `viewConfig`.
+     * @param {object} viewoptions.higlassmeta A JSON object that contains options for the metadata visualizations in `HiGlassMeta`.
+     */
+    function onViewChanged(viewoptions) {
+        console.log("Viewoptions updated", viewoptions);
+    }
 
     return (
         <div className="cistrome-explorer">
@@ -334,7 +340,7 @@ export default function CistromeExplorer() {
 
             <div className="visualization-container">
                 <div className="visualization">
-                    <HiGlassWithMetadata 
+                    <HiGlassMeta 
                         viewConfig={demos[selectedDemo].viewConfig}
                         options={demos[selectedDemo].options}
                         onViewChanged={onViewChanged}

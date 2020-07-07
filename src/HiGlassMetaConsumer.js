@@ -36,7 +36,7 @@ import {
 } from './utils/viewconf.js';
 import { wrapSvg } from './utils/wrap-svg.js';
 
-import './HiGlassWithMetadataConsumer.scss';
+import './HiGlassMetaConsumer.scss';
 import cloneDeep from 'lodash/cloneDeep';
 import { removeItemFromArray, modifyItemInArray, insertItemToArray } from './utils/array.js';
 
@@ -61,10 +61,10 @@ const hgOptionsBase = {
  * @prop {function} onViewChanged A function to call upon change of the view config and option. Optional.
  * @prop {function} onGenomicIntervalSearch A function to call upon searching for TFs by using the selected interval. Optional.
  */
-export default function HiGlassWithMetadataConsumer(props) {
+export default function HiGlassMetaConsumer(props) {
 
     const {
-        viewConfig,
+        viewConfig: initViewConfig,
         options: optionsRaw,
         onViewChanged,
         onGenomicIntervalSearch
@@ -73,12 +73,26 @@ export default function HiGlassWithMetadataConsumer(props) {
     const hgRef = useRef();
     const drawRef = useRef({});
 
+    const [viewConfig, setViewConfig] = useState(initViewConfig);
     const [options, setOptions] = useState({});
     const [muiltivecTrackIds, setMultivecTrackIds] = useState([]);
     const [viewportTrackIds, setViewportTrackIds] = useState({});
     const [isWheelListening, setIsWheelListening] = useState(false);
     
     const context = useContext(InfoContext);
+
+    // Update `viewConfig` when outside of this class forces to do so.
+    useEffect(() => {
+        setViewConfig(initViewConfig);    
+    }, [initViewConfig]);
+
+    // Call `onViewChanged` upon either `viewConfig` or `options` changes.
+    useEffect(() => {
+        onViewChanged({
+            higlass: viewConfig,
+            higlassmeta: options
+        });
+    }, [viewConfig, options]);
 
     // Set initial sorting, filtering, and highlighting.
     const onMetadataLoad = useCallback((viewId, trackId) => {
@@ -432,7 +446,6 @@ export default function HiGlassWithMetadataConsumer(props) {
         hgRef.current.api.on('viewConfig', (newViewConfigString) => {
             const newViewConfig = JSON.parse(newViewConfigString);
             onViewConfig(newViewConfig);
-            onViewChanged(newViewConfigString);
         });         
 
         return () => hgRef.current.api.off('viewConfig');
@@ -443,20 +456,20 @@ export default function HiGlassWithMetadataConsumer(props) {
         const hgOptions = {
             ...hgOptionsBase,
             onViewConfLoaded: () => {
-                onViewConfig(viewConfig);
+                onViewConfig(initViewConfig);
             }
         };
 
         console.log("HiGlassComponent.render");
         return (
             <HiGlassComponent
-                viewConfig={viewConfig}
+                viewConfig={initViewConfig}
                 options={hgOptions}
                 zoomFixed={false}
                 ref={hgRef}
             />
         );
-    }, [viewConfig]);
+    }, [initViewConfig]);
 
     //console.log("HiGlassWithMetadataConsumer.render");
     return (
