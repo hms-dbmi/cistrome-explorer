@@ -4,8 +4,8 @@ import { InfoProvider } from './utils/contexts.js';
 import HiGlassMetaConsumer from "./HiGlassMetaConsumer.js";
 
 /**
- * Cistrome HiGlass Wrapper, a React component that wraps around HiGlass 
- * to provide visualization features for cistrome data.
+ * HiGlassMeta, a React component that wraps around HiGlass 
+ * to provide interactive metadata visualizations.
  * @prop {object} viewConfig A HiGlass viewConfig object.
  * @prop {(object|object[])} options Options for the wrapper component.
  * @prop {function} onViewChanged A function to call upon change of the view config and option. Optional.

@@ -19,7 +19,7 @@ import hgDemoViewConfigApril2020 from '../viewconfigs/meeting-2020-04-29.json';
 
 import './CistromeExplorer.scss';
 import { diffViewOptions } from '../utils/view-history';
-import { processWrapperOptions } from '../utils/options';
+import { isProcessedWrapperOptions } from '../utils/options';
 import diff from 'deep-diff';
 
 const demos = {
@@ -267,7 +267,7 @@ export default function CistromeExplorer() {
         // TODO: This variable should contain additional information for the full functionality of undo/redu,
         //       such as viewConfig, use of toolkits, interval selection, gene search
         //       (e.g., add `viewConfig: Object.values(demos)[0].viewConfig,`).
-        options: processWrapperOptions(Object.values(demos)[0].options)
+        options: Object.values(demos)[0].options
     }]);
     const [indexOfCurrentView, setIndexOfCurrentView] = useState(0); // The most recent view will be stored at the index zero.
 
@@ -278,7 +278,7 @@ export default function CistromeExplorer() {
     // When a user select a different demo, initialize the view history.
     useEffect(() => {
         setViewHistory([{
-            options: processWrapperOptions(demos[selectedDemo].options)
+            options: demos[selectedDemo].options
         }]);
         setIndexOfCurrentView(0);
     }, [selectedDemo]);
@@ -289,10 +289,9 @@ export default function CistromeExplorer() {
     }, [viewHistory, indexOfCurrentView]);
 
     useEffect(() => {
-        // DEBUG
-        console.log(indexOfCurrentView, viewHistory);
+        console.log("Undo/Redo clicked", indexOfCurrentView, viewHistory);
     }, [indexOfCurrentView]);
-    
+
     /**
      * This function is being called when either `viewConfig` or `options` is updated interactively.
      * @param {object} viewOptions A JSON object that contains updated visualization specs for `HiGlassMeta`.
@@ -301,7 +300,7 @@ export default function CistromeExplorer() {
      */
     function onViewChanged(viewOptions) {        
         // Make sure not to update the history if there is no difference.
-        if(!diffViewOptions(viewOptions, viewHistory[indexOfCurrentView])) {
+        if(!diffViewOptions(viewOptions.options, viewHistory[indexOfCurrentView].options)) {
             return;
         }
         // DEBUG: To see the difference between two JSON objects
@@ -311,7 +310,7 @@ export default function CistromeExplorer() {
         const newViewHistory = viewHistory.slice();
         if(indexOfCurrentView !== 0) {
             // This means a user ever have clicked on the `Undo` button, 
-            // and we want to overwrite the recent history.
+            // and we want to overwrite recent history.
             newViewHistory.splice(0, indexOfCurrentView);
         }
         // A recent view is added at the start of the array.

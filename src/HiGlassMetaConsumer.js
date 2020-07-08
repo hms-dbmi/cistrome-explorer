@@ -39,6 +39,7 @@ import { wrapSvg } from './utils/wrap-svg.js';
 import './HiGlassMetaConsumer.scss';
 import cloneDeep from 'lodash/cloneDeep';
 import { removeItemFromArray, modifyItemInArray, insertItemToArray } from './utils/array.js';
+import { diffViewOptions } from './utils/view-history.js';
 
 higlassRegister({
     name: 'StackedBarTrack',
@@ -54,7 +55,7 @@ const hgOptionsBase = {
 };
 
 /**
- * HiGlassWithMetadata passes its props through, and wraps this component with the context provider.
+ * HiGlassMeta passes its props through, and wraps this component with the context provider.
  * @prop {object} viewConfig A HiGlass viewConfig object.
  * @prop {(object|object[])} options Options for the wrapper component.
  * @prop {function} onViewChanged A function to call upon change of the view config and option. Optional.
@@ -88,7 +89,7 @@ export default function HiGlassMetaConsumer(props) {
     // Update options when we get a new one from the outside of this class.
     useEffect(() => {
         // Update options only when there is any actual changes
-        if(!isEqual(options, processWrapperOptions(initOptions))) {
+        if(diffViewOptions(options, initOptions)) {
             setOptions(processWrapperOptions(initOptions));
         }
     }, [initOptions]);
