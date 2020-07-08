@@ -65,7 +65,7 @@ export default function HiGlassMetaConsumer(props) {
     const {
         viewConfig,
         options: initOptions,
-        onViewChanged,
+        onViewChanged: onViewChangedAPI,
         onGenomicIntervalSearch
     } = props;
 
@@ -102,8 +102,8 @@ export default function HiGlassMetaConsumer(props) {
 
     // Call `onViewChanged` upon either `viewConfig` or `options` changes.
     useEffect(() => {
-        if(onViewChanged) {
-            onViewChanged({ 
+        if(onViewChangedAPI) {
+            onViewChangedAPI({ 
                 options
                 // ...
             });
