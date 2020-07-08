@@ -29,7 +29,10 @@ export function selectRows(rowInfo, options) {
                 if(type === "nominal") {
                     notOneOf.forEach(one => {
                         filteredRowInfo = filteredRowInfo.filter(
-                            d => getAggregatedValue(d[1], field, "nominal", aggFunction).toString().toUpperCase() !== one.toUpperCase()
+                            d => {
+                                // console.log(d[1], field, aggFunction, getAggregatedValue(d[1], field, "nominal", aggFunction))
+                                return getAggregatedValue(d[1], field, "nominal", aggFunction).toString().toUpperCase() !== one.toUpperCase();
+                            }
                         );
                     })
                 } else if(type === "quantitative") {

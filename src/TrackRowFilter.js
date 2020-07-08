@@ -157,7 +157,7 @@ export default function TrackRowFilter(props) {
     }
 
     function onFilterClose() {
-        onChange("");
+        onChange();
         onClose();
         setKeyword("");
         setSuggestionIndex(undefined);

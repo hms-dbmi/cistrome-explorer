@@ -5,7 +5,7 @@
         font-weight: normal;
         border-radius: 0px;
         padding-top: 13px;
-        margin-bottom: 10px;
+        margin-bottom: 0px;
         background: #4f4f4f;
         height: 45px;
         .header {
@@ -15,7 +15,7 @@
             padding-left: 15px;
             padding-right: 15px;
             .cisvis-title {
-                font-weight: 400;
+                font-weight: bold;
             }
             .viewconf-options {
                 color: black;
@@ -66,11 +66,12 @@
     } // End of header-container
     .visualization-container {
         width: 100%;
-        height: calc(100% - 50px);
-        padding-top: 10px;
+        height: calc(100% - 45px);
+        padding-top: 20px;
         overflow-x: auto;
         .visualization {
             border: 0px solid gray;
+            height: calc(100% - 86px); // margin for `viewWrapper`
             width: 50%;
             position: relative;
             margin-left: 25%;

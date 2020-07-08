@@ -50,7 +50,7 @@ export function getAggregatedValue(rowInfo, field, type, func) {
 
     const aggregatedValue = aggFuncMapping?.[type]?.[funcName];
     if(!aggregatedValue) {
-        console.warn(`The aggFunction is ill-defined for ${field}.`);
+        console.warn(`The aggregation function is ill-defined for ${field}.`);
         return rowInfo.map(d => d[field]);
     }
     return aggregatedValue(rowInfo.map(d => d[field]));

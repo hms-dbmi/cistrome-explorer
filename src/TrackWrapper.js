@@ -21,7 +21,7 @@ import { getAggregatedRowInfo } from './utils/select-rows.js';
  * @prop {function} onHighlightRows The function to call upon a highlight interaction.
  * @prop {function} onZoomRows The function to call upon a vertical zoom interaction.
  * @prop {function} onFilterRows The function to call upon a filer interaction.
- * @prop {function} onMetadataLoad The function to call upon rowInfo is set to Context.
+ * @prop {function} onMetadataInit The function to call upon rowInfo is initially set to Context.
  * @prop {boolean} isWheelListening Whether or not to listen for wheel events for vertical zooming.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
@@ -36,7 +36,7 @@ export default function TrackWrapper(props) {
         onHighlightRows,
         onZoomRows,
         onFilterRows,
-        onMetadataLoad,
+        onMetadataInit,
         isWheelListening,
         drawRegister
     } = props;
@@ -47,10 +47,9 @@ export default function TrackWrapper(props) {
 
     useEffect(() => {
         if(shouldCallOnMetadataLoad) {
-            onMetadataLoad();
+            onMetadataInit();
         }
     }, [shouldCallOnMetadataLoad, multivecTrackViewId, multivecTrackTrackId]);
-    
 
     // All hooks must be above this return statement, since they need to be executed in the same order.
     if(!multivecTrack || !multivecTrack.tilesetInfo || !multivecTrack.tilesetInfo.shape) {
@@ -99,6 +98,7 @@ export default function TrackWrapper(props) {
     try {
         selectedRows = context.state[multivecTrackViewId][multivecTrackTrackId].selectedRows;
         highlitRows = context.state[multivecTrackViewId][multivecTrackTrackId].highlitRows;
+        console.log('Lets render tracks', selectedRows, highlitRows)
     } catch(e) {
         // pass
         console.log(e);

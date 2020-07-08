@@ -20,6 +20,7 @@ import hgDemoViewConfigApril2020 from '../viewconfigs/meeting-2020-04-29.json';
 import './CistromeExplorer.scss';
 import { diffViewOptions } from '../utils/view-history';
 import { processWrapperOptions } from '../utils/options';
+import diff from 'deep-diff';
 
 const demos = {
     "H3K27ac Demo (1 View, Center Track)": {
@@ -261,13 +262,14 @@ export default function CistromeExplorer() {
     const [redoable, setRedoable] = useState(false);
 
     // History of view updates
-    const MAX_HISTORY_LENGTH = 50;  // How many previous interactions (views) should be recorded?
+    const MAX_HISTORY_LENGTH = 50;  // How many previous views should be recorded?
     const [viewHistory, setViewHistory] = useState([{
-        // The most recent view will be stored at the start of this array.
-        viewConfig: Object.values(demos)[0].viewConfig,
+        // TODO: This variable should contain additional information for the full functionality of undo/redu,
+        //       such as viewConfig, use of toolkits, interval selection, gene search
+        //       (e.g., add `viewConfig: Object.values(demos)[0].viewConfig,`).
         options: processWrapperOptions(Object.values(demos)[0].options)
     }]);
-    const [indexOfCurrentView, setIndexOfCurrentView] = useState(0);
+    const [indexOfCurrentView, setIndexOfCurrentView] = useState(0); // The most recent view will be stored at the index zero.
 
     // Toolkit-related
     const [isToolkitVisible, setIsToolkitVisible] = useState(false);
@@ -276,7 +278,6 @@ export default function CistromeExplorer() {
     // When a user select a different demo, initialize the view history.
     useEffect(() => {
         setViewHistory([{
-            viewConfig: demos[selectedDemo].viewConfig,
             options: processWrapperOptions(demos[selectedDemo].options)
         }]);
         setIndexOfCurrentView(0);
@@ -287,6 +288,11 @@ export default function CistromeExplorer() {
         setRedoable(indexOfCurrentView !== 0);
     }, [viewHistory, indexOfCurrentView]);
 
+    useEffect(() => {
+        // DEBUG
+        console.log(indexOfCurrentView, viewHistory);
+    }, [indexOfCurrentView]);
+    
     /**
      * This function is being called when either `viewConfig` or `options` is updated interactively.
      * @param {object} viewOptions A JSON object that contains updated visualization specs for `HiGlassMeta`.
@@ -298,7 +304,8 @@ export default function CistromeExplorer() {
         if(!diffViewOptions(viewOptions, viewHistory[indexOfCurrentView])) {
             return;
         }
-        console.log("View updated", viewOptions);
+        // DEBUG: To see the difference between two JSON objects
+        // console.log("View updated", diff.diff(viewOptions, viewHistory[indexOfCurrentView]));
 
         // Update the view history
         const newViewHistory = viewHistory.slice();
@@ -309,7 +316,6 @@ export default function CistromeExplorer() {
         }
         // A recent view is added at the start of the array.
         newViewHistory.unshift({
-            viewConfig: viewOptions.viewConfig,
             options: viewOptions.options
         });
         // Remove the tail to make the length of the array be less than or equal to the threshold.
@@ -318,10 +324,8 @@ export default function CistromeExplorer() {
         }
         setViewHistory(newViewHistory);
         setIndexOfCurrentView(0);
+        console.log("updated view history", newViewHistory);
     }
-
-    // console.log('indexOfCurrentView', indexOfCurrentView);
-    // console.log('viewHistory', viewHistory);
 
     return (
         <div className="cistrome-explorer">
@@ -351,7 +355,6 @@ export default function CistromeExplorer() {
                             }} 
                             onClick={() => {
                                 if(undoable) {
-                                    console.log("undo", viewHistory, indexOfCurrentView + 1);
                                     setIndexOfCurrentView(indexOfCurrentView + 1);
                                 }
                             }}
@@ -370,7 +373,6 @@ export default function CistromeExplorer() {
                             }} 
                             onClick={() => {
                                 if(redoable) {
-                                    console.log("redo", viewHistory, indexOfCurrentView - 1);
                                     setIndexOfCurrentView(indexOfCurrentView - 1);
                                 }
                             }}
@@ -418,7 +420,7 @@ export default function CistromeExplorer() {
             <div className="visualization-container">
                 <div className="visualization">
                     <HiGlassMeta 
-                        viewConfig={viewHistory[indexOfCurrentView].viewConfig}
+                        viewConfig={demos[selectedDemo].viewConfig}
                         options={viewHistory[indexOfCurrentView].options}
                         onViewChanged={onViewChanged}
                         onGenomicIntervalSearch={setToolkitParams}
