@@ -90,22 +90,12 @@ export default function HiGlassMetaConsumer(props) {
     useEffect(() => {
         // Update options only when there is any actual changes
         if(diffViewOptions(options, initOptions)) {
-            console.log('onInitOptions');
             setOptions(processWrapperOptions(initOptions));
         }
     }, [initOptions]);
-    
-    useEffect(() => {
-        // Update context based on the new options
-        console.log('[options, multivecTrackIds]');
-        multivecTrackIds.forEach(({ viewId, trackId }) => {
-            setMetadataToContext(viewId, trackId);
-        });
-    }, [options, multivecTrackIds]);
 
     // Call `onViewChanged` upon either `viewConfig` or `options` changes.
     useEffect(() => {
-        console.log('onViewChangedAPI');
         if(onViewChangedAPI) {
             onViewChangedAPI({ 
                 options: JSON.parse(JSON.stringify(options))
@@ -113,6 +103,13 @@ export default function HiGlassMetaConsumer(props) {
             });
         }
     }, [options]);
+    
+    useEffect(() => {
+        // Update context based on the new options upon `options` updates
+        multivecTrackIds.forEach(({ viewId, trackId }) => {
+            setMetadataToContext(viewId, trackId);
+        });
+    }, [options, multivecTrackIds]);
 
     // This function stores sorting, filtering, and highlighting information 
     // to the context based on `options`. This function is called as a side 
