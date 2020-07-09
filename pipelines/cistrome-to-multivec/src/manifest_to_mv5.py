@@ -27,7 +27,6 @@ def bigwigs_to_multivec(
     # Create level zero groups
     info_group = f.create_group("info")
     resolutions_group = f.create_group("resolutions")
-    # TODO: rename to "chromosomes" in updated schema
     chroms_group = f.create_group("chroms")
 
     # Set info attributes
@@ -55,7 +54,7 @@ def bigwigs_to_multivec(
     # Create each resolution group.
     for resolution in resolutions:
         resolution_group = resolutions_group.create_group(str(resolution))
-        # TODO: remove the unnecessary "values" layer in updated schema
+        # TODO: remove the unnecessary "values" layer
         resolution_values_group = resolution_group.create_group("values")
         
         # Create each chromosome dataset.
