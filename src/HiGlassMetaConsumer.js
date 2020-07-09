@@ -92,6 +92,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
     useEffect(() => {
         setMultivecTrackIds([]);
         setViewportTrackIds([]);
+        setOptions(processWrapperOptions(baseOptions));
     }, [baseOptions, baseViewConfig]);
     
     // Call a callback function when `options` changed.
@@ -109,7 +110,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         multivecTrackIds.forEach(({ viewId, trackId }) => {
             setMetadataToContext(viewId, trackId);
         });
-    }, [options, multivecTrackIds]);
+    }, [options]);
 
     // This function stores `selectedRows` and `highlitRows` to the context
     // based on the updated options.
@@ -340,7 +341,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
     }, [options]);
 
     // Callback function for vertical (row) zooming.
-    const onZoomRows = useCallback((viewId, trackId, y, deltaY) => {
+    const onZoomRows = useCallback((viewId, trackId, y, deltaY, deltaMode) => {
         const oldWrapperOptions = getTrackWrapperOptions(options, viewId, trackId);
         const trackNumRowsTotal = context.state[viewId][trackId].rowInfo.length;
         const trackNumRowsSelected = context.state[viewId][trackId].selectedRows.length;
@@ -410,6 +411,16 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
     }, [options]);
 
     // Callback function for adding a BigWig track.
+    const onAddBigWigTrack = useCallback((server, tilesetUid, position) => {		
+        if(multivecTrackIds && multivecTrackIds.length !== 0 && multivecTrackIds[0].viewId) {		
+            addNewTrack({		
+                type: 'horizontal-bar',		
+                server,		
+                tilesetUid,		
+                height: 20,		
+            }, multivecTrackIds[0].viewId, position);		
+        }		
+    }, [multivecTrackIds]);
 
     // Destroy the context menu upon any click.
     useEffect(() => {
