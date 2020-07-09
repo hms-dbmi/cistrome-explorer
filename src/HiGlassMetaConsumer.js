@@ -39,7 +39,6 @@ import { wrapSvg } from './utils/wrap-svg.js';
 import './HiGlassMetaConsumer.scss';
 import cloneDeep from 'lodash/cloneDeep';
 import { removeItemFromArray, modifyItemInArray, insertItemToArray } from './utils/array.js';
-import { diffViewOptions } from './utils/view-history.js';
 
 higlassRegister({
     name: 'StackedBarTrack',
@@ -112,9 +111,8 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         });
     }, [options, multivecTrackIds]);
 
-    // This function stores sorting, filtering, and highlighting information 
-    // to the context based on `options`. This function is called as a side 
-    // effect when `options` is updated.
+    // This function stores `selectedRows` and `highlitRows` to the context
+    // based on the updated options.
     const setMetadataToContext = useCallback((viewId, trackId) => {
         if(!context.state[viewId] || !context.state[viewId][trackId]) {
             // This means row information for this track is not yet loaded,
@@ -342,7 +340,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
     }, [options]);
 
     // Callback function for vertical (row) zooming.
-    const onZoomRows = useCallback((viewId, trackId, y, deltaY, deltaMode) => {
+    const onZoomRows = useCallback((viewId, trackId, y, deltaY) => {
         const oldWrapperOptions = getTrackWrapperOptions(options, viewId, trackId);
         const trackNumRowsTotal = context.state[viewId][trackId].rowInfo.length;
         const trackNumRowsSelected = context.state[viewId][trackId].selectedRows.length;
@@ -412,16 +410,6 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
     }, [options]);
 
     // Callback function for adding a BigWig track.
-    const onAddBigWigTrack = useCallback((server, tilesetUid, position) => {
-        if(multivecTrackIds && multivecTrackIds.length !== 0 && multivecTrackIds[0].viewId) {
-            addNewTrack({
-                type: 'horizontal-bar',
-                server,
-                tilesetUid,
-                height: 20,
-            }, multivecTrackIds[0].viewId, position);
-        }
-    }, [multivecTrackIds]);
 
     // Destroy the context menu upon any click.
     useEffect(() => {

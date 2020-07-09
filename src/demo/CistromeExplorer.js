@@ -19,7 +19,6 @@ import hgDemoViewConfigApril2020 from '../viewconfigs/meeting-2020-04-29.json';
 
 import './CistromeExplorer.scss';
 import { diffViewOptions } from '../utils/view-history';
-import { isProcessedWrapperOptions } from '../utils/options';
 import diff from 'deep-diff';
 
 const demos = {
