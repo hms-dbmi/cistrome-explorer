@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import pkg from '../../package.json';
 
 import { HiGlassMeta } from '../index.js';
@@ -255,6 +255,8 @@ const demos = {
 
 export default function CistromeExplorer() {
     
+    const hmRef = useRef();
+
     const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[0]);
     
     // Undo and redo
@@ -288,10 +290,6 @@ export default function CistromeExplorer() {
         setRedoable(indexOfCurrentView !== 0);
     }, [viewHistory, indexOfCurrentView]);
 
-    useEffect(() => {
-        console.log("Undo/Redo clicked", indexOfCurrentView, viewHistory);
-    }, [indexOfCurrentView]);
-
     /**
      * This function is being called when either `viewConfig` or `options` is updated interactively.
      * @param {object} viewOptions A JSON object that contains updated visualization specs for `HiGlassMeta`.
@@ -323,7 +321,6 @@ export default function CistromeExplorer() {
         }
         setViewHistory(newViewHistory);
         setIndexOfCurrentView(0);
-        console.log("updated view history", newViewHistory);
     }
 
     return (
@@ -354,7 +351,9 @@ export default function CistromeExplorer() {
                             }} 
                             onClick={() => {
                                 if(undoable) {
-                                    setIndexOfCurrentView(indexOfCurrentView + 1);
+                                    const newViewIndex = indexOfCurrentView + 1;
+                                    setIndexOfCurrentView(newViewIndex);
+                                    hmRef.current.api.onOptions(viewHistory[newViewIndex].options);
                                 }
                             }}
                         >
@@ -372,7 +371,9 @@ export default function CistromeExplorer() {
                             }} 
                             onClick={() => {
                                 if(redoable) {
-                                    setIndexOfCurrentView(indexOfCurrentView - 1);
+                                    const newViewIndex = indexOfCurrentView - 1;
+                                    setIndexOfCurrentView(newViewIndex);
+                                    hmRef.current.api.onOptions(viewHistory[newViewIndex].options);
                                 }
                             }}
                         >
@@ -418,9 +419,10 @@ export default function CistromeExplorer() {
 
             <div className="visualization-container">
                 <div className="visualization">
-                    <HiGlassMeta 
+                    <HiGlassMeta
+                        ref={hmRef}
                         viewConfig={demos[selectedDemo].viewConfig}
-                        options={viewHistory[indexOfCurrentView].options}
+                        options={demos[selectedDemo].options}
                         onViewChanged={onViewChanged}
                         onGenomicIntervalSearch={setToolkitParams}
                     />

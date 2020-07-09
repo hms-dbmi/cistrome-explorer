@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import { CLOSE, FILTER, RESET, SEARCH, SQUARE_CHECK, SQUARE } from './utils/icons.js';
 import d3 from "./utils/d3.js";
+import debounce from 'lodash/debounce';
 
 import './TrackRowFilter.scss';
 import RangeSlider from "./RangeSlider.js";

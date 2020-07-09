@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 
 import { InfoProvider } from './utils/contexts.js';
 import HiGlassMetaConsumer from "./HiGlassMetaConsumer.js";
@@ -16,12 +16,13 @@ import HiGlassMetaConsumer from "./HiGlassMetaConsumer.js";
  *  options={wrapperOptions}
  * />
  */
-export default function HiGlassMeta(props) {
-    
+const HiGlassMeta = forwardRef((props, ref) => { 
     console.log("HiGlassMeta.render");
     return (
         <InfoProvider>
-            <HiGlassMetaConsumer {...props} />
+            <HiGlassMetaConsumer ref={ref} {...props} />
         </InfoProvider>
     );
-}
+})
+
+export default HiGlassMeta;
