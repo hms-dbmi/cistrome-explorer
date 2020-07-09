@@ -1,9 +1,12 @@
 ## 0.5.0 - in progress
 
 ### Added
+- Undo/Redu interactions added in Cistrome Explorer.
+- Added an `onOptions` API in `HiGlassMeta` to listen to the updates of wrapper options.
 
 ### Changed
 - Moved `CistromeToolkit` to the sibling of `CistromeHGW`.
+- Rename `HiGlassWithMeta` to `HiGlassMeta`.
 
 ## 0.4.0
 

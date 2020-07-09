@@ -84,10 +84,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
     useEffect(() => {
         ref.current = {
             api: {
-                onOptions: (newOptions) => { 
-                    console.log('onOptions() API called');
-                    setOptions(processWrapperOptions(newOptions));
-                }
+                onOptions: (newOptions) => setOptions(processWrapperOptions(newOptions))
             }
         }
     }, [ref]);
@@ -145,7 +142,6 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         }
         if(!isEqual(newHighlitRows, context.state[viewId][trackId].highlitRows)) {
             // Update context only when there is any actual changes
-            console.log('setMetadataToContext');
             setHighlitRows(viewId, trackId, newHighlitRows);
         }
     }, [options, context]);

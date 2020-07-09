@@ -40,9 +40,7 @@ const reducer = createReducer({
     },
     [ACTION.SELECT_ROWS]: (state, action) => {
         if(state[action.viewId] && state[action.viewId][action.trackId]) {
-            // state[action.viewId][action.trackId].selectedRows = action.selectedRows;
             state = {
-                // Reassigning state re-renders HiGlassMeta.
                 ...state,
                 [action.viewId]: {
                     ...state[action.viewId],
@@ -57,9 +55,7 @@ const reducer = createReducer({
     },
     [ACTION.HIGHLIGHT_ROWS]: (state, action) => {
         if(state[action.viewId] && state[action.viewId][action.trackId]) {
-            // state[action.viewId][action.trackId].highlitRows = action.highlitRows;
             state = {
-                // Reassigning state re-renders HiGlassMeta.
                 ...state,
                 [action.viewId]: {
                     ...state[action.viewId],
