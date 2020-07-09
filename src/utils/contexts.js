@@ -4,7 +4,8 @@ import merge from 'lodash/merge';
 export const ACTION = Object.freeze({
     SET_ROW_INFO: "set_row_info",
     SELECT_ROWS: "select_rows",
-    HIGHLIGHT_ROWS: "highlight_rows"
+    HIGHLIGHT_ROWS: "highlight_rows",
+    RESET_CONTEXT: "reset_context"
 });
 
 /**
@@ -66,6 +67,10 @@ const reducer = createReducer({
                 }
             };
         }
+        return state;
+    },
+    [ACTION.RESET_CONTEXT]: (state, action) => {
+        state = {};
         return state;
     }
 });

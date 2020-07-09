@@ -93,6 +93,9 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         setMultivecTrackIds([]);
         setViewportTrackIds([]);
         setOptions(processWrapperOptions(baseOptions));
+        context.dispatch({
+            type: ACTION.RESET_CONTEXT
+        });
     }, [baseOptions, baseViewConfig]);
     
     // Call a callback function when `options` changed.
@@ -164,7 +167,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         for(let trackIds of newTrackIds) {
             const newSelectedRows = getHMSelectedRowsFromViewConfig(newViewConfig, trackIds.viewId, trackIds.trackId);
             if(
-                !context.state[trackIds.viewId] 
+                ! context.state[trackIds.viewId] 
                 || !context.state[trackIds.viewId][trackIds.trackId] 
                 || !isEqual(newSelectedRows, context.state[trackIds.viewId][trackIds.trackId].selectedRows)
             ) {
