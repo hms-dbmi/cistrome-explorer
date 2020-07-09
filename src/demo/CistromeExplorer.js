@@ -300,7 +300,6 @@ export default function CistromeExplorer() {
      */
     function onViewChanged(viewOptions) {        
         // Make sure not to update the history if there is no difference.
-        console.log(viewOptions);
         if(!diffViewOptions(viewOptions.options, viewHistory[indexOfCurrentView].options)) {
             return;
         }

@@ -90,12 +90,14 @@ export default function HiGlassMetaConsumer(props) {
     useEffect(() => {
         // Update options only when there is any actual changes
         if(diffViewOptions(options, initOptions)) {
+            console.log('onInitOptions');
             setOptions(processWrapperOptions(initOptions));
         }
     }, [initOptions]);
-
+    
     useEffect(() => {
         // Update context based on the new options
+        console.log('[options, multivecTrackIds]');
         multivecTrackIds.forEach(({ viewId, trackId }) => {
             setMetadataToContext(viewId, trackId);
         });
@@ -103,10 +105,11 @@ export default function HiGlassMetaConsumer(props) {
 
     // Call `onViewChanged` upon either `viewConfig` or `options` changes.
     useEffect(() => {
+        console.log('onViewChangedAPI');
         if(onViewChangedAPI) {
             onViewChangedAPI({ 
                 options: JSON.parse(JSON.stringify(options))
-                // ...
+                // ... add more here
             });
         }
     }, [options]);
@@ -141,9 +144,11 @@ export default function HiGlassMetaConsumer(props) {
         }
         if(!isEqual(newHighlitRows, context.state[viewId][trackId].highlitRows)) {
             // Update context only when there is any actual changes
+            console.log('setMetadataToContext');
             setHighlitRows(viewId, trackId, newHighlitRows);
         }
     }, [options, context]);
+
     /*
      * Function to call when the view config has changed.
      * Updates the array of `horizontal-multivec` track IDs.
