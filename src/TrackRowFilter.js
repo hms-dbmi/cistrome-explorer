@@ -96,8 +96,11 @@ export default function TrackRowFilter(props) {
         if(suggestionIndex === undefined && keyword.length > 0) {
             onChange(keyword);
         }
-        if(suggestionIndex !== undefined && suggestionIndex >= 0 && suggestionIndex < suggestions.length) {
+        else if(suggestionIndex !== undefined && suggestionIndex >= 0 && suggestionIndex < suggestions.length) {
             onChange(suggestions[suggestionIndex]);
+        }
+        else if(suggestionIndex === undefined) {
+            onChange();
         }
     }, [suggestions, suggestionIndex]);
 

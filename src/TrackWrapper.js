@@ -93,16 +93,8 @@ export default function TrackWrapper(props) {
         console.log(e);
     }
 
-    let selectedRows;
-    let highlitRows;
-    try {
-        selectedRows = context.state[multivecTrackViewId][multivecTrackTrackId].selectedRows;
-        highlitRows = context.state[multivecTrackViewId][multivecTrackTrackId].highlitRows;
-        console.log('Lets render tracks', selectedRows, highlitRows)
-    } catch(e) {
-        // pass
-        console.log(e);
-    }
+    const selectedRows = context.state[multivecTrackViewId]?.[multivecTrackTrackId]?.selectedRows;
+    const highlitRows = context.state[multivecTrackViewId]?.[multivecTrackTrackId]?.highlitRows;
 
     // Transformed `rowInfo` after aggregating, filtering, and sorting rows.
     // Each element of `transformedRowInfo` is either a JSON Object or an array of JSON Object

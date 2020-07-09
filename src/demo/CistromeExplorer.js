@@ -264,7 +264,7 @@ export default function CistromeExplorer() {
     // History of view updates
     const MAX_HISTORY_LENGTH = 50;  // How many previous views should be recorded?
     const [viewHistory, setViewHistory] = useState([{
-        // TODO: This variable should contain additional information for the full functionality of undo/redu,
+        // TODO: This variable should contain additional information to support the full functionality of undo/redu,
         //       such as viewConfig, use of toolkits, interval selection, gene search
         //       (e.g., add `viewConfig: Object.values(demos)[0].viewConfig,`).
         options: Object.values(demos)[0].options
@@ -300,6 +300,7 @@ export default function CistromeExplorer() {
      */
     function onViewChanged(viewOptions) {        
         // Make sure not to update the history if there is no difference.
+        console.log(viewOptions);
         if(!diffViewOptions(viewOptions.options, viewHistory[indexOfCurrentView].options)) {
             return;
         }
@@ -363,7 +364,7 @@ export default function CistromeExplorer() {
                                 <title>Undo</title>
                                 <path fill="currentColor" d={UNDO.path}/>
                             </svg>
-                            {" Undo"}
+                            {` Undo (${viewHistory.length - indexOfCurrentView - 1})`}
                         </span>
                         <span 
                             style={{ 
@@ -381,7 +382,7 @@ export default function CistromeExplorer() {
                                 <title>Redo</title>
                                 <path fill="currentColor" d={REDO.path}/>
                             </svg>
-                            {" Redo"}
+                            {` Redo (${indexOfCurrentView})`}
                         </span>
                     </span>
                     <span className="header-info">

@@ -105,7 +105,7 @@ export default function HiGlassMetaConsumer(props) {
     useEffect(() => {
         if(onViewChangedAPI) {
             onViewChangedAPI({ 
-                options
+                options: JSON.parse(JSON.stringify(options))
                 // ...
             });
         }
@@ -117,18 +117,17 @@ export default function HiGlassMetaConsumer(props) {
     const setMetadataToContext = useCallback((viewId, trackId) => {
         if(!context.state[viewId] || !context.state[viewId][trackId]) {
             // This means row information for this track is not yet loaded,
-            // so we cannot store any additional information for now.
+            // so we cannot store any additional information now.
             return;
         }
         const rowInfo = context.state[viewId][trackId].rowInfo;
         const trackOptions = getTrackWrapperOptions(options, viewId, trackId);
 
         // Aggregate, filter, and sort
-        const newSelectedRows = selectRows(rowInfo, trackOptions);
+        const newSelectedRows = selectRows(rowInfo, trackOptions); 
         if(!isEqual(newSelectedRows, context.state[viewId][trackId].selectedRows)) {
             // Update context only when there is any actual changes
-            console.log("selectedRows changed")
-            setTrackSelectedRows(viewId, trackId, newSelectedRows);   
+            setTrackSelectedRows(viewId, trackId, newSelectedRows);
         }
         
         // Highlight
@@ -142,13 +141,9 @@ export default function HiGlassMetaConsumer(props) {
         }
         if(!isEqual(newHighlitRows, context.state[viewId][trackId].highlitRows)) {
             // Update context only when there is any actual changes
-            console.log("highlit rows changed", newHighlitRows, options);
             setHighlitRows(viewId, trackId, newHighlitRows);
-            console.log(context.state[viewId][trackId].highlitRows);
         }
-        console.log("end of context changed")
-    }, [options]);
-
+    }, [options, context]);
     /*
      * Function to call when the view config has changed.
      * Updates the array of `horizontal-multivec` track IDs.
@@ -271,7 +266,7 @@ export default function HiGlassMetaConsumer(props) {
     // Callback function for searching and highlighting.
     const onHighlightRows = useCallback((viewId, trackId, field, type, condition) => {
         const highlightKey = getHighlightKeyByFieldType(type, condition);
-        const newRowHighlight = condition ? { field, type, [highlightKey]: condition } : undefined;
+        const newRowHighlight = condition ? { field, type, [highlightKey]: condition } : {};
         const newOptions = updateWrapperOptions(options, newRowHighlight, "rowHighlight", viewId, trackId, { isReplace: true });
         setOptions(newOptions);
     }, [options]);
@@ -339,8 +334,8 @@ export default function HiGlassMetaConsumer(props) {
         }
         
         let newOptions = updateWrapperOptions(options, newSubOptions, "rowFilter", viewId, trackId, { isReplace: true });
-        newOptions = updateWrapperOptions(newOptions, undefined, "rowHighlight", viewId, trackId, { isReplace: true });
-        newOptions = updateWrapperOptions(newOptions, undefined, "rowZoom", viewId, trackId, { isReplace: true });
+        newOptions = updateWrapperOptions(newOptions, {}, "rowHighlight", viewId, trackId, { isReplace: true });
+        newOptions = updateWrapperOptions(newOptions, {}, "rowZoom", viewId, trackId, { isReplace: true });
         setOptions(newOptions);
     }, [options]);
 

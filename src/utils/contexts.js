@@ -31,8 +31,8 @@ const reducer = createReducer({
                 [action.viewId]: {
                     [action.trackId]: {
                         rowInfo: action.rowInfo,
-                        selectedRows: null,
-                        highlitRows: null,
+                        selectedRows: [],
+                        highlitRows: [],
                     }
                 }
             }
@@ -40,13 +40,33 @@ const reducer = createReducer({
     },
     [ACTION.SELECT_ROWS]: (state, action) => {
         if(state[action.viewId] && state[action.viewId][action.trackId]) {
-            state[action.viewId][action.trackId].selectedRows = action.selectedRows;
+            state = {
+                // We want to re-render HiGlassMeta upon updating state.
+                ...state,
+                [action.viewId]: {
+                    ...state[action.viewId],
+                    [action.trackId]: {
+                        ...state[action.viewId][action.trackId],
+                        selectedRows: action.selectedRows
+                    }
+                }
+            };
         }
         return state;
     },
     [ACTION.HIGHLIGHT_ROWS]: (state, action) => {
         if(state[action.viewId] && state[action.viewId][action.trackId]) {
-            state[action.viewId][action.trackId].highlitRows = action.highlitRows;
+            state = {
+                // We want to re-render HiGlassMeta upon updating state.
+                ...state,
+                [action.viewId]: {
+                    ...state[action.viewId],
+                    [action.trackId]: {
+                        ...state[action.viewId][action.trackId],
+                        highlitRows: action.highlitRows
+                    }
+                }
+            };
         }
         return state;
     }

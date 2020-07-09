@@ -288,7 +288,11 @@ export function processWrapperOptions(options) {
     // Set up the default options:
     const newOptions = {
         [DEFAULT_OPTIONS_KEY]: {
-            rowInfoAttributes: []
+            rowInfoAttributes: [],
+            rowFilter: [],
+            rowSort: [],
+            rowHighlight: {},
+            rowZoom: {},
         }
     };
 
