@@ -22,12 +22,12 @@ export function destroyTooltip() {
 export function TooltipContent(props) {
     const { title, value, color: background, warning } = props;   
     return (
-        <div className="chgw-tooltip-content">
-            <div className="chgw-tooltip-title">{title}</div>
-            <div className="chgw-tooltip-content-group">
+        <div className="hm-tooltip-content">
+            <div className="hm-tooltip-title">{title}</div>
+            <div className="hm-tooltip-content-group">
                 {background ? 
-                    <div className="chw-tooltip-color-container">
-                        <div className="chw-tooltip-color" style={{ background }}/>
+                    <div className="hm-tooltip-color-container">
+                        <div className="hm-tooltip-color" style={{ background }}/>
                     </div>
                     : null
                 }
@@ -65,7 +65,7 @@ export default function Tooltip() {
 
     return (
         <div
-            className="chw-tooltip"
+            className="hm-tooltip"
             style={{
                 display: ((left !== null && top !== null) ? 'inline-block' : 'none'),
                 top: `${top}px`,

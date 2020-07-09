@@ -112,7 +112,7 @@ export default function TrackWrapper(props) {
 
     // console.log("TrackWrapper.render");
     return (
-        <div className="cistrome-hgw-track-wrapper">
+        <div className="hm-track-wrapper">
             {leftAttrs.length !== 0 ? 
                 (<TrackRowInfo
                     rowInfo={aggregatedRowInfo}

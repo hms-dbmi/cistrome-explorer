@@ -2,9 +2,9 @@ toc:
 - name: Introduction
   file: docs/Introduction.md
 - name: React Components
-- HiGlassWithMetadata
+- HiGlassMeta
 - name: React Components (internal)
-- HiGlassWithMetadataConsumer
+- HiGlassMetaConsumer
 - InfoProvider
 - DataTable
 - CistromeToolkit

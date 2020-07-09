@@ -181,11 +181,11 @@ export default function RangeSlider(props) {
 
     return (
         <div 
-            className="chw-range-slider-container"
+            className="hm-range-slider-container"
         >
             <input
                 ref={minInputRef}
-                className="chw-range-input"
+                className="hm-range-input"
                 type="text"
                 name="leftcutoff"
                 placeholder={isRight ? "min" : "max"}
@@ -199,14 +199,14 @@ export default function RangeSlider(props) {
                 }}
             />
             <div
-                className="chw-range-slider"
+                className="hm-range-slider"
                 style={{
                     width: `${sliderWidth}px`
                 }}
             >
-                <div className="chw-range-slider-ruler-bg"/>
+                <div className="hm-range-slider-ruler-bg"/>
                 <div 
-                    className="chw-range-slider-ruler-fg"
+                    className="hm-range-slider-ruler-fg"
                     style={{
                         left: `${xScale(leftCutoff)}px`,
                         width: `${xScale(rightCutoff) - xScale(leftCutoff)}px`
@@ -214,7 +214,7 @@ export default function RangeSlider(props) {
                 />
                 <div 
                     ref={leftMoverRef}
-                    className="chw-range-slider-mover-left"
+                    className="hm-range-slider-mover-left"
                     style={{
                         left: `${xScale(leftCutoff) - moverSize / 2.0}px`,
                         width: `${moverSize}px`,
@@ -223,7 +223,7 @@ export default function RangeSlider(props) {
                 />
                 <div 
                     ref={rightMoverRef}
-                    className="chw-range-slider-mover-right"
+                    className="hm-range-slider-mover-right"
                     style={{
                         left: `${xScale(rightCutoff) - moverSize / 2.0}px`,
                         width: `${moverSize}px`,
@@ -233,7 +233,7 @@ export default function RangeSlider(props) {
             </div>
             <input
                 ref={maxInputRef}
-                className="chw-range-input"
+                className="hm-range-input"
                 type="text"
                 name="rightcutoff"
                 placeholder={isRight ? "max" : "min"}

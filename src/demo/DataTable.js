@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 
-import "../TrackRowInfoControl.scss";
 import "./DataTable.scss";
 import { PLUS } from '../utils/icons';
 
@@ -38,7 +37,7 @@ export default function DataTable(props) {
                         style={{ position: 'relative', top: 3 }}
                         onClick={onButton}
                     >
-                        <svg className="chw-button"
+                        <svg className="hm-button"
                             style={{ color: "#808080", background: "none" }}
                             xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                             viewBox={PLUS.viewBox}>

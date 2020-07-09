@@ -483,7 +483,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
 
     //console.log("HiGlassWithMetadataConsumer.render");
     return (
-        <div className="chw-root">
+        <div className="hm-root">
             {hgComponent}
             {multivecTrackIds.map(({ viewId, trackId, trackTilesetId }, i) => (
                 <TrackWrapper
