@@ -24,17 +24,6 @@ conda env create -f environment.yml
 conda activate cistrome-to-multivec-pipeline
 ```
 
-## Using pybbi with `summary="sum"`
-
-Until version `0.2.3` is pushed to PyPI, install from source to get the changes added in pull request https://github.com/nvictus/pybbi/pull/12
-
-```sh
-cd path/to/pybbi-parent
-git clone git@github.com:nvictus/pybbi.git
-cd pybbi
-pip install -e .
-```
-
 ## Using parallel hdf5 via h5py and mpi4py
 
 https://docs.h5py.org/en/latest/build.html#building-against-parallel-hdf5
