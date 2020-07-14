@@ -219,17 +219,13 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
     const addNewTrack = useCallback((trackDef, viewId, position) => {
         const currViewConfig = hgRef.current.api.getViewConfig();
         const newViewConfig = addTrackDefToViewConfig(currViewConfig, trackDef, viewId, position);
-        hgRef.current.api.setViewConfig(newViewConfig).then(() => {
-            onViewConfig(newViewConfig);
-        });
+        hgRef.current.api.setViewConfig(newViewConfig);
     }, [hgRef]);
 
     const setSelectedRowsToViewConfig = useCallback((viewId, trackId, selectedRows) => {
         const currViewConfig = hgRef.current.api.getViewConfig();
         const newViewConfig = updateViewConfigOnSelectRowsByTrack(currViewConfig, selectedRows, viewId, trackId);
-        hgRef.current.api.setViewConfig(newViewConfig).then(() => {
-            onViewConfig(newViewConfig);
-        });
+        hgRef.current.api.setViewConfig(newViewConfig);
     }, [hgRef]);
     
     const setSelectedRows = useCallback((viewId, trackId, selectedRows) => {
@@ -535,16 +531,12 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                     onSelectGenomicInterval={(startProp, endProp, uid) => {
                         const currViewConfig = hgRef.current.api.getViewConfig();
                         const newViewConfig = updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, startProp, endProp, uid);
-                        hgRef.current.api.setViewConfig(newViewConfig).then(() => {
-                            onViewConfig(newViewConfig);
-                        });
+                        hgRef.current.api.setViewConfig(newViewConfig);
                     }}
                     onViewportRemove={(viewportId) => {
                         const currViewConfig = hgRef.current.api.getViewConfig();
                         const newViewConfig = removeViewportFromViewConfig(currViewConfig, viewId, viewportId);
-                        hgRef.current.api.setViewConfig(newViewConfig).then(() => {
-                            onViewConfig(newViewConfig);
-                        });
+                        hgRef.current.api.setViewConfig(newViewConfig);
                     }}
                     onGenomicIntervalSearch={onGenomicIntervalSearchCallback}
                     drawRegister={drawRegister}
