@@ -290,9 +290,8 @@ export default function CistromeExplorer() {
     }, [viewHistory, indexOfCurrentView]);
 
     /**
-     * This function is being called when either `viewConfig` or `options` is updated interactively.
+     * This function is being called when `options` is updated interactively.
      * @param {object} viewOptions A JSON object that contains updated visualization specs for `HiGlassMeta`.
-     * @param {object} viewoptions.viewConfig A JSON object that contains the view configuration spec for `HiGlass`, `viewConfig`.
      * @param {object} viewoptions.options A JSON object that contains options for the metadata visualizations in `HiGlassMeta`.
      */
     function onViewChanged(viewOptions) {        
@@ -310,10 +309,12 @@ export default function CistromeExplorer() {
             // and we want to overwrite recent history.
             newViewHistory.splice(0, indexOfCurrentView);
         }
-        // A recent view is added at the start of the array.
+
+        // Add a recent view at the start of the array.
         newViewHistory.unshift({
             options: viewOptions.options
         });
+
         // Remove the tail to make the length of the array be less than or equal to the threshold.
         if(newViewHistory.length > MAX_HISTORY_LENGTH) { 
             newViewHistory.splice(MAX_HISTORY_LENGTH - 1);
