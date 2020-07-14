@@ -33,5 +33,5 @@ dependencies:
     - pytest
     - pytest-cov
     - bumpversion
-    - pybbi>=0.2.0
+    - pybbi>=0.2.3
     - clodius
