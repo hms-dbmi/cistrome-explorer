@@ -1,11 +1,12 @@
 import React, { createContext, useReducer } from "react";
 import merge from 'lodash/merge';
+import isEqual from "lodash/isEqual";
 
 export const ACTION = Object.freeze({
     SET_ROW_INFO: "set_row_info",
     SELECT_ROWS: "select_rows",
-    HIGHLIGHT_ROWS: "highlight_rows",
-    RESET_CONTEXT: "reset_context"
+    SELECT_ROWS_RERENDER: "select_rows_rerender",
+    HIGHLIGHT_ROWS_RERENDER: "highlight_rows_rerender"
 });
 
 /**
@@ -41,6 +42,12 @@ const reducer = createReducer({
     },
     [ACTION.SELECT_ROWS]: (state, action) => {
         if(state[action.viewId] && state[action.viewId][action.trackId]) {
+            state[action.viewId][action.trackId].selectedRows = action.selectedRows;
+        }
+        return state;
+    },
+    [ACTION.SELECT_ROWS_RERENDER]: (state, action) => {
+        if(state[action.viewId] && state[action.viewId][action.trackId]) {
             state = {
                 ...state,
                 [action.viewId]: {
@@ -54,7 +61,7 @@ const reducer = createReducer({
         }
         return state;
     },
-    [ACTION.HIGHLIGHT_ROWS]: (state, action) => {
+    [ACTION.HIGHLIGHT_ROWS_RERENDER]: (state, action) => {
         if(state[action.viewId] && state[action.viewId][action.trackId]) {
             state = {
                 ...state,
@@ -67,10 +74,6 @@ const reducer = createReducer({
                 }
             };
         }
-        return state;
-    },
-    [ACTION.RESET_CONTEXT]: (state, action) => {
-        state = {};
         return state;
     }
 });

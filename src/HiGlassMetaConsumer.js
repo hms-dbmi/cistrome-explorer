@@ -91,11 +91,8 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
     // Initialize instances when we receive a new demo.
     useEffect(() => {
         setMultivecTrackIds([]);
-        setViewportTrackIds([]);
+        setViewportTrackIds({});
         setOptions(processWrapperOptions(baseOptions));
-        context.dispatch({
-            type: ACTION.RESET_CONTEXT
-        });
     }, [baseOptions, baseViewConfig]);
     
     // Call a callback function when `options` changed.
@@ -130,23 +127,23 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         const newSelectedRows = selectRows(rowInfo, trackOptions); 
         if(!isEqual(newSelectedRows, context.state[viewId][trackId].selectedRows)) {
             // Update context only when there is any actual changes
-            setTrackSelectedRows(viewId, trackId, newSelectedRows);
+            setSelectedRowsToViewConfig(viewId, trackId, newSelectedRows);
+            setSelectedRows(viewId, trackId, newSelectedRows);
         }
         
         // Highlight
         let newHighlitRows = undefined; // `undefined` resets the hightlighting
         if(trackOptions.rowHighlight) {
             const { field, type } = trackOptions.rowHighlight;
-            const condition = (type === "nominal") ? 
-                trackOptions.rowHighlight.contains :
-                trackOptions.rowHighlight.range;
+            const highlightKey = getHighlightKeyByFieldType(type, condition);
+            const condition = trackOptions.rowHighlight[highlightKey];
             newHighlitRows = highlightRowsFromSearch(rowInfo, field, type, condition, trackOptions);
         }
         if(!isEqual(newHighlitRows, context.state[viewId][trackId].highlitRows)) {
             // Update context only when there is any actual changes
             setHighlitRows(viewId, trackId, newHighlitRows);
         }
-    }, [options, context]);
+    }, [options]);
 
     /*
      * Function to call when the view config has changed.
@@ -171,6 +168,8 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                 || !context.state[trackIds.viewId][trackIds.trackId] 
                 || !isEqual(newSelectedRows, context.state[trackIds.viewId][trackIds.trackId].selectedRows)
             ) {
+                // This must not force re-rendering React components since we might be in the 
+                // middle of a rendering process by a `state` change.
                 context.dispatch({
                     type: ACTION.SELECT_ROWS,
                     viewId: trackIds.viewId,
@@ -225,7 +224,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         });
     }, [hgRef]);
 
-    const setTrackSelectedRows = useCallback((viewId, trackId, selectedRows) => {
+    const setSelectedRowsToViewConfig = useCallback((viewId, trackId, selectedRows) => {
         const currViewConfig = hgRef.current.api.getViewConfig();
         const newViewConfig = updateViewConfigOnSelectRowsByTrack(currViewConfig, selectedRows, viewId, trackId);
         hgRef.current.api.setViewConfig(newViewConfig).then(() => {
@@ -233,9 +232,18 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         });
     }, [hgRef]);
     
+    const setSelectedRows = useCallback((viewId, trackId, selectedRows) => {
+        context.dispatch({
+            type: ACTION.SELECT_ROWS_RERENDER,
+            viewId,
+            trackId,
+            selectedRows
+        });
+    }, [hgRef]);
+
     const setHighlitRows = useCallback((viewId, trackId, highlitRows) => {
         context.dispatch({
-            type: ACTION.HIGHLIGHT_ROWS,
+            type: ACTION.HIGHLIGHT_ROWS_RERENDER,
             viewId,
             trackId,
             highlitRows
@@ -369,7 +377,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         const newSelectedRows = selectRows(context.state[viewId][trackId].rowInfo, newTrackOptions);
 
         setHighlitRows(viewId, trackId, undefined); // TODO: figure out how to update highlit rows y
-        setTrackSelectedRows(viewId, trackId, newSelectedRows);
+        setSelectedRowsToViewConfig(viewId, trackId, newSelectedRows);
         setOptions(newWrapperOptions);
     }, [options]);
 
