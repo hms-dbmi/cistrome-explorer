@@ -59,7 +59,7 @@ export default function TrackRowZoomOverlay(props) {
             ref={overlayRef}
             style={style}
         >
-            <span className="chw-vertical-zoom-info">Vertical zooming enabled</span>
+            <span className="hm-vertical-zoom-info">Vertical zooming enabled</span>
         </div>
     );
 }

@@ -139,25 +139,25 @@ export default function TrackRowInfoControl(props){
     return (
         <div>
             <div ref={divRef}
-                className={"chw-button-sm-container-vertical"}
+                className={"hm-button-sm-container-vertical"}
                 style={{
                     top: "4px",
                     left: "4px",
                     visibility: isVisible ? "visible" : "hidden"
                 }}>
                 {buttons.map((button, i) => {
-                    let positionClass = "chw-button-middle";
+                    let positionClass = "hm-button-middle";
                     if(buttons.length > 1) {
                         if(i === 0) {
-                            positionClass = "chw-button-top"
+                            positionClass = "hm-button-top"
                         } else if(i === buttons.length - 1) {
-                            positionClass = "chw-button-bottom"
+                            positionClass = "hm-button-bottom"
                         }
                     }
                     return (
                         <svg 
                             key={button.title}
-                            className={`${button.highlit ? "chw-button-sm-hl" : "chw-button-sm"} ${positionClass}`}
+                            className={`${button.highlit ? "hm-button-sm-hl" : "hm-button-sm"} ${positionClass}`}
                             onClick={button.onClick} 
                             viewBox={button.icon.viewBox}
                         >

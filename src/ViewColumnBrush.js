@@ -80,7 +80,7 @@ export default function ViewColumnBrush(props) {
                 width: end - start
             }}>
             {end - start > minWidthToShowButton ? 
-                <div className={"chw-button-sm-container-horizontal"}
+                <div className={"hm-button-sm-container-horizontal"}
                     style={{
                         right: "0px",
                         height: "100%",
@@ -92,7 +92,7 @@ export default function ViewColumnBrush(props) {
                     {/* Cistrome DB API Button */}
                     {onRequestIntervalTFs ? 
                         // Show the search icon only when `onIntervalSearch` is defined.
-                        <svg className={"chw-button-sm chw-button-middle"} 
+                        <svg className={"hm-button-sm hm-button-middle"} 
                             style={{ height: "100%" }}
                             onMouseOver={(e) => {
                                 PubSub.publish(EVENT.TOOLTIP, {
@@ -125,7 +125,7 @@ export default function ViewColumnBrush(props) {
                         </svg>
                         : null}
                     {/* Close Button */}
-                    <svg className={"chw-button-sm chw-button-middle"}
+                    <svg className={"hm-button-sm hm-button-middle"}
                         style={{ height: "100%" }}
                         onClick={() => onViewportRemove(viewportTrack.id)} 
                         viewBox={CLOSE.viewBox}>

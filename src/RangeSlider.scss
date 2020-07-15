@@ -1,14 +1,14 @@
-.chw-range-slider-container {
+.hm-range-slider-container {
     display: flex;
     flex-direction: row;
-    .chw-range-slider {
+    .hm-range-slider {
         position: relative;
         margin-left: 10px;
         margin-right: 10px;
         margin-top: 10px;
     }
-    .chw-range-slider-ruler-bg,
-    .chw-range-slider-ruler-fg {
+    .hm-range-slider-ruler-bg,
+    .hm-range-slider-ruler-fg {
         background: lightgray;
         height: 7px;
         width: 100%;
@@ -16,27 +16,27 @@
         border-radius: 3px;
         position: absolute;
     }
-    .chw-range-slider-ruler-bg {
+    .hm-range-slider-ruler-bg {
         background: lightgray;
     }
-    .chw-range-slider-ruler-fg {
+    .hm-range-slider-ruler-fg {
         background: #337ab7;
     }
-    .chw-range-slider-mover-left,
-    .chw-range-slider-mover-right {
+    .hm-range-slider-mover-left,
+    .hm-range-slider-mover-right {
         background: gray;
         border: 1px solid white;
         border-radius: 16px;
         position: absolute;
         cursor: ew-resize;
     }
-    .chw-range-input {
+    .hm-range-input {
         width: 30px;
         margin-right: 6px;
         border: none;
         border-bottom: solid 1px lightgray;
     }
-    .chw-range-input:focus{
+    .hm-range-input:focus{
         outline: none;
     }
 }
