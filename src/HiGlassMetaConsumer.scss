@@ -1,17 +1,17 @@
-.chw-root {
+.hm-root {
     position: relative;
     display: block;
     width: auto;
-    height: auto;
+    height: 100%;
     text-align: left;
 }
 
-.chw-hidden {
+.hm-hidden {
     display: none;
 }
 
-.chw-button-sm-container-horizontal,
-.chw-button-sm-container-vertical {
+.hm-button-sm-container-horizontal,
+.hm-button-sm-container-vertical {
     position: absolute;
     border-radius: 2.5px;
     background: white;
@@ -19,55 +19,55 @@
     box-shadow: 0 0 0 1px rgba(0,0,0,.05),0 0 3px 0 rgba(0,0,0,.1);
     display: flex;
 }
-.chw-button-sm-container-horizontal {
+.hm-button-sm-container-horizontal {
     flex-direction: row;
 }
-.chw-button-sm-container-vertical {
+.hm-button-sm-container-vertical {
     flex-direction: column;
 }
-.chw-button-sm-container-horizontal:hover,
-.chw-button-sm-container-vertical:hover {
+.hm-button-sm-container-horizontal:hover,
+.hm-button-sm-container-vertical:hover {
     opacity: 1;
 }
 
-.chw-button,
-.chw-button-sm,
-.chw-button-sm-hl,
-.chw-button-lg {
+.hm-button,
+.hm-button-sm,
+.hm-button-sm-hl,
+.hm-button-lg {
     padding: 4px;
     cursor: pointer;
     border-radius: 2.5px;
     transition: background .15s ease, color .15s ease stroke .15s ease, color .15s ease;
 }
-.chw-button-sm-hl {
+.hm-button-sm-hl {
     color: #b12929;
 }
-.chw-button,
-.chw-button-drag {
+.hm-button,
+.hm-button-drag {
     height: 25px;
     width: 25px;
 }
-.chw-button-sm,
-.chw-button-sm-hl {
+.hm-button-sm,
+.hm-button-sm-hl {
     height: 20px;
     width: 20px;
 }
-.chw-button-lg {
+.hm-button-lg {
     height: 35px;
     width: 35px;
 }
-.chw-button:hover,
-.chw-button-sm:hover,
-.chw-button-sm-hl:hover,
-.chw-button-lg:hover {
+.hm-button:hover,
+.hm-button-sm:hover,
+.hm-button-sm-hl:hover,
+.hm-button-lg:hover {
     color: #fff;
     background: #337ab7;
     opacity: 1;
 }
-.chw-button-static {
+.hm-button-static {
     pointer-events: none;
 }
-.chw-button-drag {
+.hm-button-drag {
     box-sizing: border-box;
     display: flex;
     align-items: center;
@@ -80,19 +80,19 @@
         background: #bbb;
     }
 }
-.chw-button-middle {
+.hm-button-middle {
     border-radius: 0;
 }
-.chw-button-left {
+.hm-button-left {
     border-radius: 2.5px 0 0 2.5px;
 }
-.chw-button-right {
+.hm-button-right {
     border-radius: 0 2.5px 2.5px 0;
 }
-.chw-button-top {
+.hm-button-top {
     border-radius: 2.5px 2.5px 0 0;
 }
-.chw-button-bottom {
+.hm-button-bottom {
     border-radius: 0 0 2.5px 2.5px;
 }
 

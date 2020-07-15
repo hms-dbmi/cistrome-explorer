@@ -21,7 +21,7 @@ import { getAggregatedRowInfo } from './utils/select-rows.js';
  * @prop {function} onHighlightRows The function to call upon a highlight interaction.
  * @prop {function} onZoomRows The function to call upon a vertical zoom interaction.
  * @prop {function} onFilterRows The function to call upon a filer interaction.
- * @prop {function} onMetadataLoad The function to call upon rowInfo is set to Context.
+ * @prop {function} onMetadataInit The function to call upon rowInfo being initially set to Context.
  * @prop {boolean} isWheelListening Whether or not to listen for wheel events for vertical zooming.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
@@ -36,7 +36,7 @@ export default function TrackWrapper(props) {
         onHighlightRows,
         onZoomRows,
         onFilterRows,
-        onMetadataLoad,
+        onMetadataInit,
         isWheelListening,
         drawRegister
     } = props;
@@ -47,10 +47,9 @@ export default function TrackWrapper(props) {
 
     useEffect(() => {
         if(shouldCallOnMetadataLoad) {
-            onMetadataLoad();
+            onMetadataInit();
         }
     }, [shouldCallOnMetadataLoad, multivecTrackViewId, multivecTrackTrackId]);
-    
 
     // All hooks must be above this return statement, since they need to be executed in the same order.
     if(!multivecTrack || !multivecTrack.tilesetInfo || !multivecTrack.tilesetInfo.shape) {
@@ -94,15 +93,8 @@ export default function TrackWrapper(props) {
         console.log(e);
     }
 
-    let selectedRows;
-    let highlitRows;
-    try {
-        selectedRows = context.state[multivecTrackViewId][multivecTrackTrackId].selectedRows;
-        highlitRows = context.state[multivecTrackViewId][multivecTrackTrackId].highlitRows;
-    } catch(e) {
-        // pass
-        console.log(e);
-    }
+    const selectedRows = context.state[multivecTrackViewId]?.[multivecTrackTrackId]?.selectedRows;
+    const highlitRows = context.state[multivecTrackViewId]?.[multivecTrackTrackId]?.highlitRows;
 
     // Transformed `rowInfo` after aggregating, filtering, and sorting rows.
     // Each element of `transformedRowInfo` is either a JSON Object or an array of JSON Object
@@ -120,7 +112,7 @@ export default function TrackWrapper(props) {
 
     // console.log("TrackWrapper.render");
     return (
-        <div className="cistrome-hgw-track-wrapper">
+        <div className="hm-track-wrapper">
             {leftAttrs.length !== 0 ? 
                 (<TrackRowInfo
                     rowInfo={aggregatedRowInfo}

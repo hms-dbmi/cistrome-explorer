@@ -192,7 +192,7 @@ export default function CistromeToolkit(props) {
                 className={isReady ? 'api-search-button' : 'api-search-button-disabled'}
                 onClick={onClick}
             >
-                <svg className="chw-button-sm chw-button-static" 
+                <svg className="hm-button-sm hm-button-static" 
                     style={{ top: '.3em', position: 'relative' }}
                     viewBox={SEARCH.viewBox}>
                     <path d={SEARCH.path} fill="currentColor"/>
@@ -441,7 +441,7 @@ export default function CistromeToolkit(props) {
                     {' CistromeDB Toolkit '}
                     <span style={{ position: 'relative', top: 6 }}>
                         <svg
-                            className={'chw-button'}
+                            className={'hm-button'}
                             style={{ color: "gray", background: "none" }}
                             onClick={() => window.open('http://dbtoolkit.cistrome.org')}
                             viewBox={EXTERNAL_LINK.viewBox}
@@ -468,7 +468,7 @@ export default function CistromeToolkit(props) {
                     top: 15
                 }}>
                     <svg
-                        className={'chw-button'}
+                        className={'hm-button'}
                         style={{ color: "gray", background: "none" }}
                         onClick={() => setHeight(window.innerHeight)}
                         viewBox={EXPAND.viewBox}
@@ -485,7 +485,7 @@ export default function CistromeToolkit(props) {
                     top: 15
                 }}>
                     <svg
-                        className={'chw-button'}
+                        className={'hm-button'}
                         style={{ color: "gray", background: "none" }}
                         onClick={() => setIsVisible(false)}
                         viewBox={CLOSE.viewBox}

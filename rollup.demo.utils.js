@@ -1,4 +1,4 @@
-const hgVersion = '1.10.0';
+const hgVersion = '1.10.1';
 const peerScripts = {
     'development': `
         <script crossorigin type="text/javascript" src="https://unpkg.com/react@16/umd/react.development.js"></script>

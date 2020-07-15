@@ -65,20 +65,20 @@ export default function ContextMenu() {
     
         return (
             isSeparator ? 
-                <hr className="chw-context-menu-separator" key={key}/>
-                : <div className={action ? "chw-context-menu-item" : "chw-context-menu-item-title"} key={key}
+                <hr className="hm-context-menu-separator" key={key}/>
+                : <div className={action ? "hm-context-menu-item" : "hm-context-menu-item-title"} key={key}
                     onClick={action}
                     style={{ 
                         display: "flex", 
                         alignItems: "center" 
                     }}>
                     {icon ?
-                        <svg className="chw-button-sm chw-button-static"
+                        <svg className="hm-button-sm hm-button-static"
                             viewBox={icon.viewBox}>
                             <path d={icon.path} fill="currentColor"/>
                         </svg>
                         : action ? 
-                            <svg className="chw-button-sm chw-button-static"/>
+                            <svg className="hm-button-sm hm-button-static"/>
                             : null
                     }
                     {title}
@@ -87,7 +87,7 @@ export default function ContextMenu() {
     }
 
     return (
-        <div className="chw-context-menu-container"
+        <div className="hm-context-menu-container"
             style={{
                 visibility: menuItemData.length === 0 ? "hidden" : "visible",
                 left, top

@@ -1,29 +1,27 @@
 .cistrome-explorer {
     height: 100vh;
     .header-container{
-        font-family: 'Lato', sans-serif;
+        font-family: Helvetica, Arial, sans-serif, "Lato", "Inter", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
         font-weight: normal;
         border-radius: 0px;
-        border-bottom: 2px solid #999;
-        padding-top: 10px;
+        padding-top: 13px;
         margin-bottom: 0px;
-        background: #E5E5E5;
-        height: 50px;
+        background: #4f4f4f;
+        height: 45px;
         .header {
-            width: 50%;
-            margin-left: 25%;
-            font-size: 18px;
+            color: white;
+            font-size: 14px;
             text-align: left;
             padding-left: 15px;
             padding-right: 15px;
             .cisvis-title {
-                color: #666;
                 font-weight: bold;
-                font-family: "Inter", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+                text-transform: uppercase;
             }
             .viewconf-options {
+                color: black;
                 margin-left: 10px;
-                font-size: 14px;
+                font-size: 10px;
                 select {
                     width: 200px;
                 }
@@ -38,29 +36,43 @@
                     }
                 }
             }
+            .header-control {
+                position: relative;
+                padding-top: 6px;
+                margin-left: 10px;
+                span {
+                    margin-right: 10px;
+                }
+            }
             .header-info {
                 float: right;
                 span {
                     margin-left: 7px;
                 }
+                a {
+                    color: white;
+                }
             }
             @media (max-width: 950px) {
-                width: 100%;
-                margin-left: 0;
-                font-size: 16px;
                 .viewconf-options select {
                     width: 100px;
+                }
+            }
+            @media (max-width: 500px) {
+                .header-control {
+                    display: none;
                 }
             }
         }
     } // End of header-container
     .visualization-container {
         width: 100%;
-        height: calc(100% - 50px);
-        padding-top: 10px;
+        height: calc(100% - 45px);
+        padding-top: 20px;
         overflow-x: auto;
         .visualization {
             border: 0px solid gray;
+            height: calc(100% - 86px); // margin for `viewWrapper`
             width: 50%;
             position: relative;
             margin-left: 25%;

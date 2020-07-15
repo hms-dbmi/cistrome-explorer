@@ -1,4 +1,4 @@
-.chw-filter {
+.hm-filter {
     position: absolute;
     z-index: 2;
     flex-direction: column;
@@ -6,21 +6,21 @@
     background: white;
     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 0 3px 0 rgba(0, 0, 0, 0.075), 0 0 7px 0 rgba(0, 0, 0, 0.05);
     opacity: 0.8;
-    .chw-filter-box {
+    .hm-filter-box {
         width: auto;
         height: auto;
         display: flex;
         align-items: center;
-        .chw-filter-box-input {
+        .hm-filter-box-input {
             margin-right: 6px;
             border: none;
             border-bottom: solid 1px lightgray;
         }
-        .chw-filter-box-input:focus{
+        .hm-filter-box-input:focus{
             outline: none;
         }
     }
-    .chw-filter-suggestions {
+    .hm-filter-suggestions {
         line-height: 14px;
         border-left: 1px solid silver;
         border-right: 1px solid silver;
@@ -37,15 +37,15 @@
         }
     }
 }
-.chw-filter:hover,
-.chw-filter:focus-within {
+.hm-filter:hover,
+.hm-filter:focus-within {
     opacity: 1;
 }
 
-.chw-filter-suggestion-text {
+.hm-filter-suggestion-text {
     cursor: pointer;
 }
 
-.chw-filter-suggestion-text.active-suggestion {
+.hm-filter-suggestion-text.active-suggestion {
     background: rgb(225, 225, 225);
 }

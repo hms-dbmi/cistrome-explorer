@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import { CLOSE, FILTER, RESET, SEARCH, SQUARE_CHECK, SQUARE } from './utils/icons.js';
 import d3 from "./utils/d3.js";
+import debounce from 'lodash/debounce';
 
 import './TrackRowFilter.scss';
 import RangeSlider from "./RangeSlider.js";
@@ -96,8 +97,11 @@ export default function TrackRowFilter(props) {
         if(suggestionIndex === undefined && keyword.length > 0) {
             onChange(keyword);
         }
-        if(suggestionIndex !== undefined && suggestionIndex >= 0 && suggestionIndex < suggestions.length) {
+        else if(suggestionIndex !== undefined && suggestionIndex >= 0 && suggestionIndex < suggestions.length) {
             onChange(suggestions[suggestionIndex]);
+        }
+        else if(suggestionIndex === undefined) {
+            onChange();
         }
     }, [suggestions, suggestionIndex]);
 
@@ -157,7 +161,7 @@ export default function TrackRowFilter(props) {
     }
 
     function onFilterClose() {
-        onChange("");
+        onChange();
         onClose();
         setKeyword("");
         setSuggestionIndex(undefined);
@@ -287,23 +291,23 @@ export default function TrackRowFilter(props) {
 
     return (
         <div
-            className="chw-filter"
+            className="hm-filter"
             style={{
                 display: ((left !== null && top !== null) ? 'flex' : 'none'),
                 left: left - (width + padding * 2) / 2 + offset.x,
                 top: top - (height + padding * 2) - 80 + offset.y,
             }}
         >
-            <div className="chw-filter-box"
+            <div className="hm-filter-box"
                 style={{
                     padding: padding,
                     paddingLeft: '0px'
                 }}>
-                <div ref={moverRef} className="chw-button-drag">
+                <div ref={moverRef} className="hm-button-drag">
                     <div/><div/><div/>
                 </div>
                 {type === "nominal" || type === "link" ?
-                    <svg className="chw-button-sm chw-button-static" 
+                    <svg className="hm-button-sm hm-button-static" 
                         style={{ color: "gray", marginLeft: "0px" }}
                         viewBox={SEARCH.viewBox}>
                         <path d={SEARCH.path} fill="currentColor"/>
@@ -313,7 +317,7 @@ export default function TrackRowFilter(props) {
                 {type === "nominal" || type === "link" ?
                     <input
                         ref={keywordInputRef}
-                        className="chw-filter-box-input"
+                        className="hm-filter-box-input"
                         type="text"
                         name="default name"
                         placeholder="Search"
@@ -334,27 +338,27 @@ export default function TrackRowFilter(props) {
                     />
                 }
                 {type === "quantitative" ?
-                    <svg className="chw-button-sm"
+                    <svg className="hm-button-sm"
                         onClick={onFilterClick} viewBox={FILTER.viewBox}>
                         <title>Filter rows by the range of values</title>
                         <path d={FILTER.path} fill="currentColor"/>
                     </svg>
                     : null
                 }
-                <svg className="chw-button-sm"
+                <svg className="hm-button-sm"
                     onClick={onResetClick} viewBox={type === "quantitative" ? RESET.viewBox : SQUARE_CHECK.viewBox}>
                     <title>Remove all filters</title>
                     <path d={type === "quantitative" ? RESET.path : SQUARE_CHECK.path} fill="currentColor"/>
                 </svg>
                 {type === "nominal" || type === "link" ?
-                    <svg className="chw-button-sm"
+                    <svg className="hm-button-sm"
                         onClick={onUnckeckAllClick} viewBox={SQUARE.viewBox}>
                         <title>Unckeck all categories</title>
                         <path d={SQUARE.path} fill="currentColor"/>
                     </svg>
                     : null
                 }
-                <svg className="chw-button-sm"
+                <svg className="hm-button-sm"
                     onClick={onFilterClose} viewBox={CLOSE.viewBox}>
                     <title>Close filter component</title>
                     <path d={CLOSE.path} fill="currentColor"/>
@@ -362,7 +366,7 @@ export default function TrackRowFilter(props) {
             </div>   
             {type === "nominal" || type === "link" ?
                 <div 
-                    className="chw-filter-suggestions"
+                    className="hm-filter-suggestions"
                     style={{
                         top: (padding + height),
                         left: "45px",
@@ -376,7 +380,7 @@ export default function TrackRowFilter(props) {
                         {suggestions.map((d, i) => (
                             <li
                                 key={d}
-                                className={"chw-filter-suggestion-text " + (i === suggestionIndex ? "active-suggestion" : "")}
+                                className={"hm-filter-suggestion-text " + (i === suggestionIndex ? "active-suggestion" : "")}
                                 onClick={() => onSuggestionEnter(d)}
                                 onMouseEnter={() => setSuggestionIndex(i)}
                                 onMouseLeave={() => setSuggestionIndex(undefined)}

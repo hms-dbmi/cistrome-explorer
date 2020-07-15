@@ -140,7 +140,7 @@ export default function ViewWrapper(props) {
     const brushBarTop = height + 4;
 
     return assembly ? (
-        <div className="cistrome-hgw-view-wrapper">
+        <div className="hm-view-wrapper">
             <div 
                 style={{
                     position: "absolute",
@@ -194,7 +194,7 @@ export default function ViewWrapper(props) {
                         display: "inline-block",
                         pointerEvents: "none"
                     }}>
-                        <svg className={'chw-button-sm'}
+                        <svg className={'hm-button-sm'}
                             style={{ color: "#b7b6b6", verticalAlign: "middle" }}
                             viewBox={ARROW_H.viewBox}>
                             <path d={ARROW_H.path} fill="currentColor"/>

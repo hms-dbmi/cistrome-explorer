@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useMemo, useCallback, useContext } from 'react';
+import React, { forwardRef, useRef, useEffect, useState, useMemo, useCallback, useContext } from 'react';
 import isEqual from 'lodash/isEqual';
 import clamp from 'lodash/clamp';
 
@@ -36,7 +36,7 @@ import {
 } from './utils/viewconf.js';
 import { wrapSvg } from './utils/wrap-svg.js';
 
-import './HiGlassWithMetadataConsumer.scss';
+import './HiGlassMetaConsumer.scss';
 import cloneDeep from 'lodash/cloneDeep';
 import { removeItemFromArray, modifyItemInArray, insertItemToArray } from './utils/array.js';
 
@@ -47,58 +47,100 @@ higlassRegister({
 });
 
 const hgOptionsBase = {
-    bounded: true,
-    pixelPreciseMarginPadding: true,
+    sizeMode: 'bounded', // Stretch the height of HiGlass to its container <div/>
+    pixelPreciseMarginPadding: false,
     containerPaddingX: 0,
     containerPaddingY: 0,
-    sizeMode: 'default'
 };
 
 /**
- * HiGlassWithMetadata passes its props through, and wraps this component with the context provider.
+ * HiGlassMeta passes its props through, and wraps this component with the context provider.
  * @prop {object} viewConfig A HiGlass viewConfig object.
  * @prop {(object|object[])} options Options for the wrapper component.
- * @prop {function} onViewConfigChange A function to call upon change of the HiGlass view config. Optional.
+ * @prop {function} onViewChanged A function to call upon change of the view config and option. Optional.
  * @prop {function} onGenomicIntervalSearch A function to call upon searching for TFs by using the selected interval. Optional.
  */
-export default function HiGlassWithMetadataConsumer(props) {
+const HiGlassMetaConsumer = forwardRef((props, ref) => {
 
     const {
-        viewConfig,
-        options: optionsRaw,
-        onViewConfigChange: onViewConfigChangeProp,
-        onGenomicIntervalSearch
+        viewConfig: baseViewConfig,
+        options: baseOptions,
+        onViewChanged: onViewChangedCallback,
+        onGenomicIntervalSearch: onGenomicIntervalSearchCallback
     } = props;
 
     const hgRef = useRef();
     const drawRef = useRef({});
 
-    const [options, setOptions] = useState({});
-    const [muiltivecTrackIds, setMultivecTrackIds] = useState([]);
+    const [options, setOptions] = useState(processWrapperOptions(baseOptions));
+    const [multivecTrackIds, setMultivecTrackIds] = useState([]);
     const [viewportTrackIds, setViewportTrackIds] = useState({});
     const [isWheelListening, setIsWheelListening] = useState(false);
     
     const context = useContext(InfoContext);
 
-    // Set initial sorting, filtering, and highlighting.
-    const onMetadataLoad = useCallback((viewId, trackId) => {
+    // HiGlassMeta APIs that can be called outside the library.
+    useEffect(() => {
+        ref.current = {
+            api: {
+                onOptions: (newOptions) => setOptions(processWrapperOptions(newOptions))
+            }
+        }
+    }, [ref]);
+
+    // Initialize instances when we receive a new demo.
+    useEffect(() => {
+        setMultivecTrackIds([]);
+        setViewportTrackIds({});
+        setOptions(processWrapperOptions(baseOptions));
+    }, [baseOptions, baseViewConfig]);
+    
+    // Call a callback function when `options` changed.
+    useEffect(() => {
+        if(onViewChangedCallback) {
+            onViewChangedCallback({ 
+                options: JSON.parse(JSON.stringify(options))
+                // ... add more here
+            });
+        }
+    }, [options]);
+    
+    useEffect(() => {
+        // Update Context based on the new options
+        multivecTrackIds.forEach(({ viewId, trackId }) => {
+            setMetadataToContext(viewId, trackId);
+        });
+    }, [options]);
+
+    // This function stores `selectedRows` and `highlitRows` to the context
+    // based on the updated options.
+    const setMetadataToContext = useCallback((viewId, trackId) => {
         if(!context.state[viewId] || !context.state[viewId][trackId]) {
+            // This means row information for this track is not yet loaded,
+            // so we cannot store any additional information now.
             return;
         }
-        const trackOptions = getTrackWrapperOptions(options, viewId, trackId);
         const rowInfo = context.state[viewId][trackId].rowInfo;
+        const trackOptions = getTrackWrapperOptions(options, viewId, trackId);
 
         // Aggregate, filter, and sort
-        const newSelectedRows = selectRows(rowInfo, trackOptions);
-        setTrackSelectedRows(viewId, trackId, newSelectedRows);
+        const newSelectedRows = selectRows(rowInfo, trackOptions); 
+        if(!isEqual(newSelectedRows, context.state[viewId][trackId].selectedRows)) {
+            // Update context only when there is any actual changes
+            setSelectedRowsToViewConfig(viewId, trackId, newSelectedRows);
+            setSelectedRows(viewId, trackId, newSelectedRows);
+        }
         
         // Highlight
+        let newHighlitRows = undefined; // `undefined` resets the hightlighting
         if(trackOptions.rowHighlight) {
             const { field, type } = trackOptions.rowHighlight;
-            const condition = type === "nominal" ? 
-                trackOptions.rowHighlight.contains :
-                trackOptions.rowHighlight.range;
-            const newHighlitRows = highlightRowsFromSearch(rowInfo, field, type, condition, trackOptions);
+            const highlightKey = getHighlightKeyByFieldType(type, condition);
+            const condition = trackOptions.rowHighlight[highlightKey];
+            newHighlitRows = highlightRowsFromSearch(rowInfo, field, type, condition, trackOptions);
+        }
+        if(!isEqual(newHighlitRows, context.state[viewId][trackId].highlitRows)) {
+            // Update context only when there is any actual changes
             setHighlitRows(viewId, trackId, newHighlitRows);
         }
     }, [options]);
@@ -118,13 +160,16 @@ export default function HiGlassWithMetadataConsumer(props) {
             newViewportTrackIds[viewId] = getSiblingVPHTrackIdsFromViewConfig(newViewConfig, viewId);
         });
 
+        // Get selected rows from the view config and update context.
         for(let trackIds of newTrackIds) {
             const newSelectedRows = getHMSelectedRowsFromViewConfig(newViewConfig, trackIds.viewId, trackIds.trackId);
             if(
-                !context.state[trackIds.viewId] 
+                ! context.state[trackIds.viewId] 
                 || !context.state[trackIds.viewId][trackIds.trackId] 
                 || !isEqual(newSelectedRows, context.state[trackIds.viewId][trackIds.trackId].selectedRows)
             ) {
+                // This must not force re-rendering React components since we might be in the 
+                // middle of a rendering process by a `state` change.
                 context.dispatch({
                     type: ACTION.SELECT_ROWS,
                     viewId: trackIds.viewId,
@@ -174,22 +219,27 @@ export default function HiGlassWithMetadataConsumer(props) {
     const addNewTrack = useCallback((trackDef, viewId, position) => {
         const currViewConfig = hgRef.current.api.getViewConfig();
         const newViewConfig = addTrackDefToViewConfig(currViewConfig, trackDef, viewId, position);
-        hgRef.current.api.setViewConfig(newViewConfig).then(() => {
-            onViewConfig(newViewConfig);
+        hgRef.current.api.setViewConfig(newViewConfig);
+    }, [hgRef]);
+
+    const setSelectedRowsToViewConfig = useCallback((viewId, trackId, selectedRows) => {
+        const currViewConfig = hgRef.current.api.getViewConfig();
+        const newViewConfig = updateViewConfigOnSelectRowsByTrack(currViewConfig, selectedRows, viewId, trackId);
+        hgRef.current.api.setViewConfig(newViewConfig);
+    }, [hgRef]);
+    
+    const setSelectedRows = useCallback((viewId, trackId, selectedRows) => {
+        context.dispatch({
+            type: ACTION.SELECT_ROWS_RERENDER,
+            viewId,
+            trackId,
+            selectedRows
         });
     }, [hgRef]);
 
-    const setTrackSelectedRows = useCallback((viewId, trackId, selectedRows) => {
-        const currViewConfig = hgRef.current.api.getViewConfig();
-        const newViewConfig = updateViewConfigOnSelectRowsByTrack(currViewConfig, selectedRows, viewId, trackId);
-        hgRef.current.api.setViewConfig(newViewConfig).then(() => {
-            onViewConfig(newViewConfig);
-        });
-    }, [hgRef]);
-    
     const setHighlitRows = useCallback((viewId, trackId, highlitRows) => {
         context.dispatch({
-            type: ACTION.HIGHLIGHT_ROWS,
+            type: ACTION.HIGHLIGHT_ROWS_RERENDER,
             viewId,
             trackId,
             highlitRows
@@ -204,7 +254,7 @@ export default function HiGlassWithMetadataConsumer(props) {
     // Clear the drawRegister object when the options prop changes.
     useEffect(() => {
         drawRef.current = {};
-    }, [drawRef, optionsRaw]);
+    }, [drawRef, baseOptions]);
 
     // Listen for the `createSVG` event.
     useEffect(() => {
@@ -218,24 +268,14 @@ export default function HiGlassWithMetadataConsumer(props) {
     const onSortRows = useCallback((viewId, trackId, field, type, order) => {
         const newRowSort = [ { field, type, order } ];
         const newOptions = updateWrapperOptions(options, newRowSort, "rowSort", viewId, trackId, { isReplace: true });
-        
-        const trackOptions = getTrackWrapperOptions(newOptions, viewId, trackId);
-        const newSelectedRows = selectRows(context.state[viewId][trackId].rowInfo, trackOptions);
-        
-        setTrackSelectedRows(viewId, trackId, newSelectedRows);
         setOptions(newOptions);
     }, [options]);
 
     // Callback function for searching and highlighting.
     const onHighlightRows = useCallback((viewId, trackId, field, type, condition) => {
         const highlightKey = getHighlightKeyByFieldType(type, condition);
-        const newRowHighlight = { field, type, [highlightKey]: condition };
+        const newRowHighlight = condition ? { field, type, [highlightKey]: condition } : {};
         const newOptions = updateWrapperOptions(options, newRowHighlight, "rowHighlight", viewId, trackId, { isReplace: true });
-        const trackOptions = getTrackWrapperOptions(newOptions, viewId, trackId);
-
-        // Notice: Highlighting options are specified only in the wrapper options.
-        const newHighlitRows = highlightRowsFromSearch(context.state[viewId][trackId].rowInfo, field, type, condition, trackOptions);
-        setHighlitRows(viewId, trackId, newHighlitRows);
         setOptions(newOptions);
     }, [options]);
 
@@ -302,14 +342,8 @@ export default function HiGlassWithMetadataConsumer(props) {
         }
         
         let newOptions = updateWrapperOptions(options, newSubOptions, "rowFilter", viewId, trackId, { isReplace: true });
-        newOptions = updateWrapperOptions(newOptions, undefined, "rowHighlight", viewId, trackId, { isReplace: true });
-        newOptions = updateWrapperOptions(newOptions, undefined, "rowZoom", viewId, trackId, { isReplace: true });
-
-        const trackOptions = getTrackWrapperOptions(newOptions, viewId, trackId);
-        const newSelectedRows = selectRows(context.state[viewId][trackId].rowInfo, trackOptions);
-        
-        setHighlitRows(viewId, trackId, undefined);
-        setTrackSelectedRows(viewId, trackId, newSelectedRows);
+        newOptions = updateWrapperOptions(newOptions, {}, "rowHighlight", viewId, trackId, { isReplace: true });
+        newOptions = updateWrapperOptions(newOptions, {}, "rowZoom", viewId, trackId, { isReplace: true });
         setOptions(newOptions);
     }, [options]);
 
@@ -339,7 +373,7 @@ export default function HiGlassWithMetadataConsumer(props) {
         const newSelectedRows = selectRows(context.state[viewId][trackId].rowInfo, newTrackOptions);
 
         setHighlitRows(viewId, trackId, undefined); // TODO: figure out how to update highlit rows y
-        setTrackSelectedRows(viewId, trackId, newSelectedRows);
+        setSelectedRowsToViewConfig(viewId, trackId, newSelectedRows);
         setOptions(newWrapperOptions);
     }, [options]);
 
@@ -384,21 +418,16 @@ export default function HiGlassWithMetadataConsumer(props) {
     }, [options]);
 
     // Callback function for adding a BigWig track.
-    const onAddBigWigTrack = useCallback((server, tilesetUid, position) => {
-        if(muiltivecTrackIds && muiltivecTrackIds.length !== 0 && muiltivecTrackIds[0].viewId) {
-            addNewTrack({
-                type: 'horizontal-bar',
-                server,
-                tilesetUid,
-                height: 20,
-            }, muiltivecTrackIds[0].viewId, position);
-        }
-    }, [muiltivecTrackIds]);
-
-    // Do initial processing of the options prop.
-    useEffect(() => {
-        setOptions(processWrapperOptions(optionsRaw));
-    }, [optionsRaw]);
+    const onAddBigWigTrack = useCallback((server, tilesetUid, position) => {		
+        if(multivecTrackIds && multivecTrackIds.length !== 0 && multivecTrackIds[0].viewId) {		
+            addNewTrack({		
+                type: 'horizontal-bar',		
+                server,		
+                tilesetUid,		
+                height: 20,		
+            }, multivecTrackIds[0].viewId, position);		
+        }		
+    }, [multivecTrackIds]);
 
     // Destroy the context menu upon any click.
     useEffect(() => {
@@ -432,37 +461,38 @@ export default function HiGlassWithMetadataConsumer(props) {
         hgRef.current.api.on('viewConfig', (newViewConfigString) => {
             const newViewConfig = JSON.parse(newViewConfigString);
             onViewConfig(newViewConfig);
-            onViewConfigChangeProp(newViewConfigString);
         });         
 
         return () => hgRef.current.api.off('viewConfig');
-    }, [hgRef, onViewConfigChangeProp]);
+    }, [hgRef]);
 
     // We only want to render HiGlass once.
     const hgComponent = useMemo(() => {
         const hgOptions = {
             ...hgOptionsBase,
             onViewConfLoaded: () => {
-                onViewConfig(viewConfig);
+                // This is called only once and is not duplicately called 
+                // with `on('viewConfig')` API.
+                onViewConfig(baseViewConfig);
             }
         };
 
         console.log("HiGlassComponent.render");
         return (
             <HiGlassComponent
-                viewConfig={viewConfig}
+                viewConfig={baseViewConfig}
                 options={hgOptions}
                 zoomFixed={false}
                 ref={hgRef}
             />
         );
-    }, [viewConfig]);
+    }, [baseViewConfig]);
 
     //console.log("HiGlassWithMetadataConsumer.render");
     return (
-        <div className="chw-root">
+        <div className="hm-root">
             {hgComponent}
-            {muiltivecTrackIds.map(({ viewId, trackId, trackTilesetId }, i) => (
+            {multivecTrackIds.map(({ viewId, trackId, trackTilesetId }, i) => (
                 <TrackWrapper
                     key={i}
                     isWheelListening={isWheelListening}
@@ -486,38 +516,36 @@ export default function HiGlassWithMetadataConsumer(props) {
                     onZoomRows={(y, deltaY, deltaMode) => {
                         onZoomRows(viewId, trackId, y, deltaY, deltaMode);
                     }}
-                    onMetadataLoad={() => {
-                        onMetadataLoad(viewId, trackId);
+                    onMetadataInit={() => {
+                        setMetadataToContext(viewId, trackId);
                     }}
                     drawRegister={drawRegister}
                 />
             ))}
-            {Array.from(new Set(muiltivecTrackIds.map(d => d.viewId))).map((viewId, i) => (
+            {Array.from(new Set(multivecTrackIds.map(d => d.viewId))).map((viewId, i) => (
                 <ViewWrapper
                     key={i}
                     viewBoundingBox={getViewBoundingBox(viewId)}
                     viewportTracks={viewportTrackIds[viewId] ? viewportTrackIds[viewId].map(d => getTrackObject(viewId, d.trackId)) : []}
-                    multivecTrack={getTrackObject(viewId, muiltivecTrackIds.filter(d => d.viewId === viewId)[0].trackId)}
+                    multivecTrack={getTrackObject(viewId, multivecTrackIds.filter(d => d.viewId === viewId)[0].trackId)}
                     onSelectGenomicInterval={(startProp, endProp, uid) => {
                         const currViewConfig = hgRef.current.api.getViewConfig();
                         const newViewConfig = updateViewConfigOnSelectGenomicInterval(currViewConfig, viewId, startProp, endProp, uid);
-                        hgRef.current.api.setViewConfig(newViewConfig).then(() => {
-                            onViewConfig(newViewConfig);
-                        });
+                        hgRef.current.api.setViewConfig(newViewConfig);
                     }}
                     onViewportRemove={(viewportId) => {
                         const currViewConfig = hgRef.current.api.getViewConfig();
                         const newViewConfig = removeViewportFromViewConfig(currViewConfig, viewId, viewportId);
-                        hgRef.current.api.setViewConfig(newViewConfig).then(() => {
-                            onViewConfig(newViewConfig);
-                        });
+                        hgRef.current.api.setViewConfig(newViewConfig);
                     }}
-                    onGenomicIntervalSearch={onGenomicIntervalSearch}
+                    onGenomicIntervalSearch={onGenomicIntervalSearchCallback}
                     drawRegister={drawRegister}
                 />
             ))}
-            <Tooltip />
+            <Tooltip/>
             <ContextMenu/>
         </div>
     );
-}
+});
+
+export default HiGlassMetaConsumer;

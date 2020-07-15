@@ -246,19 +246,19 @@ export function getHighlightKeyByFieldType(type, condition) {
 
 /**
  * Validate the HiGlassWithMetadata `options` prop.
- * @param {(object|object[]|null)} optionsRaw The raw value of the options prop.
+ * @param {(object|object[]|null)} options The raw value of the options prop.
  * @returns {boolean} True if the options prop value was valid.
  */
-export function validateWrapperOptions(optionsRaw) {
+export function validateWrapperOptions(options) {
     let validate;
-    if(Array.isArray(optionsRaw)) {
+    if(Array.isArray(options)) {
         validate = new Ajv({ extendRefs: true }).compile(optionsArraySchema);
-    } else if(typeof optionsRaw === "object") {
+    } else if(typeof options === "object") {
         validate = new Ajv({ extendRefs: true }).compile(optionsObjectSchema);
-    } else if(!optionsRaw) {
+    } else if(!options) {
         return true;
     }
-    const valid = validate(optionsRaw);
+    const valid = validate(options);
 
     if (validate.errors) {
         console.warn(JSON.stringify(validate.errors, null, 2));
@@ -267,53 +267,59 @@ export function validateWrapperOptions(optionsRaw) {
     return valid;
 }
 
+export function isProcessedWrapperOptions(options) {
+    // TODO: We can make a json schema for the processed options
+    // to more thoroughly check if this `options` is processed one.
+    
+    // `DEFAULT_OPTIONS_KEY` is always included in the processed wrapper options, but not in raw options.
+    return Object.keys(options).indexOf(DEFAULT_OPTIONS_KEY) !== -1;
+}
 /**
- * Process the HiGlassWithMetadata `options` prop by mapping track IDs to objects containing values for all possible option attributes.
- * @param {(object|object[]|null)} optionsRaw The raw value of the options prop.
+ * Process the HiGlassMeta `options` prop by mapping track IDs to objects containing values for all possible option attributes.
+ * @param {(object|object[]|null)} options The raw value of the options prop.
  * @returns {object} A processed options object, mapping track IDs to options objects, and merging with defaults.
  */
-export function processWrapperOptions(optionsRaw) {
-
-    // Important Descriptions about Wrapper Options (i.e., optionsRaw):
-    //  * Single 'view' can contain multiple 'tracks,' but not vice versa.
-    //  * Unlike HiGlass View Config, individual options for each combination of {viewId, trackId} are stored in an 1D array of JSON objects,
-    //    instead of using a nested format.
-    //  * Both the viewId and trackId or only a trackId can be DEAULT_OPTIONS_KEY (i.e., only the viewId cannot be DEFAULT_OPTIONS_KEY).
-    //  * An option of both viewId and trackId being DEFAULT_OPTIONS_KEY is a global option, which affects to any other tracks in any views.
-    //  * An option of only a trackId being DEFAULT_OPTIONS_KEY is a track-global option, which affects to any tracks in a certain view.
-    //  * Wrapper options may or may not contain options for all of the individual {viewId, trackId} combinations.
+export function processWrapperOptions(options) {
+    if(isProcessedWrapperOptions(options)) {
+        // This means we do not have to process the options.
+        return options;
+    }
 
     // Set up the default options:
-    const options = {
+    const newOptions = {
         [DEFAULT_OPTIONS_KEY]: {
-            rowInfoAttributes: []
+            rowInfoAttributes: [],
+            rowFilter: [],
+            rowSort: [],
+            rowHighlight: {},
+            rowZoom: {},
         }
     };
 
     // Validate the raw options:
-    const valid = validateWrapperOptions(optionsRaw);
+    const valid = validateWrapperOptions(options);
     if(!valid) {
         console.warn("Invalid Wrapper Options in processWrapperOptions().");
-        return options;
+        return newOptions;
     }
 
     // Process the raw options by merging into the processed options object:
-    if(Array.isArray(optionsRaw)) {
+    if(Array.isArray(options)) {
         // Check for global options.
-        const globalDefaults = optionsRaw.find(o => (o.viewId === DEFAULT_OPTIONS_KEY && o.trackId === DEFAULT_OPTIONS_KEY));
+        const globalDefaults = options.find(o => (o.viewId === DEFAULT_OPTIONS_KEY && o.trackId === DEFAULT_OPTIONS_KEY));
         if(globalDefaults) {
-            options[DEFAULT_OPTIONS_KEY] = merge(
-                cloneDeep(options[DEFAULT_OPTIONS_KEY]), 
+            newOptions[DEFAULT_OPTIONS_KEY] = merge(
+                cloneDeep(newOptions[DEFAULT_OPTIONS_KEY]), 
                 omit(globalDefaults, ['viewId', 'trackId'])
             );
         }
 
         // Check for view-specific, track-global options.
-        optionsRaw.forEach((trackOptions) => {
+        options.forEach((trackOptions) => {
             if(trackOptions.viewId !== DEFAULT_OPTIONS_KEY && trackOptions.trackId === DEFAULT_OPTIONS_KEY) {
-                options[trackOptions.viewId] = {
+                newOptions[trackOptions.viewId] = {
                     [DEFAULT_OPTIONS_KEY]: merge(
-                        cloneDeep(options[DEFAULT_OPTIONS_KEY]), 
+                        cloneDeep(newOptions[DEFAULT_OPTIONS_KEY]), 
                         omit(trackOptions, ['viewId', 'trackId'])
                     )
                 };
@@ -321,24 +327,24 @@ export function processWrapperOptions(optionsRaw) {
         });
 
         // Check for view-specific and track-specific options.
-        optionsRaw.forEach((trackOptions) => {
+        options.forEach((trackOptions) => {
             if(trackOptions.viewId !== DEFAULT_OPTIONS_KEY && trackOptions.trackId !== DEFAULT_OPTIONS_KEY) {
-                if(!options[trackOptions.viewId]) {
-                    options[trackOptions.viewId] = {
-                        [DEFAULT_OPTIONS_KEY]: cloneDeep(options[DEFAULT_OPTIONS_KEY])
+                if(!newOptions[trackOptions.viewId]) {
+                    newOptions[trackOptions.viewId] = {
+                        [DEFAULT_OPTIONS_KEY]: cloneDeep(newOptions[DEFAULT_OPTIONS_KEY])
                     };
                 }
-                options[trackOptions.viewId][trackOptions.trackId] = merge(
-                    cloneDeep(options[trackOptions.viewId][DEFAULT_OPTIONS_KEY]), 
+                newOptions[trackOptions.viewId][trackOptions.trackId] = merge(
+                    cloneDeep(newOptions[trackOptions.viewId][DEFAULT_OPTIONS_KEY]), 
                     omit(trackOptions, ['viewId', 'trackId'])
                 );
             }
         });
-    } else if(typeof optionsRaw === "object") {
-        options[DEFAULT_OPTIONS_KEY] = merge(cloneDeep(options[DEFAULT_OPTIONS_KEY]), optionsRaw);
+    } else if(typeof options === "object") {
+        newOptions[DEFAULT_OPTIONS_KEY] = merge(cloneDeep(newOptions[DEFAULT_OPTIONS_KEY]), options);
     }
 
-    return options;
+    return newOptions;
 }
 
 /**

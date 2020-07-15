@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import pkg from '../../package.json';
 
-import { HiGlassWithMetadata } from '../index.js';
+import { HiGlassMeta } from '../index.js';
 import CistromeToolkit from './CistromeToolkit.js';
 
-import { TABLE } from '../utils/icons.js';
+import { UNDO, REDO, TABLE, DOCUMENT, GITHUB } from '../utils/icons.js';
 
 import hgDemoViewConfig1 from '../viewconfigs/horizontal-multivec-1.json';
 import hgDemoViewConfig1b from '../viewconfigs/horizontal-multivec-1b.json';
@@ -18,6 +18,8 @@ import hgDemoViewConfig10 from '../viewconfigs/horizontal-multivec-10.json';
 import hgDemoViewConfigApril2020 from '../viewconfigs/meeting-2020-04-29.json';
 
 import './CistromeExplorer.scss';
+import { diffViewOptions } from '../utils/view-history';
+import diff from 'deep-diff';
 
 const demos = {
     "H3K27ac Demo (1 View, Center Track)": {
@@ -250,17 +252,76 @@ const demos = {
     }
 };
 
-function onViewConfigChange(viewConfigString) {
-    console.log("View config changed");
-}
-
 export default function CistromeExplorer() {
     
+    const hmRef = useRef();
+
     const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[0]);
     
+    // Undo and redo
+    const [undoable, setUndoable] = useState(false);
+    const [redoable, setRedoable] = useState(false);
+
+    // History of view updates
+    const MAX_HISTORY_LENGTH = 50;  // How many previous views should be recorded?
+    const [viewHistory, setViewHistory] = useState([{
+        // TODO: This variable should contain additional information to support the full functionality of undo/redu,
+        //       such as viewConfig, use of toolkits, interval selection, gene search
+        //       (e.g., add `viewConfig: Object.values(demos)[0].viewConfig,`).
+        options: Object.values(demos)[0].options
+    }]);
+    const [indexOfCurrentView, setIndexOfCurrentView] = useState(0); // The most recent view will be stored at the index zero.
+
     // Toolkit-related
     const [isToolkitVisible, setIsToolkitVisible] = useState(false);
     const [toolkitParams, setToolkitParams] = useState(undefined);
+
+    // When a user select a different demo, initialize the view history.
+    useEffect(() => {
+        setViewHistory([{
+            options: demos[selectedDemo].options
+        }]);
+        setIndexOfCurrentView(0);
+    }, [selectedDemo]);
+
+    useEffect(() => {
+        setUndoable(indexOfCurrentView !== viewHistory.length - 1);
+        setRedoable(indexOfCurrentView !== 0);
+    }, [viewHistory, indexOfCurrentView]);
+
+    /**
+     * This function is being called when `options` is updated interactively.
+     * @param {object} viewOptions A JSON object that contains updated visualization specs for `HiGlassMeta`.
+     * @param {object} viewoptions.options A JSON object that contains options for the metadata visualizations in `HiGlassMeta`.
+     */
+    function onViewChanged(viewOptions) {        
+        // Make sure not to update the history if there is no difference.
+        if(!diffViewOptions(viewOptions.options, viewHistory[indexOfCurrentView].options)) {
+            return;
+        }
+        // DEBUG: To see the difference between two JSON objects
+        // console.log("View updated", diff.diff(viewOptions, viewHistory[indexOfCurrentView]));
+
+        // Update the view history
+        const newViewHistory = viewHistory.slice();
+        if(indexOfCurrentView !== 0) {
+            // This means a user ever have clicked on the `Undo` button, 
+            // and we want to overwrite recent history.
+            newViewHistory.splice(0, indexOfCurrentView);
+        }
+
+        // Add a recent view at the start of the array.
+        newViewHistory.unshift({
+            options: viewOptions.options
+        });
+
+        // Remove the tail to make the length of the array be less than or equal to the threshold.
+        if(newViewHistory.length > MAX_HISTORY_LENGTH) { 
+            newViewHistory.splice(MAX_HISTORY_LENGTH - 1);
+        }
+        setViewHistory(newViewHistory);
+        setIndexOfCurrentView(0);
+    }
 
     return (
         <div className="cistrome-explorer">
@@ -282,31 +343,73 @@ export default function CistromeExplorer() {
                             ))}
                         </select>
                     </span>
+                    <span className="header-control">
+                        <span 
+                            style={{ 
+                                cursor: undoable ? 'pointer' : 'not-allowed',
+                                color: undoable ? 'white' : '#999'
+                            }} 
+                            onClick={() => {
+                                if(undoable) {
+                                    const newViewIndex = indexOfCurrentView + 1;
+                                    setIndexOfCurrentView(newViewIndex);
+                                    hmRef.current.api.onOptions(viewHistory[newViewIndex].options);
+                                }
+                            }}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
+                                viewBox={UNDO.viewBox}>
+                                <title>Undo</title>
+                                <path fill="currentColor" d={UNDO.path}/>
+                            </svg>
+                            {` Undo (${viewHistory.length - indexOfCurrentView - 1})`}
+                        </span>
+                        <span 
+                            style={{ 
+                                cursor: redoable ? 'pointer' : 'not-allowed',
+                                color: redoable ? 'white' : '#999'
+                            }} 
+                            onClick={() => {
+                                if(redoable) {
+                                    const newViewIndex = indexOfCurrentView - 1;
+                                    setIndexOfCurrentView(newViewIndex);
+                                    hmRef.current.api.onOptions(viewHistory[newViewIndex].options);
+                                }
+                            }}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
+                                viewBox={REDO.viewBox}>
+                                <title>Redo</title>
+                                <path fill="currentColor" d={REDO.path}/>
+                            </svg>
+                            {` Redo (${indexOfCurrentView})`}
+                        </span>
+                    </span>
                     <span className="header-info">
                         <span style={{ cursor: 'pointer' }} onClick={() => 
                             setIsToolkitVisible(!isToolkitVisible)
                         }>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
                                 viewBox={TABLE.viewBox}>
                                 <title>CistromeToolkit</title>
-                                <path fill="#666" d={TABLE.path}/>
+                                <path fill="currentColor" d={TABLE.path}/>
                             </svg>
                         </span>
                         <span>
                             <a href={`${pkg.homepage}/docs/`} target="_blank">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
-                                    viewBox="0 0 1792 1792">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                    viewBox={DOCUMENT.viewBox}>
                                     <title>Documents</title>
-                                    <path fill="#666" d="M1528 1280h-248v248q29-10 41-22l185-185q12-12 22-41zm-280-128h288v-896h-1280v1280h896v-288q0-40 28-68t68-28zm416-928v1024q0 40-20 88t-48 76l-184 184q-28 28-76 48t-88 20h-1024q-40 0-68-28t-28-68v-1344q0-40 28-68t68-28h1344q40 0 68 28t28 68z"/>
+                                    <path fill="currentColor" d={DOCUMENT.path}/>
                                 </svg>
                             </a>
                         </span>
                         <span>
                             <a href={pkg.repository.url} target="_blank">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                    viewBox={GITHUB.viewBox}>
                                     <title>GitHub</title>
-                                    <path fill="#666" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+                                    <path fill="currentColor" d={GITHUB.path}/>
                                 </svg>
                             </a>
                         </span>
@@ -316,10 +419,11 @@ export default function CistromeExplorer() {
 
             <div className="visualization-container">
                 <div className="visualization">
-                    <HiGlassWithMetadata 
+                    <HiGlassMeta
+                        ref={hmRef}
                         viewConfig={demos[selectedDemo].viewConfig}
                         options={demos[selectedDemo].options}
-                        onViewConfigChange={onViewConfigChange}
+                        onViewChanged={onViewChanged}
                         onGenomicIntervalSearch={setToolkitParams}
                     />
                     <CistromeToolkit
