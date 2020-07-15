@@ -14,6 +14,7 @@
     "d3-delaunay": "^5.2.1",
     "higlass-multivec": "github:higlass/higlass-multivec#es-modules-es",
     "higlass-register": "^0.1.0",
+    "js-cookie": "^2.2.1",
     "lodash": "^4.17.15",
     "pubsub-js": "^1.8.0",
     "uuid": "^3.4.0",

@@ -1,3 +1,5 @@
+import Cookies from 'js-cookie'
+
 /*
  * Types for Cistrome DB Toolkit API.
  */
@@ -165,8 +167,6 @@ export function validatePeaksetParams({ assembly, tpeak, bedFile }) {
         msg = "Success";
         success = true;
     }
-    // TODO: We do not support this API yet
-    success = false;
     return { msg, success };
 }
 
@@ -308,26 +308,24 @@ export function requestByGene({ assembly, gene, distance }) {
  * @returns {Promise} On success, promise resolves with the following array: `[rows, columns]`.
  */
 export function requestByPeakset({ assembly, tpeak, bedFile }) {
-    const formData = new FormData();
-    formData.append('species', 'hg38');
-    formData.append('tpeak', '1k');
-    formData.append('factor', 'tf');
-    formData.append('csrfmiddlewaretoken', 'vaL3t70PVyIjBkGuOKPm6dxZkrcXkMim');
-    formData.append('peak', bedFile);
-    formData.append('csrftoken', 'vaL3t70PVyIjBkGuOKPm6dxZkrcXkMim')
 
+    let csrftoken = Cookies.get('csrftoken');
+    console.log(csrftoken);
+
+    const formData = new FormData();
+    formData.append('csrfmiddlewaretoken', 'Xy1sb4N0NM7XUvaMejxinyXOSasJX6mS');
+    formData.append('species', 'hg38');
+    formData.append('factor', 'tf');
+    formData.append('tpeak', '1k');    
+    formData.append('peak', bedFile);
+    
     return fetch('http://dbtoolkit.cistrome.org/api_similar', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            "species": "hg38", "tpeak": "1k", "factor": "tf", "csrfmiddlewaretoken": 'vaL3t70PVyIjBkGuOKPm6dxZkrcXkMim',
-            'peak': bedFile, 'csrftoken': 'vaL3t70PVyIjBkGuOKPm6dxZkrcXkMim'
-        }),
-        // body: formData // Use `FormData` instead.
+        credentials: 'include', // https://stackoverflow.com/a/50388440
+        method: 'post',
+        body: formData,
     })
         .then((response) => {
+            console.log('response', response);
             if (!response.ok) {
                 return new Promise((resolve, reject) => {
                     reject(`Error: ${response.statusText}`);
@@ -336,11 +334,12 @@ export function requestByPeakset({ assembly, tpeak, bedFile }) {
             return response.json();
         })
         .then((data) => {
+            console.log('data', data);
             const keys = Object.keys(data);
 
             return new Promise((resolve, reject) => {
                 if(keys.length === 0) {
-                    reject(`No data found for gene ${gene}`);
+                    reject('No data found for the given bed file');
                 }
                 // Generate data for table.
                 const rows = keys.map(k => data[k]);
@@ -350,6 +349,7 @@ export function requestByPeakset({ assembly, tpeak, bedFile }) {
             });
         })
         .catch(error => {
+            console.log('error', error);
             return new Promise((resolve, reject) => {
                 reject(`Error: ${error.message}`);
             });

@@ -72,7 +72,7 @@ export default function CistromeToolkit(props) {
     const [latestPeaksetParams, setLatestPeaksetParams] = useState({
         assembly: CISTROME_DBTOOLKIT_SPECIES[0],
         tpeak: CISTROME_DBTOOLKIT_PEAK_NUMBERS[0],
-        bedFile: {}
+        bedFile: null
     });
 
     // Ready to call API?
@@ -308,10 +308,7 @@ export default function CistromeToolkit(props) {
                 {/* Search by Peak Set */}
                 <div
                     className={'api-config-view'}
-                    style={{ 
-                        borderLeft: `4px solid ${CISTROME_API_COLORS.PEAKSET}`,
-                        visibility: 'hidden' // TODO: Support Peak Set API
-                    }}
+                    style={{ borderLeft: `4px solid ${CISTROME_API_COLORS.PEAKSET}` }}
                 >
                     <div className='api-title'>Search by Peak Set</div>
                     <div className='api-subtitle'>What factors have a significant binding overlap with your peak set?</div>
