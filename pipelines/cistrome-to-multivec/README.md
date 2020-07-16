@@ -24,7 +24,16 @@ conda env create -f environment.yml
 conda activate cistrome-to-multivec-pipeline
 ```
 
+## Snakemake cluster config
+
+```sh
+mkdir -p ~/.config/snakemake/cistrome-explorer
+cp ./cluster-profile.yml ~/.config/snakemake/cistrome-explorer/config.yml
+```
+
 ## Using parallel hdf5 via h5py and mpi4py
+
+*The following info is outdated, since h5py does not yet work with the parallel version of hdf5 installed on the o2 cluster. In the meantime we can do parallelization by submitting many simultaneous snakemake jobs for each output bigwig file.*
 
 https://docs.h5py.org/en/latest/build.html#building-against-parallel-hdf5
 
