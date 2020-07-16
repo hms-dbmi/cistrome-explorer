@@ -9,7 +9,7 @@ conda activate cistrome-to-multivec-pipeline
 snakemake --cores 2 --config filetype=mv5
 # or, to generate zarr outputs
 snakemake --cores 2 --config filetype=zarr
-# or, if on O2 (replace with your username)
+# or, if on O2 (replace with your O2 username)
 ./submit.sh mv5 my_username
 ```
 
@@ -27,6 +27,19 @@ conda activate cistrome-to-multivec-pipeline
 ```sh
 mkdir -p ~/.config/snakemake/cistrome-explorer
 cp ./cluster-profile.yml ~/.config/snakemake/cistrome-explorer/config.yaml
+```
+
+# Sync output files with s3 bucket
+
+```sh
+# replace with your credentials
+export AWS_ACCESS_KEY_ID="{my_access_key_id}"
+export AWS_SECRET_ACCESS_KEY="{my_secret_access_key}"
+export AWS_DEFAULT_REGION="us-east-1"
+
+# replace with your O2 username details
+# .../users/{first_letter_of_username}/{username}/cistrome-explorer/...
+aws s3 sync /n/scratch3/users/m/mk596/cistrome-explorer/data/processed/ s3://higlass-server/
 ```
 
 
