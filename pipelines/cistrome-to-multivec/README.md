@@ -1,18 +1,16 @@
 
-Generate multivec files from CistromeDB bigWig files:
+# pipelines/cistrome-to-multivec
+
+Generate multivec files from CistromeDB bigWig files.
+
 ```sh
 conda activate cistrome-to-multivec-pipeline
+# to generate multivec outputs
 snakemake --cores 2 --config filetype=mv5
-# or
+# or, to generate zarr outputs
 snakemake --cores 2 --config filetype=zarr
-# or, if on O2
-snakemake --cores 2 --config filetype=mv5 user={your_o2_username}
-```
-
-Ingest the processed multivec files with `higlass-server`:
-```sh
-conda activate higlass-server
-bash higlass_ingest.sh path/to/higlass-server # fill in this path
+# or, if on O2 (replace with your username)
+./submit.sh mv5 my_username
 ```
 
 # Setup
@@ -28,8 +26,9 @@ conda activate cistrome-to-multivec-pipeline
 
 ```sh
 mkdir -p ~/.config/snakemake/cistrome-explorer
-cp ./cluster-profile.yml ~/.config/snakemake/cistrome-explorer/config.yml
+cp ./cluster-profile.yml ~/.config/snakemake/cistrome-explorer/config.yaml
 ```
+
 
 ## Using parallel hdf5 via h5py and mpi4py
 
