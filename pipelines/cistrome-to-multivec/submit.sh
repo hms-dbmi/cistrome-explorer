@@ -10,4 +10,4 @@
 source ~/.bashrc_mark # to load the `conda activate` command
 
 conda activate cistrome-to-multivec-pipeline
-snakemake --profile cistrome-explorer --local-cores 4 --keep-going --config filetype=$1 user=$2
+snakemake --profile cistrome-explorer --keep-going --config filetype=$1 user=$2
