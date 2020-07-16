@@ -39,7 +39,7 @@ export const margin = 5;
 export default function TrackRowInfoVisQuantitativeBar(props) {
     const {
         left, top, width, height,
-        fieldInfo,
+        field, type, title, aggFunction,
         isLeft,
         isShowControlButtons,
         rowInfo,
@@ -60,7 +60,6 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
     const hiddenCanvasRef = useRef();
 
     // Data, layouts and styles
-    const { field, aggFunction } = fieldInfo;
     const isStackedBar = Array.isArray(field);
     const axisHeight = 30;
     const textAreaWidth = 20;
@@ -82,6 +81,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
     let cnt = 1, fields = isStackedBar ? field : [field];
     
     fields.forEach(field => {
+
         transformedRowInfo.forEach((d, i) => {
             const uniqueColor = generateNextUniqueColor(cnt++);
             colorToInfo.push({
@@ -101,14 +101,6 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             height,
             domElement
         });
-
-        let titleText = isStackedBar ? field.join(" + ") : field;
-        if(aggFunction === "count") {
-            // For `count` aggregation function, field name is not important since
-            // we are just counting rows.
-            titleText = "count";
-        }
-
         const isTextLabel = width > minTrackWidth;
 
         if(isStackedBar) {
@@ -210,7 +202,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             });
         }
 
-        drawVisTitle(titleText, { two, isLeft, width, height, titleSuffix });
+        drawVisTitle(title, { two, isLeft, width, height, titleSuffix });
 
         two.update();
         return two.teardown;
@@ -265,7 +257,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                     x: mouseViewportX,
                     y: mouseViewportY,
                     content: <TooltipContent 
-                        title={hoveredInfo.field}
+                        title={(isStackedBar ? `${title}: ${hoveredInfo.field}` : title)}
                         value={numberFormatLong(hoveredInfo.value)}
                         color={hoveredInfo.color}
                     />
@@ -328,7 +320,10 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             <TrackRowInfoControl
                 isLeft={isLeft}
                 isVisible={isShowControlButtons}
-                fieldInfo={fieldInfo}
+                field={field}
+                type={type}
+                title={title}
+                aggFunction={aggFunction}
                 searchTop={top + axisHeight}
                 searchLeft={left}
                 sortAsceButtonHighlit={sortInfo && sortInfo.order === "ascending"}

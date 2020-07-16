@@ -11,6 +11,7 @@ import TrackRowInfoControl from './TrackRowInfoControl.js';
 import { getAggregatedValue } from "./utils/aggregate.js";
 
 const margin = 5;
+const numStates = 3; // undefined, negative, positive
 
 /**
  * Component for visualization of row info URL values.
@@ -31,7 +32,7 @@ const margin = 5;
  * @prop {function} onFilterRows The function to call upon a filter interaction.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
-export default function TrackRowInfoVisLink(props) {
+export default function TrackRowInfoVisComparison(props) {
     const {
         left, top, width, height,
         field, type, title, aggFunction,
@@ -46,12 +47,29 @@ export default function TrackRowInfoVisLink(props) {
         onSortRows,
         onHighlightRows,
         onFilterRows,
-        drawRegister,
     } = props;
 
     const divRef = useRef();
     const canvasRef = useRef();
     const [hoverIndex, setHoverIndex] = useState(null);
+    const [idToClicks, setIdToClicks] = useState({});
+
+    function getRowColor(rowLabel) {
+        if(idToClicks[rowLabel] === 2) {
+            return "#00ff00";
+        } else if(idToClicks[rowLabel] === 1) {
+            return "#ff0000";
+        }
+        return "#dedede";
+    }
+    function getRowState(rowLabel) {
+        if(idToClicks[rowLabel] === 2) {
+            return "positive";
+        } else if(idToClicks[rowLabel] === 1) {
+            return "negative";
+        }
+        return null;
+    }
 
     // Data, layouts and styles
     const minTrackWidth = 40;
@@ -82,45 +100,38 @@ export default function TrackRowInfoVisLink(props) {
             bgRect.fill = "#EBEBEB";
         }
 
-        if(shouldRenderText) {
-            // There is enough height to render the text elements.
-            transformedRowInfo.forEach((info, i) => {
-                const textTop = yScale(i);
-                const textLeft = isLeft ? width - margin : margin;
-                const titleField = title ? title : field;
-                const diplayText = isTextLabel ? aggValue(info, titleField) : "Link";
-                const text = two.makeText(textLeft, textTop + rowHeight/2, width, rowHeight, diplayText);
-                text.fill = "#23527C";
+        transformedRowInfo.forEach((info, i) => {
+            const textTop = yScale(i);
+            const textLeft = isLeft ? width - margin : margin;
+            const rowLabel = aggValue(info, field);
+
+            const rowRect = two.makeRect(0, textTop, width, rowHeight);
+            rowRect.fill = getRowColor(rowLabel);
+            rowRect.stroke = null;
+            rowRect.opacity = 0.7 + (hoverIndex !== null && i === hoverIndex ? 0.3 : 0);
+
+            if(shouldRenderText && isTextLabel) {
+                const text = two.makeText(textLeft, textTop + rowHeight/2, width, rowHeight, rowLabel);
+                text.fill = "#333";
                 text.fontsize = fontSize;
                 text.align = textAlign;
                 text.baseline = "middle";
                 text.overflow = "ellipsis";
-
-                if(hoverIndex !== null && hoverIndex === i) {
-                    // There is both a hovered link and enough height to render text, so also render an underline for the hovered link.
-                    const textDimensions = two.measureText(text);
-                    const textUnderlineLeft = isLeft ? textLeft - textDimensions.width : textLeft;
-                    const textUnderlineTop = textTop + (rowHeight / 2) + (textDimensions.height / 2);
-                    const textUnderline = two.makeLine(textUnderlineLeft, textUnderlineTop, textUnderlineLeft + textDimensions.width, textUnderlineTop);
-                    textUnderline.stroke = "#23527C";
-                    textUnderline.linewidth = 1;
-                }
-            });
-        }
+            }
+        });
         
-
-        drawVisTitle(field, { two, isLeft, width, height, titleSuffix });
+        drawVisTitle(title, { two, isLeft, width, height, titleSuffix });
         
         two.update();
         return two.teardown;
     });
     
-    drawRegister("TrackRowInfoVisLink", draw);
 
     useEffect(() => {
         const canvas = canvasRef.current;
         const div = divRef.current;
         const teardown = draw(canvas);
+        console.log("drew")
 
         d3.select(canvas).on("mousemove", () => {
             const [mouseX, mouseY] = d3.mouse(canvas);
@@ -143,8 +154,8 @@ export default function TrackRowInfoVisLink(props) {
                 x: mouseViewportX,
                 y: mouseViewportY,
                 content: <TooltipContent 
-                    title={title}
-                    value={fieldVal}
+                    title={"Click once to mark negative, twice to mark positive."}
+                    value={fieldVal + (idToClicks[fieldVal] ? ` (${getRowState(fieldVal)})` : '')}
                 />
             });
         });
@@ -155,7 +166,18 @@ export default function TrackRowInfoVisLink(props) {
 
             const y = yScale.invert(mouseY);
             if(y !== undefined) {
-               window.open(transformedRowInfo[y][field]);
+               const info = transformedRowInfo[y];
+               const rowLabel = aggValue(info, field);
+                setIdToClicks(prev => {
+                    const next = Object.assign({}, prev);
+                    if(next[rowLabel] === undefined) {
+                        next[rowLabel] = 1;
+                    } else {
+                        next[rowLabel] = (next[rowLabel] + 1) % numStates;
+                    }
+                    return next;
+                });
+               destroyTooltip();
             }
         });
 
@@ -167,7 +189,7 @@ export default function TrackRowInfoVisLink(props) {
             teardown();
             d3.select(div).on("mouseleave", null);
         };
-    }, [top, left, width, height, transformedRowInfo, hoverIndex]);
+    }, [top, left, width, height, transformedRowInfo, hoverIndex, idToClicks]);
 
     return (
         <div

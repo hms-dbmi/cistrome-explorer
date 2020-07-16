@@ -76,11 +76,11 @@ const baseSchema = {
             "properties": {
                 "field": {
                     "type": ["string", "array"],
-                    "description": "The data field name(s)"
+                    "description": "The data field name(s) as they appear in the metadata JSON object keys."
                 },
                 "type": {
                     "type": "string",
-                    "enum": ["nominal", "quantitative", "url", "tree"],
+                    "enum": ["nominal", "quantitative", "url", "tree", "comparison"],
                     "description": "The data type of a field"
                 },
                 "aggFunction": {
@@ -95,7 +95,7 @@ const baseSchema = {
                 },
                 "title": {
                     "type": "string",
-                    "description": "The name of a data field to alternatively use for displaying urls"
+                    "description": "The title of a data field to display in axis titles and tooltip elements."
                 }
             }
         },

@@ -37,7 +37,7 @@ export const margin = 5;
 export default function TrackRowInfoVisNominalBar(props) {
     const {
         left, top, width, height,
-        fieldInfo,
+        field, type, title, aggFunction,
         isLeft,
         isShowControlButtons,
         rowInfo,
@@ -57,7 +57,6 @@ export default function TrackRowInfoVisNominalBar(props) {
     const [hoverValue, setHoverValue] = useState(null);
 
     // Data, layouts and styles
-    const { field, aggFunction } = fieldInfo;
     const aggValue = d => getAggregatedValue(d, field, "nominal", aggFunction);
 
     const yScale = d3.scaleBand()
@@ -80,7 +79,7 @@ export default function TrackRowInfoVisNominalBar(props) {
             domElement
         });
 
-        const titleText = field;
+        const titleText = title;
         
         const textAreaWidth = width - 20;
         const barAreaWidth = width - textAreaWidth;
@@ -193,7 +192,7 @@ export default function TrackRowInfoVisNominalBar(props) {
                 x: mouseViewportX,
                 y: mouseViewportY,
                 content: <TooltipContent 
-                    title={field}
+                    title={title}
                     value={fieldVal}
                     color={colorScale(fieldVal)}
                 />
@@ -234,7 +233,10 @@ export default function TrackRowInfoVisNominalBar(props) {
             <TrackRowInfoControl
                 isLeft={isLeft}
                 isVisible={isShowControlButtons}
-                fieldInfo={fieldInfo}
+                field={field}
+                type={type}
+                title={title}
+                aggFunction={aggFunction}
                 searchTop={top}
                 searchLeft={left}
                 sortAsceButtonHighlit={sortInfo && sortInfo.order === "ascending"}

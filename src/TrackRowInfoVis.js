@@ -5,12 +5,14 @@ import TrackRowInfoVisNominalBar from './TrackRowInfoVisNominalBar.js';
 import TrackRowInfoVisQuantitativeBar from './TrackRowInfoVisQuantitativeBar.js';
 import TrackRowInfoVisLink from './TrackRowInfoVisLink.js';
 import TrackRowInfoVisDendrogram from './TrackRowInfoVisDendrogram.js';
+import TrackRowInfoVisComparison from './TrackRowInfoVisComparison.js';
 
 const fieldTypeToVisComponent = {
     "nominal": TrackRowInfoVisNominalBar,
     "quantitative": TrackRowInfoVisQuantitativeBar,
     "url": TrackRowInfoVisLink,
-    "tree": TrackRowInfoVisDendrogram
+    "tree": TrackRowInfoVisDendrogram,
+    "comparison": TrackRowInfoVisComparison,
 };
 
 /**
@@ -50,6 +52,19 @@ export default function TrackRowInfoVis(props) {
         drawRegister,
         onWidthChanged
     } = props;
+
+    const { type, field, aggFunction } = fieldInfo;
+
+    let title;
+    if(aggFunction === "count") {
+        title = "Count";
+    } else if(fieldInfo.title) {
+        title = fieldInfo.title;
+    } else if(Array.isArray(field)) {
+        title = field.join(" + ");
+    } else {
+        title = field;
+    }
 
     const minWidth = 40;
     const resizerWidth = 4
@@ -112,11 +127,11 @@ export default function TrackRowInfoVis(props) {
 
     // Determine the title suffix.
     let titleSuffix = "";
-    const sortInfo = rowSort ? rowSort.find(d => d.field === fieldInfo.field) : undefined;
+    const sortInfo = rowSort ? rowSort.find(d => d.field === field) : undefined;
     if(sortInfo) {
         titleSuffix += ` | sorted (${sortInfo.order})`;
     }
-    const filterInfo = rowFilter ? rowFilter.find(d => d.field === fieldInfo.field) : undefined;
+    const filterInfo = rowFilter ? rowFilter.find(d => d.field === field) : undefined;
 
     // Create the resizer element.
     const resizer = useMemo(() => {
@@ -147,7 +162,7 @@ export default function TrackRowInfoVis(props) {
             }}
         >
             {React.createElement(
-                fieldTypeToVisComponent[fieldInfo.type],
+                fieldTypeToVisComponent[type],
                 {
                     left,
                     top: 0,
@@ -155,7 +170,10 @@ export default function TrackRowInfoVis(props) {
                     height,
                     isLeft,
                     isShowControlButtons: isHovering,
-                    fieldInfo,
+                    title: (title || field),
+                    type,
+                    field,
+                    aggFunction,
                     transformedRowInfo,
                     rowInfo,
                     titleSuffix,

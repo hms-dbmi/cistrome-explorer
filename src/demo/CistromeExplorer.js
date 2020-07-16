@@ -27,9 +27,9 @@ const demos = {
         options: {
             rowInfoAttributes: [
                 {field: "Hierarchical Clustering (Average)", type: "tree", position: "left"},
-                {field: "qc_frip", type: "quantitative", position: "left"},
-                {field: "qc_fastqc", type: "quantitative", position: "left"},
-                {field: "Metadata URL", type: "url", position: "left", title: "cid"},
+                {field: "qc_frip", type: "quantitative", position: "left", title: "QC: FRIP"},
+                {field: "qc_fastqc", type: "quantitative", position: "left", title:  "QC: FastQC"},
+                {field: "cid", type: "comparison", position: "left", title: "Compare Positive and Negative"},
                 {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right"},
                 {field: "Cell Type", type: "nominal", position: "right"},
                 {field: "Tissue Type", type: "nominal", position: "right"},
@@ -49,9 +49,7 @@ const demos = {
         options: {
             rowInfoAttributes: [
                 {field: "Hierarchical Clustering (Average)", type: "tree", position: "left"},
-                {field: ["qc_frip", "qc_fastqc"], type: "quantitative", position: "left", aggFunction: "mean"},
-                {field: "qc_frip", type: "quantitative", position: "left", aggFunction: "mean"},
-                {field: "qc_fastqc", type: "quantitative", position: "left", aggFunction: "mean"},
+                {field: ["qc_frip", "qc_fastqc"], title: "QC", type: "quantitative", position: "left", aggFunction: "mean"},
                 {field: "id", type: "quantitative", position: "left", aggFunction: "count"},
                 {field: "Metadata URL", type: "url", position: "left", title: "cid", aggFunction: "mostCommon"},
                 {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right"},
@@ -110,7 +108,7 @@ const demos = {
                 {field: "Hierarchical Clustering (Average)", type: "tree", position: "right"},
                 {field: "Random 3", type: "quantitative", position: "right"},
                 {field: ["Random 1", "Random 2", "Random 3", "Random 4"], type: "quantitative", position: "right"},
-                {field: "Metadata URL", type: "url", position: "right", title: "cid"},
+                {field: "Metadata URL", type: "url", position: "right", title: "Metadata URL"},
                 {field: "Hierarchical Clustering (Ward)", type: "tree", position: "left"},
                 {field: "Cell Type", type: "nominal", position: "left"},
                 {field: "Tissue Type", type: "nominal", position: "left"},
