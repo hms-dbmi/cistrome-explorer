@@ -7,5 +7,7 @@
 #SBATCH -o snakemake-%j.out # file for STDOUT with job ID
 #SBATCH -e snakemake-%j.err # file for STDERR with job ID
 
+source ~/.bashrc_mark # to load the `conda activate` command
+
 conda activate cistrome-to-multivec-pipeline
 snakemake --profile cistrome-explorer --local-cores 4 --keep-going --config filetype=$1 user=$2
