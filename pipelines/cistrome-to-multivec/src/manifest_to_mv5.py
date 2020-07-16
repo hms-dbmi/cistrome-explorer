@@ -90,7 +90,12 @@ def bigwigs_to_multivec(
     row_infos = []
     for metadata_index, metadata_file in enumerate(input_metadata_files):
         with open(metadata_file) as mf:
-            metadata_json = json.load(mf)
+            try:
+                metadata_json = json.load(mf)
+            except Exception as e:
+                print(f"Error loading metadata file: {metadata_file}")
+                print(e)
+                metadata_json = None
         row_info = metadata_json_to_row_info(metadata_json)
         row_infos.append(row_info)
     

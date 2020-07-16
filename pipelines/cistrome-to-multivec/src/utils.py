@@ -28,6 +28,8 @@ def metadata_json_to_row_info(metadata_json):
             return None
         except IndexError:
             return None
+        except TypeError:
+            return None
         return None
 
     # Flatten the metadata object
