@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -c 4 # number of cores
+#SBATCH -c 1 # number of cores
 #SBATCH -N 1 # number of nodes
 #SBATCH -t 1-00:00 # runtime in D-HH:MM format
 #SBATCH -p medium # partition
