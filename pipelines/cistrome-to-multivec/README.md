@@ -39,7 +39,7 @@ export AWS_DEFAULT_REGION="us-east-1"
 
 # replace with your O2 username details
 # .../users/{first_letter_of_username}/{username}/cistrome-explorer/...
-aws s3 sync /n/scratch3/users/m/mk596/cistrome-explorer/data/processed/ s3://higlass-server/
+aws s3 sync /n/scratch3/users/m/mk596/cistrome-explorer/data/processed/ s3://higlass-server/CistromeDB/
 ```
 
 
