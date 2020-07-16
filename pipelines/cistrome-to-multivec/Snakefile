@@ -26,7 +26,7 @@ SAMPLE_METADATA_URL = "http://dc2.cistrome.org/api/inspector?id={cid}"
 
 # Process the config
 #GROUP_NAMES = config["groups"].keys() # TODO: uncomment
-GROUP_NAMES = ['Homo_sapiens__BTAF1__all', 'Homo_sapiens__PHF8__all', 'Homo_sapiens__SMAD3__all', 'Homo_sapiens__H3K27ac__all']
+GROUP_NAMES = [ name for name, group in config["groups"].items() if len(group) < 100 and name[0] == "H" ][0:250]
 
 FILETYPE = config.get("filetype", "mv5")
 OUTFILE_WRAPPER = directory if FILETYPE == "zarr" else (lambda x: x)
@@ -37,6 +37,7 @@ rule all:
         expand(join(PROCESSED_DIR, f"{{group_name}}.multires.{FILETYPE}"), group_name=GROUP_NAMES),
 
 rule manifest_to_outfile:
+    group: "outfile_group"
     input:
         bigwigs=lambda w: expand(join(RAW_DIR, "{cid}.bw"), cid=config["groups"][w.group_name]),
         metadata=lambda w: expand(join(RAW_DIR, "{cid}.metadata.json"), cid=config["groups"][w.group_name]),
@@ -45,7 +46,9 @@ rule manifest_to_outfile:
         OUTFILE_WRAPPER(join(PROCESSED_DIR, f"{{group_name}}.multires.{FILETYPE}"))
     params:
         starting_resolution=1000,
-        script=join(SRC_DIR, f"manifest_to_{FILETYPE}.py")
+        script=join(SRC_DIR, f"manifest_to_{FILETYPE}.py"),
+        rm_input_bigwigs=False
+        # TODO: implement rm_input_bigwigs=True in the python script
     shell:
         """
         python {params.script} \
@@ -55,6 +58,7 @@ rule manifest_to_outfile:
         """
 
 rule bigwigs_to_manifest:
+    group: "outfile_group"
     input:
         bigwigs=lambda w: expand(join(RAW_DIR, "{cid}.bw"), cid=config["groups"][w.group_name]),
         metadata=lambda w: expand(join(RAW_DIR, "{cid}.metadata.json"), cid=config["groups"][w.group_name]),
@@ -64,6 +68,7 @@ rule bigwigs_to_manifest:
         join(SRC_DIR, "bigwigs_to_manifest.py")
 
 rule download_bigwig:
+    group: "outfile_group"
     input:
         join(RAW_DIR, "{cid}.data.json")
     output:
@@ -74,6 +79,7 @@ rule download_bigwig:
         '''
 
 rule download_bigwig_metadata:
+    group: "outfile_group"
     output:
         metadata_json=join(RAW_DIR, "{cid}.metadata.json"),
         data_json=join(RAW_DIR, "{cid}.data.json")
