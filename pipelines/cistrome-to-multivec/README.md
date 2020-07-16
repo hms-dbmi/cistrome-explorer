@@ -13,23 +13,23 @@ snakemake --cores 2 --config filetype=zarr
 ./submit.sh mv5 my_username
 ```
 
-# Setup
+## Setup
 
-## Conda environment
+### Create conda environment
 
 ```sh
 conda env create -f environment.yml
 conda activate cistrome-to-multivec-pipeline
 ```
 
-## Snakemake cluster config
+### Copy snakemake cluster config
 
 ```sh
 mkdir -p ~/.config/snakemake/cistrome-explorer
 cp ./cluster-profile.yml ~/.config/snakemake/cistrome-explorer/config.yaml
 ```
 
-# Sync output files with s3 bucket
+### Sync output files with s3 bucket
 
 ```sh
 # replace with your credentials
@@ -43,13 +43,13 @@ aws s3 sync /n/scratch3/users/m/mk596/cistrome-explorer/data/processed/ s3://hig
 ```
 
 
-## Using parallel hdf5 via h5py and mpi4py
+### Using parallel hdf5 via h5py and mpi4py
 
 *The following info is outdated, since h5py does not yet work with the parallel version of hdf5 installed on the o2 cluster. In the meantime we can do parallelization by submitting many simultaneous snakemake jobs for each output bigwig file.*
 
 https://docs.h5py.org/en/latest/build.html#building-against-parallel-hdf5
 
-### On O2
+#### On O2
 
 ```sh
 module load gcc/6.2.0
@@ -71,7 +71,7 @@ python setup.py configure --mpi
 python setup.py install
 ```
 
-### On macOS
+#### On macOS
 
 Download hdf5 1.10.6 source code from https://www.hdfgroup.org/downloads/hdf5/source-code/ and un-tar-gz
 
