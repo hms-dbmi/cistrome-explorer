@@ -309,19 +309,19 @@ export function requestByGene({ assembly, gene, distance }) {
  */
 export function requestByPeakset({ assembly, tpeak, bedFile }) {
 
-    let csrftoken = Cookies.get('csrftoken');
-    console.log(csrftoken);
+    // TODO: Get csrftoken from the Toolkit website
+    // let csrftoken = Cookies.get('csrftoken');
+    // console.log(csrftoken);
 
     const formData = new FormData();
-    formData.append('csrfmiddlewaretoken', 'aRhEtcy1ueRKBvJ1daP1wpecazQUxcqI');
+    formData.append('csrfmiddlewaretoken', 'Xy1sb4N0NM7XUvaMejxinyXOSasJX6mS');
     formData.append('species', 'hg38');
     formData.append('factor', 'tf');
     formData.append('tpeak', '1k');
     formData.append('peak', bedFile);
 
     return fetch('http://dbtoolkit.cistrome.org/api_similar', {
-        credentials: 'include', // https://stackoverflow.com/a/50388440
-        mode: "no-cors",
+        credentials: 'omit', // https://stackoverflow.com/a/50388440
         method: 'post',
         body: formData,
     })

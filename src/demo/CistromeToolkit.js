@@ -308,7 +308,7 @@ export default function CistromeToolkit(props) {
                 {/* Search by Peak Set */}
                 <div
                     className={'api-config-view'}
-                    style={{ borderLeft: `4px solid ${CISTROME_API_COLORS.PEAKSET}` }}
+                    style={{ borderLeft: `4px solid ${CISTROME_API_COLORS.PEAKSET}`, visibility: "hidden" }} // TODO: We do not support this API yet.
                 >
                     <div className='api-title'>Search by Peak Set</div>
                     <div className='api-subtitle'>What factors have a significant binding overlap with your peak set?</div>
