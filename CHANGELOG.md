@@ -7,6 +7,7 @@
 ### Changed
 - Moved `CistromeToolkit` to the sibling of `CistromeHGW`.
 - Rename `HiGlassWithMeta` to `HiGlassMeta`.
+- Upgraded to HiGlass version `1.10.2`
 
 ## 0.4.0
 
