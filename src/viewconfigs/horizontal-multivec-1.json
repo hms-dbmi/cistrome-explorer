@@ -104,19 +104,18 @@
               "uid": "cistrome-track-1",
               "data": {
                 "server": "http://ec2-3-93-68-250.compute-1.amazonaws.com/api/v1",
-                "url": "s3://CistromeDB/Homo_sapiens__E2F4__all.multires.mv5",
+                "url": "s3://CistromeDB/Homo_sapiens__H3K27me2__all.multires.mv5",
                 "filetype": "multivec"
               },
               "coordSystem": "hg38",
               "options": {
-                "labelPosition": "hidden",
+                "labelPosition": "topLeft",
                 "labelColor": "black",
                 "labelTextOpacity": 0.4,
                 "valueScaling": "linear",
                 "trackBorderWidth": 0,
                 "trackBorderColor": "black",
                 "heatmapValueScaling": "log",
-                "name": "my_file_genome_wide.multires.mv5",
                 "labelLeftMargin": 0,
                 "labelRightMargin": 0,
                 "labelTopMargin": 0,

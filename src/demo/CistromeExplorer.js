@@ -31,6 +31,7 @@ const demos = {
             rowInfoAttributes: [
                 {field: "qc__table__frip__0", title: "QC: FRIP", type: "quantitative", position: "left"},
                 {field: "treats__0__link", title: "id", type: "url", position: "left"},
+                //{field: "treats__0__factor__name", title: "Factor", type: "nominal", position: "right"},
                 {field: "treats__0__cell_type__name", title: "Cell Type", type: "nominal", position: "right"},
                 {field: "treats__0__cell_line__name", title: "Cell Line", type: "nominal", position: "right"},
                 {field: "treats__0__tissue_type__name", title: "Tissue Type", type: "nominal", position: "right"},
