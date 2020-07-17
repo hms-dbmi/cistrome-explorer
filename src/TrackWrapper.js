@@ -70,15 +70,11 @@ export default function TrackWrapper(props) {
     // Attempt to obtain metadata values from the `tilesetInfo` field of the track.
     let rowInfo = [];
     try {
-        if(["meeting-2020-04-29-track"].includes(multivecTrackTrackId)) {
-            // TODO: use the below line to use the real metadata coming from the HiGlass Server tileset_info.
-            //       see https://github.com/hms-dbmi/cistrome-explorer/issues/26
-            rowInfo = multivecTrack.tilesetInfo.row_infos.map(JSON.parse);
-        } else {
-            // TODO: remove this else clause.
-            //       see https://github.com/hms-dbmi/cistrome-explorer/issues/26
-            rowInfo = fakedata[multivecTrack.id].tilesetInfo.rowInfo.slice(0, totalNumRows);
-        }
+
+        // TODO: use the below line to use the real metadata coming from the HiGlass Server tileset_info.
+        //       see https://github.com/hms-dbmi/cistrome-explorer/issues/26
+        rowInfo = multivecTrack.tilesetInfo.row_infos;
+        
         
         if(!context.state[multivecTrackViewId] || !context.state[multivecTrackViewId][multivecTrackTrackId]) {
             context.dispatch({

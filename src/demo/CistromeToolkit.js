@@ -506,14 +506,14 @@ export default function CistromeToolkit(props) {
                         rows={selectedRequestIndex !== undefined ? requestHistory[selectedRequestIndex].rows : []}
                         selectedRows={selectedRowIndexes}
                         expoNotations={["Overlap Ratio", 'Regulatory Potential']}
-                        onButton={onAddTrack ? () => {
-                            // TODO: Change this to add a track based on actual data after we build DB.
-                            onAddTrack(
-                                'https://resgen.io/api/v1',
-                                'Hygs6CEVR2mCnGlsHK93zQ',
-                                'top'
-                            );
-                        } : null}
+                        onButton={(row) => {
+                            onAddTrack({
+                                species: row["Species"],
+                                factor: row["Factor"],
+                                biologicalSourceType: "cl",
+                                biologicalSourceName: row["Cell Line"],
+                            });
+                        }}
                     />
                 </div>
             </div>

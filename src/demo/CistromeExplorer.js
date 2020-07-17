@@ -1,10 +1,11 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import pkg from '../../package.json';
 
 import { HiGlassMeta } from '../index.js';
 import CistromeToolkit from './CistromeToolkit.js';
 
 import { UNDO, REDO, TABLE, DOCUMENT, GITHUB } from '../utils/icons.js';
+import { DEFAULT_COLOR_RANGE } from '../utils/color.js';
 
 import hgDemoViewConfig1 from '../viewconfigs/horizontal-multivec-1.json';
 import hgDemoViewConfig1b from '../viewconfigs/horizontal-multivec-1b.json';
@@ -21,26 +22,26 @@ import './CistromeExplorer.scss';
 import { diffViewOptions } from '../utils/view-history';
 import diff from 'deep-diff';
 
+
+
 const demos = {
     "H3K27ac Demo (1 View, Center Track)": {
         viewConfig: hgDemoViewConfig1,
         options: {
             rowInfoAttributes: [
-                {field: "Hierarchical Clustering (Average)", type: "tree", position: "left"},
-                {field: "qc_frip", type: "quantitative", position: "left"},
-                {field: "qc_fastqc", type: "quantitative", position: "left"},
-                {field: "Metadata URL", type: "url", position: "left", title: "cid"},
-                {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right"},
-                {field: "Cell Type", type: "nominal", position: "right"},
-                {field: "Tissue Type", type: "nominal", position: "right"},
-                {field: "Species", type: "nominal", position: "right"}
+                {field: "qc__table__frip__0", title: "QC: FRIP", type: "quantitative", position: "left"},
+                {field: "treats__0__link", title: "id", type: "url", position: "left"},
+                {field: "treats__0__cell_type__name", title: "Cell Type", type: "nominal", position: "right"},
+                {field: "treats__0__cell_line__name", title: "Cell Line", type: "nominal", position: "right"},
+                {field: "treats__0__tissue_type__name", title: "Tissue Type", type: "nominal", position: "right"},
+                {field: "treats__0__species__name", title: "Species", type: "nominal", position: "right"}
             ],
             rowSort: [
-                {field: "Tissue Type", type: "nominal", order: "ascending"},
-                {field: "qc_frip", type: "quantitative", order: "descending"}
+                {field: "treats__0__cell_type__name", type: "nominal", order: "ascending"},
+                {field: "qc__table__frip__0", type: "quantitative", order: "descending"}
             ],
             rowFilter: [
-                {field: "Tissue Type", type: "nominal", notOneOf: ["None"]}
+                
             ]
         }
     },
@@ -323,6 +324,28 @@ export default function CistromeExplorer() {
         setIndexOfCurrentView(0);
     }
 
+    const addNewTrack = useCallback((trackDef, viewId, position) => {
+        hmRef.current.api.addTrack(trackDef, viewId, position);
+    }, [hmRef]);
+
+    // Callback function for adding a BigWig track.
+    const onAddTrack = useCallback((cistromeDataConfig) => {
+        const { species, factor, biologicalSourceType, biologicalSourceName } = cistromeDataConfig;	
+        addNewTrack({		
+            type: 'horizontal-multivec',
+            data: {
+                server: "http://ec2-3-93-68-250.compute-1.amazonaws.com/api/v1",
+                url: "s3://CistromeDB/" + `${species}__${factor}__all`.replace(" ", "_") + ".multires.mv5",
+                filetype: "multivec"
+            },
+            coordSystem: "hg38",
+            options: {
+                colorRange: DEFAULT_COLOR_RANGE,
+            },
+            height: 200,
+        }, "cistrome-view-1", 'top');
+    }, [addNewTrack]);
+
     return (
         <div className="cistrome-explorer">
             <div className="header-container">
@@ -429,10 +452,7 @@ export default function CistromeExplorer() {
                     <CistromeToolkit
                         isVisible={isToolkitVisible}
                         intervalAPIParams={toolkitParams}
-                        // TODO: After we build DB for cistrome bigwig files, uncomment the following code.
-                        // onAddTrack={(server, tilesetUid, position) => { 
-                        //     onAddBigWigTrack(server, tilesetUid, position);
-                        // }}
+                        onAddTrack={onAddTrack}
                     />
                 </div>
             </div>

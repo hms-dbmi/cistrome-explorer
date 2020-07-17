@@ -79,15 +79,6 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
     
     const context = useContext(InfoContext);
 
-    // HiGlassMeta APIs that can be called outside the library.
-    useEffect(() => {
-        ref.current = {
-            api: {
-                onOptions: (newOptions) => setOptions(processWrapperOptions(newOptions))
-            }
-        }
-    }, [ref]);
-
     // Initialize instances when we receive a new demo.
     useEffect(() => {
         setMultivecTrackIds([]);
@@ -221,6 +212,16 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         const newViewConfig = addTrackDefToViewConfig(currViewConfig, trackDef, viewId, position);
         hgRef.current.api.setViewConfig(newViewConfig);
     }, [hgRef]);
+
+    // HiGlassMeta APIs that can be called outside the library.
+    useEffect(() => {
+        ref.current = {
+            api: {
+                onOptions: (newOptions) => setOptions(processWrapperOptions(newOptions)),
+                addTrack: (trackDef, viewId, position) => addNewTrack(trackDef, viewId, position),
+            }
+        }
+    }, [ref, addNewTrack]);
 
     const setSelectedRowsToViewConfig = useCallback((viewId, trackId, selectedRows) => {
         const currViewConfig = hgRef.current.api.getViewConfig();
@@ -416,18 +417,6 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         addNewTrack(newTrackDef, viewId, position);
         setOptions(newOptions);
     }, [options]);
-
-    // Callback function for adding a BigWig track.
-    const onAddBigWigTrack = useCallback((server, tilesetUid, position) => {		
-        if(multivecTrackIds && multivecTrackIds.length !== 0 && multivecTrackIds[0].viewId) {		
-            addNewTrack({		
-                type: 'horizontal-bar',		
-                server,		
-                tilesetUid,		
-                height: 20,		
-            }, multivecTrackIds[0].viewId, position);		
-        }		
-    }, [multivecTrackIds]);
 
     // Destroy the context menu upon any click.
     useEffect(() => {

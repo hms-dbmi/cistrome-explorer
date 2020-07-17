@@ -102,8 +102,12 @@
             {
               "type": "horizontal-multivec",
               "uid": "cistrome-track-1",
-              "tilesetUid": "UvVPeLHuRDiYA3qwFlm7xQ",
-              "server": "https://resgen.io/api/v1",
+              "data": {
+                "server": "http://ec2-3-93-68-250.compute-1.amazonaws.com/api/v1",
+                "url": "s3://CistromeDB/Homo_sapiens__E2F4__all.multires.mv5",
+                "filetype": "multivec"
+              },
+              "coordSystem": "hg38",
               "options": {
                 "labelPosition": "hidden",
                 "labelColor": "black",
@@ -123,6 +127,7 @@
                 "zeroValueColor": "dimgray",
                 "selectRowsAggregationWithRelativeHeight": false,
                 "selectRowsAggregationMode": "mean",
+                "selectRowsAggregationMethod": "server",
                 "colorRange": [
                     "rgba(68,1,84,1)",
                     "rgba(68,2,85,1)",
