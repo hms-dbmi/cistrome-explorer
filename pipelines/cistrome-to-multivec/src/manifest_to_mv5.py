@@ -113,7 +113,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Create a multivec file.')
     parser.add_argument('-i', '--input', type=str, required=True, help='The input manifest JSON file.')
     parser.add_argument('-o', '--output', type=str, required=True, help='The output multivec file.')
-    parser.add_argument('-s', '--starting-resolution', type=int, default=1000, help='The starting resolution.')
+    parser.add_argument('-s', '--starting-resolution', type=int, default=200, help='The starting resolution.')
     args = parser.parse_args()
 
     with open(args.input) as f:

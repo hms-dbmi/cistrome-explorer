@@ -45,7 +45,7 @@ rule manifest_to_outfile:
     output:
         OUTFILE_WRAPPER(join(PROCESSED_DIR, f"{{group_name}}.multires.{FILETYPE}"))
     params:
-        starting_resolution=1000,
+        starting_resolution=200,
         script=join(SRC_DIR, f"manifest_to_{FILETYPE}.py"),
         rm_input_bigwigs=False
         # TODO: implement rm_input_bigwigs=True in the python script
