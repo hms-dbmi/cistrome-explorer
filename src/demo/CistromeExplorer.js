@@ -273,7 +273,7 @@ export default function CistromeExplorer() {
     const [indexOfCurrentView, setIndexOfCurrentView] = useState(0); // The most recent view will be stored at the index zero.
 
     // Toolkit-related
-    const [isToolkitVisible, setIsToolkitVisible] = useState(true); // false); // TODO:
+    const [isToolkitVisible, setIsToolkitVisible] = useState(false);
     const [toolkitParams, setToolkitParams] = useState(undefined);
 
     // When a user select a different demo, initialize the view history.
