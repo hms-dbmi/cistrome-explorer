@@ -313,14 +313,15 @@ export function requestByPeakset({ assembly, tpeak, bedFile }) {
     console.log(csrftoken);
 
     const formData = new FormData();
-    formData.append('csrfmiddlewaretoken', '9zlj1ZOLLbIU83KmT8IbCO8Rq9agCSEC');
+    formData.append('csrfmiddlewaretoken', 'aRhEtcy1ueRKBvJ1daP1wpecazQUxcqI');
     formData.append('species', 'hg38');
     formData.append('factor', 'tf');
     formData.append('tpeak', '1k');
     formData.append('peak', bedFile);
-    
+
     return fetch('http://dbtoolkit.cistrome.org/api_similar', {
         credentials: 'include', // https://stackoverflow.com/a/50388440
+        mode: "no-cors",
         method: 'post',
         body: formData,
     })
