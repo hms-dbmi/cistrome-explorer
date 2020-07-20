@@ -218,7 +218,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         ref.current = {
             api: {
                 onOptions: (newOptions) => setOptions(processWrapperOptions(newOptions)),
-                addTrack: (trackDef, viewId, position) => addNewTrack(trackDef, viewId, position),
+                addNewTrack: (trackDef, viewId, position) => addNewTrack(trackDef, viewId, position),
             }
         }
     }, [ref, addNewTrack]);

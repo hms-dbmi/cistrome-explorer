@@ -326,7 +326,7 @@ export default function CistromeExplorer() {
     }
 
     const addNewTrack = useCallback((trackDef, viewId, position) => {
-        hmRef.current.api.addTrack(trackDef, viewId, position);
+        hmRef.current.api.addNewTrack(trackDef, viewId, position);
     }, [hmRef]);
 
     // Callback function for adding a BigWig track.

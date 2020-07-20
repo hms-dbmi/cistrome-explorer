@@ -34,6 +34,7 @@ export function generateNextUniqueColor(i) {
     }
 }
 
+// Viridis
 export const DEFAULT_COLOR_RANGE = [
     "rgba(68,1,84,1)",
     "rgba(68,2,85,1)",
