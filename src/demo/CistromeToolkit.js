@@ -510,8 +510,6 @@ export default function CistromeToolkit(props) {
                             onAddTrack({
                                 species: row["Species"],
                                 factor: row["Factor"],
-                                biologicalSourceType: "cl",
-                                biologicalSourceName: row["Cell Line"],
                             });
                         }}
                     />

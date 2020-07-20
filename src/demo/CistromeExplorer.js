@@ -16,6 +16,7 @@ import hgDemoViewConfig7 from '../viewconfigs/horizontal-multivec-7.json';
 import hgDemoViewConfig8 from '../viewconfigs/horizontal-multivec-8.json';
 import hgDemoViewConfig9 from '../viewconfigs/horizontal-multivec-9.json';
 import hgDemoViewConfig10 from '../viewconfigs/horizontal-multivec-10.json';
+import hgDemoViewConfig11 from '../viewconfigs/horizontal-multivec-11.json';
 import hgDemoViewConfigApril2020 from '../viewconfigs/meeting-2020-04-29.json';
 
 import './CistromeExplorer.scss';
@@ -29,20 +30,21 @@ const demos = {
         viewConfig: hgDemoViewConfig1,
         options: {
             rowInfoAttributes: [
-                {field: "qc__table__frip__0", title: "QC: FRIP", type: "quantitative", position: "left"},
-                {field: "treats__0__link", title: "id", type: "url", position: "left"},
-                //{field: "treats__0__factor__name", title: "Factor", type: "nominal", position: "right"},
-                {field: "treats__0__cell_type__name", title: "Cell Type", type: "nominal", position: "right"},
-                {field: "treats__0__cell_line__name", title: "Cell Line", type: "nominal", position: "right"},
-                {field: "treats__0__tissue_type__name", title: "Tissue Type", type: "nominal", position: "right"},
-                {field: "treats__0__species__name", title: "Species", type: "nominal", position: "right"}
+                {field: "Hierarchical Clustering (Average)", type: "tree", position: "left"},
+                {field: "qc_frip", type: "quantitative", position: "left"},
+                {field: "qc_fastqc", type: "quantitative", position: "left"},
+                {field: "Metadata URL", type: "url", position: "left", title: "cid"},
+                {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right"},
+                {field: "Cell Type", type: "nominal", position: "right"},
+                {field: "Tissue Type", type: "nominal", position: "right"},
+                {field: "Species", type: "nominal", position: "right"}
             ],
             rowSort: [
-                {field: "treats__0__cell_type__name", type: "nominal", order: "ascending"},
-                {field: "qc__table__frip__0", type: "quantitative", order: "descending"}
+                {field: "Tissue Type", type: "nominal", order: "ascending"},
+                {field: "qc_frip", type: "quantitative", order: "descending"}
             ],
             rowFilter: [
-                
+                {field: "Tissue Type", type: "nominal", notOneOf: ["None"]}
             ]
         }
     },
@@ -251,7 +253,28 @@ const demos = {
                 {field: "Tissue Type", type: "nominal", oneOf: ["Blood", "Bone Marrow"]}
             ]
         }
-    }
+    },
+    "S3-based multivec files": {
+        viewConfig: hgDemoViewConfig11,
+        options: {
+            rowInfoAttributes: [
+                {field: "qc__table__frip__0", title: "QC: FRIP", type: "quantitative", position: "left"},
+                {field: "treats__0__link", title: "id", type: "url", position: "left"},
+                //{field: "treats__0__factor__name", title: "Factor", type: "nominal", position: "right"},
+                {field: "treats__0__cell_type__name", title: "Cell Type", type: "nominal", position: "right"},
+                {field: "treats__0__cell_line__name", title: "Cell Line", type: "nominal", position: "right"},
+                {field: "treats__0__tissue_type__name", title: "Tissue Type", type: "nominal", position: "right"},
+                {field: "treats__0__species__name", title: "Species", type: "nominal", position: "right"}
+            ],
+            rowSort: [
+                {field: "treats__0__cell_type__name", type: "nominal", order: "ascending"},
+                {field: "qc__table__frip__0", type: "quantitative", order: "descending"}
+            ],
+            rowFilter: [
+                
+            ]
+        }
+    },
 };
 
 export default function CistromeExplorer() {
@@ -331,7 +354,7 @@ export default function CistromeExplorer() {
 
     // Callback function for adding a BigWig track.
     const onAddTrack = useCallback((cistromeDataConfig) => {
-        const { species, factor, biologicalSourceType, biologicalSourceName } = cistromeDataConfig;	
+        const { species, factor } = cistromeDataConfig;
         addNewTrack({		
             type: 'horizontal-multivec',
             data: {
