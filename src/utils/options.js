@@ -99,7 +99,12 @@ const baseSchema = {
                 },
                 "resolveYScale": {
                     "type": "boolean",
-                    "description": "If the scale of y axis should be independent to that in the corresponding horizontal-multivec-track"
+                    "description": "Determine if the scale of y axis should be independent to the adjacently placed tracks"
+                },
+                "sort": {
+                    "type": "string",
+                    "enum": ["descending", "ascending"],
+                    "description": "The order of sorting. This only works if `resolveYScale` is set to `true`"
                 }
             }
         },
