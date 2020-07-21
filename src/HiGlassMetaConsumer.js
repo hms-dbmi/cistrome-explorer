@@ -281,7 +281,6 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         multivecTrackIds.forEach(({ viewId, trackId }) => {
             newOptions = updateWrapperOptions(newOptions, [], "rowFilter", viewId, trackId, { isReplace: true });
         });
-        console.log(multivecTrackIds, newOptions);
         setOptions(newOptions);
     }, [multivecTrackIds]);
 
