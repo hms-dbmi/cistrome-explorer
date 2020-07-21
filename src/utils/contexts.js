@@ -6,7 +6,8 @@ export const ACTION = Object.freeze({
     SET_ROW_INFO: "set_row_info",
     SELECT_ROWS: "select_rows",
     SELECT_ROWS_RERENDER: "select_rows_rerender",
-    HIGHLIGHT_ROWS_RERENDER: "highlight_rows_rerender"
+    HIGHLIGHT_ROWS_RERENDER: "highlight_rows_rerender",
+    RESET: "reset"
 });
 
 /**
@@ -73,6 +74,12 @@ const reducer = createReducer({
                     }
                 }
             };
+        }
+        return state;
+    },
+    [ACTION.RESET]: (state, action) => {
+        if(state[action.viewId] && state[action.viewId][action.trackId]) {
+            state[action.viewId][action.trackId] = undefined;
         }
         return state;
     }

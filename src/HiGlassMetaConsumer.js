@@ -83,13 +83,15 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
     useEffect(() => {
         ref.current = {
             api: {
-                onOptions: (newOptions) => setOptions(processWrapperOptions(newOptions))
+                onOptions: (newOptions) => setOptions(processWrapperOptions(newOptions)),
+                onRemoveAllFilters: () => removeAllFilters()
             }
         }
-    }, [ref]);
+    }, [ref, multivecTrackIds]);
 
     // Initialize instances when we receive a new demo.
     useEffect(() => {
+        resetTrackContext();
         setMultivecTrackIds([]);
         setViewportTrackIds({});
         setOptions(processWrapperOptions(baseOptions));
@@ -228,6 +230,16 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         hgRef.current.api.setViewConfig(newViewConfig);
     }, [hgRef]);
     
+    const resetTrackContext = useCallback(() => {
+        multivecTrackIds.forEach(({ viewId, trackId }) => {
+            context.dispatch({
+                type: ACTION.RESET,
+                viewId,
+                trackId
+            });
+        });
+    }, [multivecTrackIds]);
+
     const setSelectedRows = useCallback((viewId, trackId, selectedRows) => {
         context.dispatch({
             type: ACTION.SELECT_ROWS_RERENDER,
@@ -235,7 +247,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
             trackId,
             selectedRows
         });
-    }, [hgRef]);
+    });
 
     const setHighlitRows = useCallback((viewId, trackId, highlitRows) => {
         context.dispatch({
@@ -244,7 +256,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
             trackId,
             highlitRows
         });
-    }, [hgRef]);
+    });
 
     // Function for child components to call to "register" their draw functions.
     const drawRegister = useCallback((key, draw, options) => {
@@ -264,6 +276,14 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         return () => hgRef.current.api.off('createSVG');
     }, [hgRef, drawRef]);
     
+    const removeAllFilters = useCallback(() => {
+        let newOptions = options;
+        multivecTrackIds.forEach(({ viewId, trackId }) => {
+            newOptions = updateWrapperOptions(newOptions, [], "rowFilter", viewId, trackId, { isReplace: true });
+        });
+        setOptions(newOptions);
+    }, [multivecTrackIds]);
+
     // Callback function for sorting.
     const onSortRows = useCallback((viewId, trackId, field, type, order) => {
         const newRowSort = [ { field, type, order } ];

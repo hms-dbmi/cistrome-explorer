@@ -283,6 +283,7 @@ export function isProcessedWrapperOptions(options) {
     // `DEFAULT_OPTIONS_KEY` is always included in the processed wrapper options, but not in raw options.
     return Object.keys(options).indexOf(DEFAULT_OPTIONS_KEY) !== -1;
 }
+
 /**
  * Process the HiGlassMeta `options` prop by mapping track IDs to objects containing values for all possible option attributes.
  * @param {(object|object[]|null)} options The raw value of the options prop.

@@ -4,7 +4,7 @@ import pkg from '../../package.json';
 import { HiGlassMeta } from '../index.js';
 import CistromeToolkit from './CistromeToolkit.js';
 
-import { UNDO, REDO, TABLE, DOCUMENT, GITHUB } from '../utils/icons.js';
+import { UNDO, REDO, TABLE, DOCUMENT, GITHUB, CLOSE, MENU, TRASH } from '../utils/icons.js';
 
 import hgDemoViewConfig1 from '../viewconfigs/horizontal-multivec-1.json';
 import hgDemoViewConfig1b from '../viewconfigs/horizontal-multivec-1b.json';
@@ -257,7 +257,8 @@ export default function CistromeExplorer() {
     const hmRef = useRef();
 
     const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[0]);
-    
+    const [isSettingVisible, setIsSettingVisible] = useState(false);
+
     // Undo and redo
     const [undoable, setUndoable] = useState(false);
     const [redoable, setRedoable] = useState(false);
@@ -327,24 +328,19 @@ export default function CistromeExplorer() {
         <div className="cistrome-explorer">
             <div className="header-container">
                 <div className="header">
-                    <span className="cisvis-title">Cistrome Explorer</span>
-                    <span className="viewconf-options">
-                        <select 
-                            onChange={e => setSelectedDemo(e.target.value)} 
-                            defaultValue={selectedDemo}
-                        >
-                            {Object.keys(demos).map(vcKey => (
-                                <option 
-                                    key={vcKey} 
-                                    value={vcKey} 
-                                >
-                                    {vcKey}
-                                </option>
-                            ))}
-                        </select>
+                    <span 
+                        className="ce-generic-button"
+                        onClick={() => setIsSettingVisible(!isSettingVisible)}>
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            viewBox={MENU.viewBox}>
+                            <title>Menu</title>
+                            <path fill="currentColor" d={MENU.path}/>
+                        </svg>
                     </span>
+                    <span className="cisvis-title">Cistrome Explorer</span>
                     <span className="header-control">
                         <span 
+                            className="ce-generic-button-sm"
                             style={{ 
                                 cursor: undoable ? 'pointer' : 'not-allowed',
                                 color: undoable ? 'white' : '#999'
@@ -357,7 +353,7 @@ export default function CistromeExplorer() {
                                 }
                             }}
                         >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
+                            <svg xmlns="http://www.w3.org/2000/svg"
                                 viewBox={UNDO.viewBox}>
                                 <title>Undo</title>
                                 <path fill="currentColor" d={UNDO.path}/>
@@ -365,6 +361,7 @@ export default function CistromeExplorer() {
                             {` Undo (${viewHistory.length - indexOfCurrentView - 1})`}
                         </span>
                         <span 
+                            className="ce-generic-button-sm"
                             style={{ 
                                 cursor: redoable ? 'pointer' : 'not-allowed',
                                 color: redoable ? 'white' : '#999'
@@ -377,7 +374,7 @@ export default function CistromeExplorer() {
                                 }
                             }}
                         >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
+                            <svg xmlns="http://www.w3.org/2000/svg"
                                 viewBox={REDO.viewBox}>
                                 <title>Redo</title>
                                 <path fill="currentColor" d={REDO.path}/>
@@ -386,27 +383,28 @@ export default function CistromeExplorer() {
                         </span>
                     </span>
                     <span className="header-info">
-                        <span style={{ cursor: 'pointer' }} onClick={() => 
-                            setIsToolkitVisible(!isToolkitVisible)
-                        }>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                        <span 
+                            className="ce-generic-button" 
+                            onClick={() => setIsToolkitVisible(!isToolkitVisible)}>
+                            <svg xmlns="http://www.w3.org/2000/svg"
                                 viewBox={TABLE.viewBox}>
-                                <title>CistromeToolkit</title>
+                                <title>Cistrome DB Toolkit</title>
                                 <path fill="currentColor" d={TABLE.path}/>
                             </svg>
+                            {' Toolkit '}
                         </span>
-                        <span>
+                        <span className="ce-generic-button">
                             <a href={`${pkg.homepage}/docs/`} target="_blank">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                <svg xmlns="http://www.w3.org/2000/svg"
                                     viewBox={DOCUMENT.viewBox}>
                                     <title>Documents</title>
                                     <path fill="currentColor" d={DOCUMENT.path}/>
                                 </svg>
                             </a>
                         </span>
-                        <span>
+                        <span className="ce-generic-button">
                             <a href={pkg.repository.url} target="_blank">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                <svg xmlns="http://www.w3.org/2000/svg"
                                     viewBox={GITHUB.viewBox}>
                                     <title>GitHub</title>
                                     <path fill="currentColor" d={GITHUB.path}/>
@@ -434,6 +432,71 @@ export default function CistromeExplorer() {
                         //     onAddBigWigTrack(server, tilesetUid, position);
                         // }}
                     />
+                </div>
+                <div className="settings" style={{
+                    left: isSettingVisible ? 0 : "-300px"
+                }}>
+                    <span style={{ 
+                        verticalAlign: "middle", 
+                        display: "inline-block",
+                        position: "absolute", 
+                        right: 5, 
+                        top: 5
+                    }}>
+                        <svg
+                            className={'hm-button'}
+                            style={{ color: "rgb(171, 171, 171)", background: "none" }}
+                            onClick={() => setIsSettingVisible(false)}
+                            viewBox={CLOSE.viewBox}
+                        >
+                            <title>Close Cistrome Toolkit</title>
+                            <path d={CLOSE.path} fill="currentColor"/>
+                        </svg>
+                    </span>
+                    <h2>Example Datasets</h2>
+                    <span className="viewconf-options">
+                        <select 
+                            onChange={e => setSelectedDemo(e.target.value)} 
+                            defaultValue={selectedDemo}
+                        >
+                            {Object.keys(demos).map(vcKey => (
+                                <option 
+                                    key={vcKey} 
+                                    value={vcKey} 
+                                >
+                                    {vcKey}
+                                </option>
+                            ))}
+                        </select>
+                    </span>
+                    <div className="setting-separater"></div>
+                    <h2>View Options</h2>
+                    <span 
+                        className="ce-generic-button"
+                        style={{ 
+                            fontSize: 12,
+                            cursor: 'pointer',
+                            display: 'inline-block',
+                            color: 'black', 
+                            background: 'white', 
+                            border: '1px solid gray',
+                            padding: '4px',
+                            marginTop: '4px'
+                        }}
+                        onClick={() => {
+                            hmRef.current.api.onRemoveAllFilters()}
+                        }
+                    >
+                        <svg
+                            style={{ color: "rgb(171, 171, 171)", width: 14, height: 14 }}
+                            viewBox={TRASH.viewBox}
+                        >
+                            <title>Remove All Filters</title>
+                            <path d={TRASH.path} fill="currentColor"/>
+                        </svg>
+                        {' Remove All Filters'}
+                    </span>
+                    {/* TODO: Add more options here */}
                 </div>
             </div>
         </div>
