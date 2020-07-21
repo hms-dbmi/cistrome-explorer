@@ -58,7 +58,7 @@ export default function TrackRowInfo(props) {
         setUnitWidths(newUnitWidths);
     }
     
-    // Determine position of each dimension.
+    // Determine position of each vertical track.
     let trackProps = [], currentLeft = 0;
     rowInfoAttributes.forEach((attribute, i) => {
         const fieldInfo = isLeft ? rowInfoAttributes[rowInfoAttributes.length - i - 1] : attribute;

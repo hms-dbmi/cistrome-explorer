@@ -96,6 +96,10 @@ const baseSchema = {
                 "title": {
                     "type": "string",
                     "description": "The name of a data field to alternatively use for displaying urls"
+                },
+                "resolveYScale": {
+                    "type": "boolean",
+                    "description": "If the scale of y axis should be independent to that in the corresponding horizontal-multivec-track"
                 }
             }
         },

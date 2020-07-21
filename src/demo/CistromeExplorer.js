@@ -26,7 +26,7 @@ const demos = {
         viewConfig: hgDemoViewConfig1,
         options: {
             rowInfoAttributes: [
-                {field: "Hierarchical Clustering (Average)", type: "tree", position: "left"},
+                {field: "Hierarchical Clustering (Average)", type: "tree", position: "left", resolveYScale: true},
                 {field: "qc_frip", type: "quantitative", position: "left"},
                 {field: "qc_fastqc", type: "quantitative", position: "left"},
                 {field: "Metadata URL", type: "url", position: "left", title: "cid"},
