@@ -83,10 +83,11 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
     useEffect(() => {
         ref.current = {
             api: {
-                onOptions: (newOptions) => setOptions(processWrapperOptions(newOptions))
+                onOptions: (newOptions) => setOptions(processWrapperOptions(newOptions)),
+                onRemoveAllFilters: () => removeAllFilters()
             }
         }
-    }, [ref]);
+    }, [ref, multivecTrackIds]);
 
     // Initialize instances when we receive a new demo.
     useEffect(() => {
@@ -227,7 +228,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         const newViewConfig = updateViewConfigOnSelectRowsByTrack(currViewConfig, selectedRows, viewId, trackId);
         hgRef.current.api.setViewConfig(newViewConfig);
     }, [hgRef]);
-    
+
     const setSelectedRows = useCallback((viewId, trackId, selectedRows) => {
         context.dispatch({
             type: ACTION.SELECT_ROWS_RERENDER,
@@ -264,6 +265,15 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         return () => hgRef.current.api.off('createSVG');
     }, [hgRef, drawRef]);
     
+    const removeAllFilters = useCallback(() => {
+        let newOptions = options;
+        multivecTrackIds.forEach(({ viewId, trackId }) => {
+            newOptions = updateWrapperOptions(newOptions, [], "rowFilter", viewId, trackId, { isReplace: true });
+        });
+        console.log(multivecTrackIds, newOptions);
+        setOptions(newOptions);
+    }, [multivecTrackIds]);
+
     // Callback function for sorting.
     const onSortRows = useCallback((viewId, trackId, field, type, order) => {
         const newRowSort = [ { field, type, order } ];
