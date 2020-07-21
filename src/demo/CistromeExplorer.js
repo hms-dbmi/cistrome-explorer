@@ -257,7 +257,7 @@ export default function CistromeExplorer() {
     const hmRef = useRef();
 
     const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[0]);
-    const [isSettingVisible, setIsSettingVisible] = useState(true);
+    const [isSettingVisible, setIsSettingVisible] = useState(false);
 
     // Undo and redo
     const [undoable, setUndoable] = useState(false);
@@ -484,7 +484,6 @@ export default function CistromeExplorer() {
                             marginTop: '4px'
                         }}
                         onClick={() => {
-                            console.log("HERE");
                             hmRef.current.api.onRemoveAllFilters()}
                         }
                     >
