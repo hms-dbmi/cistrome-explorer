@@ -3,6 +3,7 @@
 ### Added
 - Undo/Redu interactions added in Cistrome Explorer.
 - Added an `onOptions` API in `HiGlassMeta` to change the wrapper options outside the library.
+- Added a menu panel that shows examples datasets and any other high-level options for `HiGlassMeta`.
 
 ### Changed
 - Moved `CistromeToolkit` to the sibling of `CistromeHGW`.
