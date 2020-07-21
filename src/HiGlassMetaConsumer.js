@@ -91,6 +91,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
 
     // Initialize instances when we receive a new demo.
     useEffect(() => {
+        resetTrackContext();
         setMultivecTrackIds([]);
         setViewportTrackIds({});
         setOptions(processWrapperOptions(baseOptions));
@@ -228,6 +229,16 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         const newViewConfig = updateViewConfigOnSelectRowsByTrack(currViewConfig, selectedRows, viewId, trackId);
         hgRef.current.api.setViewConfig(newViewConfig);
     }, [hgRef]);
+    
+    const resetTrackContext = useCallback(() => {
+        multivecTrackIds.forEach(({ viewId, trackId }) => {
+            context.dispatch({
+                type: ACTION.RESET,
+                viewId,
+                trackId
+            });
+        });
+    }, [multivecTrackIds]);
 
     const setSelectedRows = useCallback((viewId, trackId, selectedRows) => {
         context.dispatch({
@@ -236,7 +247,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
             trackId,
             selectedRows
         });
-    }, [hgRef]);
+    });
 
     const setHighlitRows = useCallback((viewId, trackId, highlitRows) => {
         context.dispatch({
@@ -245,7 +256,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
             trackId,
             highlitRows
         });
-    }, [hgRef]);
+    });
 
     // Function for child components to call to "register" their draw functions.
     const drawRegister = useCallback((key, draw, options) => {
@@ -270,7 +281,6 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         multivecTrackIds.forEach(({ viewId, trackId }) => {
             newOptions = updateWrapperOptions(newOptions, [], "rowFilter", viewId, trackId, { isReplace: true });
         });
-        console.log(multivecTrackIds, newOptions);
         setOptions(newOptions);
     }, [multivecTrackIds]);
 
