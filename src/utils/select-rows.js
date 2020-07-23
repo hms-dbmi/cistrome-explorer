@@ -6,9 +6,13 @@ import { getAggregatedValue } from './aggregate.js';
  * Generate an array of selected row indices based on filter and sort options.
  * @param {object[]} rowInfo The original/full default-ordered rowInfo array.
  * @param {object} options The track options object, containing sort/filter options.
+ * @param {object[]} altOptions.rowSort An alternative sort options.
  * @returns {(number[]|null)} The array of selected indices.
  */
-export function selectRows(rowInfo, options) {
+export function selectRows(rowInfo, options, altOptions = null) {
+    // Use alternative options if presented
+    const altRowSort = altOptions?.rowSort;
+
     if(options) {   
         // Aggregate
         let aggregatedRowInfo = getAggregatedRowInfo(rowInfo, options.rowAggregate);
@@ -92,8 +96,9 @@ export function selectRows(rowInfo, options) {
         }
 
         // Sort
-        if(options.rowSort && options.rowSort.length > 0) {
-            let sortOptions = options.rowSort.slice().reverse();
+        const rowSort = altRowSort ? altRowSort : options.rowSort;
+        if(rowSort && rowSort.length > 0) {
+            let sortOptions = rowSort.slice().reverse();
             sortOptions.forEach((d) => {
                 const { field, type, order } = d;
                 const isMultipleFields = Array.isArray(field);

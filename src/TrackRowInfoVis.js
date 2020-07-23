@@ -5,12 +5,14 @@ import TrackRowInfoVisNominalBar from './TrackRowInfoVisNominalBar.js';
 import TrackRowInfoVisQuantitativeBar from './TrackRowInfoVisQuantitativeBar.js';
 import TrackRowInfoVisLink from './TrackRowInfoVisLink.js';
 import TrackRowInfoVisDendrogram from './TrackRowInfoVisDendrogram.js';
+import TrackRowInfoVisBand from './TrackRowInfoVisBand.js';
 
 const fieldTypeToVisComponent = {
     "nominal": TrackRowInfoVisNominalBar,
     "quantitative": TrackRowInfoVisQuantitativeBar,
     "url": TrackRowInfoVisLink,
-    "tree": TrackRowInfoVisDendrogram
+    "tree": TrackRowInfoVisDendrogram,
+    "band": TrackRowInfoVisBand
 };
 
 /**
@@ -40,6 +42,8 @@ export default function TrackRowInfoVis(props) {
         isLeft,
         rowInfo,
         transformedRowInfo,
+        leftSelectedRows, // TODO:
+        rightSelectedRows,
         rowSort,
         rowFilter,
         rowHighlight,

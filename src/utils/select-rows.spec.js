@@ -35,6 +35,42 @@ describe('Helper functions for producing arrays of row indices for track.options
         expect(selectedRows).toEqual([13,6,11,8,1,2,14,7,9,12,5,3,10,4,0]);
     });
 
+    it('Using alternative sorting options should produce correct selectRows array after sorting on quantitative attribute', () => {
+        const rowInfo = [
+            {"r1":4},
+            {"r1":73},
+            {"r1":59},
+            {"r1":35},
+            {"r1":5},
+            {"r1":41},
+            {"r1":95},
+            {"r1":54},
+            {"r1":77},
+            {"r1":53},
+            {"r1":33},
+            {"r1":87},
+            {"r1":46},
+            {"r1":98},
+            {"r1":56}
+        ];
+        const options = {
+            rowSort: [{
+                field: "r1",
+                order: "descending",
+                type: "quantitative"
+            }]
+        };
+        const altOptions = {
+            rowSort: [{
+                field: "r1",
+                order: "ascending",
+                type: "quantitative"
+            }]
+        };
+        const selectedRows = selectRows(rowInfo, options, altOptions);
+        expect(selectedRows).toEqual([13,6,11,8,1,2,14,7,9,12,5,3,10,4,0].reverse());
+    });
+
     it('Should produce correct selectRows array after sorting on nominal attribute', () => {
         const rowInfo = [
             {"t":"Blood"},

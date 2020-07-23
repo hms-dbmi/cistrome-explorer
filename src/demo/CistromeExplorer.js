@@ -26,11 +26,11 @@ const demos = {
         viewConfig: hgDemoViewConfig1,
         options: {
             rowInfoAttributes: [
-                {field: "Hierarchical Clustering (Average)", type: "tree", position: "left", resolveYScale: true},
+                {field: "Hierarchical Clustering (Average)", type: "tree", position: "left", resolveYScale: true, sort: "ascending"},
                 {field: "qc_frip", type: "quantitative", position: "left"},
                 {field: "qc_fastqc", type: "quantitative", position: "left"},
                 {field: "Metadata URL", type: "url", position: "left", title: "cid"},
-                {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right"},
+                {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right", resolveYScale: true, sort: "ascending"},
                 {field: "Cell Type", type: "nominal", position: "right"},
                 {field: "Tissue Type", type: "nominal", position: "right"},
                 {field: "Species", type: "nominal", position: "right"}

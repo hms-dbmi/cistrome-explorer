@@ -104,7 +104,7 @@ const baseSchema = {
                 "sort": {
                     "type": "string",
                     "enum": ["descending", "ascending"],
-                    "description": "The order of sorting. This only works if `resolveYScale` is set to `true`"
+                    "description": "The order of sorting. This works only if `resolveYScale` is set to `true`"
                 }
             }
         },
