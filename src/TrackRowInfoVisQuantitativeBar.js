@@ -64,7 +64,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
     const isStackedBar = Array.isArray(field);
     const axisHeight = 30;
     const textAreaWidth = 20;
-    const barAreaWidth = width - textAreaWidth;
+    const barAreaWidth = width;
     const minTrackWidth = 40;
     const fontSize = 10;
     const aggValue = (d, f) => getAggregatedValue(d, f, "quantitative", aggFunction);
@@ -210,7 +210,9 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             });
         }
 
-        drawVisTitle(titleText, { two, isLeft, width, height, titleSuffix });
+        if(!isShowControlButtons) {
+            drawVisTitle(titleText, { two, isLeft, width, height, titleSuffix });
+        }
 
         two.update();
         return two.teardown;
@@ -227,7 +229,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             .attr("width", width)
             .attr("height", axisHeight)
             .append("g")
-                .attr("transform", `translate(${isLeft ? textAreaWidth - 1 : 1}, 0)`)
+                .attr("transform", `translate(${isLeft ? 1 : 1}, 0)`)
                 .call(axis);
         
         d3.select(domElement)
@@ -286,7 +288,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             d3.select(div).on("mouseenter", null);
             d3.select(div).on("mouseleave", null);
         };
-    }, [top, left, width, height, transformedRowInfo]);
+    }, [top, left, width, height, transformedRowInfo, isShowControlButtons]);
     
     return (
         <div

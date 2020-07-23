@@ -251,7 +251,9 @@ export default function TrackRowInfoVisDendrogram(props) {
             rect.opacity = 1;
         }
 
-        drawVisTitle(field, { two, isLeft, width, height });
+        if(!isShowControlButtons) {
+            drawVisTitle(field, { two, isLeft, width, height });
+        }
 
         const points = descendants.map(pointFromNode);
         const delaunay = d3.delaunay.from(points);
@@ -401,7 +403,7 @@ export default function TrackRowInfoVisDendrogram(props) {
             teardownSvg();
             d3.select(div).on("mouseleave", null);
         };
-    }, [width, height, root]);
+    }, [width, height, root, isShowControlButtons]);
 
     // Create the minimum similarity bar element.
     const minSimBar = useMemo(() => {

@@ -4,7 +4,9 @@ import omit from 'lodash/omit';
 import Ajv from 'ajv';
 import { insertItemToArray } from './array.js'
 
+/* Defatul values */
 export const DEFAULT_OPTIONS_KEY = "default";
+const DEFAULT_TRACK_WIDTH = 200;
 
 const baseSchema = {
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -105,6 +107,10 @@ const baseSchema = {
                     "type": "string",
                     "enum": ["descending", "ascending"],
                     "description": "The order of sorting. This works only if `resolveYScale` is set to `true`"
+                },
+                "width": {
+                    "type": "number",
+                    "description": "The horizontal size of a vertical track"
                 }
             }
         },

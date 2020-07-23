@@ -55,7 +55,7 @@ export default function TrackRowInfoVis(props) {
         onWidthChanged
     } = props;
 
-    const minWidth = 40;
+    const minWidth = 20;
     const resizerWidth = 4
     const resizerHeight = 10
     const resizerMargin = 2;
@@ -162,6 +162,8 @@ export default function TrackRowInfoVis(props) {
                     fieldInfo,
                     transformedRowInfo,
                     rowInfo,
+                    leftSelectedRows,
+                    rightSelectedRows,
                     titleSuffix,
                     sortInfo,
                     filterInfo,

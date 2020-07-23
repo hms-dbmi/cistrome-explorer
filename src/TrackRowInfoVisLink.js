@@ -109,8 +109,9 @@ export default function TrackRowInfoVisLink(props) {
             });
         }
         
-
-        drawVisTitle(field, { two, isLeft, width, height, titleSuffix });
+        if(!isShowControlButtons) {
+            drawVisTitle(field, { two, isLeft, width, height, titleSuffix });
+        }
         
         two.update();
         return two.teardown;
@@ -168,7 +169,7 @@ export default function TrackRowInfoVisLink(props) {
             teardown();
             d3.select(div).on("mouseleave", null);
         };
-    }, [top, left, width, height, transformedRowInfo, hoverIndex]);
+    }, [top, left, width, height, transformedRowInfo, hoverIndex, isShowControlButtons]);
 
     return (
         <div

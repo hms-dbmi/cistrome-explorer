@@ -135,7 +135,9 @@ export default function TrackRowInfoVisNominalBar(props) {
             sameCategoriesNearby = 1;
         });
 
-        drawVisTitle(titleText, { two, isLeft, width, height, titleSuffix });
+        if(!isShowControlButtons) {
+            drawVisTitle(titleText, { two, isLeft, width, height, titleSuffix });
+        }
 
         two.update();
         return two.teardown;
@@ -209,7 +211,7 @@ export default function TrackRowInfoVisNominalBar(props) {
             teardown();
             d3.select(div).on("mouseleave", null);
         };
-    }, [top, left, width, height, transformedRowInfo, hoverValue]);
+    }, [top, left, width, height, transformedRowInfo, hoverValue, isShowControlButtons]);
     
     return (
         <div
