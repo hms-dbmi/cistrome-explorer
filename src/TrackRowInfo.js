@@ -43,6 +43,7 @@ export default function TrackRowInfo(props) {
         onAddTrack,
         onSortRows,
         onHighlightRows,
+        onRowInfoAttributesChange,
         onFilterRows,
         drawRegister
     } = props;
@@ -59,8 +60,8 @@ export default function TrackRowInfo(props) {
         let isPrevIndependentYScale = false;
         rowInfoAttributes.forEach((attribute, i) => {
             const fieldInfo = isLeft ? rowInfoAttributes[rowInfoAttributes.length - i - 1] : attribute;
-            const { field, type, resolveYScale, sort: order } = fieldInfo;        
-            const width = DEFAULT_TRACK_WIDTH;
+            const { field, type, resolveYScale, sort: order, width: initWidth } = fieldInfo;        
+            const width = initWidth ? initWidth : DEFAULT_TRACK_WIDTH;
             let isCurrIndependentYScale = false;
             
             // Determine whether to use a track-level transformedRowInfo or the global one
@@ -103,7 +104,7 @@ export default function TrackRowInfo(props) {
 
             // Add props for the current vertical track
             properties.push({
-                index: i,
+                index: i, // TODO:
                 top: 0,
                 left: currentLeft, 
                 width,

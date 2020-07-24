@@ -26,7 +26,7 @@ const demos = {
         viewConfig: hgDemoViewConfig1,
         options: {
             rowInfoAttributes: [
-                {field: "qc_frip", type: "quantitative", position: "left"},
+                {field: "qc_frip", type: "quantitative", position: "left", width: 20},
                 {field: "qc_fastqc", type: "quantitative", position: "left"},
                 {field: "Metadata URL", type: "url", position: "left", title: "cid"},
                 {field: "Hierarchical Clustering (Ward)", type: "tree", position: "left", resolveYScale: true, sort: "ascending"},
@@ -494,6 +494,31 @@ export default function CistromeExplorer() {
                             <path d={TRASH.path} fill="currentColor"/>
                         </svg>
                         {' Remove All Filters'}
+                    </span>
+                    <span 
+                        className="ce-generic-button"
+                        style={{ 
+                            fontSize: 12,
+                            cursor: 'pointer',
+                            display: 'inline-block',
+                            color: 'black', 
+                            background: 'white', 
+                            border: '1px solid gray',
+                            padding: '4px',
+                            marginTop: '4px'
+                        }}
+                        onClick={() => {
+                            hmRef.current.api.onRemoveAllSort()}
+                        }
+                    >
+                        <svg
+                            style={{ color: "rgb(171, 171, 171)", width: 14, height: 14 }}
+                            viewBox={TRASH.viewBox}
+                        >
+                            <title>Remove All Sort</title>
+                            <path d={TRASH.path} fill="currentColor"/>
+                        </svg>
+                        {' Remove All Sort'}
                     </span>
                     {/* TODO: Add more options here */}
                 </div>

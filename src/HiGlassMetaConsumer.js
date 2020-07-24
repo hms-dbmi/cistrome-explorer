@@ -84,7 +84,8 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         ref.current = {
             api: {
                 onOptions: (newOptions) => setOptions(processWrapperOptions(newOptions)),
-                onRemoveAllFilters: () => removeAllFilters()
+                onRemoveAllFilters: () => removeAllFilters(),
+                onRemoveAllSort: () => removeAllSort()
             }
         }
     }, [ref, multivecTrackIds]);
@@ -284,6 +285,14 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         setOptions(newOptions);
     }, [multivecTrackIds]);
 
+    const removeAllSort = useCallback(() => {
+        let newOptions = options;
+        multivecTrackIds.forEach(({ viewId, trackId }) => {
+            newOptions = updateWrapperOptions(newOptions, [], "rowSort", viewId, trackId, { isReplace: true });
+        });
+        setOptions(newOptions);
+    }, [multivecTrackIds]);
+
     // Callback function for sorting.
     const onSortRows = useCallback((viewId, trackId, field, type, order) => {
         const newRowSort = [ { field, type, order } ];
@@ -397,6 +406,12 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         setOptions(newWrapperOptions);
     }, [options]);
 
+    const onRowInfoAttributesChange = useCallback((viewId, trackId, rowInfoAttributes) => {
+        // TODO: ???
+        const newOptions = updateWrapperOptions(options, rowInfoAttributes, "rowInfoAttributes", viewId, trackId, { isReplace: true });
+        setOptions(newOptions);
+    }, [options]);
+    
     // Callback function for adding a track.
     const onAddTrack = useCallback((viewId, trackId, field, type, notOneOf, position) => {
         if(viewId === DEFAULT_OPTIONS_KEY || trackId === DEFAULT_OPTIONS_KEY) {
@@ -538,6 +553,9 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                     }}
                     onMetadataInit={() => {
                         setMetadataToContext(viewId, trackId);
+                    }}
+                    onRowInfoAttributesChange={(rowInfoAttributes) => {
+                        onRowInfoAttributesChange(viewId, trackId, rowInfoAttributes);
                     }}
                     drawRegister={drawRegister}
                 />
