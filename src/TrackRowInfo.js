@@ -146,6 +146,7 @@ export default function TrackRowInfo(props) {
         // Iterate over normal vertical tracks first
         newTrackProps = newTrackProps.map(d => {
             if(d.fieldInfo.type !== 'band') {
+                // TODO: use resolveYScale updated in the `rowInfoAttributes`
                 const { field, type, resolveYScale, sort: order } = d.fieldInfo;
                 let currSelectedRows, currTransformedRowInfo;
                 if(resolveYScale && order) {

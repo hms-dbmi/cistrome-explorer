@@ -64,7 +64,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
     const isStackedBar = Array.isArray(field);
     const axisHeight = 30;
     const textAreaWidth = 20;
-    const barAreaWidth = width;
+    const barAreaWidth = width - textAreaWidth;
     const minTrackWidth = 40;
     const fontSize = 10;
     const aggValue = (d, f) => getAggregatedValue(d, f, "quantitative", aggFunction);
@@ -229,7 +229,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             .attr("width", width)
             .attr("height", axisHeight)
             .append("g")
-                .attr("transform", `translate(${isLeft ? 1 : 1}, 0)`)
+                .attr("transform", `translate(${isLeft ? textAreaWidth - 1 : 1}, 0)`)
                 .call(axis);
         
         d3.select(domElement)

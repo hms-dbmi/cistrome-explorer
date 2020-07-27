@@ -294,9 +294,24 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
     }, [multivecTrackIds]);
 
     // Callback function for sorting.
-    const onSortRows = useCallback((viewId, trackId, field, type, order) => {
-        const newRowSort = [ { field, type, order } ];
-        const newOptions = updateWrapperOptions(options, newRowSort, "rowSort", viewId, trackId, { isReplace: true });
+    const onSortRows = useCallback((viewId, trackId, field, type, order, isTrackIndependent) => {
+        let newOptions;
+        if(isTrackIndependent) {
+            // We need to modify the track-level `sort` option
+            const { rowInfoAttributes } = getTrackWrapperOptions(options, viewId, trackId);
+            const newRowInfoAttributes = rowInfoAttributes.map(fieldInfo => {
+                if(fieldInfo.field === field && fieldInfo.type === type) {
+                    return { ...fieldInfo, sort: order }
+                } else {
+                    return fieldInfo;
+                }
+            });
+            newOptions = updateWrapperOptions(options, newRowInfoAttributes, "rowInfoAttributes", viewId, trackId, { isReplace: true });
+        }
+        else {
+            const newRowSort = [ { field, type, order } ];
+            newOptions = updateWrapperOptions(options, newRowSort, "rowSort", viewId, trackId, { isReplace: true });
+        }
         setOptions(newOptions);
     }, [options]);
 
@@ -539,8 +554,8 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                     onAddTrack={(field, type, notOneOf, position) => {
                         onAddTrack(viewId, trackId, field, type, notOneOf, position);
                     }}
-                    onSortRows={(field, type, order) => {
-                        onSortRows(viewId, trackId, field, type, order);
+                    onSortRows={(field, type, order, isTrackIndependent) => {
+                        onSortRows(viewId, trackId, field, type, order, isTrackIndependent);
                     }}
                     onHighlightRows={(field, type, condition) => {
                         onHighlightRows(viewId, trackId, field, type, condition);
