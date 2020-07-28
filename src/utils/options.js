@@ -244,17 +244,39 @@ const optionsObjectSchema = merge(cloneDeep(baseSchema), {
 });
 
 /**
+ * Return a condition for highlighting rows (e.g., `subtree` for dendrogram tracks).
+ * @param {Object} highlitOption A `rowHighlight` object.
+ * @returns {string|array|null} The condition for highlighting rows for a given field type. `null` if no proper condition found.
+ */
+export function getConditionFromHighlightOption(highlitOption) {
+    const { type } = highlitOption;
+    const key = Object.keys(highlitOption).find(k => 
+        k !== "field" && 
+        k !== "type" &&
+        k === getHighlightKeyByFieldType(type, highlitOption[k]) // key should match with the given field type
+    );
+    if(!key) {
+        console.warn("No proper condition for a given field type is provided in the following options:", highlitOption);
+    }
+    return key ? highlitOption[key] : null;
+}
+
+/**
  * Get a key in `rowHighlight` object that indicate a certain condition (e.g., `contains`) for highlighting.
  * @param {string} type The field type.
+ * @param {string} condition The condition in options for applying highlighting.
  * @returns {string} The key of `rowHighlight` object that indicate a certain condition.
  */
-export function getHighlightKeyByFieldType(type, condition) {
+export function getHighlightKeyByFieldType(type, condition = undefined) {
   switch(type) {
     case "quantitative":
         return "range";
     case "nominal":
         return "contains";
     case "tree":
+        if(!condition) {
+            console.warn("`condition` is not properly provided, so we are just guessing a HighlightKey");
+        }
         return Array.isArray(condition) ? "subtree" : "minSimilarity";
   }
 }

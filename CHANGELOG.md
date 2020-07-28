@@ -9,6 +9,7 @@
 - Moved `CistromeToolkit` to the sibling of `CistromeHGW`.
 - Rename `HiGlassWithMeta` to `HiGlassMeta`.
 - Upgraded to HiGlass version `1.10.2`
+- Fix the bug on highlighting rows in dendrograms.
 
 ## 0.4.0
 

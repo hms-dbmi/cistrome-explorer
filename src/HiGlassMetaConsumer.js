@@ -20,7 +20,8 @@ import {
     getWrapperSubOptions,
     updateWrapperOptions,
     addTrackWrapperOptions,
-    getHighlightKeyByFieldType
+    getHighlightKeyByFieldType,
+    getConditionFromHighlightOption
 } from './utils/options.js';
 import { 
     getHMTrackIdsFromViewConfig, 
@@ -138,8 +139,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         let newHighlitRows = undefined; // `undefined` resets the hightlighting
         if(trackOptions.rowHighlight) {
             const { field, type } = trackOptions.rowHighlight;
-            const highlightKey = getHighlightKeyByFieldType(type, condition);
-            const condition = trackOptions.rowHighlight[highlightKey];
+            const condition = getConditionFromHighlightOption(trackOptions.rowHighlight);
             newHighlitRows = highlightRowsFromSearch(rowInfo, field, type, condition, trackOptions);
         }
         if(!isEqual(newHighlitRows, context.state[viewId][trackId].highlitRows)) {
