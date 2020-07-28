@@ -12,6 +12,7 @@ import { TooltipContent, destroyTooltip } from "./Tooltip.js";
 import { FILTER, HIGHLIGHTER, ARROW_UP, ARROW_DOWN } from './utils/icons.js';
 import { getAggregatedValue } from "./utils/aggregate.js";
 import { drawRowHighlightRect } from "./utils/linking-views.js";
+import { HIGLASSMETA_DEFAULT } from "./utils/visualization-properties.js";
 
 export const margin = 5;
 
@@ -89,10 +90,9 @@ export default function TrackRowInfoVisNominalBar(props) {
         
         const titleText = field;
         
-        const textAreaWidth = width - 20;
+        const textAreaWidth = width - HIGLASSMETA_DEFAULT.TRACK.MIN_WIDTH;
+        const showTextLabel = textAreaWidth > 0;
         const barAreaWidth = width - textAreaWidth;
-        const minTrackWidth = 40;
-        const isTextLabel = width > minTrackWidth;
         const fontSize = 10;
 
         // Render visual components for each row (i.e., bars and texts).
@@ -114,14 +114,6 @@ export default function TrackRowInfoVisNominalBar(props) {
                 isAggregateNext = true;
             }
 
-            // // Highlight rows w/ background color
-            // if(highlitRows && highlitRows.length !== 0 && selectedRows && highlitRows.indexOf(selectedRows[i]) !== -1) {
-            //     const hoverBgRectLeft = (isLeft ? 0 : barAreaWidth);
-            //     const rect = two.makeRect(hoverBgRectLeft, yScale(i), textAreaWidth, rowHeight);
-            //     rect.fill = HIGHLIGHTING_COLOR;
-            //     rect.opacity = 0.4;
-            // }
-
             if(isAggregateNext) {
                 return;
             }
@@ -137,7 +129,7 @@ export default function TrackRowInfoVisNominalBar(props) {
             rect.fill = color;
 
             // Render text labels when the space is enough.
-            if(barHeight >= fontSize && isTextLabel){
+            if(barHeight >= fontSize && showTextLabel){
                 const text = two.makeText(textLeft, barTop + barHeight/2, textAreaWidth, barHeight, category);
                 text.fill = d3.hsl(color).darker(3);
                 text.fontsize = fontSize;

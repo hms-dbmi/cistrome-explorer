@@ -141,6 +141,17 @@ export default function TrackRowInfoVisBand(props) {
         return two.teardown;
     });
     
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        const div = divRef.current;
+        const teardown = draw(canvas);
+
+        // Clean up.
+        return () => {
+            teardown();
+        };
+    }, [top, left, width, height, leftSelectedRows]);
+
     drawRegister("TrackRowInfoVisBand", draw);
 
     return (

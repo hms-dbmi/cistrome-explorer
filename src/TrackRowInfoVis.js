@@ -6,6 +6,7 @@ import TrackRowInfoVisQuantitativeBar from './TrackRowInfoVisQuantitativeBar.js'
 import TrackRowInfoVisLink from './TrackRowInfoVisLink.js';
 import TrackRowInfoVisDendrogram from './TrackRowInfoVisDendrogram.js';
 import TrackRowInfoVisBand from './TrackRowInfoVisBand.js';
+import { HIGLASSMETA_DEFAULT } from './utils/visualization-properties.js';
 
 const fieldTypeToVisComponent = {
     "nominal": TrackRowInfoVisNominalBar,
@@ -61,7 +62,6 @@ export default function TrackRowInfoVis(props) {
         onWidthChanged
     } = props;
 
-    const minWidth = 20;
     const resizerWidth = 4
     const resizerHeight = 10
     const resizerMargin = 2;
@@ -86,8 +86,8 @@ export default function TrackRowInfoVis(props) {
         const event = d3.event;
         const diff = event.sourceEvent.clientX - dragX.current;
         let newWidth = isLeft ? width - diff : width + diff;
-        if(newWidth < minWidth) {
-            newWidth = minWidth;
+        if(newWidth < HIGLASSMETA_DEFAULT.TRACK.MIN_WIDTH) {
+            newWidth = HIGLASSMETA_DEFAULT.TRACK.MIN_WIDTH;
         }
         // Emit the new width value to the parent component.
         onWidthChanged(newWidth);

@@ -19,7 +19,7 @@ export const demos = {
                 {field: "Metadata URL", type: "url", position: "left", title: "cid", width: 30},
                 {field: "Hierarchical Clustering (Ward)", type: "tree", position: "left", resolveYScale: true, sort: "ascending", width: 200},
                 {field: "Cell Type", type: "nominal", position: "right", width: 80},
-                {field: "Tissue Type", type: "nominal", position: "right", resolveYScale: true, sort: "ascending", width: 80},
+                {field: "Tissue Type", type: "nominal", position: "right", width: 80},
                 {field: "Species", type: "nominal", position: "right", width: 80},
             ],
             rowSort: [

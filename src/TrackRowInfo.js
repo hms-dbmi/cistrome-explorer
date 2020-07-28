@@ -155,7 +155,7 @@ export default function TrackRowInfo(props) {
     const left = isLeft ? trackX - totalWidth : trackX + trackWidth;
 
     const setUnitWidthByIndex = useCallback((i, val) => {
-        setTrackWidths(modifyItemInArray(newTrackWidths, i, val));
+        setTrackWidths(modifyItemInArray(trackWidths, i, val));
     }, [trackWidths]);
 
     //console.log("TrackRowInfo.render");
