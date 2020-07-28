@@ -43,7 +43,9 @@ export default function TrackRowInfoVis(props) {
         rowInfo,
         transformedRowInfo,
         leftSelectedRows, // TODO:
-        rightSelectedRows,
+        rightSelectedRows, // TODO:
+        selectedRows, // TODO:
+        highlitRows, // TODO:
         rowSort,
         rowFilter,
         rowHighlight,
@@ -164,6 +166,8 @@ export default function TrackRowInfoVis(props) {
                     rowInfo,
                     leftSelectedRows,
                     rightSelectedRows,
+                    selectedRows,
+                    highlitRows,
                     titleSuffix,
                     sortInfo,
                     filterInfo,

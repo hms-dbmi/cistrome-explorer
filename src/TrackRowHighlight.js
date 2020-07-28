@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useCallback } from 'react';
 import range from 'lodash/range';
 import d3 from './utils/d3.js';
 import Two from './utils/two.js';
+import { HIGHLIGHTING_STROKE, HIGHLIGHTING_COLOR, HIGHLIGHTING_OPACITY } from './utils/linking-views.js';
 
 /**
  * Component for visualizing highlighted rows of a multivec track.
@@ -55,12 +56,27 @@ export default function TrackRowHighlight(props) {
         });
 
         if(highlitRows) {
-            for(let i of highlitRows) {
-                const rect = two.makeRect(0, yScale(i), width, rowHeight);
-                rect.stroke = null;
-                rect.fill = "#000";
-                rect.opacity = 0.4;
-            }
+            let aggregatedRows = 1;
+            const sortedHighlitRows = highlitRows.slice().sort((a, b) => selectedRows.indexOf(a) - selectedRows.indexOf(b));
+            sortedHighlitRows.forEach((d, i) => {
+                const startY = yScale(d);
+                
+                if(
+                    sortedHighlitRows.length > i + 1 && 
+                    Math.abs(selectedRows.indexOf(sortedHighlitRows[i + 1]) - selectedRows.indexOf(d)) === 1
+                ) {
+                    // Aggregate highlighting rows for drawing the stroke only once
+                    aggregatedRows++;
+                    return;
+                }
+
+                const rect = two.makeRect(0, startY - rowHeight * (aggregatedRows - 1), width, rowHeight * aggregatedRows);
+                rect.stroke = HIGHLIGHTING_STROKE;
+                rect.fill = HIGHLIGHTING_COLOR;
+                rect.opacity = HIGHLIGHTING_OPACITY;
+
+                aggregatedRows = 1;
+            });
         }
 
         two.update();

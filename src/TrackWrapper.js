@@ -120,6 +120,7 @@ export default function TrackWrapper(props) {
                     rowInfo={aggregatedRowInfo}
                     transformedRowInfo={transformedRowInfo}
                     selectedRows={selectedRows}
+                    highlitRows={highlitRows}
                     viewId={multivecTrackViewId}
                     trackId={multivecTrackTrackId}
                     trackX={trackX}
@@ -146,6 +147,7 @@ export default function TrackWrapper(props) {
                     rowInfo={aggregatedRowInfo}
                     transformedRowInfo={transformedRowInfo}
                     selectedRows={selectedRows}
+                    highlitRows={highlitRows}
                     viewId={multivecTrackViewId}
                     trackId={multivecTrackTrackId}
                     trackX={trackX}

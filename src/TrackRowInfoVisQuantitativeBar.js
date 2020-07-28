@@ -13,6 +13,7 @@ import { rgbToHex, generateNextUniqueColor } from "./utils/color.js";
 import { getRetinaRatio } from './utils/canvas.js';
 import { modifyItemInArray } from "./utils/array.js";
 import { getAggregatedValue } from "./utils/aggregate.js";
+import { drawRowHighlightRect } from "./utils/linking-views.js";
 
 export const margin = 5;
 
@@ -44,6 +45,8 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
         isShowControlButtons,
         rowInfo,
         transformedRowInfo,
+        selectedRows, // TODO:  
+        highlitRows, // TODO: 
         titleSuffix,
         sortInfo,
         filterInfo,
@@ -118,9 +121,11 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                 field.forEach(f => sum += aggValue(d, f));
                 return sum;
             }))[1]];   // Zero baseline
+
             xScale = xScale
                 .domain(valueExtent)
                 .range([0, barAreaWidth]);
+
             const colorScale = d3.scaleOrdinal()
                 .domain(Array.from(new Set(field)).sort())
                 .range(d3.schemeTableau10);
@@ -185,7 +190,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                 const barLeft = (isLeft ? width - barWidth : 0);
                 const textLeft = (isLeft ? width - barWidth - margin : barWidth + margin);
                 const infoForMouseEvent = colorToInfo.find(d => d.field === field && d.rowIndex === i);
-                const color = isHidden ? infoForMouseEvent.uniqueColor : d3.interpolateViridis(colorScale(value));;
+                const color = isHidden ? infoForMouseEvent.uniqueColor : d3.interpolateViridis(colorScale(value));
 
                 const rect = two.makeRect(barLeft, barTop, barWidth, rowHeight);
                 rect.fill = color;
@@ -209,6 +214,8 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                 }
             });
         }
+
+        drawRowHighlightRect(two, selectedRows, highlitRows, width, height);
 
         if(!isShowControlButtons) {
             drawVisTitle(titleText, { two, isLeft, width, height, titleSuffix });
@@ -272,6 +279,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                         color={hoveredInfo.color}
                     />
                 });
+                onHighlightRows(field, "quantitative", [hoveredInfo.value, hoveredInfo.value]);
             } else {
                 destroyTooltip();
             }            
@@ -279,6 +287,9 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
 
         // Handle mouse enter and leave.
         d3.select(canvas).on("mouseout", destroyTooltip);
+        d3.select(div).on("mouseleave", () => {
+            onHighlightRows("");
+        });
 
         // Clean up.
         return () => {

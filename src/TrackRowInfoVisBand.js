@@ -1,6 +1,7 @@
 import React, { useRef, useCallback, useEffect } from "react";
 import d3 from "./utils/d3.js";
 import Two from "./utils/two.js";
+import { HIGHLIGHTING_COLOR } from "./utils/linking-views.js";
 
 // TODO: Add these to HiGlassMeta options.
 const BAND_TYPE = [
@@ -22,6 +23,8 @@ export default function TrackRowInfoVisBand(props) {
         left, top, width, height,
         leftSelectedRows,
         rightSelectedRows,
+        selectedRows, // TODO:  
+        highlitRows, // TODO: 
         drawRegister,
     } = props;
 
@@ -45,6 +48,8 @@ export default function TrackRowInfoVisBand(props) {
             domElement
         });
         
+        // TODO: move highlighted bands to front
+        const bandColor = (i) => highlitRows?.indexOf(i) !== -1 ? HIGHLIGHTING_COLOR : "lightgray";
         const renderBand = {
             'band': (i) => {
                 const band = two.makePath(
@@ -57,10 +62,10 @@ export default function TrackRowInfoVisBand(props) {
                     TRACK_PADDING + BAND_PADDING, yScaleLeft(i) + bandWidth,
                     TRACK_PADDING, yScaleLeft(i) + bandWidth,
                 )
-                band.fill = "lightgray";
+                band.fill = bandColor(i);
                 band.stroke = "transparent";
                 band.linewidth = 1;
-                band.opacity = 0.3;
+                band.opacity = 0.4;
             },
             'line': (i) => {
                 if(BAND_PADDING !== 0) {
@@ -70,7 +75,7 @@ export default function TrackRowInfoVisBand(props) {
                         TRACK_PADDING + BAND_PADDING, 
                         yScaleLeft(i) + bandWidth / 2.0,
                     );
-                    lineStart.stroke = "lightgray";
+                    lineStart.stroke = bandColor(i);
                     lineStart.linewidth = 1;
                     lineStart.opacity = 0.5;
 
@@ -80,7 +85,7 @@ export default function TrackRowInfoVisBand(props) {
                         width - TRACK_PADDING,
                         yScaleRight(i) + bandWidth / 2.0,
                     );
-                    lineEnd.stroke = "lightgray";
+                    lineEnd.stroke = bandColor(i);
                     lineEnd.linewidth = 1;
                     lineEnd.opacity = 0.5;
                 }
@@ -91,7 +96,7 @@ export default function TrackRowInfoVisBand(props) {
                     width - TRACK_PADDING - BAND_PADDING,
                     yScaleRight(i) + bandWidth / 2.0,
                 );
-                lineMid.stroke = "lightgray";
+                lineMid.stroke = bandColor(i);
                 lineMid.linewidth = 1;
                 lineMid.opacity = 0.5;
 

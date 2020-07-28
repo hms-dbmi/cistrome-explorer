@@ -11,6 +11,7 @@ import TrackRowInfoControl from './TrackRowInfoControl.js';
 import { TooltipContent, destroyTooltip } from "./Tooltip.js";
 import { FILTER, HIGHLIGHTER, ARROW_UP, ARROW_DOWN } from './utils/icons.js';
 import { getAggregatedValue } from "./utils/aggregate.js";
+import { drawRowHighlightRect } from "./utils/linking-views.js";
 
 export const margin = 5;
 
@@ -42,6 +43,8 @@ export default function TrackRowInfoVisNominalBar(props) {
         isShowControlButtons,
         rowInfo,
         transformedRowInfo,
+        selectedRows, // TODO:  
+        highlitRows, // TODO: 
         titleSuffix,
         sortInfo,
         filterInfo,
@@ -93,7 +96,9 @@ export default function TrackRowInfoVisNominalBar(props) {
         let aggregateStartIdx = -1, sameCategoriesNearby = 1;
         transformedRowInfo.forEach((d, i) => {
             const category = aggValue(d);
+
             // To aggregate bars, check if there is a same category on the next row.
+            let isAggregateNext = false;
             if(
                 i + 1 < transformedRowInfo.length
                 && category === aggValue(transformedRowInfo[i+1])
@@ -102,6 +107,18 @@ export default function TrackRowInfoVisNominalBar(props) {
                     aggregateStartIdx = i;
                 }
                 sameCategoriesNearby++;
+                isAggregateNext = true;
+            }
+
+            // // Highlight rows w/ background color
+            // if(highlitRows && highlitRows.length !== 0 && selectedRows && highlitRows.indexOf(selectedRows[i]) !== -1) {
+            //     const hoverBgRectLeft = (isLeft ? 0 : barAreaWidth);
+            //     const rect = two.makeRect(hoverBgRectLeft, yScale(i), textAreaWidth, rowHeight);
+            //     rect.fill = HIGHLIGHTING_COLOR;
+            //     rect.opacity = 0.4;
+            // }
+
+            if(isAggregateNext) {
                 return;
             }
 
@@ -114,12 +131,6 @@ export default function TrackRowInfoVisNominalBar(props) {
 
             const rect = two.makeRect(barLeft, barTop, barWidth, barHeight);
             rect.fill = color;
-
-            if(hoverValue && category === hoverValue) {
-                const hoverBgRectLeft = (isLeft ? barLeft - textAreaWidth : barLeft + barWidth);
-                const hoverBgRect = two.makeRect(hoverBgRectLeft, barTop, textAreaWidth, barHeight);
-                hoverBgRect.fill = "#EBEBEB";
-            }
 
             // Render text labels when the space is enough.
             if(barHeight >= fontSize && isTextLabel){
@@ -134,6 +145,8 @@ export default function TrackRowInfoVisNominalBar(props) {
             aggregateStartIdx = -1;
             sameCategoriesNearby = 1;
         });
+
+        drawRowHighlightRect(two, selectedRows, highlitRows, width, height);
 
         if(!isShowControlButtons) {
             drawVisTitle(titleText, { two, isLeft, width, height, titleSuffix });
@@ -178,13 +191,15 @@ export default function TrackRowInfoVisNominalBar(props) {
             const [mouseX, mouseY] = d3.mouse(canvas);
 
             const y = yScale.invert(mouseY);
-            let fieldVal;
+            let hoveredCategory;
             if(y !== undefined){
-                fieldVal = aggValue(transformedRowInfo[y]);
-                setHoverValue(fieldVal);
+                hoveredCategory = aggValue(transformedRowInfo[y]);
+                setHoverValue(hoveredCategory);
+                onHighlightRows(field, "nominal", hoveredCategory);
             } else {
                 setHoverValue(null);
                 destroyTooltip();
+                onHighlightRows("");
                 return;
             }
 
@@ -196,15 +211,18 @@ export default function TrackRowInfoVisNominalBar(props) {
                 y: mouseViewportY,
                 content: <TooltipContent 
                     title={field}
-                    value={fieldVal}
-                    color={colorScale(fieldVal)}
+                    value={hoveredCategory}
+                    color={colorScale(hoveredCategory)}
                 />
             });
         });
 
         // Handle mouse leave.
         d3.select(canvas).on("mouseout", destroyTooltip);
-        d3.select(div).on("mouseleave", () => setHoverValue(null));
+        d3.select(div).on("mouseleave", () => {
+            setHoverValue(null);
+            onHighlightRows("");
+        });
 
         // Clean up.
         return () => {

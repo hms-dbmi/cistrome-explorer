@@ -16,12 +16,11 @@ export const demos = {
             rowInfoAttributes: [
                 {field: "qc_frip", type: "quantitative", position: "left"},
                 {field: "qc_fastqc", type: "quantitative", position: "left"},
-                // {field: "Metadata URL", type: "url", position: "left", title: "cid", width: 20},
-                {field: "Cell Type", type: "nominal", position: "left", width: 20},
+                {field: "Metadata URL", type: "url", position: "left", title: "cid", width: 30},
                 {field: "Hierarchical Clustering (Ward)", type: "tree", position: "left", resolveYScale: true, sort: "ascending", width: 200},
-                {field: "Cell Type", type: "nominal", position: "right", width: 20},
-                {field: "Tissue Type", type: "nominal", position: "right", resolveYScale: true, sort: "ascending", width: 20},
-                {field: "Species", type: "nominal", position: "right", width: 20},
+                {field: "Cell Type", type: "nominal", position: "right", width: 80},
+                {field: "Tissue Type", type: "nominal", position: "right", resolveYScale: true, sort: "ascending", width: 80},
+                {field: "Species", type: "nominal", position: "right", width: 80},
             ],
             rowSort: [
                 {field: "Cell Type", type: "nominal", order: "ascending"},
@@ -29,7 +28,8 @@ export const demos = {
             ],
             rowFilter: [
                 {field: "Tissue Type", type: "nominal", notOneOf: ["None"]}
-            ]
+            ],
+            // rowHighlight: {field: "Cell Type", type: "index", index: [0]}
         }
     },
     "H3K27ac Demo (1 View, Center Track, Rows Aggregated)": {

@@ -36,6 +36,7 @@ const baseSchema = {
                 "rowHighlight": {
                     "type": "object",
                     "oneOf":[ 
+                        { "required": ["field", "type", "index"] },
                         { "required": ["field", "type", "contains"] },
                         { "required": ["field", "type", "range"] },
                         { "required": ["field", "type", "subtree"] },
@@ -48,8 +49,12 @@ const baseSchema = {
                         },
                         "type": {
                             "type": "string",
-                            "enum": ["nominal", "quantitative", "tree"],
+                            "enum": ["index", "nominal", "quantitative", "tree"],
                             "description": "The data type of a field"
+                        },
+                        "index": {
+                            "type": "array",
+                            "description": "Indices of rows"
                         },
                         "contains": {
                             "type": "string",
@@ -255,9 +260,6 @@ export function getConditionFromHighlightOption(highlitOption) {
         k !== "type" &&
         k === getHighlightKeyByFieldType(type, highlitOption[k]) // key should match with the given field type
     );
-    if(!key) {
-        console.warn("No proper condition for a given field type is provided in the following options:", highlitOption);
-    }
     return key ? highlitOption[key] : null;
 }
 
@@ -269,6 +271,8 @@ export function getConditionFromHighlightOption(highlitOption) {
  */
 export function getHighlightKeyByFieldType(type, condition = undefined) {
   switch(type) {
+    case "index":
+        return "index";
     case "quantitative":
         return "range";
     case "nominal":

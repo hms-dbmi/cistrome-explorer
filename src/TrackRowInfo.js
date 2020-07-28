@@ -31,10 +31,11 @@ export default function TrackRowInfo(props) {
     const {
         trackX, trackY,
         trackWidth, trackHeight,
-        originalRowInfo,    // TODO: Better way to differentiate the tree
+        originalRowInfo,    // TODO: Better way to differentiate the three
         rowInfo,
         transformedRowInfo, 
-        selectedRows, // TODO: 
+        selectedRows, // TODO: doc
+        highlitRows, // TODO: doc
         rowInfoAttributes,
         rowInfoPosition,
         rowSort,
@@ -234,6 +235,8 @@ export default function TrackRowInfo(props) {
                     transformedRowInfo={d.transformedRowInfo}
                     leftSelectedRows={d.leftSelectedRows}
                     rightSelectedRows={d.rightSelectedRows}
+                    selectedRows={d.selectedRows}
+                    highlitRows={highlitRows}
                     rowSort={rowSort}
                     rowFilter={rowFilter}
                     rowHighlight={rowHighlight}

@@ -10,6 +10,7 @@ import { SORT_TREE, HIGHLIGHTER } from './utils/icons.js';
 import { TooltipContent, destroyTooltip } from './Tooltip.js';
 import TrackRowInfoControl from "./TrackRowInfoControl.js";
 import { FILTER } from './utils/icons.js';
+import { drawRowHighlightRect } from "./utils/linking-views.js";
 
 /**
  * Component for visualization of row info hierarchies.
@@ -38,6 +39,8 @@ export default function TrackRowInfoVisDendrogram(props) {
         filterInfo,
         isLeft,
         isShowControlButtons,
+        selectedRows, // TODO:  
+        highlitRows, // TODO: 
         onAddTrack,
         onSortRows,
         onHighlightRows,
@@ -251,6 +254,8 @@ export default function TrackRowInfoVisDendrogram(props) {
             rect.opacity = 1;
         }
 
+        drawRowHighlightRect(two, selectedRows, highlitRows, width, height);
+
         if(!isShowControlButtons) {
             drawVisTitle(field, { two, isLeft, width, height });
         }
@@ -304,20 +309,20 @@ export default function TrackRowInfoVisDendrogram(props) {
             const mouseViewportY = e.clientY;
             
             let node = ancestor.current;
-            const subtree = [];
+            const ancestors = [];
             while(node.parent) {
-                subtree.push(node.data.name);
+                ancestors.push(node.data.name);
                 node = node.parent;
             }
-            subtree.reverse();
+            ancestors.reverse();
             PubSub.publish(EVENT.CONTEXT_MENU, {
                 x: mouseViewportX,
                 y: mouseViewportY,
                 title: "Options for dendrogram",
                 menuType: CONTEXT_MENU_TYPE.TREE_ANCESTOR,
                 items: [
-                    { title: "Highlight Rows", icon: HIGHLIGHTER, action: () => onHighlightRows(field, "tree", subtree) },
-                    { title: "Filter Rows", icon: FILTER, action: () => onFilterRows(field, "tree", subtree, false) }
+                    { title: "Highlight Rows", icon: HIGHLIGHTER, action: () => onHighlightRows(field, "tree", ancestors) },
+                    { title: "Filter Rows", icon: FILTER, action: () => onFilterRows(field, "tree", ancestors, false) }
                 ]
             });
         }   
@@ -388,13 +393,22 @@ export default function TrackRowInfoVisDendrogram(props) {
                 
                 setHighlightNodeX(pointX);
                 setHighlightNodeY(pointY);
+                
+                const ancestors = [];
+                let node = d;
+                while(node.parent) {
+                    ancestors.push(node.data.name);
+                    node = node.parent;
+                }
+                ancestors.reverse();
+                onHighlightRows(field, "tree", ancestors);
             }
         });
 
         d3.select(canvas).on("mouseout", () => {
             destroyTooltip();
             if(!showMinSimBar) {
-                // onHighlightRows("");
+                onHighlightRows("");
             }
         });
 
