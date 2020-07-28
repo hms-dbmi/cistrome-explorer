@@ -21,6 +21,8 @@ const margin = 5;
  * @prop {number} height The height of this view.
  * @prop {object[]} rowInfo The array of JSON Object containing row information.
  * @prop {object[]} transformedRowInfo The `rowInfo` array after aggregating, filtering, and sorting rows.
+ * @prop {array} selectedRows The array of selected indices. 
+ * @prop {array} highlitRows The array of highlit indices.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  * @prop {string} titleSuffix The suffix of a title, information about sorting and filtering status.
@@ -40,8 +42,8 @@ export default function TrackRowInfoVisLink(props) {
         isShowControlButtons,
         rowInfo,
         transformedRowInfo,
-        selectedRows, // TODO:  
-        highlitRows, // TODO: 
+        selectedRows,
+        highlitRows,
         titleSuffix,
         sortInfo,
         filterInfo,
@@ -135,6 +137,7 @@ export default function TrackRowInfoVisLink(props) {
             } else {
                 setHoverIndex(null);
                 destroyTooltip();
+                onHighlightRows("");
                 return;
             }
 

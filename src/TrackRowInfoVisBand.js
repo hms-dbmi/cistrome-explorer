@@ -3,28 +3,36 @@ import d3 from "./utils/d3.js";
 import Two from "./utils/two.js";
 import { HIGHLIGHTING_COLOR } from "./utils/linking-views.js";
 
-// TODO: Add these to HiGlassMeta options.
+/* TODO: Add these to HiGlassMeta options. */
 const BAND_TYPE = [
     'band',
     'line',
     'curved-band',
     'curved-line'
-][0];
+][1];
 const POINT_RADIUS = 0;
 const TRACK_PADDING = 0;
 const BAND_PADDING = 10;
 
 /**
- * 
- * @param {array} leftSelectedRows
+ * Component for visualization of row info quantitative or nominal attribute values.
+ * @prop {number} left The left position of this view.
+ * @prop {number} top The top position of this view.
+ * @prop {number} width The width of this view.
+ * @prop {number} height The height of this view.
+ * @prop {array} leftSelectedRows The array of selected indices on the left track.
+ * @prop {array} rightSelectedRows The array of selected indices on the right track.
+ * @prop {array} selectedRows The array of selected indices. 
+ * @prop {array} highlitRows The array of highlit indices.
+ * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function TrackRowInfoVisBand(props) {
     const {
         left, top, width, height,
         leftSelectedRows,
         rightSelectedRows,
-        selectedRows, // TODO:  
-        highlitRows, // TODO: 
+        selectedRows,
+        highlitRows,
         drawRegister,
     } = props;
 
@@ -48,8 +56,8 @@ export default function TrackRowInfoVisBand(props) {
             domElement
         });
         
-        // TODO: move highlighted bands to front
         const bandColor = (i) => highlitRows?.indexOf(i) !== -1 ? HIGHLIGHTING_COLOR : "lightgray";
+        const lineWidth = (i) => highlitRows?.indexOf(i) !== -1 ? 2 : 1;
         const renderBand = {
             'band': (i) => {
                 const band = two.makePath(
@@ -76,7 +84,7 @@ export default function TrackRowInfoVisBand(props) {
                         yScaleLeft(i) + bandWidth / 2.0,
                     );
                     lineStart.stroke = bandColor(i);
-                    lineStart.linewidth = 1;
+                    lineStart.linewidth = lineWidth(i);
                     lineStart.opacity = 0.5;
 
                     const lineEnd = two.makeLine(
@@ -86,7 +94,7 @@ export default function TrackRowInfoVisBand(props) {
                         yScaleRight(i) + bandWidth / 2.0,
                     );
                     lineEnd.stroke = bandColor(i);
-                    lineEnd.linewidth = 1;
+                    lineEnd.linewidth = lineWidth(i);
                     lineEnd.opacity = 0.5;
                 }
 
@@ -97,7 +105,7 @@ export default function TrackRowInfoVisBand(props) {
                     yScaleRight(i) + bandWidth / 2.0,
                 );
                 lineMid.stroke = bandColor(i);
-                lineMid.linewidth = 1;
+                lineMid.linewidth = lineWidth(i);
                 lineMid.opacity = 0.5;
 
                 if(POINT_RADIUS) {
@@ -134,27 +142,6 @@ export default function TrackRowInfoVisBand(props) {
     });
     
     drawRegister("TrackRowInfoVisBand", draw);
-
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        const div = divRef.current;
-        const teardown = draw(canvas);
-
-        d3.select(canvas).on("mousemove", () => {
-            const [] = d3.mouse(canvas);
-            // TODO:
-        });
-
-        // Handle mouse leave.
-        // d3.select(canvas).on("mouseout", destroyTooltip);
-        // d3.select(div).on("mouseleave", () => setHoverValue(null));
-
-        // Clean up.
-        return () => {
-            teardown();
-            d3.select(div).on("mouseleave", null);
-        };
-    }, [leftSelectedRows, rightSelectedRows, top, left, width, height]);
 
     return (
         <div

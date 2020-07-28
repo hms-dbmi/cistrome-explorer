@@ -3,8 +3,6 @@ import isEqual from 'lodash/isEqual';
 import clamp from 'lodash/clamp';
 
 import { HiGlassComponent } from 'higlass';
-import higlassRegister from 'higlass-register';
-import StackedBarTrack from 'higlass-multivec/es/StackedBarTrack.js';
 
 import { InfoContext, ACTION } from './utils/contexts.js';
 import { selectRows, highlightRowsFromSearch } from './utils/select-rows.js';
@@ -40,12 +38,6 @@ import { wrapSvg } from './utils/wrap-svg.js';
 import './HiGlassMetaConsumer.scss';
 import cloneDeep from 'lodash/cloneDeep';
 import { removeItemFromArray, modifyItemInArray, insertItemToArray } from './utils/array.js';
-
-higlassRegister({
-    name: 'StackedBarTrack',
-    track: StackedBarTrack,
-    config: StackedBarTrack.config,
-});
 
 const hgOptionsBase = {
     sizeMode: 'bounded', // Stretch the height of HiGlass to its container <div/>
@@ -420,12 +412,6 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         setSelectedRowsToViewConfig(viewId, trackId, newSelectedRows);
         setOptions(newWrapperOptions);
     }, [options]);
-
-    const onRowInfoAttributesChange = useCallback((viewId, trackId, rowInfoAttributes) => {
-        // TODO: ???
-        const newOptions = updateWrapperOptions(options, rowInfoAttributes, "rowInfoAttributes", viewId, trackId, { isReplace: true });
-        setOptions(newOptions);
-    }, [options]);
     
     // Callback function for adding a track.
     const onAddTrack = useCallback((viewId, trackId, field, type, notOneOf, position) => {
@@ -568,9 +554,6 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                     }}
                     onMetadataInit={() => {
                         setMetadataToContext(viewId, trackId);
-                    }}
-                    onRowInfoAttributesChange={(rowInfoAttributes) => {
-                        onRowInfoAttributesChange(viewId, trackId, rowInfoAttributes);
                     }}
                     drawRegister={drawRegister}
                 />

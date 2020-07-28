@@ -20,6 +20,8 @@ import { drawRowHighlightRect } from "./utils/linking-views.js";
  * @prop {number} height The height of this view.
  * @prop {object[]} rowInfo The array of JSON Object containing row information.
  * @prop {object[]} transformedRowInfo The `rowInfo` array after aggregating, filtering, and sorting rows.
+ * @prop {array} selectedRows The array of selected indices. 
+ * @prop {array} highlitRows The array of highlit indices.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {object} filterInfo The options for filtering rows of the field used in this track.
  * @prop {boolean} isLeft Is this view on the left side of the track?
@@ -39,8 +41,8 @@ export default function TrackRowInfoVisDendrogram(props) {
         filterInfo,
         isLeft,
         isShowControlButtons,
-        selectedRows, // TODO:  
-        highlitRows, // TODO: 
+        selectedRows,
+        highlitRows,
         onAddTrack,
         onSortRows,
         onHighlightRows,
@@ -183,6 +185,8 @@ export default function TrackRowInfoVisDendrogram(props) {
             domElement
         });
         
+        drawRowHighlightRect(two, selectedRows, highlitRows, width, height);
+
         // Draw the dendrogram.
         const descendants = root.descendants();
 
@@ -253,8 +257,6 @@ export default function TrackRowInfoVisDendrogram(props) {
             rect.fill = "white";
             rect.opacity = 1;
         }
-
-        drawRowHighlightRect(two, selectedRows, highlitRows, width, height);
 
         if(!isShowControlButtons) {
             drawVisTitle(field, { two, isLeft, width, height });

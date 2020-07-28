@@ -3,9 +3,15 @@ import d3 from './utils/d3.js';
 
 import TrackRowInfoVis from "./TrackRowInfoVis.js";
 import { selectRows } from './utils/select-rows.js';
+import { modifyItemInArray } from './utils/array.js';
 
 const DEFAULT_TRACK_WIDTH = 100;
 const DEFAULT_BAND_WIDTH = 100;
+
+const TRACK_TYPE = Object.freeze({
+    VIS: "vis",
+    BAND: "band"
+});
 
 /**
  * Parent component for visualization of multiple row info attribute values, on a particular side (left/right).
@@ -13,8 +19,11 @@ const DEFAULT_BAND_WIDTH = 100;
  * @prop {number} trackY The track vertical offset.
  * @prop {number} trackWidth The track width.
  * @prop {number} trackHeight The track height.
+ * @prop {object[]} originalRowInfo The array of JSON Object containing `raw` row information.
  * @prop {object[]} rowInfo The array of JSON Object containing row information.
  * @prop {object[]} transformedRowInfo The `rowInfo` array after aggregating, filtering, and sorting rows.
+ * @prop {array} selectedRows The array of selected indices. 
+ * @prop {array} highlitRows The array of highlit indices.
  * @prop {array} rowInfoAttributes Array of JSON object, one object for the names and types of each attribute.
  * @prop {string} rowInfoPosition The value of the `rowInfoPosition` option.
  * @prop {object} rowSort The options for sorting rows.
@@ -31,11 +40,11 @@ export default function TrackRowInfo(props) {
     const {
         trackX, trackY,
         trackWidth, trackHeight,
-        originalRowInfo,    // TODO: Better way to differentiate the three
-        rowInfo,
-        transformedRowInfo, 
-        selectedRows, // TODO: doc
-        highlitRows, // TODO: doc
+        originalRowInfo, // Used only for determining track-specific `selectedRows`
+        rowInfo, // Used only for showing data in filtering interfaces (e.g., keyword search results)
+        transformedRowInfo, // Used for visualizations
+        selectedRows,
+        highlitRows,
         rowInfoAttributes,
         rowInfoPosition,
         rowSort,
@@ -44,7 +53,6 @@ export default function TrackRowInfo(props) {
         onAddTrack,
         onSortRows,
         onHighlightRows,
-        onRowInfoAttributesChange,
         onFilterRows,
         drawRegister
     } = props;
@@ -52,27 +60,31 @@ export default function TrackRowInfo(props) {
     const isLeft = rowInfoPosition === "left";
     const top = trackY;
     const height = trackHeight;
-    const [trackProps, setTrackProps] = useState(getInitTrackProps());
+    const [trackWidths, setTrackWidths] = useState([]);
+    const trackProps = generateTrackProps();
     
-    function getInitTrackProps() { 
+    // This function generates properties for tracks (e.g., width, x start position), 
+    // considering the band-connection tracks between actual tracks
+    function generateTrackProps() { 
         const properties = [];
         
         let currentLeft = 0, prevTrackSelectedRows = selectedRows;
         let isPrevIndependentYScale = false;
+        let currentIndex = 0;
+
         rowInfoAttributes.forEach((attribute, i) => {
             const fieldInfo = isLeft ? rowInfoAttributes[rowInfoAttributes.length - i - 1] : attribute;
             const { field, type, resolveYScale, sort: order, width: initWidth } = fieldInfo;        
-            const width = initWidth ? initWidth : DEFAULT_TRACK_WIDTH;
             let isCurrIndependentYScale = false;
             
-            // Determine whether to use a track-level transformedRowInfo or the global one
+            // Determine whether to use a track-specific transformedRowInfo or the global one
             let currSelectedRows, currTransformedRowInfo;
             if(resolveYScale && order) {
                 isCurrIndependentYScale = true;
 
-                // Track-independent arrangement
+                // Use track-specific arrangement
                 currSelectedRows = selectRows(
-                    originalRowInfo, 
+                    originalRowInfo,
                     { rowFilter },
                     { rowSort: [{ field, type, order }] }
                 );
@@ -88,24 +100,27 @@ export default function TrackRowInfo(props) {
             
             if(
                 (isPrevIndependentYScale || isCurrIndependentYScale)
-                && !(isLeft && i === 0) // we do not have to add a left-most band track
+                && !(isLeft && i === 0) // we don't want to add a band track on the left-most area
             ) {
-                // We need to show band connections before this track.
+                // We need to show band connections before this visualization track
+                const width = trackWidths[currentIndex++] ?? DEFAULT_BAND_WIDTH;
                 properties.push({
+                    type: TRACK_TYPE.BAND,
                     top: 0,
                     left: currentLeft, 
-                    width: DEFAULT_BAND_WIDTH,
+                    width,
                     height,
                     fieldInfo: { type: "band" },
                     leftSelectedRows: prevTrackSelectedRows,
                     rightSelectedRows: currSelectedRows
                 });
-                currentLeft += DEFAULT_BAND_WIDTH;
+                currentLeft += width;
             }
 
             // Add props for the current vertical track
+            const width = trackWidths[currentIndex++] ?? initWidth ?? DEFAULT_TRACK_WIDTH;
             properties.push({
-                index: i, // TODO:
+                type: TRACK_TYPE.VIS,
                 top: 0,
                 left: currentLeft, 
                 width,
@@ -121,11 +136,12 @@ export default function TrackRowInfo(props) {
         });
 
         if(isLeft && isPrevIndependentYScale) {
-            // Add a last band track between a HiGlass heatmap and a vertical track on the left
+            // Add a last band track between a HiGlass heatmap and a vis track on the left
             properties.push({
+                type: TRACK_TYPE.BAND,
                 top: 0,
                 left: currentLeft, 
-                width: DEFAULT_BAND_WIDTH,
+                width: trackWidths[currentIndex] ?? DEFAULT_BAND_WIDTH,
                 height,
                 fieldInfo: { type: "band" },
                 leftSelectedRows: prevTrackSelectedRows,
@@ -134,83 +150,13 @@ export default function TrackRowInfo(props) {
         }
         return properties;
     }
-    
-    // If we get new rowInfo data, initialize tracks.
-    useEffect(() => {
-        setTrackProps(getInitTrackProps());
-    }, [rowInfoAttributes]);
-
-    // Update row information
-    useEffect(() => {
-        let newTrackProps = Array.from(trackProps);
-
-        // Iterate over normal vertical tracks first
-        newTrackProps = newTrackProps.map(d => {
-            if(d.fieldInfo.type !== 'band') {
-                // TODO: use resolveYScale updated in the `rowInfoAttributes`
-                const { field, type, resolveYScale, sort: order } = d.fieldInfo;
-                let currSelectedRows, currTransformedRowInfo;
-                if(resolveYScale && order) {
-                    // This is a track with an independent y-axis scale
-                    currSelectedRows = selectRows(
-                        originalRowInfo, 
-                        { rowFilter },
-                        { rowSort: [{ field, type, order }] }
-                    );
-                    currTransformedRowInfo = (!currSelectedRows ? originalRowInfo : currSelectedRows.map(
-                        indexOrIndices => Array.isArray(indexOrIndices)
-                            ? originalRowInfo.filter((d, i) => indexOrIndices.includes(i))
-                            : originalRowInfo[indexOrIndices]
-                    ));
-                } else {
-                    currSelectedRows = selectedRows;
-                    currTransformedRowInfo = transformedRowInfo;
-                }
-                return {
-                    ...d,
-                    height,
-                    selectedRows: currSelectedRows,
-                    transformedRowInfo: currTransformedRowInfo
-                }
-            }
-            return { ...d, height };
-        });
-
-        // Iterate over band-connection tracks
-        newTrackProps = newTrackProps.map((d, i) => {
-            if(d.fieldInfo.type === "band") {
-                const leftSelectedRows = newTrackProps[i-1]?.selectedRows ? 
-                    newTrackProps[i-1]?.selectedRows :
-                    selectedRows;
-                const rightSelectedRows = newTrackProps[i+1]?.selectedRows ? 
-                    newTrackProps[i+1]?.selectedRows :
-                    selectedRows;
-                return {
-                    ...d,
-                    height,
-                    leftSelectedRows,
-                    rightSelectedRows
-                }
-            }
-            return { ...d, height };
-        });
-        setTrackProps(newTrackProps);
-    }, [originalRowInfo, selectedRows, transformedRowInfo, height]);
 
     const totalWidth = d3.sum(trackProps.map(d => d.width));
     const left = isLeft ? trackX - totalWidth : trackX + trackWidth;
 
-    const setUnitWidthByIndex = useCallback((index, val) => {
-        let newTrackProps = Array.from(trackProps);
-        newTrackProps[index].width = val;
-
-        // Update `left` properties using the updated width
-        newTrackProps = newTrackProps.map((d, i) => ({ 
-            ...d, 
-            left: d3.sum(newTrackProps.slice(0, i).map(_d => _d.width)) 
-        }));
-        setTrackProps([...newTrackProps]);
-    }, [trackProps]);
+    const setUnitWidthByIndex = useCallback((i, val) => {
+        setTrackWidths(modifyItemInArray(newTrackWidths, i, val));
+    }, [trackWidths]);
 
     //console.log("TrackRowInfo.render");
     return (

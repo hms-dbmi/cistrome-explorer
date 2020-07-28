@@ -28,8 +28,7 @@ export const demos = {
             ],
             rowFilter: [
                 {field: "Tissue Type", type: "nominal", notOneOf: ["None"]}
-            ],
-            // rowHighlight: {field: "Cell Type", type: "index", index: [0]}
+            ]
         }
     },
     "H3K27ac Demo (1 View, Center Track, Rows Aggregated)": {

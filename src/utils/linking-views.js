@@ -1,9 +1,9 @@
 import d3 from "./d3.js";
 import range from "lodash/range";
 
-export const HIGHLIGHTING_COLOR = ["gold", "#399AB6"][0];
-export const HIGHLIGHTING_STROKE = ["brown", "#265D8A"][0];
-export const HIGHLIGHTING_OPACITY = 0.4;
+export const HIGHLIGHTING_COLOR = ["#999", "gold", "#399AB6"][0];
+export const HIGHLIGHTING_STROKE = ["black", "brown", "#265D8A"][0];
+export const HIGHLIGHTING_OPACITY = 0.26;
 
 export function drawRowHighlightRect(two, selectedRows, highlitRows, width, height) {
     if(!highlitRows || !selectedRows) {

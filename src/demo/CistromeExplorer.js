@@ -286,7 +286,6 @@ export default function CistromeExplorer() {
                         </svg>
                         {' Remove All Sort'}
                     </span>
-                    {/* TODO: Add more options here */}
                 </div>
             </div>
         </div>

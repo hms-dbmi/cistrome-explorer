@@ -28,6 +28,8 @@ export const margin = 5;
  * @prop {boolean} isShowControlButtons Determine if control buttons should be shown.
  * @prop {object[]} rowInfo The array of JSON Object containing row information.
  * @prop {object[]} transformedRowInfo The `rowInfo` array after aggregating, filtering, and sorting rows.
+ * @prop {array} selectedRows The array of selected indices. 
+ * @prop {array} highlitRows The array of highlit indices.
  * @prop {string} titleSuffix The suffix of a title, information about sorting and filtering status.
  * @prop {object} sortInfo The options for sorting rows of the field used in this track.
  * @prop {object} filterInfo The options for filtering rows of the field used in this track.
@@ -45,8 +47,8 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
         isShowControlButtons,
         rowInfo,
         transformedRowInfo,
-        selectedRows, // TODO:  
-        highlitRows, // TODO: 
+        selectedRows,
+        highlitRows,
         titleSuffix,
         sortInfo,
         filterInfo,
@@ -105,6 +107,8 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             domElement
         });
 
+        drawRowHighlightRect(two, selectedRows, highlitRows, width, height);
+        
         let titleText = isStackedBar ? field.join(" + ") : field;
         if(aggFunction === "count") {
             // For `count` aggregation function, field name is not important since
@@ -215,8 +219,6 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             });
         }
 
-        drawRowHighlightRect(two, selectedRows, highlitRows, width, height);
-
         if(!isShowControlButtons) {
             drawVisTitle(titleText, { two, isLeft, width, height, titleSuffix });
         }
@@ -282,6 +284,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                 onHighlightRows(field, "quantitative", [hoveredInfo.value, hoveredInfo.value]);
             } else {
                 destroyTooltip();
+                onHighlightRows("");
             }            
         });
 

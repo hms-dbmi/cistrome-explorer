@@ -17,7 +17,7 @@ import HiGlassMetaConsumer from "./HiGlassMetaConsumer.js";
  * />
  */
 const HiGlassMeta = forwardRef((props, ref) => { 
-    console.log("HiGlassMeta.render");
+    // console.log("HiGlassMeta.render");
     return (
         <InfoProvider>
             <HiGlassMetaConsumer ref={ref} {...props} />
