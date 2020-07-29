@@ -26,9 +26,9 @@
           "top": [
             {
               "type": "horizontal-chromosome-labels",
-              "uid": "GzHGPlijS2eASBqslzVcxA",
-              "tilesetUid": "ZpZ8c5JJRUS1J7ZkofcUrg",
-              "server": "https://resgen.io/api/v1",
+              "server": "http://higlass.io/api/v1",
+              "tilesetUid": "NyITQvZsS_mOFNlz5C2LJg",
+              "uid": "cBUEM6QWQ-mHfiFuza2I1w",
               "options": {
                 "showMousePosition": false,
                 "mousePositionColor": "#999999",
@@ -42,9 +42,9 @@
             },
             {
               "type": "horizontal-gene-annotations",
-              "uid": "R6ZZ5LnEQ4ODCWZoE38maw",
-              "tilesetUid": "M9A9klpwTci5Vf4bHZ864g",
-              "server": "https://resgen.io/api/v1",
+              "server": "//higlass.io/api/v1",
+              "tilesetUid": "P0PLbQMwTYGy-5uPIQid7A",
+              "uid": "GyS0k_E_T5-8prM1VQjQMQ",
               "options": {
                 "labelColor": "black",
                 "labelPosition": "hidden",
@@ -156,9 +156,9 @@
           "top": [
             {
               "type": "horizontal-chromosome-labels",
-              "uid": "GzHGPlijS2eASBqslzVcxA",
-              "tilesetUid": "ZpZ8c5JJRUS1J7ZkofcUrg",
-              "server": "https://resgen.io/api/v1",
+              "server": "http://higlass.io/api/v1",
+              "tilesetUid": "NyITQvZsS_mOFNlz5C2LJg",
+              "uid": "cBUEM6QWQ-mHfiFuza2I1w2",
               "options": {
                 "showMousePosition": false,
                 "mousePositionColor": "#999999",
@@ -172,9 +172,9 @@
             },
             {
               "type": "horizontal-gene-annotations",
-              "uid": "R6ZZ5LnEQ4ODCWZoE38maw",
-              "tilesetUid": "M9A9klpwTci5Vf4bHZ864g",
-              "server": "https://resgen.io/api/v1",
+              "server": "//higlass.io/api/v1",
+              "tilesetUid": "P0PLbQMwTYGy-5uPIQid7A",
+              "uid": "GyS0k_E_T5-8prM1VQjQMQ2",
               "options": {
                 "labelColor": "black",
                 "labelPosition": "hidden",

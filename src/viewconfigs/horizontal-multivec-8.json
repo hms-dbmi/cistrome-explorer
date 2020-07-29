@@ -26,9 +26,9 @@
           "top": [
             {
               "type": "horizontal-chromosome-labels",
-              "uid": "GzHGPlijS2eASBqslzVcxA",
-              "tilesetUid": "ZpZ8c5JJRUS1J7ZkofcUrg",
-              "server": "https://resgen.io/api/v1",
+              "server": "http://higlass.io/api/v1",
+              "tilesetUid": "NyITQvZsS_mOFNlz5C2LJg",
+              "uid": "cBUEM6QWQ-mHfiFuza2I1w",
               "options": {
                 "showMousePosition": false,
                 "mousePositionColor": "#999999",
