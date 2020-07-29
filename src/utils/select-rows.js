@@ -27,7 +27,7 @@ export function selectRows(rowInfo, options, altOptions = null) {
             filterInfos.sort((a, b) => a.minSimilarity ? 1 : b.minSimilarity ? -1 : 0);
 
             filterInfos.forEach(info => {
-                const { field, type, notOneOf, range, subtree, minSimilarity } = info;
+                const { field, type, notOneOf, range, ancestors, minSimilarity } = info;
                 const aggFunction = options.rowInfoAttributes?.find(d => d.field === field)?.aggFunction;
                 const isMultipleFields = Array.isArray(field);
                 if(type === "nominal") {
@@ -55,11 +55,11 @@ export function selectRows(rowInfo, options, altOptions = null) {
                         // TODO: How to best support aggregation for `tree`?
                         return;
                     }
-                    // `tree` type filter can have both the `subtree` and `minSimilarity` filters in a single `filterInfo`.
-                    if(subtree) {
+                    // `tree` type filter can have both the `ancestors` and `minSimilarity` filters in a single `filterInfo`.
+                    if(ancestors) {
                         filteredRowInfo = filteredRowInfo.filter(d => d[1][field].reduce(
-                            // TODO: Remove `h === subtree[i]` when we always encode similarity distance in dendrogram.
-                            (a, h, i) => a && (i >= subtree.length || h === subtree[i] || h.name === subtree[i]), true)
+                            // TODO: Remove `h === ancestors[i]` when we always encode similarity distance in dendrogram.
+                            (a, h, i) => a && (i >= ancestors.length || h === ancestors[i] || h.name === ancestors[i]), true)
                         );
                     } 
                     if (minSimilarity) {
@@ -242,7 +242,7 @@ export function highlightRowsFromSearch(rowInfo, field, type, conditions, option
             const filteredRows = aggregatedRowInfo.filter(
                 d => getAggregatedValue(d[1], field, 'tree', aggFuncName).reduce(
                     // Check if a node have identical ancestors
-                    // TODO: Remove `curr === subtree[i]` when we always encode similarity distance in dendrogram.
+                    // TODO: Remove `curr === ancestors[i]` when we always encode similarity distance in dendrogram.
                     (accum, curr, i) => accum && (i > ancestors.length || curr === ancestors[i] || curr.name === ancestors[i]),
                     true
                 )

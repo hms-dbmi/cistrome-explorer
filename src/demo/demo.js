@@ -220,7 +220,7 @@ export const demos = {
             rowFilter: [ ]
         }
     },
-    "Minimal Dataset (w/ Dendrogram and Aggregation)": {
+    "Minimal Dataset (w/ Similarity Dendrogram)": {
         viewConfig: hgDemoViewConfig2b,
         options: {
             rowInfoAttributes: [
@@ -233,7 +233,8 @@ export const demos = {
             ],
             rowFilter: [ ],
             rowAggregate: [
-                {field: "Tissue Type", type: "nominal", oneOf: ["Blood", "Bone Marrow"]}
+                // Use this for debuging aggregation features
+                // {field: "Tissue Type", type: "nominal", oneOf: ["Blood", "Bone Marrow"]}
             ]
         }
     }

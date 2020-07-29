@@ -160,7 +160,7 @@ export default function TrackRowInfoVisDendrogram(props) {
             maxDistance * (newLeft / visWidth);
         setMinSimBarLeft(newLeft);
         
-        // TODO: We want to uncomment the below line, but that is somehow removing `subtree` in `filterInfo`.
+        // TODO: We want to uncomment the below line, but that is somehow removing `ancestors` in `filterInfo`.
         // onHighlightRows(field, "tree", minSimilarity.current);
     }, [maxDistance, width, dragX, minSimBarLeft]);
 
