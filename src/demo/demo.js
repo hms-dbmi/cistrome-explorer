@@ -16,8 +16,8 @@ export const demos = {
             rowInfoAttributes: [
                 {field: "qc_frip", type: "quantitative", position: "left", title: "QC: FRIP"},
                 {field: "qc_fastqc", type: "quantitative", position: "left", title:  "QC: FastQC"},
-                {field: "cid", type: "comparison", position: "left", title: "Compare Positive and Negative", width: 40},
-                {field: "Metadata URL", alt: "cid", type: "url", position: "left", width: 40},
+                {field: "cid", type: "nominal-dynamic",  position: "left", title: "Compare Positive and Negative", domain: ["positive", "negative"], range: ["blue", "red"], width: 30},
+                {field: "Metadata URL", alt: "cid", type: "url", position: "left", width: 30},
                 {field: "Hierarchical Clustering (Ward)", type: "tree", position: "left", resolveYScale: true, sort: "ascending", width: 200},
                 {field: "Cell Type", type: "nominal", position: "right", width: 80},
                 {field: "Tissue Type", type: "nominal", position: "right", width: 80},

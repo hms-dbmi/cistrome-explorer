@@ -95,7 +95,7 @@ const baseSchema = {
                 },
                 "type": {
                     "type": "string",
-                    "enum": ["nominal", "quantitative", "url", "tree", "comparison"],
+                    "enum": ["nominal", "quantitative", "url", "tree", "nominal-dynamic"],
                     "description": "The data type of a field"
                 },
                 "aggFunction": {
@@ -120,6 +120,16 @@ const baseSchema = {
                 "width": {
                     "type": "number",
                     "description": "The horizontal size of a vertical track"
+                },
+                "domain": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "Only applicable with type === 'nominal-dynamic'. Set the domain for the nominal field, for example ['positive', 'negative']."
+                },
+                "range": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "Only applicable with type === 'nominal-dynamic'. Set the color range for the nominal field, for example ['blue', 'red']."
                 }
             }
         },

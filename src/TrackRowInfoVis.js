@@ -5,7 +5,7 @@ import TrackRowInfoVisNominalBar from './TrackRowInfoVisNominalBar.js';
 import TrackRowInfoVisQuantitativeBar from './TrackRowInfoVisQuantitativeBar.js';
 import TrackRowInfoVisLink from './TrackRowInfoVisLink.js';
 import TrackRowInfoVisDendrogram from './TrackRowInfoVisDendrogram.js';
-import TrackRowInfoVisComparison from './TrackRowInfoVisComparison.js';
+import TrackRowInfoVisNominalDynamic from './TrackRowInfoVisNominalDynamic.js';
 import TrackRowInfoVisBand from './TrackRowInfoVisBand.js';
 import { HIGLASSMETA_DEFAULT } from './utils/visualization-properties.js';
 
@@ -14,7 +14,7 @@ const fieldTypeToVisComponent = {
     "quantitative": TrackRowInfoVisQuantitativeBar,
     "url": TrackRowInfoVisLink,
     "tree": TrackRowInfoVisDendrogram,
-    "comparison": TrackRowInfoVisComparison,
+    "nominal-dynamic": TrackRowInfoVisNominalDynamic,
     "band": TrackRowInfoVisBand,
 };
 
@@ -64,7 +64,7 @@ export default function TrackRowInfoVis(props) {
         onWidthChanged
     } = props;
 
-    const { type, field, alt, aggFunction, resolveYScale } = fieldInfo;
+    const { type, field, alt, aggFunction, resolveYScale, domain, range } = fieldInfo;
 
     let title;
     if(aggFunction === "count") {
@@ -201,6 +201,10 @@ export default function TrackRowInfoVis(props) {
                     onHighlightRows,
                     onFilterRows,
                     drawRegister,
+                    ...(type === "nominal-dynamic" ? {
+                        domain,
+                        range,
+                    } : {}),
                 }
             )}
             {resizer}

@@ -11,10 +11,24 @@ import TrackRowInfoControl from './TrackRowInfoControl.js';
 import { getAggregatedValue } from "./utils/aggregate.js";
 
 const margin = 5;
-const numStates = 3; // undefined, negative, positive
+// Color for the initial / undefined state.
+const UNDEFINED_COLOR = "#dedede";
+
+function createTooltipText(domain) {
+    let text = "Click ";
+    domain.forEach((domainVal, i) => {
+        text += `${i+1}x to mark ${domainVal}`;
+        if(i < domain.length - 1) {
+            text += ", ";
+        } else {
+            text += ".";
+        }
+    });
+    return text;
+}
 
 /**
- * Component for visualization of row info URL values.
+ * Component for visualization of "dynamic" / user-defined nominal values, which can be changed by clicking.
  * @prop {number} left The left position of this view.
  * @prop {number} top The top position of this view.
  * @prop {number} width The width of this view.
@@ -36,6 +50,7 @@ export default function TrackRowInfoVisComparison(props) {
     const {
         left, top, width, height,
         field, type, alt, title, aggFunction, resolveYScale,
+        domain: nominalDomain, range: nominalRange,
         isLeft,
         isShowControlButtons,
         rowInfo,
@@ -52,23 +67,21 @@ export default function TrackRowInfoVisComparison(props) {
     const divRef = useRef();
     const canvasRef = useRef();
     const [hoverIndex, setHoverIndex] = useState(null);
-    const [idToClicks, setIdToClicks] = useState({});
+    const [idToDomainValueMap, setIdToDomainValueMap] = useState({});
 
-    function getRowColor(rowLabel) {
-        if(idToClicks[rowLabel] === 2) {
-            return "#00ff00";
-        } else if(idToClicks[rowLabel] === 1) {
-            return "#ff0000";
+    // Range and domain length should match.
+    console.assert(nominalRange.length === nominalDomain.length);
+
+    function getRowColor(rowId) {
+        const domainValue = idToDomainValueMap[rowId];
+        if(domainValue !== undefined) {
+            const domainIndex = nominalDomain.indexOf(domainValue);
+            if(0 <= domainIndex && domainIndex < nominalRange.length) {
+                const rangeValue = nominalRange[domainIndex];
+                return rangeValue;
+            }
         }
-        return "#dedede";
-    }
-    function getRowState(rowLabel) {
-        if(idToClicks[rowLabel] === 2) {
-            return "positive";
-        } else if(idToClicks[rowLabel] === 1) {
-            return "negative";
-        }
-        return null;
+        return UNDEFINED_COLOR;
     }
 
     // Data, layouts and styles
@@ -103,15 +116,15 @@ export default function TrackRowInfoVisComparison(props) {
         transformedRowInfo.forEach((info, i) => {
             const textTop = yScale(i);
             const textLeft = isLeft ? width - margin : margin;
-            const rowLabel = aggValue(info, field);
+            const rowId = aggValue(info, field);
 
             const rowRect = two.makeRect(0, textTop, width, rowHeight);
-            rowRect.fill = getRowColor(rowLabel);
+            rowRect.fill = getRowColor(rowId);
             rowRect.stroke = null;
             rowRect.opacity = 0.7 + (hoverIndex !== null && i === hoverIndex ? 0.3 : 0);
 
             if(shouldRenderText && isTextLabel) {
-                const text = two.makeText(textLeft, textTop + rowHeight/2, width, rowHeight, rowLabel);
+                const text = two.makeText(textLeft, textTop + rowHeight/2, width, rowHeight, rowId);
                 text.fill = "#333";
                 text.fontsize = fontSize;
                 text.align = textAlign;
@@ -132,15 +145,14 @@ export default function TrackRowInfoVisComparison(props) {
         const canvas = canvasRef.current;
         const div = divRef.current;
         const teardown = draw(canvas);
-        console.log("drew")
 
         d3.select(canvas).on("mousemove", () => {
             const [mouseX, mouseY] = d3.mouse(canvas);
 
             const y = yScale.invert(mouseY);
-            let fieldVal;
+            let rowId;
             if(y !== undefined) {
-                fieldVal = aggValue(transformedRowInfo[y], field);
+                rowId = aggValue(transformedRowInfo[y], field);
                 setHoverIndex(y);
             } else {
                 setHoverIndex(null);
@@ -155,8 +167,8 @@ export default function TrackRowInfoVisComparison(props) {
                 x: mouseViewportX,
                 y: mouseViewportY,
                 content: <TooltipContent 
-                    title={"Click once to mark negative, twice to mark positive."}
-                    value={fieldVal + (idToClicks[fieldVal] ? ` (${getRowState(fieldVal)})` : '')}
+                    title={createTooltipText(nominalDomain)}
+                    value={rowId + (idToDomainValueMap[rowId] !== undefined ? ` (${idToDomainValueMap[rowId]})` : '')}
                 />
             });
         });
@@ -168,13 +180,18 @@ export default function TrackRowInfoVisComparison(props) {
             const y = yScale.invert(mouseY);
             if(y !== undefined) {
                const info = transformedRowInfo[y];
-               const rowLabel = aggValue(info, field);
-                setIdToClicks(prev => {
+               const rowId = aggValue(info, field);
+                setIdToDomainValueMap(prev => {
                     const next = Object.assign({}, prev);
-                    if(next[rowLabel] === undefined) {
-                        next[rowLabel] = 1;
+                    if(next[rowId] === undefined) {
+                        next[rowId] = (nominalDomain.length > 0 ? nominalDomain[0] : undefined);
                     } else {
-                        next[rowLabel] = (next[rowLabel] + 1) % numStates;
+                        const prevIndex = nominalDomain.indexOf(next[rowId]);
+                        if(prevIndex === -1 || prevIndex >= nominalDomain.length - 1) {
+                            next[rowId] = undefined;
+                        } else {
+                            next[rowId] = nominalDomain[prevIndex+1];
+                        }
                     }
                     return next;
                 });
@@ -190,7 +207,7 @@ export default function TrackRowInfoVisComparison(props) {
             teardown();
             d3.select(div).on("mouseleave", null);
         };
-    }, [top, left, width, height, transformedRowInfo, hoverIndex, idToClicks]);
+    }, [top, left, width, height, transformedRowInfo, hoverIndex, idToDomainValueMap]);
 
     return (
         <div
