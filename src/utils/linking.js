@@ -2,7 +2,7 @@ import d3 from "./d3.js";
 
 export const HIGHLIGHTING_COLOR = ["#333", "gold", "#399AB6"][0];
 export const HIGHLIGHTING_STROKE = ["black", "brown", "#265D8A"][0];
-export const HIGHLIGHTING_OPACITY = 0.3;
+export const HIGHLIGHTING_OPACITY = 0.24;
 
 /**
  * Draw highlighting effect with a background rectangle.
