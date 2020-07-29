@@ -10,7 +10,7 @@ import { SORT_TREE, HIGHLIGHTER } from './utils/icons.js';
 import { TooltipContent, destroyTooltip } from './Tooltip.js';
 import TrackRowInfoControl from "./TrackRowInfoControl.js";
 import { FILTER } from './utils/icons.js';
-import { drawRowHighlightRect } from "./utils/linking-views.js";
+import { drawRowHighlightRect } from "./utils/linking.js";
 
 /**
  * Component for visualization of row info hierarchies.

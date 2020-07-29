@@ -9,7 +9,7 @@ import { drawVisTitle } from "./utils/vis.js";
 import { TooltipContent, destroyTooltip } from "./Tooltip.js";
 import TrackRowInfoControl from './TrackRowInfoControl.js';
 import { getAggregatedValue } from "./utils/aggregate.js";
-import { drawRowHighlightRect } from "./utils/linking-views.js";
+import { drawRowHighlightRect } from "./utils/linking.js";
 
 const margin = 5;
 

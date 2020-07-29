@@ -13,7 +13,7 @@ import { rgbToHex, generateNextUniqueColor } from "./utils/color.js";
 import { getRetinaRatio } from './utils/canvas.js';
 import { modifyItemInArray } from "./utils/array.js";
 import { getAggregatedValue } from "./utils/aggregate.js";
-import { drawRowHighlightRect } from "./utils/linking-views.js";
+import { drawRowHighlightRect } from "./utils/linking.js";
 
 export const margin = 5;
 

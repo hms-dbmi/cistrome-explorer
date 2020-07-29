@@ -11,7 +11,7 @@ import TrackRowInfoControl from './TrackRowInfoControl.js';
 import { TooltipContent, destroyTooltip } from "./Tooltip.js";
 import { FILTER, HIGHLIGHTER, ARROW_UP, ARROW_DOWN } from './utils/icons.js';
 import { getAggregatedValue } from "./utils/aggregate.js";
-import { drawRowHighlightRect } from "./utils/linking-views.js";
+import { drawRowHighlightRect } from "./utils/linking.js";
 import { HIGLASSMETA_DEFAULT } from "./utils/visualization-properties.js";
 
 export const margin = 5;

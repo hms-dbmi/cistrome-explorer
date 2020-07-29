@@ -1,7 +1,7 @@
 import React, { useRef, useCallback, useEffect } from "react";
 import d3 from "./utils/d3.js";
 import Two from "./utils/two.js";
-import { HIGHLIGHTING_COLOR } from "./utils/linking-views.js";
+import { HIGHLIGHTING_COLOR } from "./utils/linking.js";
 
 /* TODO: Add these to HiGlassMeta options. */
 const BAND_TYPE = [
