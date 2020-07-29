@@ -71,9 +71,9 @@
           },
           {
             "type": "horizontal-bar",
-            "uid": "bmcNxj_MSEar_3nYVMnPnQ",
-            "tilesetUid": "a-iBpdh3Q_uO2FLCWKpOOw",
-            "server": "https://resgen.io/api/v1",
+            "server": "//higlass.io/api/v1",
+            "tilesetUid": "HnOFdNKyQiWEnLkn4Wb1Ug",
+            "uid": "aPyDLIDiQ6OfXVq8TWz5Ng",
             "options": {
               "labelColor": "black",
               "labelPosition": "topLeft",
