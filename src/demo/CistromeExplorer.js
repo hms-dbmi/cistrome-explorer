@@ -48,6 +48,20 @@ export default function CistromeExplorer() {
         setRedoable(indexOfCurrentView !== 0);
     }, [viewHistory, indexOfCurrentView]);
 
+    useEffect(() => {
+        function closeSideViews(e) {
+            if(
+                (e.key === 'Esc' || e.key === 'Escape') && 
+                (isSettingVisible || isToolkitVisible)
+            ) {
+                setIsSettingVisible(false);
+                setIsToolkitVisible(false);
+            }
+        }
+        window.addEventListener("keydown", closeSideViews);
+        return () => window.removeEventListener("keydown", closeSideViews);
+    }, [isSettingVisible, isToolkitVisible]);
+
     /**
      * This function is being called when `options` is updated interactively.
      * @param {object} viewOptions A JSON object that contains updated visualization specs for `HiGlassMeta`.
@@ -83,14 +97,7 @@ export default function CistromeExplorer() {
     }
 
     return (
-        <div className="cistrome-explorer"
-            onKeyDown={e => {
-                if(
-                    (e.key === 'Esc' || e.key === 'Escape') && isSettingVisible
-                ) {
-                    setIsSettingVisible(false);
-                }
-            }}>
+        <div className="cistrome-explorer">
             <div className="header-container">
                 <div className="header">
                     <span 
