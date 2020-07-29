@@ -26,6 +26,7 @@ export default function ViewWrapper(props) {
         onSelectGenomicInterval,
         onViewportRemove,
         onGenomicIntervalSearch,
+        onGenomicIntervalRowSort,
         drawRegister
     } = props;
     
@@ -182,7 +183,8 @@ export default function ViewWrapper(props) {
                                     viewportTrack={viewportTrack}
                                     multivecTrack={multivecTrack}
                                     onViewportRemove={onViewportRemove}
-                                    onRequestIntervalTFs={onGenomicIntervalSearch}
+                                    onGenomicIntervalSearch={onGenomicIntervalSearch}
+                                    onGenomicIntervalRowSort={onGenomicIntervalRowSort}
                                 />
                             ) : null;
                         }))

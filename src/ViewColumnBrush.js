@@ -5,7 +5,8 @@ import { resolveIntervalCoordinates } from './utils/genome.js';
 import { validateIntervalParams } from './utils/cistrome.js';
 import { TooltipContent, destroyTooltip } from "./Tooltip.js";
 import { getRange } from './utils/viewport.js';
-import { CLOSE, SEARCH } from './utils/icons.js';
+import { CLOSE, SEARCH, SORT_ASC } from './utils/icons.js';
+import { getTilePosAndDimensions } from './utils/track-utils.js';
 import { EVENT } from "./utils/constants.js";
 import './ViewColumnBrush.scss';
 
@@ -16,6 +17,7 @@ import './ViewColumnBrush.scss';
  * @prop {object} multivecTrack A object of `horizontal-multivec` track in the same view.
  * @prop {function} onViewportRemove The function to call upon removing a viewport track.
  * @prop {function} onRequestIntervalTFs The function to call upon making a request for further interval transcription factor data.
+ * @prop {function} onIntervalRowSort The function to call upon making a request to sort the heatmap rows by the values in the selected genomic interval.
  */
 export default function ViewColumnBrush(props) {
     
@@ -24,7 +26,8 @@ export default function ViewColumnBrush(props) {
         viewportTrack,
         multivecTrack,
         onViewportRemove,
-        onRequestIntervalTFs
+        onGenomicIntervalSearch,
+        onGenomicIntervalRowSort
     } = props;
 
     const [isLoading, setIsLoading] = useState(true);
@@ -70,7 +73,7 @@ export default function ViewColumnBrush(props) {
         ? 'Loading...'
         : (!intervalValid
             ? intervalInvalidMsg 
-            : `${chrStartName}:${chrStartPos}-${chrEndPos}`
+            : `${chrStartName}:${chrStartPos.toLocaleString()}-${chrEndPos.toLocaleString()}`
         )
     );
                                         
@@ -100,8 +103,59 @@ export default function ViewColumnBrush(props) {
                         boxShadow: "none",
                         color: "gray"
                     }}>
+                    {/* Sort by heatmap values within selection button */}
+                    {onGenomicIntervalRowSort ? 
+                    <svg className={"hm-button-sm hm-button-middle"} 
+                        style={{ height: "100%" }}
+                        onMouseOver={(e) => {
+                            PubSub.publish(EVENT.TOOLTIP, {
+                                x: e.clientX,
+                                y: e.clientY,
+                                content: <TooltipContent 
+                                    title="Sort rows by values in selected genomic interval"
+                                    value={tooltipValue}
+                                    warning={!intervalValid}
+                                />
+                            });
+                        }}
+                        onMouseLeave={() => destroyTooltip()}
+                        onClick={(e) => {
+                            if(intervalValid && multivecTrack) {
+                                // TODO: sort the rows using the multivecTrack object and the tiles currently loaded.
+                                
+
+                                /*const zoomLevel = multivecTrack.calculateZoomLevel();
+                                const xTiles = tileProxy.calculateTiles(
+                                    zoomLevel,
+                                    multivecTrack._xScale,
+                                    multivecTrack.tilesetInfo.min_pos[0],
+                                    multivecTrack.tilesetInfo.max_pos[0],
+                                    multivecTrack.tilesetInfo.max_zoom,
+                                    multivecTrack.tilesetInfo.max_width,
+                                );*/
+                                const { fetchedTiles, tilesetInfo } = multivecTrack;
+                                const fetchedTileIds = Object.keys(fetchedTiles);
+
+                                console.log(fetchedTiles);
+                                console.log(tilesetInfo);
+                                console.log(getTilePosAndDimensions(tilesetInfo, fetchedTileIds[0]));
+
+
+                                onGenomicIntervalRowSort({
+                                    assembly,
+                                    chrStartName,
+                                    chrStartPos,
+                                    chrEndName,
+                                    chrEndPos
+                                });
+                            }
+                        }}
+                        viewBox={SORT_ASC.viewBox}>
+                        <path d={SORT_ASC.path} fill="currentColor"/>
+                    </svg>
+                    : null}
                     {/* Cistrome DB API Button */}
-                    {onRequestIntervalTFs ? 
+                    {onGenomicIntervalSearch ? 
                         // Show the search icon only when `onIntervalSearch` is defined.
                         <svg className={"hm-button-sm hm-button-middle"} 
                             style={{ height: "100%" }}
@@ -119,7 +173,7 @@ export default function ViewColumnBrush(props) {
                             onMouseLeave={() => destroyTooltip()}
                             onClick={() => {
                                 if(intervalValid) {
-                                    onRequestIntervalTFs({
+                                    onGenomicIntervalSearch({
                                         assembly,
                                         chrStartName,
                                         chrStartPos,

@@ -575,6 +575,9 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                         hgRef.current.api.setViewConfig(newViewConfig);
                     }}
                     onGenomicIntervalSearch={onGenomicIntervalSearchCallback}
+                    onGenomicIntervalRowSort={(args) => {
+                        console.log(args);
+                    }}
                     drawRegister={drawRegister}
                 />
             ))}
