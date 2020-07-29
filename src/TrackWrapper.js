@@ -73,7 +73,7 @@ export default function TrackWrapper(props) {
         if(["meeting-2020-04-29-track"].includes(multivecTrackTrackId)) {
             // TODO: use the below line to use the real metadata coming from the HiGlass Server tileset_info.
             //       see https://github.com/hms-dbmi/cistrome-explorer/issues/26
-            rowInfo = multivecTrack.tilesetInfo.row_infos.map(JSON.parse);
+            rowInfo = multivecTrack.tilesetInfo.row_infos.map(d => (typeof d === "string" ? JSON.parse(d) : d));
         } else {
             // TODO: remove this else clause.
             //       see https://github.com/hms-dbmi/cistrome-explorer/issues/26

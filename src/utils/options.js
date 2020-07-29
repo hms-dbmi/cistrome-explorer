@@ -39,7 +39,7 @@ const baseSchema = {
                         { "required": ["field", "type", "index"] },
                         { "required": ["field", "type", "contains"] },
                         { "required": ["field", "type", "range"] },
-                        { "required": ["field", "type", "subtree"] },
+                        { "required": ["field", "type", "ancestors"] },
                         { "required": ["field", "type", "minSimilarity"] },
                     ],
                     "properties": {
@@ -64,9 +64,9 @@ const baseSchema = {
                             "type": "array",
                             "description": "Min and max values"
                         },
-                        "subtree": {
+                        "ancestors": {
                             "type": "array",
-                            "description": "The subtree to search for"
+                            "description": "The names of ancestors to search for"
                         },
                         "minSimilarity": {
                             "type": "number",
@@ -144,8 +144,8 @@ const baseSchema = {
             "oneOf":[ 
                 { "required": ["field", "type", "notOneOf"] },
                 { "required": ["field", "type", "range"] },
-                { "required": ["field", "type", "subtree"] },
-                { "required": ["field", "type", "subtree", "minSimilarity"] },
+                { "required": ["field", "type", "ancestors"] },
+                { "required": ["field", "type", "ancestors", "minSimilarity"] },
                 { "required": ["field", "type", "minSimilarity"] },
             ],
             "properties": {
@@ -166,9 +166,9 @@ const baseSchema = {
                     "type": "array",
                     "description": "Min and max values"
                 },
-                "subtree": {
+                "ancestors": {
                     "type": "array",
-                    "description": "The subtree to search for"
+                    "description": "The ancestors to search for"
                 },
                 "minSimilarity": {
                     "type": "number",
@@ -249,7 +249,7 @@ const optionsObjectSchema = merge(cloneDeep(baseSchema), {
 });
 
 /**
- * Return a condition for highlighting rows (e.g., `subtree` for dendrogram tracks).
+ * Return a condition for highlighting rows (e.g., `ancestors` for dendrogram tracks).
  * @param {Object} highlitOption A `rowHighlight` object.
  * @returns {string|array|null} The condition for highlighting rows for a given field type. `null` if no proper condition found.
  */
@@ -281,7 +281,7 @@ export function getHighlightKeyByFieldType(type, condition = undefined) {
         if(!condition) {
             console.warn("`condition` is not properly provided, so we are just guessing a HighlightKey");
         }
-        return Array.isArray(condition) ? "subtree" : "minSimilarity";
+        return Array.isArray(condition) ? "ancestors" : "minSimilarity";
   }
 }
 

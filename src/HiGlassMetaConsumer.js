@@ -334,7 +334,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                 });
                 newSubOptions[fieldOptionIndex] = fieldOption;
             } else if(type === "quantitative" || type === "tree") {
-                // Simply remove `range` or `subtree` and `minSimilarity` filters from the cetain field.
+                // Simply remove `range` or `ancestors` and `minSimilarity` filters from the cetain field.
                 newSubOptions = removeItemFromArray(newSubOptions, newSubOptions.indexOf(fieldOption));
             }
         } else {
@@ -365,11 +365,11 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                 }
             } else if(type === "tree") {
                 // Replace with the incoming.
-                const key = Array.isArray(condition) ? "subtree" : "minSimilarity";
+                const key = Array.isArray(condition) ? "ancestors" : "minSimilarity";
                 if(fieldOption) {
                     const fieldOptionIndex = newSubOptions.indexOf(fieldOption);
                     newSubOptions = modifyItemInArray(newSubOptions, fieldOptionIndex, {
-                        ...fieldOption, [key]: condition // We do not want to remove a `subtree` or `minSimilarity` option if exists.
+                        ...fieldOption, [key]: condition // We do not want to remove a `ancestors` or `minSimilarity` option if exists.
                     });
                 } else {
                     newSubOptions = insertItemToArray(newSubOptions, 0, { field, type, [key]: condition });

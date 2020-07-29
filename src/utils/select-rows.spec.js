@@ -228,7 +228,7 @@ describe('Helper functions for producing arrays of row indices for track.options
             rowFilter: [{
                 field: "t",
                 type: "tree",
-                subtree: ["root", "b1"]
+                ancestors: ["root", "b1"]
             }]
         };
         const selectedRows = selectRows(rowInfo, options);
@@ -262,7 +262,7 @@ describe('Helper functions for producing arrays of row indices for track.options
         expect(selectedRows).not.toContain(4);
     });
 
-    it('Should produce correct selectRows array after filtering on tree attribute using `subtree` and `minSimilarity`', () => {
+    it('Should produce correct selectRows array after filtering on tree attribute using `ancestors` and `minSimilarity`', () => {
         const rowInfo = [
             {"id": "a","t":[{"name":"root","dist":1},{"name":"b1","dist":0.5},{"name":"b2","dist":0.1},{"name":"node-a","dist":0}]},
             {"id": "b","t":[{"name":"root","dist":1},{"name":"b1","dist":0.5},{"name":"b2","dist":0.1},{"name":"node-b","dist":0}]},
@@ -275,7 +275,7 @@ describe('Helper functions for producing arrays of row indices for track.options
                 field: "t",
                 type: "tree",
                 minSimilarity: 0.2,
-                subtree: ["root", "b1"]
+                ancestors: ["root", "b1"]
             }]
         };
         const selectedRows = selectRows(rowInfo, options);
@@ -300,7 +300,7 @@ describe('Helper functions for producing arrays of row indices for track.options
                     field: "t",
                     type: "tree",
                     minSimilarity: 0.2,
-                    subtree: ["root", "b1"]
+                    ancestors: ["root", "b1"]
                 },
                 {
                     field: "id",
@@ -328,7 +328,7 @@ describe('Helper functions for producing arrays of row indices for track.options
                     field: "t",
                     type: "tree",
                     minSimilarity: 0.2,
-                    subtree: ["root", "b1"]
+                    ancestors: ["root", "b1"]
                 }
             ]
         };
