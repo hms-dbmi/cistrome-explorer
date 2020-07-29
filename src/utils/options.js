@@ -317,21 +317,6 @@ export function isProcessedWrapperOptions(options) {
 }
 
 /**
- * // TODO:
- * @param {(object|object[]|null)} subOptions
- * @returns {object} 
- */
-export function setDefaultWrapperOptions(subOptions) {
-    subOptions.rowInfoAttributes?.map(fieldInfo => {
-        return {
-            ...fieldInfo,
-            width: fieldInfo.width ? fieldInfo.width : DEFAULT_TRACK_WIDTH
-        };
-    });
-    return subOptions;
-}
-
-/**
  * Process the HiGlassMeta `options` prop by mapping track IDs to objects containing values for all possible option attributes.
  * @param {(object|object[]|null)} options The raw value of the options prop.
  * @returns {object} A processed options object, mapping track IDs to options objects, and merging with defaults.
@@ -398,13 +383,10 @@ export function processWrapperOptions(options) {
             }
         });
     } else if(typeof options === "object") {
-        newOptions[DEFAULT_OPTIONS_KEY] = merge(
-            cloneDeep(newOptions[DEFAULT_OPTIONS_KEY]), 
-            setDefaultWrapperOptions(options)
-        );
+        newOptions[DEFAULT_OPTIONS_KEY] = merge(cloneDeep(newOptions[DEFAULT_OPTIONS_KEY]), options);
     }
     
-    return setDefaultWrapperOptions(newOptions);
+    return newOptions;
 }
 
 /**

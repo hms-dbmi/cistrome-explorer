@@ -41,9 +41,9 @@ export default function TrackRowInfo(props) {
     const {
         trackX, trackY,
         trackWidth, trackHeight,
-        originalRowInfo, // Used only for determining track-specific `selectedRows`
-        rowInfo, // Used only for showing data in filtering interfaces (e.g., keyword search results)
-        transformedRowInfo, // Used for visualizations
+        originalRowInfo, // Being used only for determining track-specific `selectedRows`
+        rowInfo, // Being used only for showing data in filtering interfaces (e.g., keyword search results)
+        transformedRowInfo, // Being used for visualizations
         selectedRows,
         highlitRows,
         rowInfoAttributes,
@@ -66,7 +66,7 @@ export default function TrackRowInfo(props) {
     ));
     const trackProps = generateTrackProps();
 
-    // This function generates properties for tracks (e.g., width, x start position), 
+    // This function generates properties for tracks (e.g., width, starting position),
     // considering the band-connection tracks between actual tracks
     function generateTrackProps() { 
         const properties = [];
@@ -76,8 +76,9 @@ export default function TrackRowInfo(props) {
         let currentIndex = 0;
 
         rowInfoAttributes.forEach((attribute, i) => {
+            // select the `fieldInfo` that is closest to HiGlass first
             const fieldInfo = isLeft ? rowInfoAttributes[rowInfoAttributes.length - i - 1] : attribute;
-            const { field, type, resolveYScale, sort: order, width: initWidth } = fieldInfo;        
+            const { field, type, resolveYScale, sort: order, width: initWidth } = fieldInfo;
             let isCurrIndependentYScale = false;
             
             // Determine whether to use a track-specific transformedRowInfo or the global one
@@ -103,9 +104,9 @@ export default function TrackRowInfo(props) {
             
             if(
                 (isPrevIndependentYScale || isCurrIndependentYScale)
-                && !(isLeft && i === 0) // we don't want to add a band track on the left-most area
+                && !(isLeft && i === 0) // we don't want to add a band-connection track on the left-most area
             ) {
-                // We need to show band connections before this visualization track
+                // We need to show band connections before this regular track
                 const width = trackWidths[currentIndex++] ?? DEFAULT_BAND_WIDTH;
                 properties.push({
                     type: TRACK_TYPE.BAND,
@@ -120,7 +121,7 @@ export default function TrackRowInfo(props) {
                 currentLeft += width;
             }
 
-            // Add props for the current vertical track
+            // Add props for the current regular track
             const width = trackWidths[currentIndex++] ?? initWidth ?? DEFAULT_TRACK_WIDTH;
             properties.push({
                 type: TRACK_TYPE.VIS,
