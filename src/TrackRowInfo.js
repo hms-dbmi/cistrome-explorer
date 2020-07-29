@@ -4,6 +4,7 @@ import d3 from './utils/d3.js';
 import TrackRowInfoVis from "./TrackRowInfoVis.js";
 import { selectRows } from './utils/select-rows.js';
 import { modifyItemInArray } from './utils/array.js';
+import { getNumOfTracks } from './utils/layout.js';
 
 const DEFAULT_TRACK_WIDTH = 100;
 const DEFAULT_BAND_WIDTH = 100;
@@ -60,9 +61,11 @@ export default function TrackRowInfo(props) {
     const isLeft = rowInfoPosition === "left";
     const top = trackY;
     const height = trackHeight;
-    const [trackWidths, setTrackWidths] = useState([]);
+    const [trackWidths, setTrackWidths] = useState(new Array(
+        getNumOfTracks(isLeft, rowInfoAttributes.map(d => d.resolveYScale))
+    ));
     const trackProps = generateTrackProps();
-    
+
     // This function generates properties for tracks (e.g., width, x start position), 
     // considering the band-connection tracks between actual tracks
     function generateTrackProps() { 
@@ -155,7 +158,8 @@ export default function TrackRowInfo(props) {
     const left = isLeft ? trackX - totalWidth : trackX + trackWidth;
 
     const setUnitWidthByIndex = useCallback((i, val) => {
-        setTrackWidths(modifyItemInArray(trackWidths, i, val));
+        const newTrackWidths = modifyItemInArray(trackWidths, i, val);
+        setTrackWidths(newTrackWidths);
     }, [trackWidths]);
 
     //console.log("TrackRowInfo.render");
