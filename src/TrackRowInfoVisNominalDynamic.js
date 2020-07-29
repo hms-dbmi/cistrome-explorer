@@ -9,20 +9,32 @@ import { drawVisTitle } from "./utils/vis.js";
 import { TooltipContent, destroyTooltip } from "./Tooltip.js";
 import TrackRowInfoControl from './TrackRowInfoControl.js';
 import { getAggregatedValue } from "./utils/aggregate.js";
-import { drawRowHighlightRect } from "./utils/linking.js";
 
 const margin = 5;
+// Color for the initial / undefined state.
+const UNDEFINED_COLOR = "#dedede";
+
+function createTooltipText(domain) {
+    let text = "Click ";
+    domain.forEach((domainVal, i) => {
+        text += `${i+1}x to mark ${domainVal}`;
+        if(i < domain.length - 1) {
+            text += ", ";
+        } else {
+            text += ".";
+        }
+    });
+    return text;
+}
 
 /**
- * Component for visualization of row info URL values.
+ * Component for visualization of "dynamic" / user-defined nominal values, which can be changed by clicking.
  * @prop {number} left The left position of this view.
  * @prop {number} top The top position of this view.
  * @prop {number} width The width of this view.
  * @prop {number} height The height of this view.
  * @prop {object[]} rowInfo The array of JSON Object containing row information.
  * @prop {object[]} transformedRowInfo The `rowInfo` array after aggregating, filtering, and sorting rows.
- * @prop {array} selectedRows The array of selected indices. 
- * @prop {array} highlitRows The array of highlit indices.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  * @prop {string} titleSuffix The suffix of a title, information about sorting and filtering status.
@@ -34,16 +46,15 @@ const margin = 5;
  * @prop {function} onFilterRows The function to call upon a filter interaction.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
-export default function TrackRowInfoVisLink(props) {
+export default function TrackRowInfoVisComparison(props) {
     const {
         left, top, width, height,
         field, type, alt, title, aggFunction, resolveYScale,
+        domain: nominalDomain, range: nominalRange,
         isLeft,
         isShowControlButtons,
         rowInfo,
         transformedRowInfo,
-        selectedRows,
-        highlitRows,
         titleSuffix,
         sortInfo,
         filterInfo,
@@ -51,12 +62,27 @@ export default function TrackRowInfoVisLink(props) {
         onSortRows,
         onHighlightRows,
         onFilterRows,
-        drawRegister,
     } = props;
 
     const divRef = useRef();
     const canvasRef = useRef();
     const [hoverIndex, setHoverIndex] = useState(null);
+    const [idToDomainValueMap, setIdToDomainValueMap] = useState({});
+
+    // Range and domain length should match.
+    console.assert(nominalRange.length === nominalDomain.length);
+
+    function getRowColor(rowId) {
+        const domainValue = idToDomainValueMap[rowId];
+        if(domainValue !== undefined) {
+            const domainIndex = nominalDomain.indexOf(domainValue);
+            if(0 <= domainIndex && domainIndex < nominalRange.length) {
+                const rangeValue = nominalRange[domainIndex];
+                return rangeValue;
+            }
+        }
+        return UNDEFINED_COLOR;
+    }
 
     // Data, layouts and styles
     const minTrackWidth = 40;
@@ -81,42 +107,39 @@ export default function TrackRowInfoVisLink(props) {
 
         const shouldRenderText = (rowHeight >= fontSize);
 
-        if(shouldRenderText) {
-            // There is enough height to render the text elements.
-            transformedRowInfo.forEach((info, i) => {
-                const textTop = yScale(i);
-                const textLeft = isLeft ? width - margin : margin;
-                const diplayText = isTextLabel ? aggValue(info, alt ? alt : field) : "Link";
-                const text = two.makeText(textLeft, textTop + rowHeight/2, width, rowHeight, diplayText);
-                text.fill = "#23527C";
+        if(hoverIndex !== null) {
+            // There is currently a hovered element, so render a background rect.
+            const bgRect = two.makeRect(0, yScale(hoverIndex), width, rowHeight);
+            bgRect.fill = "#EBEBEB";
+        }
+
+        transformedRowInfo.forEach((info, i) => {
+            const textTop = yScale(i);
+            const textLeft = isLeft ? width - margin : margin;
+            const rowId = aggValue(info, field);
+
+            const rowRect = two.makeRect(0, textTop, width, rowHeight);
+            rowRect.fill = getRowColor(rowId);
+            rowRect.stroke = null;
+            rowRect.opacity = 0.7 + (hoverIndex !== null && i === hoverIndex ? 0.3 : 0);
+
+            if(shouldRenderText && isTextLabel) {
+                const text = two.makeText(textLeft, textTop + rowHeight/2, width, rowHeight, rowId);
+                text.fill = "#333";
                 text.fontsize = fontSize;
                 text.align = textAlign;
                 text.baseline = "middle";
                 text.overflow = "ellipsis";
-
-                if(hoverIndex !== null && hoverIndex === i) {
-                    // There is both a hovered link and enough height to render text, so also render an underline for the hovered link.
-                    const textDimensions = two.measureText(text);
-                    const textUnderlineLeft = isLeft ? textLeft - textDimensions.width : textLeft;
-                    const textUnderlineTop = textTop + (rowHeight / 2) + (textDimensions.height / 2);
-                    const textUnderline = two.makeLine(textUnderlineLeft, textUnderlineTop, textUnderlineLeft + textDimensions.width, textUnderlineTop);
-                    textUnderline.stroke = "#23527C";
-                    textUnderline.linewidth = 1;
-                }
-            });
-        }
-        
-        drawRowHighlightRect(two, selectedRows, highlitRows, width, height);
-
+            }
+        });
         if(!isShowControlButtons) {
-            drawVisTitle(field, { two, isLeft, width, height, titleSuffix });
+            drawVisTitle(title, { two, isLeft, width, height, titleSuffix });
         }
         
         two.update();
         return two.teardown;
     });
     
-    drawRegister("TrackRowInfoVisLink", draw);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -127,15 +150,13 @@ export default function TrackRowInfoVisLink(props) {
             const [mouseX, mouseY] = d3.mouse(canvas);
 
             const y = yScale.invert(mouseY);
-            let fieldVal;
+            let rowId;
             if(y !== undefined) {
-                fieldVal = aggValue(transformedRowInfo[y], field);
+                rowId = aggValue(transformedRowInfo[y], field);
                 setHoverIndex(y);
-                onHighlightRows(field, "nominal", fieldVal);
             } else {
                 setHoverIndex(null);
                 destroyTooltip();
-                onHighlightRows("");
                 return;
             }
 
@@ -146,8 +167,8 @@ export default function TrackRowInfoVisLink(props) {
                 x: mouseViewportX,
                 y: mouseViewportY,
                 content: <TooltipContent 
-                    title={title}
-                    value={fieldVal}
+                    title={createTooltipText(nominalDomain)}
+                    value={rowId + (idToDomainValueMap[rowId] !== undefined ? ` (${idToDomainValueMap[rowId]})` : '')}
                 />
             });
         });
@@ -158,22 +179,35 @@ export default function TrackRowInfoVisLink(props) {
 
             const y = yScale.invert(mouseY);
             if(y !== undefined) {
-               window.open(transformedRowInfo[y][field]);
+               const info = transformedRowInfo[y];
+               const rowId = aggValue(info, field);
+                setIdToDomainValueMap(prev => {
+                    const next = Object.assign({}, prev);
+                    if(next[rowId] === undefined) {
+                        next[rowId] = (nominalDomain.length > 0 ? nominalDomain[0] : undefined);
+                    } else {
+                        const prevIndex = nominalDomain.indexOf(next[rowId]);
+                        if(prevIndex === -1 || prevIndex >= nominalDomain.length - 1) {
+                            next[rowId] = undefined;
+                        } else {
+                            next[rowId] = nominalDomain[prevIndex+1];
+                        }
+                    }
+                    return next;
+                });
+               destroyTooltip();
             }
         });
 
         // Handle mouse leave.
         d3.select(canvas).on("mouseout", destroyTooltip);
-        d3.select(div).on("mouseleave", () => {
-            setHoverIndex(null);
-            onHighlightRows("");
-        });
+        d3.select(div).on("mouseleave", () => setHoverIndex(null));
 
         return () => {
             teardown();
             d3.select(div).on("mouseleave", null);
         };
-    }, [top, left, width, height, transformedRowInfo, hoverIndex, isShowControlButtons]);
+    }, [top, left, width, height, transformedRowInfo, hoverIndex, idToDomainValueMap]);
 
     return (
         <div

@@ -14,9 +14,10 @@ export const demos = {
         viewConfig: hgDemoViewConfig1,
         options: {
             rowInfoAttributes: [
-                {field: "qc_frip", type: "quantitative", position: "left"},
-                {field: "qc_fastqc", type: "quantitative", position: "left"},
-                {field: "Metadata URL", type: "url", position: "left", title: "cid", width: 30},
+                {field: "qc_frip", type: "quantitative", position: "left", title: "QC: FRIP"},
+                {field: "qc_fastqc", type: "quantitative", position: "left", title:  "QC: FastQC"},
+                {field: "cid", type: "nominal-dynamic",  position: "left", title: "Compare Positive and Negative", domain: ["positive", "negative"], range: ["blue", "red"], width: 30},
+                {field: "Metadata URL", alt: "cid", type: "url", position: "left", width: 30},
                 {field: "Hierarchical Clustering (Ward)", type: "tree", position: "left", resolveYScale: true, sort: "ascending", width: 200},
                 {field: "Cell Type", type: "nominal", position: "right", width: 80},
                 {field: "Tissue Type", type: "nominal", position: "right", width: 80},
@@ -40,7 +41,7 @@ export const demos = {
                 {field: "qc_frip", type: "quantitative", position: "left", aggFunction: "mean"},
                 {field: "qc_fastqc", type: "quantitative", position: "left", aggFunction: "mean"},
                 {field: "id", type: "quantitative", position: "left", aggFunction: "count"},
-                {field: "Metadata URL", type: "url", position: "left", title: "cid", aggFunction: "mostCommon"},
+                {field: "Metadata URL", type: "url", position: "left", alt: "cid", aggFunction: "mostCommon"},
                 {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right"},
                 {field: "Cell Type", type: "nominal", position: "right", aggFunction: "concat"},
                 {field: "Tissue Type", type: "nominal", position: "right", aggFunction: "concat"},
@@ -97,7 +98,7 @@ export const demos = {
                 {field: "Hierarchical Clustering (Average)", type: "tree", position: "right"},
                 {field: "Random 3", type: "quantitative", position: "right"},
                 {field: ["Random 1", "Random 2", "Random 3", "Random 4"], type: "quantitative", position: "right"},
-                {field: "Metadata URL", type: "url", position: "right", title: "cid"},
+                {field: "Metadata URL", type: "url", position: "right", alt: "cid"},
                 {field: "Hierarchical Clustering (Ward)", type: "tree", position: "left"},
                 {field: "Cell Type", type: "nominal", position: "left"},
                 {field: "Tissue Type", type: "nominal", position: "left"},
@@ -146,7 +147,7 @@ export const demos = {
                 viewId: "cistrome-view-1",
                 trackId: "cistrome-track-1",
                 rowInfoAttributes: [
-                    {field: "Metadata URL", type: "url", position: "left", title: "cid"},
+                    {field: "Metadata URL", type: "url", position: "left", alt: "cid"},
                     {field: "Cell Type", type: "nominal", position: "right"},
                     {field: "Tissue Type", type: "nominal", position: "right"},
                     {field: "Species", type: "nominal", position: "right"}
@@ -159,7 +160,7 @@ export const demos = {
                 viewId: "cistrome-view-1",
                 trackId: "cistrome-track-1-detail-view-1",
                 rowInfoAttributes: [
-                    {field: "Metadata URL", type: "url", position: "left", title: "cid"},
+                    {field: "Metadata URL", type: "url", position: "left", alt: "cid"},
                     {field: "Cell Type", type: "nominal", position: "right"},
                     {field: "Tissue Type", type: "nominal", position: "right"},
                     {field: "Species", type: "nominal", position: "right"}

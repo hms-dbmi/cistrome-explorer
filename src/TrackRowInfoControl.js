@@ -26,7 +26,7 @@ export default function TrackRowInfoControl(props){
     const {
         isLeft,
         isVisible, 
-        fieldInfo,
+        field, type, alt, title, aggFunction, resolveYScale,
         sortAsceButtonHighlit,
         sortDescButtonHighlit,
         filterButtonHighlit,
@@ -43,7 +43,6 @@ export default function TrackRowInfoControl(props){
     const [filterTop, setFilterTop] = useState(null);
     const [FilterLeft, setFilterLeft] = useState(null);
 
-    const { field, type, title, aggFunction, resolveYScale } = fieldInfo;
     const controlField = (type === "url" && title ? title : field);
     const controlType = (type === "url" ? "nominal" : type);
 

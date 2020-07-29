@@ -83,11 +83,19 @@ const baseSchema = {
             "properties": {
                 "field": {
                     "type": ["string", "array"],
-                    "description": "The data field name(s)"
+                    "description": "The data field name(s) as they appear in the metadata JSON object keys."
+                },
+                "alt": {
+                    "type": "string",
+                    "description": "A key for an alternative name to display in axis label elements."
+                },
+                "title": {
+                    "type": "string",
+                    "description": "A human-readable title of the data field to display in axis titles and tooltip elements."
                 },
                 "type": {
                     "type": "string",
-                    "enum": ["nominal", "quantitative", "url", "tree"],
+                    "enum": ["nominal", "quantitative", "url", "tree", "nominal-dynamic"],
                     "description": "The data type of a field"
                 },
                 "aggFunction": {
@@ -99,10 +107,6 @@ const baseSchema = {
                     "type": "string",
                     "enum": ["left", "right"],
                     "description": "The position to show a data attribute relative to a higlass track"
-                },
-                "title": {
-                    "type": "string",
-                    "description": "The name of a data field to alternatively use for displaying urls"
                 },
                 "resolveYScale": {
                     "type": "boolean",
@@ -116,6 +120,16 @@ const baseSchema = {
                 "width": {
                     "type": "number",
                     "description": "The horizontal size of a vertical track"
+                },
+                "domain": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "Only applicable with type === 'nominal-dynamic'. Set the domain for the nominal field, for example ['positive', 'negative']."
+                },
+                "range": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "Only applicable with type === 'nominal-dynamic'. Set the color range for the nominal field, for example ['blue', 'red']."
                 }
             }
         },

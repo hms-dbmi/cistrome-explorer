@@ -27,6 +27,7 @@ export default function ViewColumnBrush(props) {
         onRequestIntervalTFs
     } = props;
 
+    const [isLoading, setIsLoading] = useState(true);
     const [chrStartName, setChrStartName] = useState(null);
     const [chrStartPos, setChrStartPos] = useState(null);
     const [chrEndName, setChrEndName] = useState(null);
@@ -52,6 +53,7 @@ export default function ViewColumnBrush(props) {
                     setChrStartPos(result[0][1]);
                     setChrEndName(result[1][0]);
                     setChrEndPos(result[1][1]);
+                    setIsLoading(false);
                 }
             });
 
@@ -63,6 +65,15 @@ export default function ViewColumnBrush(props) {
         msg: intervalInvalidMsg, 
         success: intervalValid 
     } = validateIntervalParams({ assembly, chrStartName, chrStartPos, chrEndName, chrEndPos });
+
+    const tooltipValue = (isLoading
+        ? 'Loading...'
+        : (!intervalValid
+            ? intervalInvalidMsg 
+            : `${chrStartName}:${chrStartPos}-${chrEndPos}`
+        )
+    );
+                                        
 
     if(end === null && start === null) {
         // Do not show range when they are ourside.
@@ -100,10 +111,7 @@ export default function ViewColumnBrush(props) {
                                     y: e.clientY,
                                     content: <TooltipContent 
                                         title="Search bind TFs from Cistrome DB"
-                                        value={!intervalValid ? 
-                                            intervalInvalidMsg 
-                                            : `${chrStartName}:${chrStartPos}-${chrEndPos}`
-                                        }
+                                        value={tooltipValue}
                                         warning={!intervalValid}
                                     />
                                 });

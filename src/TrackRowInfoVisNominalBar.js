@@ -41,7 +41,7 @@ export const margin = 5;
 export default function TrackRowInfoVisNominalBar(props) {
     const {
         left, top, width, height,
-        fieldInfo,
+        field, type, alt, title, aggFunction, resolveYScale,
         isLeft,
         isShowControlButtons,
         rowInfo,
@@ -63,7 +63,6 @@ export default function TrackRowInfoVisNominalBar(props) {
     const [hoverValue, setHoverValue] = useState(null);
 
     // Data, layouts and styles
-    const { field, aggFunction } = fieldInfo;
     const aggValue = d => getAggregatedValue(d, field, "nominal", aggFunction);
 
     const yScale = d3.scaleBand()
@@ -87,9 +86,7 @@ export default function TrackRowInfoVisNominalBar(props) {
         });
 
         drawRowHighlightRect(two, selectedRows, highlitRows, width, height);
-        
-        const titleText = field;
-        
+                
         const textAreaWidth = width - HIGLASSMETA_DEFAULT.TRACK.MIN_WIDTH;
         const showTextLabel = textAreaWidth > 0;
         const barAreaWidth = width - textAreaWidth;
@@ -143,7 +140,7 @@ export default function TrackRowInfoVisNominalBar(props) {
         });
 
         if(!isShowControlButtons) {
-            drawVisTitle(titleText, { two, isLeft, width, height, titleSuffix });
+            drawVisTitle(title, { two, isLeft, width, height, titleSuffix });
         }
 
         two.update();
@@ -204,7 +201,7 @@ export default function TrackRowInfoVisNominalBar(props) {
                 x: mouseViewportX,
                 y: mouseViewportY,
                 content: <TooltipContent 
-                    title={field}
+                    title={title}
                     value={hoveredCategory}
                     color={colorScale(hoveredCategory)}
                 />
@@ -248,7 +245,10 @@ export default function TrackRowInfoVisNominalBar(props) {
             <TrackRowInfoControl
                 isLeft={isLeft}
                 isVisible={isShowControlButtons}
-                fieldInfo={fieldInfo}
+                field={field}
+                type={type}
+                title={title}
+                aggFunction={aggFunction}
                 searchTop={top}
                 searchLeft={left}
                 sortAsceButtonHighlit={sortInfo && sortInfo.order === "ascending"}

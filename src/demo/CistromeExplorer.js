@@ -8,7 +8,6 @@ import { UNDO, REDO, TABLE, DOCUMENT, GITHUB, CLOSE, MENU, TRASH } from '../util
 import { diffViewOptions } from '../utils/view-history';
 import { demos } from './demo';
 import './CistromeExplorer.scss';
-import diff from 'deep-diff';
 
 export default function CistromeExplorer() {
     

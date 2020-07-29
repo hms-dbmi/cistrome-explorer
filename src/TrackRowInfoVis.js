@@ -5,6 +5,7 @@ import TrackRowInfoVisNominalBar from './TrackRowInfoVisNominalBar.js';
 import TrackRowInfoVisQuantitativeBar from './TrackRowInfoVisQuantitativeBar.js';
 import TrackRowInfoVisLink from './TrackRowInfoVisLink.js';
 import TrackRowInfoVisDendrogram from './TrackRowInfoVisDendrogram.js';
+import TrackRowInfoVisNominalDynamic from './TrackRowInfoVisNominalDynamic.js';
 import TrackRowInfoVisBand from './TrackRowInfoVisBand.js';
 import { HIGLASSMETA_DEFAULT } from './utils/visualization-properties.js';
 
@@ -13,7 +14,8 @@ const fieldTypeToVisComponent = {
     "quantitative": TrackRowInfoVisQuantitativeBar,
     "url": TrackRowInfoVisLink,
     "tree": TrackRowInfoVisDendrogram,
-    "band": TrackRowInfoVisBand
+    "nominal-dynamic": TrackRowInfoVisNominalDynamic,
+    "band": TrackRowInfoVisBand,
 };
 
 /**
@@ -62,6 +64,20 @@ export default function TrackRowInfoVis(props) {
         onWidthChanged
     } = props;
 
+    const { type, field, alt, aggFunction, resolveYScale, domain, range } = fieldInfo;
+
+    let title;
+    if(aggFunction === "count") {
+        title = "Count";
+    } else if(fieldInfo.title) {
+        title = fieldInfo.title;
+    } else if(Array.isArray(field)) {
+        title = field.join(" + ");
+    } else {
+        title = field;
+    }
+
+    const minWidth = 40;
     const resizerWidth = 4
     const resizerHeight = 10
     const resizerMargin = 2;
@@ -122,11 +138,11 @@ export default function TrackRowInfoVis(props) {
 
     // Determine the title suffix.
     let titleSuffix = "";
-    const sortInfo = rowSort ? rowSort.find(d => d.field === fieldInfo.field) : undefined;
+    const sortInfo = rowSort ? rowSort.find(d => d.field === field) : undefined;
     if(sortInfo) {
         titleSuffix += ` | sorted (${sortInfo.order})`;
     }
-    const filterInfo = rowFilter ? rowFilter.find(d => d.field === fieldInfo.field) : undefined;
+    const filterInfo = rowFilter ? rowFilter.find(d => d.field === field) : undefined;
 
     // Create the resizer element.
     const resizer = useMemo(() => {
@@ -157,7 +173,7 @@ export default function TrackRowInfoVis(props) {
             }}
         >
             {React.createElement(
-                fieldTypeToVisComponent[fieldInfo.type],
+                fieldTypeToVisComponent[type],
                 {
                     left,
                     top: 0,
@@ -165,7 +181,12 @@ export default function TrackRowInfoVis(props) {
                     height,
                     isLeft,
                     isShowControlButtons: isHovering,
-                    fieldInfo,
+                    field,
+                    type,
+                    title: (title || field),
+                    alt,
+                    aggFunction,
+                    resolveYScale,
                     transformedRowInfo,
                     rowInfo,
                     leftSelectedRows,
@@ -180,6 +201,10 @@ export default function TrackRowInfoVis(props) {
                     onHighlightRows,
                     onFilterRows,
                     drawRegister,
+                    ...(type === "nominal-dynamic" ? {
+                        domain,
+                        range,
+                    } : {}),
                 }
             )}
             {resizer}

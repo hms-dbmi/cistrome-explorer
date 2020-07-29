@@ -20,7 +20,7 @@ export function destroyTooltip() {
  * @prop {string} color A color related to the value/title.
  */
 export function TooltipContent(props) {
-    const { title, value, color: background, warning } = props;   
+    const { title, value, color: background, warning } = props;
     return (
         <div className="hm-tooltip-content">
             <div className="hm-tooltip-title">{title}</div>

@@ -35,9 +35,9 @@ import { drawRowHighlightRect } from "./utils/linking.js";
 export default function TrackRowInfoVisDendrogram(props) {
     const {
         left, top, width, height,
+        field, type, alt, title, aggFunction, resolveYScale,
         rowInfo,
         transformedRowInfo,
-        fieldInfo,
         filterInfo,
         isLeft,
         isShowControlButtons,
@@ -69,7 +69,6 @@ export default function TrackRowInfoVisDendrogram(props) {
     const [showMinSimBar, setShowMinSimBar] = useState(false);
 
     // Data, layouts and styles
-    const { field } = fieldInfo;
     const axisHeight = 30;
     const titleAreaWidth = 20;
     const visWidth = width - titleAreaWidth;
@@ -362,24 +361,24 @@ export default function TrackRowInfoVisDendrogram(props) {
 
         d3.select(canvas).on("mousemove", () => {
 
-            if(cannotAlign) {
-                // Show a tooltip indicating that the dendrogram has been hidden.
-                const mouseViewportX = d3.event.clientX;
-                const mouseViewportY = d3.event.clientY;
-                PubSub.publish(EVENT.TOOLTIP, {
-                    x: mouseViewportX,
-                    y: mouseViewportY,
-                    content: <TooltipContent 
-                        title={`Dendrogram is inaccurate due to the current row ordering.`}
-                    />
-                });
+            const mouseViewportX = d3.event.clientX;
+            const mouseViewportY = d3.event.clientY;
 
+            PubSub.publish(EVENT.TOOLTIP, {
+                x: mouseViewportX,
+                y: mouseViewportY,
+                content: <TooltipContent 
+                    title={(cannotAlign
+                        ? "Dendrogram is hidden since its leaf ordering does not align with the current row ordering."
+                        : "Right-click to view highlight and filter options.")}
+                />
+            });
+
+            if(cannotAlign) {
                 setHighlightNodeX(null);
                 setHighlightNodeY(null);
             } else {
-                // The dendrogram is visible, so no tooltip should be shown on hover.
-                destroyTooltip();
-                
+                // The dendrogram is visible, so show a tooltip with information about right-clicking.
                 if(showMinSimBar) {
                     // Do not want to select nearest branch when min similarity bar shown.
                     setHighlightNodeX(null);
@@ -469,7 +468,10 @@ export default function TrackRowInfoVisDendrogram(props) {
             <TrackRowInfoControl
                 isLeft={isLeft}
                 isVisible={isShowControlButtons}
-                fieldInfo={fieldInfo}
+                field={field}
+                type={type}
+                title={title}
+                aggFunction={aggFunction}
                 searchTop={top}
                 searchLeft={left}
                 onFilterRows={onFilterRows}
@@ -484,7 +486,7 @@ export default function TrackRowInfoVisDendrogram(props) {
                 } : undefined}
             />
             {cannotAlign ? (
-                <div onClick={() => onSortRows(fieldInfo.field, fieldInfo.type, "ascending")}
+                <div onClick={() => onSortRows(field, type, "ascending")}
                     style={{
                         position: "absolute",
                         top: `${height / 2.0 - 17}px`,
