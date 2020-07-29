@@ -27,6 +27,7 @@ toc:
 - ViewColumnBrush
 - SuggestionWithHighlight
 - name: Functions (internal)
+- getConditionFromHighlightOption
 - getHighlightKeyByFieldType
 - addTrackWrapperOptions
 - validateWrapperOptions
@@ -51,9 +52,11 @@ toc:
 - highlightRowsFromSearch
 - getAggregatedRowInfo
 - getAggregatedValue
+- getNumOfTracks
 - insertItemToArray
 - modifyItemInArray
 - removeItemFromArray
+- drawRowHighlightRect
 - drawVisTitle
 - matrixToTree
 - matrixToTreeWithDistance

@@ -6,6 +6,8 @@ import TrackRowInfoVisQuantitativeBar from './TrackRowInfoVisQuantitativeBar.js'
 import TrackRowInfoVisLink from './TrackRowInfoVisLink.js';
 import TrackRowInfoVisDendrogram from './TrackRowInfoVisDendrogram.js';
 import TrackRowInfoVisComparison from './TrackRowInfoVisComparison.js';
+import TrackRowInfoVisBand from './TrackRowInfoVisBand.js';
+import { HIGLASSMETA_DEFAULT } from './utils/visualization-properties.js';
 
 const fieldTypeToVisComponent = {
     "nominal": TrackRowInfoVisNominalBar,
@@ -13,6 +15,7 @@ const fieldTypeToVisComponent = {
     "url": TrackRowInfoVisLink,
     "tree": TrackRowInfoVisDendrogram,
     "comparison": TrackRowInfoVisComparison,
+    "band": TrackRowInfoVisBand,
 };
 
 /**
@@ -23,6 +26,10 @@ const fieldTypeToVisComponent = {
  * @prop {number} height The height of this view.
  * @prop {object[]} rowInfo The array of JSON Object containing row information.
  * @prop {object[]} transformedRowInfo The `rowInfo` array after aggregating, filtering, and sorting rows.
+ * @prop {array} leftSelectedRows The array of selected indices on the left track.
+ * @prop {array} rightSelectedRows The array of selected indices on the right track.
+ * @prop {array} selectedRows The array of selected indices. 
+ * @prop {array} highlitRows The array of highlit indices.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  * @prop {object} rowSort The options for sorting rows.
@@ -42,6 +49,10 @@ export default function TrackRowInfoVis(props) {
         isLeft,
         rowInfo,
         transformedRowInfo,
+        leftSelectedRows,
+        rightSelectedRows,
+        selectedRows,
+        highlitRows,
         rowSort,
         rowFilter,
         rowHighlight,
@@ -53,7 +64,7 @@ export default function TrackRowInfoVis(props) {
         onWidthChanged
     } = props;
 
-    const { type, field, aggFunction } = fieldInfo;
+    const { type, field, alt, aggFunction, resolveYScale } = fieldInfo;
 
     let title;
     if(aggFunction === "count") {
@@ -91,8 +102,8 @@ export default function TrackRowInfoVis(props) {
         const event = d3.event;
         const diff = event.sourceEvent.clientX - dragX.current;
         let newWidth = isLeft ? width - diff : width + diff;
-        if(newWidth < minWidth) {
-            newWidth = minWidth;
+        if(newWidth < HIGLASSMETA_DEFAULT.TRACK.MIN_WIDTH) {
+            newWidth = HIGLASSMETA_DEFAULT.TRACK.MIN_WIDTH;
         }
         // Emit the new width value to the parent component.
         onWidthChanged(newWidth);
@@ -170,12 +181,18 @@ export default function TrackRowInfoVis(props) {
                     height,
                     isLeft,
                     isShowControlButtons: isHovering,
-                    title: (title || field),
-                    type,
                     field,
+                    type,
+                    title: (title || field),
+                    alt,
                     aggFunction,
+                    resolveYScale,
                     transformedRowInfo,
                     rowInfo,
+                    leftSelectedRows,
+                    rightSelectedRows,
+                    selectedRows,
+                    highlitRows,
                     titleSuffix,
                     sortInfo,
                     filterInfo,

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useCallback } from 'react';
 import range from 'lodash/range';
 import d3 from './utils/d3.js';
 import Two from './utils/two.js';
+import { drawRowHighlightRect } from './utils/linking.js';
 
 /**
  * Component for visualizing highlighted rows of a multivec track.
@@ -54,14 +55,7 @@ export default function TrackRowHighlight(props) {
             domElement
         });
 
-        if(highlitRows) {
-            for(let i of highlitRows) {
-                const rect = two.makeRect(0, yScale(i), width, rowHeight);
-                rect.stroke = null;
-                rect.fill = "#000";
-                rect.opacity = 0.4;
-            }
-        }
+        drawRowHighlightRect(two, selectedRows, highlitRows, width, height, { isStroke: true });
 
         two.update();
         return two.teardown;

@@ -3,8 +3,6 @@ import isEqual from 'lodash/isEqual';
 import clamp from 'lodash/clamp';
 
 import { HiGlassComponent } from 'higlass';
-import higlassRegister from 'higlass-register';
-import StackedBarTrack from 'higlass-multivec/es/StackedBarTrack.js';
 
 import { InfoContext, ACTION } from './utils/contexts.js';
 import { selectRows, highlightRowsFromSearch } from './utils/select-rows.js';
@@ -20,7 +18,8 @@ import {
     getWrapperSubOptions,
     updateWrapperOptions,
     addTrackWrapperOptions,
-    getHighlightKeyByFieldType
+    getHighlightKeyByFieldType,
+    getConditionFromHighlightOption
 } from './utils/options.js';
 import { 
     getHMTrackIdsFromViewConfig, 
@@ -39,12 +38,6 @@ import { wrapSvg } from './utils/wrap-svg.js';
 import './HiGlassMetaConsumer.scss';
 import cloneDeep from 'lodash/cloneDeep';
 import { removeItemFromArray, modifyItemInArray, insertItemToArray } from './utils/array.js';
-
-higlassRegister({
-    name: 'StackedBarTrack',
-    track: StackedBarTrack,
-    config: StackedBarTrack.config,
-});
 
 const hgOptionsBase = {
     sizeMode: 'bounded', // Stretch the height of HiGlass to its container <div/>
@@ -83,13 +76,16 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
     useEffect(() => {
         ref.current = {
             api: {
-                onOptions: (newOptions) => setOptions(processWrapperOptions(newOptions))
+                onOptions: (newOptions) => setOptions(processWrapperOptions(newOptions)),
+                onRemoveAllFilters: () => removeAllFilters(),
+                onRemoveAllSort: () => removeAllSort()
             }
         }
-    }, [ref]);
+    }, [ref, multivecTrackIds]);
 
     // Initialize instances when we receive a new demo.
     useEffect(() => {
+        resetTrackContext();
         setMultivecTrackIds([]);
         setViewportTrackIds({});
         setOptions(processWrapperOptions(baseOptions));
@@ -135,8 +131,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         let newHighlitRows = undefined; // `undefined` resets the hightlighting
         if(trackOptions.rowHighlight) {
             const { field, type } = trackOptions.rowHighlight;
-            const highlightKey = getHighlightKeyByFieldType(type, condition);
-            const condition = trackOptions.rowHighlight[highlightKey];
+            const condition = getConditionFromHighlightOption(trackOptions.rowHighlight);
             newHighlitRows = highlightRowsFromSearch(rowInfo, field, type, condition, trackOptions);
         }
         if(!isEqual(newHighlitRows, context.state[viewId][trackId].highlitRows)) {
@@ -228,6 +223,16 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         hgRef.current.api.setViewConfig(newViewConfig);
     }, [hgRef]);
     
+    const resetTrackContext = useCallback(() => {
+        multivecTrackIds.forEach(({ viewId, trackId }) => {
+            context.dispatch({
+                type: ACTION.RESET,
+                viewId,
+                trackId
+            });
+        });
+    }, [multivecTrackIds]);
+
     const setSelectedRows = useCallback((viewId, trackId, selectedRows) => {
         context.dispatch({
             type: ACTION.SELECT_ROWS_RERENDER,
@@ -235,7 +240,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
             trackId,
             selectedRows
         });
-    }, [hgRef]);
+    });
 
     const setHighlitRows = useCallback((viewId, trackId, highlitRows) => {
         context.dispatch({
@@ -244,7 +249,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
             trackId,
             highlitRows
         });
-    }, [hgRef]);
+    });
 
     // Function for child components to call to "register" their draw functions.
     const drawRegister = useCallback((key, draw, options) => {
@@ -264,10 +269,41 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         return () => hgRef.current.api.off('createSVG');
     }, [hgRef, drawRef]);
     
+    const removeAllFilters = useCallback(() => {
+        let newOptions = options;
+        multivecTrackIds.forEach(({ viewId, trackId }) => {
+            newOptions = updateWrapperOptions(newOptions, [], "rowFilter", viewId, trackId, { isReplace: true });
+        });
+        setOptions(newOptions);
+    }, [multivecTrackIds]);
+
+    const removeAllSort = useCallback(() => {
+        let newOptions = options;
+        multivecTrackIds.forEach(({ viewId, trackId }) => {
+            newOptions = updateWrapperOptions(newOptions, [], "rowSort", viewId, trackId, { isReplace: true });
+        });
+        setOptions(newOptions);
+    }, [multivecTrackIds]);
+
     // Callback function for sorting.
-    const onSortRows = useCallback((viewId, trackId, field, type, order) => {
-        const newRowSort = [ { field, type, order } ];
-        const newOptions = updateWrapperOptions(options, newRowSort, "rowSort", viewId, trackId, { isReplace: true });
+    const onSortRows = useCallback((viewId, trackId, field, type, order, isTrackIndependent) => {
+        let newOptions;
+        if(isTrackIndependent) {
+            // We need to modify the track-level `sort` option
+            const { rowInfoAttributes } = getTrackWrapperOptions(options, viewId, trackId);
+            const newRowInfoAttributes = rowInfoAttributes.map(fieldInfo => {
+                if(fieldInfo.field === field && fieldInfo.type === type) {
+                    return { ...fieldInfo, sort: order }
+                } else {
+                    return fieldInfo;
+                }
+            });
+            newOptions = updateWrapperOptions(options, newRowInfoAttributes, "rowInfoAttributes", viewId, trackId, { isReplace: true });
+        }
+        else {
+            const newRowSort = [ { field, type, order } ];
+            newOptions = updateWrapperOptions(options, newRowSort, "rowSort", viewId, trackId, { isReplace: true });
+        }
         setOptions(newOptions);
     }, [options]);
 
@@ -376,7 +412,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         setSelectedRowsToViewConfig(viewId, trackId, newSelectedRows);
         setOptions(newWrapperOptions);
     }, [options]);
-
+    
     // Callback function for adding a track.
     const onAddTrack = useCallback((viewId, trackId, field, type, notOneOf, position) => {
         if(viewId === DEFAULT_OPTIONS_KEY || trackId === DEFAULT_OPTIONS_KEY) {
@@ -504,8 +540,8 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                     onAddTrack={(field, type, notOneOf, position) => {
                         onAddTrack(viewId, trackId, field, type, notOneOf, position);
                     }}
-                    onSortRows={(field, type, order) => {
-                        onSortRows(viewId, trackId, field, type, order);
+                    onSortRows={(field, type, order, isTrackIndependent) => {
+                        onSortRows(viewId, trackId, field, type, order, isTrackIndependent);
                     }}
                     onHighlightRows={(field, type, condition) => {
                         onHighlightRows(viewId, trackId, field, type, condition);

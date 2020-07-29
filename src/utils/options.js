@@ -4,7 +4,9 @@ import omit from 'lodash/omit';
 import Ajv from 'ajv';
 import { insertItemToArray } from './array.js'
 
+/* Defatul values */
 export const DEFAULT_OPTIONS_KEY = "default";
+const DEFAULT_TRACK_WIDTH = 200;
 
 const baseSchema = {
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -34,6 +36,7 @@ const baseSchema = {
                 "rowHighlight": {
                     "type": "object",
                     "oneOf":[ 
+                        { "required": ["field", "type", "index"] },
                         { "required": ["field", "type", "contains"] },
                         { "required": ["field", "type", "range"] },
                         { "required": ["field", "type", "subtree"] },
@@ -46,8 +49,12 @@ const baseSchema = {
                         },
                         "type": {
                             "type": "string",
-                            "enum": ["nominal", "quantitative", "tree"],
+                            "enum": ["index", "nominal", "quantitative", "tree"],
                             "description": "The data type of a field"
+                        },
+                        "index": {
+                            "type": "array",
+                            "description": "Indices of rows"
                         },
                         "contains": {
                             "type": "string",
@@ -78,6 +85,14 @@ const baseSchema = {
                     "type": ["string", "array"],
                     "description": "The data field name(s) as they appear in the metadata JSON object keys."
                 },
+                "alt": {
+                    "type": "string",
+                    "description": "A key for an alternative name to display in axis label elements."
+                },
+                "title": {
+                    "type": "string",
+                    "description": "A human-readable title of the data field to display in axis titles and tooltip elements."
+                },
                 "type": {
                     "type": "string",
                     "enum": ["nominal", "quantitative", "url", "tree", "comparison"],
@@ -93,9 +108,18 @@ const baseSchema = {
                     "enum": ["left", "right"],
                     "description": "The position to show a data attribute relative to a higlass track"
                 },
-                "title": {
+                "resolveYScale": {
+                    "type": "boolean",
+                    "description": "Determine if the scale of y axis should be independent to the adjacently placed tracks"
+                },
+                "sort": {
                     "type": "string",
-                    "description": "The title of a data field to display in axis titles and tooltip elements."
+                    "enum": ["descending", "ascending"],
+                    "description": "The order of sorting. This works only if `resolveYScale` is set to `true`"
+                },
+                "width": {
+                    "type": "number",
+                    "description": "The horizontal size of a vertical track"
                 }
             }
         },
@@ -229,17 +253,38 @@ const optionsObjectSchema = merge(cloneDeep(baseSchema), {
 });
 
 /**
+ * Return a condition for highlighting rows (e.g., `subtree` for dendrogram tracks).
+ * @param {Object} highlitOption A `rowHighlight` object.
+ * @returns {string|array|null} The condition for highlighting rows for a given field type. `null` if no proper condition found.
+ */
+export function getConditionFromHighlightOption(highlitOption) {
+    const { type } = highlitOption;
+    const key = Object.keys(highlitOption).find(k => 
+        k !== "field" && 
+        k !== "type" &&
+        k === getHighlightKeyByFieldType(type, highlitOption[k]) // key should match with the given field type
+    );
+    return key ? highlitOption[key] : null;
+}
+
+/**
  * Get a key in `rowHighlight` object that indicate a certain condition (e.g., `contains`) for highlighting.
  * @param {string} type The field type.
+ * @param {string} condition The condition in options for applying highlighting.
  * @returns {string} The key of `rowHighlight` object that indicate a certain condition.
  */
-export function getHighlightKeyByFieldType(type, condition) {
+export function getHighlightKeyByFieldType(type, condition = undefined) {
   switch(type) {
+    case "index":
+        return "index";
     case "quantitative":
         return "range";
     case "nominal":
         return "contains";
     case "tree":
+        if(!condition) {
+            console.warn("`condition` is not properly provided, so we are just guessing a HighlightKey");
+        }
         return Array.isArray(condition) ? "subtree" : "minSimilarity";
   }
 }
@@ -274,6 +319,7 @@ export function isProcessedWrapperOptions(options) {
     // `DEFAULT_OPTIONS_KEY` is always included in the processed wrapper options, but not in raw options.
     return Object.keys(options).indexOf(DEFAULT_OPTIONS_KEY) !== -1;
 }
+
 /**
  * Process the HiGlassMeta `options` prop by mapping track IDs to objects containing values for all possible option attributes.
  * @param {(object|object[]|null)} options The raw value of the options prop.
@@ -343,7 +389,7 @@ export function processWrapperOptions(options) {
     } else if(typeof options === "object") {
         newOptions[DEFAULT_OPTIONS_KEY] = merge(cloneDeep(newOptions[DEFAULT_OPTIONS_KEY]), options);
     }
-
+    
     return newOptions;
 }
 

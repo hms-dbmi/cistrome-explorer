@@ -3,16 +3,24 @@
 ### Added
 - Undo/Redu interactions added in Cistrome Explorer.
 - Added an `onOptions` API in `HiGlassMeta` to change the wrapper options outside the library.
+- Added a menu panel that shows examples datasets and any other high-level options for `HiGlassMeta`.
 
 ### Changed
 - Moved `CistromeToolkit` to the sibling of `CistromeHGW`.
 - Rename `HiGlassWithMeta` to `HiGlassMeta`.
+- Upgraded to HiGlass version `1.10.2`
+- Fix the bug on highlighting rows in dendrograms.
 
 ## 0.4.0
 
 ### Added
 - Added row aggregation options (e.g., `rowAggregate`) to aggregate rows based on nominal fields metadata.
 - Added visual indicators (vertical black bars) to show which rows are aggregated.
+- Added linking tracks with background color upon mouse hover.
+- Added `resolveYScale` and `sort` options for using track-specific Y-axis scale.
+- Added line/band connections between tracks whey they use different y-axis scales.
+- Added `width` options that set the initial size of vertical tracks along x-axis.
+- Added an `onRemoveAllSort` API in `HiGlassMeta` for removing all sort options outside of the library.
 
 ### Changed
 - Changed the table view to be shown as a modal view.
@@ -22,6 +30,8 @@
 - Updaetd a Cistrome DB Toolkit view to show two APIs with the history of request and data tables of each request.
 - Fixed z-index between track resizer, filtering box, and toolkit.
 - Rename the keyword search box (`TrackRowSearch` => `TrackRowFilter`).
+- Hide track titles upon mouse hover for addressing visual overlap.
+- Changed the row highlighting method, from reverse highlighting to regular highlighting, i.e., highlight the selected rows.
 
 ## 0.3.0 - 05/27/20
 

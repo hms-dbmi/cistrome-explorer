@@ -26,7 +26,7 @@ export default function TrackRowInfoControl(props){
     const {
         isLeft,
         isVisible, 
-        field, type, title, aggFunction,
+        field, type, alt, title, aggFunction, resolveYScale,
         sortAsceButtonHighlit,
         sortDescButtonHighlit,
         filterButtonHighlit,
@@ -59,10 +59,10 @@ export default function TrackRowInfoControl(props){
     })
 
     function onSortAscClick() {
-        onSortRows(controlField, controlType, "ascending");
+        onSortRows(controlField, controlType, "ascending", resolveYScale);
     }
     function onSortDescClick() {
-        onSortRows(controlField, controlType, "descending");
+        onSortRows(controlField, controlType, "descending", resolveYScale);
     }
     function onFilterClick(event) {
         const parentRect = divRef.current.getBoundingClientRect();

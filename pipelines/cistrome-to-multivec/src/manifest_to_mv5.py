@@ -90,7 +90,12 @@ def bigwigs_to_multivec(
     row_infos = []
     for metadata_index, metadata_file in enumerate(input_metadata_files):
         with open(metadata_file) as mf:
-            metadata_json = json.load(mf)
+            try:
+                metadata_json = json.load(mf)
+            except Exception as e:
+                print(f"Error loading metadata file: {metadata_file}")
+                print(e)
+                metadata_json = None
         row_info = metadata_json_to_row_info(metadata_json)
         row_infos.append(row_info)
     
@@ -108,7 +113,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Create a multivec file.')
     parser.add_argument('-i', '--input', type=str, required=True, help='The input manifest JSON file.')
     parser.add_argument('-o', '--output', type=str, required=True, help='The output multivec file.')
-    parser.add_argument('-s', '--starting-resolution', type=int, default=1000, help='The starting resolution.')
+    parser.add_argument('-s', '--starting-resolution', type=int, default=200, help='The starting resolution.')
     args = parser.parse_args()
 
     with open(args.input) as f:

@@ -27,7 +27,7 @@ export function drawVisTitle(text, options) {
     const fullText = `${text}${titleSuffix}`;
 
     const title = new TwoText(titleLeftInitial, 0, width, height, fullText);
-    title.fill = "#9A9A9A";
+    title.fill = "gray";
     title.fontsize = titleFontSize;
     title.align = isLeft ? "end" : "start";
     title.baseline = isLeft ? "top" : "bottom";
@@ -41,7 +41,7 @@ export function drawVisTitle(text, options) {
         const rect = new TwoRectangle(titleLeft - 2, 0, titleDims.height + 6, titleDims.width);
         rect.fill = backgroundColor;
         rect.stroke = null;
-        rect.opacity = 0.8;
+        rect.opacity = 0.5;
 
         two.append(rect);
     }

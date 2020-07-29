@@ -11,6 +11,8 @@ import TrackRowInfoControl from './TrackRowInfoControl.js';
 import { TooltipContent, destroyTooltip } from "./Tooltip.js";
 import { FILTER, HIGHLIGHTER, ARROW_UP, ARROW_DOWN } from './utils/icons.js';
 import { getAggregatedValue } from "./utils/aggregate.js";
+import { drawRowHighlightRect } from "./utils/linking.js";
+import { HIGLASSMETA_DEFAULT } from "./utils/visualization-properties.js";
 
 export const margin = 5;
 
@@ -25,6 +27,8 @@ export const margin = 5;
  * @prop {boolean} isShowControlButtons Determine if control buttons should be shown.
  * @prop {object[]} rowInfo The array of JSON Object containing row information.
  * @prop {object[]} transformedRowInfo The `rowInfo` array after aggregating, filtering, and sorting rows.
+ * @prop {array} selectedRows The array of selected indices. 
+ * @prop {array} highlitRows The array of highlit indices.
  * @prop {string} titleSuffix The suffix of a title, information about sorting and filtering status.
  * @prop {object} sortInfo The options for sorting rows of the field used in this track.
  * @prop {object} filterInfo The options for filtering rows of the field used in this track.
@@ -37,11 +41,13 @@ export const margin = 5;
 export default function TrackRowInfoVisNominalBar(props) {
     const {
         left, top, width, height,
-        field, type, title, aggFunction,
+        field, type, alt, title, aggFunction, resolveYScale,
         isLeft,
         isShowControlButtons,
         rowInfo,
         transformedRowInfo,
+        selectedRows,
+        highlitRows,
         titleSuffix,
         sortInfo,
         filterInfo,
@@ -79,12 +85,11 @@ export default function TrackRowInfoVisNominalBar(props) {
             domElement
         });
 
-        const titleText = title;
-        
-        const textAreaWidth = width - 20;
+        drawRowHighlightRect(two, selectedRows, highlitRows, width, height);
+                
+        const textAreaWidth = width - HIGLASSMETA_DEFAULT.TRACK.MIN_WIDTH;
+        const showTextLabel = textAreaWidth > 0;
         const barAreaWidth = width - textAreaWidth;
-        const minTrackWidth = 40;
-        const isTextLabel = width > minTrackWidth;
         const fontSize = 10;
 
         // Render visual components for each row (i.e., bars and texts).
@@ -92,7 +97,9 @@ export default function TrackRowInfoVisNominalBar(props) {
         let aggregateStartIdx = -1, sameCategoriesNearby = 1;
         transformedRowInfo.forEach((d, i) => {
             const category = aggValue(d);
+
             // To aggregate bars, check if there is a same category on the next row.
+            let isAggregateNext = false;
             if(
                 i + 1 < transformedRowInfo.length
                 && category === aggValue(transformedRowInfo[i+1])
@@ -101,6 +108,10 @@ export default function TrackRowInfoVisNominalBar(props) {
                     aggregateStartIdx = i;
                 }
                 sameCategoriesNearby++;
+                isAggregateNext = true;
+            }
+
+            if(isAggregateNext) {
                 return;
             }
 
@@ -114,14 +125,8 @@ export default function TrackRowInfoVisNominalBar(props) {
             const rect = two.makeRect(barLeft, barTop, barWidth, barHeight);
             rect.fill = color;
 
-            if(hoverValue && category === hoverValue) {
-                const hoverBgRectLeft = (isLeft ? barLeft - textAreaWidth : barLeft + barWidth);
-                const hoverBgRect = two.makeRect(hoverBgRectLeft, barTop, textAreaWidth, barHeight);
-                hoverBgRect.fill = "#EBEBEB";
-            }
-
             // Render text labels when the space is enough.
-            if(barHeight >= fontSize && isTextLabel){
+            if(barHeight >= fontSize && showTextLabel){
                 const text = two.makeText(textLeft, barTop + barHeight/2, textAreaWidth, barHeight, category);
                 text.fill = d3.hsl(color).darker(3);
                 text.fontsize = fontSize;
@@ -134,7 +139,9 @@ export default function TrackRowInfoVisNominalBar(props) {
             sameCategoriesNearby = 1;
         });
 
-        drawVisTitle(titleText, { two, isLeft, width, height, titleSuffix });
+        if(!isShowControlButtons) {
+            drawVisTitle(title, { two, isLeft, width, height, titleSuffix });
+        }
 
         two.update();
         return two.teardown;
@@ -175,13 +182,15 @@ export default function TrackRowInfoVisNominalBar(props) {
             const [mouseX, mouseY] = d3.mouse(canvas);
 
             const y = yScale.invert(mouseY);
-            let fieldVal;
+            let hoveredCategory;
             if(y !== undefined){
-                fieldVal = aggValue(transformedRowInfo[y]);
-                setHoverValue(fieldVal);
+                hoveredCategory = aggValue(transformedRowInfo[y]);
+                setHoverValue(hoveredCategory);
+                onHighlightRows(field, "nominal", hoveredCategory);
             } else {
                 setHoverValue(null);
                 destroyTooltip();
+                onHighlightRows("");
                 return;
             }
 
@@ -193,22 +202,25 @@ export default function TrackRowInfoVisNominalBar(props) {
                 y: mouseViewportY,
                 content: <TooltipContent 
                     title={title}
-                    value={fieldVal}
-                    color={colorScale(fieldVal)}
+                    value={hoveredCategory}
+                    color={colorScale(hoveredCategory)}
                 />
             });
         });
 
         // Handle mouse leave.
         d3.select(canvas).on("mouseout", destroyTooltip);
-        d3.select(div).on("mouseleave", () => setHoverValue(null));
+        d3.select(div).on("mouseleave", () => {
+            setHoverValue(null);
+            onHighlightRows("");
+        });
 
         // Clean up.
         return () => {
             teardown();
             d3.select(div).on("mouseleave", null);
         };
-    }, [top, left, width, height, transformedRowInfo, hoverValue]);
+    }, [top, left, width, height, transformedRowInfo, hoverValue, isShowControlButtons]);
     
     return (
         <div

@@ -35,7 +35,7 @@ const numStates = 3; // undefined, negative, positive
 export default function TrackRowInfoVisComparison(props) {
     const {
         left, top, width, height,
-        field, type, title, aggFunction,
+        field, type, alt, title, aggFunction, resolveYScale,
         isLeft,
         isShowControlButtons,
         rowInfo,
@@ -119,8 +119,9 @@ export default function TrackRowInfoVisComparison(props) {
                 text.overflow = "ellipsis";
             }
         });
-        
-        drawVisTitle(title, { two, isLeft, width, height, titleSuffix });
+        if(!isShowControlButtons) {
+            drawVisTitle(title, { two, isLeft, width, height, titleSuffix });
+        }
         
         two.update();
         return two.teardown;

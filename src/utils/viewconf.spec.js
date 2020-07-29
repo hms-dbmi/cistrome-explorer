@@ -96,13 +96,13 @@ describe('Utilities for processing higlass view config objects', () => {
     it('Should get viewId and trackId pairs of all kinds of tracks', () => {
         const searchedPairs = getAllViewAndTrackPairs(hgDemoViewConfig4, { onlyHorizontalMultivec: false });
         expect(searchedPairs.length).toEqual(8);
-        expect(searchedPairs.find(d => d.viewId === "cistrome-view-4-2" && d.trackId === "bmcNxj_MSEar_3nYVMnPnQ") !== undefined).toEqual(true);
+        expect(searchedPairs.find(d => d.viewId === "cistrome-view-4-2" && d.trackId === "conservation-track-2") !== undefined).toEqual(true);
     });
 
     it('Should get viewId and trackId pairs of all kinds of tracks, but without tracks on the left and right positions', () => {
         const searchedPairs = getAllViewAndTrackPairs(hgDemoViewConfig4, { onlyHorizontalMultivec: false, notSide: true });
         expect(searchedPairs.length).toEqual(8);
-        expect(searchedPairs.find(d => d.viewId === "cistrome-view-4-2" && d.trackId === "bmcNxj_MSEar_3nYVMnPnQ") !== undefined).toEqual(true);
+        expect(searchedPairs.find(d => d.viewId === "cistrome-view-4-2" && d.trackId === "conservation-track-2") !== undefined).toEqual(true);
     });
 
     it('Should get viewId and trackId pairs of all kinds of tracks, but without tracks on the left and right positions', () => {

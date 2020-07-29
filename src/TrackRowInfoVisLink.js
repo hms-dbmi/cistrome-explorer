@@ -9,6 +9,7 @@ import { drawVisTitle } from "./utils/vis.js";
 import { TooltipContent, destroyTooltip } from "./Tooltip.js";
 import TrackRowInfoControl from './TrackRowInfoControl.js';
 import { getAggregatedValue } from "./utils/aggregate.js";
+import { drawRowHighlightRect } from "./utils/linking.js";
 
 const margin = 5;
 
@@ -20,6 +21,8 @@ const margin = 5;
  * @prop {number} height The height of this view.
  * @prop {object[]} rowInfo The array of JSON Object containing row information.
  * @prop {object[]} transformedRowInfo The `rowInfo` array after aggregating, filtering, and sorting rows.
+ * @prop {array} selectedRows The array of selected indices. 
+ * @prop {array} highlitRows The array of highlit indices.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  * @prop {string} titleSuffix The suffix of a title, information about sorting and filtering status.
@@ -34,11 +37,13 @@ const margin = 5;
 export default function TrackRowInfoVisLink(props) {
     const {
         left, top, width, height,
-        field, type, title, aggFunction,
+        field, type, alt, title, aggFunction, resolveYScale,
         isLeft,
         isShowControlButtons,
         rowInfo,
         transformedRowInfo,
+        selectedRows,
+        highlitRows,
         titleSuffix,
         sortInfo,
         filterInfo,
@@ -76,19 +81,12 @@ export default function TrackRowInfoVisLink(props) {
 
         const shouldRenderText = (rowHeight >= fontSize);
 
-        if(hoverIndex !== null) {
-            // There is currently a hovered element, so render a background rect.
-            const bgRect = two.makeRect(0, yScale(hoverIndex), width, rowHeight);
-            bgRect.fill = "#EBEBEB";
-        }
-
         if(shouldRenderText) {
             // There is enough height to render the text elements.
             transformedRowInfo.forEach((info, i) => {
                 const textTop = yScale(i);
                 const textLeft = isLeft ? width - margin : margin;
-                const titleField = title ? title : field;
-                const diplayText = isTextLabel ? aggValue(info, titleField) : "Link";
+                const diplayText = isTextLabel ? aggValue(info, alt ? alt : field) : "Link";
                 const text = two.makeText(textLeft, textTop + rowHeight/2, width, rowHeight, diplayText);
                 text.fill = "#23527C";
                 text.fontsize = fontSize;
@@ -108,8 +106,11 @@ export default function TrackRowInfoVisLink(props) {
             });
         }
         
+        drawRowHighlightRect(two, selectedRows, highlitRows, width, height);
 
-        drawVisTitle(field, { two, isLeft, width, height, titleSuffix });
+        if(!isShowControlButtons) {
+            drawVisTitle(field, { two, isLeft, width, height, titleSuffix });
+        }
         
         two.update();
         return two.teardown;
@@ -130,9 +131,11 @@ export default function TrackRowInfoVisLink(props) {
             if(y !== undefined) {
                 fieldVal = aggValue(transformedRowInfo[y], field);
                 setHoverIndex(y);
+                onHighlightRows(field, "nominal", fieldVal);
             } else {
                 setHoverIndex(null);
                 destroyTooltip();
+                onHighlightRows("");
                 return;
             }
 
@@ -161,13 +164,16 @@ export default function TrackRowInfoVisLink(props) {
 
         // Handle mouse leave.
         d3.select(canvas).on("mouseout", destroyTooltip);
-        d3.select(div).on("mouseleave", () => setHoverIndex(null));
+        d3.select(div).on("mouseleave", () => {
+            setHoverIndex(null);
+            onHighlightRows("");
+        });
 
         return () => {
             teardown();
             d3.select(div).on("mouseleave", null);
         };
-    }, [top, left, width, height, transformedRowInfo, hoverIndex]);
+    }, [top, left, width, height, transformedRowInfo, hoverIndex, isShowControlButtons]);
 
     return (
         <div

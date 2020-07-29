@@ -4,258 +4,18 @@ import pkg from '../../package.json';
 import { HiGlassMeta } from '../index.js';
 import CistromeToolkit from './CistromeToolkit.js';
 
-import { UNDO, REDO, TABLE, DOCUMENT, GITHUB } from '../utils/icons.js';
-
-import hgDemoViewConfig1 from '../viewconfigs/horizontal-multivec-1.json';
-import hgDemoViewConfig1b from '../viewconfigs/horizontal-multivec-1b.json';
-import hgDemoViewConfig2 from '../viewconfigs/horizontal-multivec-2.json';
-import hgDemoViewConfig2b from '../viewconfigs/horizontal-multivec-2b.json';
-import hgDemoViewConfig6 from '../viewconfigs/horizontal-multivec-6.json';
-import hgDemoViewConfig7 from '../viewconfigs/horizontal-multivec-7.json';
-import hgDemoViewConfig8 from '../viewconfigs/horizontal-multivec-8.json';
-import hgDemoViewConfig9 from '../viewconfigs/horizontal-multivec-9.json';
-import hgDemoViewConfig10 from '../viewconfigs/horizontal-multivec-10.json';
-import hgDemoViewConfigApril2020 from '../viewconfigs/meeting-2020-04-29.json';
-
-import './CistromeExplorer.scss';
+import { UNDO, REDO, TABLE, DOCUMENT, GITHUB, CLOSE, MENU, TRASH } from '../utils/icons.js';
 import { diffViewOptions } from '../utils/view-history';
-import diff from 'deep-diff';
-
-const demos = {
-    "H3K27ac Demo (1 View, Center Track)": {
-        viewConfig: hgDemoViewConfig1,
-        options: {
-            rowInfoAttributes: [
-                {field: "Hierarchical Clustering (Average)", type: "tree", position: "left"},
-                {field: "qc_frip", type: "quantitative", position: "left", title: "QC: FRIP"},
-                {field: "qc_fastqc", type: "quantitative", position: "left", title:  "QC: FastQC"},
-                {field: "cid", type: "comparison", position: "left", title: "Compare Positive and Negative"},
-                {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right"},
-                {field: "Cell Type", type: "nominal", position: "right"},
-                {field: "Tissue Type", type: "nominal", position: "right"},
-                {field: "Species", type: "nominal", position: "right"}
-            ],
-            rowSort: [
-                {field: "Tissue Type", type: "nominal", order: "ascending"},
-                {field: "qc_frip", type: "quantitative", order: "descending"}
-            ],
-            rowFilter: [
-                {field: "Tissue Type", type: "nominal", notOneOf: ["None"]}
-            ]
-        }
-    },
-    "H3K27ac Demo (1 View, Center Track, Rows Aggregated)": {
-        viewConfig: hgDemoViewConfig1b,
-        options: {
-            rowInfoAttributes: [
-                {field: "Hierarchical Clustering (Average)", type: "tree", position: "left"},
-                {field: ["qc_frip", "qc_fastqc"], title: "QC", type: "quantitative", position: "left", aggFunction: "mean"},
-                {field: "id", type: "quantitative", position: "left", aggFunction: "count"},
-                {field: "Metadata URL", type: "url", position: "left", title: "cid", aggFunction: "mostCommon"},
-                {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right"},
-                {field: "Cell Type", type: "nominal", position: "right", aggFunction: "concat"},
-                {field: "Tissue Type", type: "nominal", position: "right", aggFunction: "concat"},
-                {field: "Species", type: "nominal", position: "right", aggFunction: "concat"}
-            ],
-            rowAggregate: [
-                {field: "Cell Type", type: "nominal", oneOf: ["Fibroblast", "Epithelium"]},
-                {field: "Tissue Type", type: "nominal", oneOf: ["Blood"]}
-            ],
-            rowSort: [
-                {field: "Tissue Type", type: "nominal", order: "ascending"},
-                {field: "qc_frip", type: "quantitative", order: "descending"}
-            ],
-            rowFilter: [
-                {field: "Tissue Type", type: "nominal", notOneOf: [
-                    "None", "Adipose", "Bone", "Bone Marrow", "Brain", "Breast", "Cervix", "Colon", "Connective Tissue", "Embryo"
-                ]}
-            ]
-        }
-    },
-    "H3K27ac Demo (2 Views, Center Tracks)": {
-        viewConfig: hgDemoViewConfig6,
-        options: [
-            {
-                viewId: "default",
-                trackId: "default",
-                rowSort: [
-                    {field: "Cell Type", type: "nominal", order: "ascending"}
-                ],
-                rowFilter: [],
-                rowHighlight: {field: "Cell Type", type: "nominal", contains: "Stem"}
-            },
-            {
-                viewId: "cistrome-view-6-1",
-                trackId: "cistrome-track-6-1",
-                rowInfoAttributes: [
-                    {field: "Hierarchical Clustering (Ward)", type: "tree", position: "left"},
-                ]
-            },
-            {
-                viewId: "cistrome-view-6-2",
-                trackId: "cistrome-track-6-2",
-                rowInfoAttributes: [
-                    {field: "Tissue Type", type: "nominal", position: "right"},
-                    {field: "Cell Type", type: "nominal", position: "right"},
-                ]
-            }
-        ]
-    },
-    "H3K27ac Demo (1 View, Top Track)": {
-        viewConfig: hgDemoViewConfig7,
-        options: {
-            rowInfoAttributes: [
-                {field: "Hierarchical Clustering (Average)", type: "tree", position: "right"},
-                {field: "Random 3", type: "quantitative", position: "right"},
-                {field: ["Random 1", "Random 2", "Random 3", "Random 4"], type: "quantitative", position: "right"},
-                {field: "Metadata URL", type: "url", position: "right", title: "Metadata URL"},
-                {field: "Hierarchical Clustering (Ward)", type: "tree", position: "left"},
-                {field: "Cell Type", type: "nominal", position: "left"},
-                {field: "Tissue Type", type: "nominal", position: "left"},
-                {field: "Species", type: "nominal", position: "left"}
-            ],
-            rowSort: [
-                {field: "Cell Type", type: "nominal", order: "ascending"}
-            ],
-            rowFilter: [],
-            rowHighlight: {field: "Cell Type", type: "nominal", contains: "Stem"}
-        }
-    },
-    "H3K27ac Demo (1 View, Top and Center Tracks)": {
-        viewConfig: hgDemoViewConfig8,
-        options: [
-            {
-                viewId: "default",
-                trackId: "default"
-            },
-            {
-                viewId: "cistrome-view-8",
-                trackId: "cistrome-track-8-1",
-                rowInfoAttributes: [
-                    {field: "Hierarchical Clustering (Ward)", type: "tree", position: "left"},
-                    {field: "Cell Type", type: "nominal", position: "right"},
-                ]
-            },
-            {
-                viewId: "cistrome-view-8",
-                trackId: "cistrome-track-8-2",
-                rowInfoAttributes: [
-                    {field: "Hierarchical Clustering", type: "tree", position: "right"},
-                    {field: "Cell Type", type: "nominal", position: "left"},
-                ]
-            }
-        ]
-    },
-    "H3K27ac Demo (1 View, 1 Viewport, Top and Center Tracks, Overview & Detail)": {
-        viewConfig: hgDemoViewConfig9,
-        options: [
-            {
-                viewId: "default",
-                trackId: "default",
-            },
-            {
-                viewId: "cistrome-view-1",
-                trackId: "cistrome-track-1",
-                rowInfoAttributes: [
-                    {field: "Metadata URL", type: "url", position: "left", title: "cid"},
-                    {field: "Cell Type", type: "nominal", position: "right"},
-                    {field: "Tissue Type", type: "nominal", position: "right"},
-                    {field: "Species", type: "nominal", position: "right"}
-                ],
-                rowSort: [
-                    { field: "Cell Type", type: "nominal", order: "ascending" }
-                ]
-            },
-            {
-                viewId: "cistrome-view-1",
-                trackId: "cistrome-track-1-detail-view-1",
-                rowInfoAttributes: [
-                    {field: "Metadata URL", type: "url", position: "left", title: "cid"},
-                    {field: "Cell Type", type: "nominal", position: "right"},
-                    {field: "Tissue Type", type: "nominal", position: "right"},
-                    {field: "Species", type: "nominal", position: "right"}
-                ],
-                rowFilter: [
-                    { field: "Cell Type", type: "nominal", notOneOf: [
-                        "Th1", "Spermatid", "ILC1", "Th17", "None", "Monocyte", "Natural Killer Cell", 
-                        "T Lymphocyte", "Erythroid Progenitor Cell", "B Lymphocyte", "liver", "Dendritic Cell", 
-                        "Macrophage", "Myeloid Cell", "Plasmablast", "Th2", "Endothelial Cell", "Epithelium", 
-                        "Melanoma Cell", "Keratinocyte", "Cortex", "Stem cell", "Embryonic Stem Cell", "Adipocyte", 
-                        "Neuroblastoma", "Neuroectoderm", "Neural crest cell", "Glial Cell", "Neural Progenitor Cell", 
-                        "Neuroblastoma patient cells", "Inferior Temporal Lobe Cell", "Substantia Nigra Cell", 
-                        "Hippocampus Middle Cell", "iPSC", "Melanocyte", "Endoderm Cell", "Erythroblast", 
-                        "Lymphoblastoid", "Mesenchymal Stem Cell", "Osteoblast", "Stromal Cell", "Intermediate", 
-                        "Myoblast", "Schwann Cell"
-                    ] }
-                ]
-            }
-        ]
-    },
-    "Cistrome_DNase_1kb_average_QN.multires.mv5": {
-        viewConfig: hgDemoViewConfig10,
-        options: {
-            rowInfoAttributes: [
-                {field: "Cluster", type: "nominal", position: "right"},
-                {field: "Hierarchical Clustering", type: "tree", position: "right"},
-                {field: "Cell Type", type: "nominal", position: "left"}
-            ],
-            rowSort: [
-                // {field: "Cluster", type: "nominal", order: "ascending"},
-            ],
-            rowFilter: [ ]
-        }
-    },
-    "Demo for Meeting 2020-04-29": {
-        viewConfig: hgDemoViewConfigApril2020,
-        options: {
-            rowInfoAttributes: [
-                {field: "Cluster", type: "nominal", position: "right"},
-                {field: "Cell Type", type: "nominal", position: "right"}
-            ],
-            rowSort: [
-                {field: "Cell Type", type: "nominal", order: "ascending"},
-            ],
-            rowFilter: [ ]
-        }
-    },
-    "Minimal Dataset": {
-        viewConfig: hgDemoViewConfig2,
-        options: {
-            rowInfoAttributes: [
-                {field: "Hierarchical Clustering", type: "tree", position: "left"},
-                {field: "Tissue Type", type: "nominal", position: "left"},
-                {field: ["Random 1", "Random 2"], type: "quantitative", position: "left"},
-                {field: "id", type: "nominal", position: "right"},
-                {field: "Hierarchical Clustering", type: "tree", position: "right"}
-            ],
-            rowFilter: [ ]
-        }
-    },
-    "Minimal Dataset (w/ Dendrogram and Aggregation)": {
-        viewConfig: hgDemoViewConfig2b,
-        options: {
-            rowInfoAttributes: [
-                {field: "Hierarchical Clustering", type: "tree", position: "left"},
-                {field: "Tissue Type", type: "nominal", position: "left", aggFunction: "concat"},
-                {field: "Random 1", type: "quantitative", position: "left", aggFunction: "mean"},
-                {field: ["Random 1", "Random 2"], type: "quantitative", position: "left", aggFunction: "mean"},
-                {field: "id", type: "nominal", position: "right", aggFunction: "concat"},
-                {field: "Hierarchical Clustering", type: "tree", position: "right"}
-            ],
-            rowFilter: [ ],
-            rowAggregate: [
-                {field: "Tissue Type", type: "nominal", oneOf: ["Blood", "Bone Marrow"]}
-            ]
-        }
-    }
-};
+import { demos } from './demo';
+import './CistromeExplorer.scss';
 
 export default function CistromeExplorer() {
     
     const hmRef = useRef();
 
     const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[0]);
-    
+    const [isSettingVisible, setIsSettingVisible] = useState(false);
+
     // Undo and redo
     const [undoable, setUndoable] = useState(false);
     const [redoable, setRedoable] = useState(false);
@@ -286,6 +46,20 @@ export default function CistromeExplorer() {
         setUndoable(indexOfCurrentView !== viewHistory.length - 1);
         setRedoable(indexOfCurrentView !== 0);
     }, [viewHistory, indexOfCurrentView]);
+
+    useEffect(() => {
+        function closeSideViews(e) {
+            if(
+                (e.key === 'Esc' || e.key === 'Escape') && 
+                (isSettingVisible || isToolkitVisible)
+            ) {
+                setIsSettingVisible(false);
+                setIsToolkitVisible(false);
+            }
+        }
+        window.addEventListener("keydown", closeSideViews);
+        return () => window.removeEventListener("keydown", closeSideViews);
+    }, [isSettingVisible, isToolkitVisible]);
 
     /**
      * This function is being called when `options` is updated interactively.
@@ -325,24 +99,19 @@ export default function CistromeExplorer() {
         <div className="cistrome-explorer">
             <div className="header-container">
                 <div className="header">
-                    <span className="cisvis-title">Cistrome Explorer</span>
-                    <span className="viewconf-options">
-                        <select 
-                            onChange={e => setSelectedDemo(e.target.value)} 
-                            defaultValue={selectedDemo}
-                        >
-                            {Object.keys(demos).map(vcKey => (
-                                <option 
-                                    key={vcKey} 
-                                    value={vcKey} 
-                                >
-                                    {vcKey}
-                                </option>
-                            ))}
-                        </select>
+                    <span 
+                        className="ce-generic-button"
+                        onClick={() => setIsSettingVisible(!isSettingVisible)}>
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            viewBox={MENU.viewBox}>
+                            <title>Menu</title>
+                            <path fill="currentColor" d={MENU.path}/>
+                        </svg>
                     </span>
+                    <span className="cisvis-title">Cistrome Explorer</span>
                     <span className="header-control">
                         <span 
+                            className="ce-generic-button-sm"
                             style={{ 
                                 cursor: undoable ? 'pointer' : 'not-allowed',
                                 color: undoable ? 'white' : '#999'
@@ -355,7 +124,7 @@ export default function CistromeExplorer() {
                                 }
                             }}
                         >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
+                            <svg xmlns="http://www.w3.org/2000/svg"
                                 viewBox={UNDO.viewBox}>
                                 <title>Undo</title>
                                 <path fill="currentColor" d={UNDO.path}/>
@@ -363,6 +132,7 @@ export default function CistromeExplorer() {
                             {` Undo (${viewHistory.length - indexOfCurrentView - 1})`}
                         </span>
                         <span 
+                            className="ce-generic-button-sm"
                             style={{ 
                                 cursor: redoable ? 'pointer' : 'not-allowed',
                                 color: redoable ? 'white' : '#999'
@@ -375,7 +145,7 @@ export default function CistromeExplorer() {
                                 }
                             }}
                         >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
+                            <svg xmlns="http://www.w3.org/2000/svg"
                                 viewBox={REDO.viewBox}>
                                 <title>Redo</title>
                                 <path fill="currentColor" d={REDO.path}/>
@@ -384,27 +154,28 @@ export default function CistromeExplorer() {
                         </span>
                     </span>
                     <span className="header-info">
-                        <span style={{ cursor: 'pointer' }} onClick={() => 
-                            setIsToolkitVisible(!isToolkitVisible)
-                        }>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                        <span 
+                            className="ce-generic-button" 
+                            onClick={() => setIsToolkitVisible(!isToolkitVisible)}>
+                            <svg xmlns="http://www.w3.org/2000/svg"
                                 viewBox={TABLE.viewBox}>
-                                <title>CistromeToolkit</title>
+                                <title>Cistrome DB Toolkit</title>
                                 <path fill="currentColor" d={TABLE.path}/>
                             </svg>
+                            {' Toolkit '}
                         </span>
-                        <span>
+                        <span className="ce-generic-button">
                             <a href={`${pkg.homepage}/docs/`} target="_blank">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                <svg xmlns="http://www.w3.org/2000/svg"
                                     viewBox={DOCUMENT.viewBox}>
                                     <title>Documents</title>
                                     <path fill="currentColor" d={DOCUMENT.path}/>
                                 </svg>
                             </a>
                         </span>
-                        <span>
+                        <span className="ce-generic-button">
                             <a href={pkg.repository.url} target="_blank">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                <svg xmlns="http://www.w3.org/2000/svg"
                                     viewBox={GITHUB.viewBox}>
                                     <title>GitHub</title>
                                     <path fill="currentColor" d={GITHUB.path}/>
@@ -432,6 +203,95 @@ export default function CistromeExplorer() {
                         //     onAddBigWigTrack(server, tilesetUid, position);
                         // }}
                     />
+                </div>
+                <div className="settings" style={{
+                    left: isSettingVisible ? 0 : "-300px"
+                }}>
+                    <span style={{ 
+                        verticalAlign: "middle", 
+                        display: "inline-block",
+                        position: "absolute", 
+                        right: 5, 
+                        top: 5
+                    }}>
+                        <svg
+                            className={'hm-button'}
+                            style={{ color: "rgb(171, 171, 171)", background: "none" }}
+                            onClick={() => setIsSettingVisible(false)}
+                            viewBox={CLOSE.viewBox}
+                        >
+                            <title>Close Cistrome Toolkit</title>
+                            <path d={CLOSE.path} fill="currentColor"/>
+                        </svg>
+                    </span>
+                    <h2>Example Datasets</h2>
+                    <span className="viewconf-options">
+                        <select 
+                            onChange={e => setSelectedDemo(e.target.value)} 
+                            defaultValue={selectedDemo}
+                        >
+                            {Object.keys(demos).map(vcKey => (
+                                <option 
+                                    key={vcKey} 
+                                    value={vcKey} 
+                                >
+                                    {vcKey}
+                                </option>
+                            ))}
+                        </select>
+                    </span>
+                    <div className="setting-separater"></div>
+                    <h2>View Options</h2>
+                    <span 
+                        className="ce-generic-button"
+                        style={{ 
+                            fontSize: 12,
+                            cursor: 'pointer',
+                            display: 'inline-block',
+                            color: 'black', 
+                            background: 'white', 
+                            border: '1px solid gray',
+                            padding: '4px',
+                            marginTop: '4px'
+                        }}
+                        onClick={() => {
+                            hmRef.current.api.onRemoveAllFilters()}
+                        }
+                    >
+                        <svg
+                            style={{ color: "rgb(171, 171, 171)", width: 14, height: 14 }}
+                            viewBox={TRASH.viewBox}
+                        >
+                            <title>Remove All Filters</title>
+                            <path d={TRASH.path} fill="currentColor"/>
+                        </svg>
+                        {' Remove All Filters'}
+                    </span>
+                    <span 
+                        className="ce-generic-button"
+                        style={{ 
+                            fontSize: 12,
+                            cursor: 'pointer',
+                            display: 'inline-block',
+                            color: 'black', 
+                            background: 'white', 
+                            border: '1px solid gray',
+                            padding: '4px',
+                            marginTop: '4px'
+                        }}
+                        onClick={() => {
+                            hmRef.current.api.onRemoveAllSort()}
+                        }
+                    >
+                        <svg
+                            style={{ color: "rgb(171, 171, 171)", width: 14, height: 14 }}
+                            viewBox={TRASH.viewBox}
+                        >
+                            <title>Remove All Sort</title>
+                            <path d={TRASH.path} fill="currentColor"/>
+                        </svg>
+                        {' Remove All Sort'}
+                    </span>
                 </div>
             </div>
         </div>

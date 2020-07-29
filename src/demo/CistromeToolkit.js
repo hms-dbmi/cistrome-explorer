@@ -72,19 +72,13 @@ export default function CistromeToolkit(props) {
     const [latestPeaksetParams, setLatestPeaksetParams] = useState({
         assembly: CISTROME_DBTOOLKIT_SPECIES[0],
         tpeak: CISTROME_DBTOOLKIT_PEAK_NUMBERS[0],
-        bedFile: {}
+        bedFile: null
     });
 
     // Ready to call API?
     const [isLatestIntervalParamsReady, setIsLatestIntervalParamsReady] = useState(false);
     const [isLatestGeneParamsReady, setIsLatestGeneParamsReady] = useState(false);
     const [isLatestPeaksetParamsReady, setIsLatestPeaksetParamsReady] = useState(false);
-
-    useEffect(() => {
-        if(isVisible) {
-            toolkitRef.current.focus();
-        }
-    }, [isVisible]);
 
     // An Interval API can be called outside of `CistromeToolkit`
     useEffect(() => {
@@ -308,10 +302,7 @@ export default function CistromeToolkit(props) {
                 {/* Search by Peak Set */}
                 <div
                     className={'api-config-view'}
-                    style={{ 
-                        borderLeft: `4px solid ${CISTROME_API_COLORS.PEAKSET}`,
-                        visibility: 'hidden' // TODO: Support Peak Set API
-                    }}
+                    style={{ borderLeft: `4px solid ${CISTROME_API_COLORS.PEAKSET}`, visibility: "hidden" }} // TODO: We do not support this API yet.
                 >
                     <div className='api-title'>Search by Peak Set</div>
                     <div className='api-subtitle'>What factors have a significant binding overlap with your peak set?</div>
@@ -418,13 +409,6 @@ export default function CistromeToolkit(props) {
         <div ref={toolkitRef}
             className={dragY.current ? "cisvis-data-table-bg-no-transition" : "cisvis-data-table-bg"}
             tabIndex="0"
-            onKeyDown={e => {
-                if(
-                    (e.key === 'Esc' || e.key === 'Escape') && isVisible
-                ) {
-                    setIsVisible(false);
-                }
-            }}
             style={{
                 height: isVisible ? `${height}px` : 0
             }}
