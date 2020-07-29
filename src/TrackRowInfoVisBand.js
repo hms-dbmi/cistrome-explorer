@@ -150,7 +150,7 @@ export default function TrackRowInfoVisBand(props) {
         return () => {
             teardown();
         };
-    }, [top, left, width, height, leftSelectedRows]);
+    }, [top, left, width, height, leftSelectedRows, rightSelectedRows]);
 
     drawRegister("TrackRowInfoVisBand", draw);
 
