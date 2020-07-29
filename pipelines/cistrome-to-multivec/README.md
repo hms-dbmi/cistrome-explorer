@@ -1,34 +1,55 @@
 
-Generate multivec files from CistromeDB bigWig files:
+# pipelines/cistrome-to-multivec
+
+Generate multivec files from CistromeDB bigWig files.
+
 ```sh
 conda activate cistrome-to-multivec-pipeline
+# to generate multivec outputs
 snakemake --cores 2 --config filetype=mv5
-# or
+# or, to generate zarr outputs
 snakemake --cores 2 --config filetype=zarr
-# or, if on O2
-snakemake --cores 2 --config filetype=mv5 user={your_o2_username}
+# or, if on O2 (replace with your O2 username)
+./submit.sh mv5 my_username
 ```
 
-Ingest the processed multivec files with `higlass-server`:
-```sh
-conda activate higlass-server
-bash higlass_ingest.sh path/to/higlass-server # fill in this path
-```
+## Setup
 
-# Setup
-
-## Conda environment
+### Create conda environment
 
 ```sh
 conda env create -f environment.yml
 conda activate cistrome-to-multivec-pipeline
 ```
 
-## Using parallel hdf5 via h5py and mpi4py
+### Copy snakemake cluster config
+
+```sh
+mkdir -p ~/.config/snakemake/cistrome-explorer
+cp ./cluster-profile.yml ~/.config/snakemake/cistrome-explorer/config.yaml
+```
+
+### Sync output files with s3 bucket
+
+```sh
+# replace with your credentials
+export AWS_ACCESS_KEY_ID="{my_access_key_id}"
+export AWS_SECRET_ACCESS_KEY="{my_secret_access_key}"
+export AWS_DEFAULT_REGION="us-east-1"
+
+# replace with your O2 username details
+# .../users/{first_letter_of_username}/{username}/cistrome-explorer/...
+aws s3 sync /n/scratch3/users/m/mk596/cistrome-explorer/data/processed/ s3://higlass-server/CistromeDB/
+```
+
+
+### Using parallel hdf5 via h5py and mpi4py
+
+*The following info is outdated, since h5py does not yet work with the parallel version of hdf5 installed on the o2 cluster. In the meantime we can do parallelization by submitting many simultaneous snakemake jobs for each output bigwig file.*
 
 https://docs.h5py.org/en/latest/build.html#building-against-parallel-hdf5
 
-### On O2
+#### On O2
 
 ```sh
 module load gcc/6.2.0
@@ -50,7 +71,7 @@ python setup.py configure --mpi
 python setup.py install
 ```
 
-### On macOS
+#### On macOS
 
 Download hdf5 1.10.6 source code from https://www.hdfgroup.org/downloads/hdf5/source-code/ and un-tar-gz
 

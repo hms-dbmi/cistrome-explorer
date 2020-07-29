@@ -9,4 +9,6 @@ __pycache__/
 *.bed
 *.bw
 *.json
+*.out
+*.err
 data/
