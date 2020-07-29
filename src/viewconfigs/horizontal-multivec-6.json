@@ -28,7 +28,7 @@
               "type": "horizontal-chromosome-labels",
               "server": "http://higlass.io/api/v1",
               "tilesetUid": "NyITQvZsS_mOFNlz5C2LJg",
-              "uid": "cBUEM6QWQ-mHfiFuza2I1w",
+              "uid": "chromosome-labels-track-1",
               "options": {
                 "showMousePosition": false,
                 "mousePositionColor": "#999999",
@@ -44,7 +44,7 @@
               "type": "horizontal-gene-annotations",
               "server": "//higlass.io/api/v1",
               "tilesetUid": "P0PLbQMwTYGy-5uPIQid7A",
-              "uid": "GyS0k_E_T5-8prM1VQjQMQ",
+              "uid": "gene-labels-track-1",
               "options": {
                 "labelColor": "black",
                 "labelPosition": "hidden",
@@ -73,7 +73,7 @@
               "type": "horizontal-bar",
               "server": "//higlass.io/api/v1",
               "tilesetUid": "HnOFdNKyQiWEnLkn4Wb1Ug",
-              "uid": "aPyDLIDiQ6OfXVq8TWz5Ng",
+              "uid": "conservation-track-1",
               "options": {
                 "labelColor": "black",
                 "labelPosition": "topLeft",
@@ -158,7 +158,7 @@
               "type": "horizontal-chromosome-labels",
               "server": "http://higlass.io/api/v1",
               "tilesetUid": "NyITQvZsS_mOFNlz5C2LJg",
-              "uid": "cBUEM6QWQ-mHfiFuza2I1w2",
+              "uid": "chromosome-labels-track-2",
               "options": {
                 "showMousePosition": false,
                 "mousePositionColor": "#999999",
@@ -174,7 +174,7 @@
               "type": "horizontal-gene-annotations",
               "server": "//higlass.io/api/v1",
               "tilesetUid": "P0PLbQMwTYGy-5uPIQid7A",
-              "uid": "GyS0k_E_T5-8prM1VQjQMQ2",
+              "uid": "gene-labels-track-2",
               "options": {
                 "labelColor": "black",
                 "labelPosition": "hidden",
@@ -203,7 +203,7 @@
               "type": "horizontal-bar",
               "server": "//higlass.io/api/v1",
               "tilesetUid": "HnOFdNKyQiWEnLkn4Wb1Ug",
-              "uid": "aPyDLIDiQ6OfXVq8TWz5Ng2",
+              "uid": "conservation-track-2",
               "options": {
                 "labelColor": "black",
                 "labelPosition": "topLeft",
