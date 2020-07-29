@@ -88,6 +88,8 @@ export class TwoPath {
 
         /** @member {string} */
         this.stroke = "#000";
+        /** @member {string} */
+        this.fill = "#fff";
         /** Width of the stroke line if stroke is not null. 
          * @member {number} */
         this.linewidth = 1;
@@ -366,6 +368,13 @@ export default class Two {
                     });
                 }
 
+                if(d.fill != null) {
+                    path
+                        .attr("fill", d.fill);
+                } else {
+                    path
+                        .attr("fill", "transparent");
+                }
                 if(d.stroke != null) {
                     path
                         .attr("stroke-width", d.linewidth)
@@ -461,6 +470,9 @@ export default class Two {
                     context.stroke();
                 }
             } else if(d instanceof TwoPath) {
+                if(d.fill !== null) {
+                    context.fillStyle = d.fill;
+                }
                 if(d.stroke !== null) {
                     context.strokeStyle = d.stroke;
                 }
@@ -473,6 +485,9 @@ export default class Two {
                             context.lineTo(p[0], p[1]);
                         }
                     });
+                }
+                if(d.fill !== null) {
+                    context.fill();
                 }
                 if(d.stroke !== null) {
                     context.stroke();

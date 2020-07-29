@@ -6,9 +6,13 @@ import { getAggregatedValue } from './aggregate.js';
  * Generate an array of selected row indices based on filter and sort options.
  * @param {object[]} rowInfo The original/full default-ordered rowInfo array.
  * @param {object} options The track options object, containing sort/filter options.
+ * @param {object[]} altOptions.rowSort An alternative sort options.
  * @returns {(number[]|null)} The array of selected indices.
  */
-export function selectRows(rowInfo, options) {
+export function selectRows(rowInfo, options, altOptions = null) {
+    // Use alternative options if presented
+    const altRowSort = altOptions?.rowSort;
+
     if(options) {   
         // Aggregate
         let aggregatedRowInfo = getAggregatedRowInfo(rowInfo, options.rowAggregate);
@@ -92,8 +96,9 @@ export function selectRows(rowInfo, options) {
         }
 
         // Sort
-        if(options.rowSort && options.rowSort.length > 0) {
-            let sortOptions = options.rowSort.slice().reverse();
+        const rowSort = altRowSort ? altRowSort : options.rowSort;
+        if(rowSort && rowSort.length > 0) {
+            let sortOptions = rowSort.slice().reverse();
             sortOptions.forEach((d) => {
                 const { field, type, order } = d;
                 const isMultipleFields = Array.isArray(field);
@@ -208,9 +213,11 @@ export function highlightRowsFromSearch(rowInfo, field, type, conditions, option
     let newHighlitRows = [];
     if(conditions === "") {
         newHighlitRows = [];
+    } else if(type === "index") {
+        newHighlitRows = conditions;
     } else if(type === "nominal") {
         const filteredRows = aggregatedRowInfo.filter(
-            d => !getAggregatedValue(d[1], field, 'nominal', aggFuncName).toString().toUpperCase().includes(conditions.toUpperCase())
+            d => getAggregatedValue(d[1], field, 'nominal', aggFuncName).toString().toUpperCase().includes(conditions.toUpperCase())
         );
         newHighlitRows = filteredRows.map(d => d[0]);
     } else if(type === "quantitative") {
@@ -220,29 +227,32 @@ export function highlightRowsFromSearch(rowInfo, field, type, conditions, option
             filteredRows = aggregatedRowInfo.filter(d => {
                 let sum = 0;
                 field.forEach(f => sum += getAggregatedValue(d[1], f, 'quantitative', aggFuncName));
-                return sum < minCutoff || sum > maxCutoff;
+                return minCutoff <= sum && sum <= maxCutoff;
             });
         } else {
             filteredRows = aggregatedRowInfo.filter(
-                d => getAggregatedValue(d[1], field, 'quantitative', aggFuncName) < minCutoff 
-                    || getAggregatedValue(d[1], field, 'quantitative', aggFuncName) > maxCutoff
+                d => minCutoff <= getAggregatedValue(d[1], field, 'quantitative', aggFuncName) && 
+                    getAggregatedValue(d[1], field, 'quantitative', aggFuncName) <= maxCutoff
             );
         }
         newHighlitRows = filteredRows.map(d => d[0]);
     } else if(type === "tree") {
         if(Array.isArray(conditions)) {
-            const subtree = conditions;
+            const ancestors = conditions;
             const filteredRows = aggregatedRowInfo.filter(
                 d => getAggregatedValue(d[1], field, 'tree', aggFuncName).reduce(
-                // TODO: Remove `h === subtree[i]` when we always encode similarity distance in dendrogram.
-                (a, h, i) => a || (i < subtree.length && h !== subtree[i] && h.name !== subtree[i]), false)
+                    // Check if a node have identical ancestors
+                    // TODO: Remove `curr === subtree[i]` when we always encode similarity distance in dendrogram.
+                    (accum, curr, i) => accum && (i > ancestors.length || curr === ancestors[i] || curr.name === ancestors[i]),
+                    true
+                )
             );
             newHighlitRows = filteredRows.map(d => d[0]);
         } else {
             const minSimilarity = conditions;
             const filteredRows = aggregatedRowInfo.filter(
                 // Note that leafs' `dist` values are zero.
-                d => getAggregatedValue(d[1], field, 'tree', aggFuncName).map(d => d.dist).filter(d => d <= minSimilarity).length <= 1
+                d => getAggregatedValue(d[1], field, 'tree', aggFuncName).map(d => d.dist).filter(d => d <= minSimilarity).length > 1
             );
             newHighlitRows = filteredRows.map(d => d[0]);
         }

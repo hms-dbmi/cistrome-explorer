@@ -4,7 +4,9 @@ import omit from 'lodash/omit';
 import Ajv from 'ajv';
 import { insertItemToArray } from './array.js'
 
+/* Defatul values */
 export const DEFAULT_OPTIONS_KEY = "default";
+const DEFAULT_TRACK_WIDTH = 200;
 
 const baseSchema = {
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -34,6 +36,7 @@ const baseSchema = {
                 "rowHighlight": {
                     "type": "object",
                     "oneOf":[ 
+                        { "required": ["field", "type", "index"] },
                         { "required": ["field", "type", "contains"] },
                         { "required": ["field", "type", "range"] },
                         { "required": ["field", "type", "subtree"] },
@@ -46,8 +49,12 @@ const baseSchema = {
                         },
                         "type": {
                             "type": "string",
-                            "enum": ["nominal", "quantitative", "tree"],
+                            "enum": ["index", "nominal", "quantitative", "tree"],
                             "description": "The data type of a field"
+                        },
+                        "index": {
+                            "type": "array",
+                            "description": "Indices of rows"
                         },
                         "contains": {
                             "type": "string",
@@ -96,6 +103,19 @@ const baseSchema = {
                 "title": {
                     "type": "string",
                     "description": "The name of a data field to alternatively use for displaying urls"
+                },
+                "resolveYScale": {
+                    "type": "boolean",
+                    "description": "Determine if the scale of y axis should be independent to the adjacently placed tracks"
+                },
+                "sort": {
+                    "type": "string",
+                    "enum": ["descending", "ascending"],
+                    "description": "The order of sorting. This works only if `resolveYScale` is set to `true`"
+                },
+                "width": {
+                    "type": "number",
+                    "description": "The horizontal size of a vertical track"
                 }
             }
         },
@@ -240,9 +260,6 @@ export function getConditionFromHighlightOption(highlitOption) {
         k !== "type" &&
         k === getHighlightKeyByFieldType(type, highlitOption[k]) // key should match with the given field type
     );
-    if(!key) {
-        console.warn("No proper condition for a given field type is provided in the following options:", highlitOption);
-    }
     return key ? highlitOption[key] : null;
 }
 
@@ -254,6 +271,8 @@ export function getConditionFromHighlightOption(highlitOption) {
  */
 export function getHighlightKeyByFieldType(type, condition = undefined) {
   switch(type) {
+    case "index":
+        return "index";
     case "quantitative":
         return "range";
     case "nominal":
@@ -366,7 +385,7 @@ export function processWrapperOptions(options) {
     } else if(typeof options === "object") {
         newOptions[DEFAULT_OPTIONS_KEY] = merge(cloneDeep(newOptions[DEFAULT_OPTIONS_KEY]), options);
     }
-
+    
     return newOptions;
 }
 

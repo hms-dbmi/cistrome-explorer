@@ -30,7 +30,6 @@ export default function ContextMenu() {
             setTop(data.y);
             
             let menuData = [];
-            // TODO: Add common context menu items for each type here.
             switch(data.menuType) {
                 case CONTEXT_MENU_TYPE.NOMINAL_BAR:
                     menuData.push({ title: data.title });

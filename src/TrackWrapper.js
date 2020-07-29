@@ -115,8 +115,11 @@ export default function TrackWrapper(props) {
         <div className="hm-track-wrapper">
             {leftAttrs.length !== 0 ? 
                 (<TrackRowInfo
+                    originalRowInfo={rowInfo}
                     rowInfo={aggregatedRowInfo}
                     transformedRowInfo={transformedRowInfo}
+                    selectedRows={selectedRows}
+                    highlitRows={highlitRows}
                     viewId={multivecTrackViewId}
                     trackId={multivecTrackTrackId}
                     trackX={trackX}
@@ -138,8 +141,11 @@ export default function TrackWrapper(props) {
                 />) : null}
             {rightAttrs.length !== 0 ? 
                 (<TrackRowInfo
+                    originalRowInfo={rowInfo}
                     rowInfo={aggregatedRowInfo}
                     transformedRowInfo={transformedRowInfo}
+                    selectedRows={selectedRows}
+                    highlitRows={highlitRows}
                     viewId={multivecTrackViewId}
                     trackId={multivecTrackTrackId}
                     trackX={trackX}

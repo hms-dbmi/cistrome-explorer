@@ -13,6 +13,7 @@ import { rgbToHex, generateNextUniqueColor } from "./utils/color.js";
 import { getRetinaRatio } from './utils/canvas.js';
 import { modifyItemInArray } from "./utils/array.js";
 import { getAggregatedValue } from "./utils/aggregate.js";
+import { drawRowHighlightRect } from "./utils/linking.js";
 
 export const margin = 5;
 
@@ -27,6 +28,8 @@ export const margin = 5;
  * @prop {boolean} isShowControlButtons Determine if control buttons should be shown.
  * @prop {object[]} rowInfo The array of JSON Object containing row information.
  * @prop {object[]} transformedRowInfo The `rowInfo` array after aggregating, filtering, and sorting rows.
+ * @prop {array} selectedRows The array of selected indices. 
+ * @prop {array} highlitRows The array of highlit indices.
  * @prop {string} titleSuffix The suffix of a title, information about sorting and filtering status.
  * @prop {object} sortInfo The options for sorting rows of the field used in this track.
  * @prop {object} filterInfo The options for filtering rows of the field used in this track.
@@ -44,6 +47,8 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
         isShowControlButtons,
         rowInfo,
         transformedRowInfo,
+        selectedRows,
+        highlitRows,
         titleSuffix,
         sortInfo,
         filterInfo,
@@ -102,6 +107,8 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             domElement
         });
 
+        drawRowHighlightRect(two, selectedRows, highlitRows, width, height);
+        
         let titleText = isStackedBar ? field.join(" + ") : field;
         if(aggFunction === "count") {
             // For `count` aggregation function, field name is not important since
@@ -118,9 +125,11 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                 field.forEach(f => sum += aggValue(d, f));
                 return sum;
             }))[1]];   // Zero baseline
+
             xScale = xScale
                 .domain(valueExtent)
                 .range([0, barAreaWidth]);
+
             const colorScale = d3.scaleOrdinal()
                 .domain(Array.from(new Set(field)).sort())
                 .range(d3.schemeTableau10);
@@ -185,7 +194,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                 const barLeft = (isLeft ? width - barWidth : 0);
                 const textLeft = (isLeft ? width - barWidth - margin : barWidth + margin);
                 const infoForMouseEvent = colorToInfo.find(d => d.field === field && d.rowIndex === i);
-                const color = isHidden ? infoForMouseEvent.uniqueColor : d3.interpolateViridis(colorScale(value));;
+                const color = isHidden ? infoForMouseEvent.uniqueColor : d3.interpolateViridis(colorScale(value));
 
                 const rect = two.makeRect(barLeft, barTop, barWidth, rowHeight);
                 rect.fill = color;
@@ -210,7 +219,9 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             });
         }
 
-        drawVisTitle(titleText, { two, isLeft, width, height, titleSuffix });
+        if(!isShowControlButtons) {
+            drawVisTitle(titleText, { two, isLeft, width, height, titleSuffix });
+        }
 
         two.update();
         return two.teardown;
@@ -270,13 +281,18 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                         color={hoveredInfo.color}
                     />
                 });
+                onHighlightRows(field, "quantitative", [hoveredInfo.value, hoveredInfo.value]);
             } else {
                 destroyTooltip();
+                onHighlightRows("");
             }            
         });
 
         // Handle mouse enter and leave.
         d3.select(canvas).on("mouseout", destroyTooltip);
+        d3.select(div).on("mouseleave", () => {
+            onHighlightRows("");
+        });
 
         // Clean up.
         return () => {
@@ -286,7 +302,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             d3.select(div).on("mouseenter", null);
             d3.select(div).on("mouseleave", null);
         };
-    }, [top, left, width, height, transformedRowInfo]);
+    }, [top, left, width, height, transformedRowInfo, isShowControlButtons]);
     
     return (
         <div

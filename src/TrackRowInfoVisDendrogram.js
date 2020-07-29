@@ -10,6 +10,7 @@ import { SORT_TREE, HIGHLIGHTER } from './utils/icons.js';
 import { TooltipContent, destroyTooltip } from './Tooltip.js';
 import TrackRowInfoControl from "./TrackRowInfoControl.js";
 import { FILTER } from './utils/icons.js';
+import { drawRowHighlightRect } from "./utils/linking.js";
 
 /**
  * Component for visualization of row info hierarchies.
@@ -19,6 +20,8 @@ import { FILTER } from './utils/icons.js';
  * @prop {number} height The height of this view.
  * @prop {object[]} rowInfo The array of JSON Object containing row information.
  * @prop {object[]} transformedRowInfo The `rowInfo` array after aggregating, filtering, and sorting rows.
+ * @prop {array} selectedRows The array of selected indices. 
+ * @prop {array} highlitRows The array of highlit indices.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {object} filterInfo The options for filtering rows of the field used in this track.
  * @prop {boolean} isLeft Is this view on the left side of the track?
@@ -38,6 +41,8 @@ export default function TrackRowInfoVisDendrogram(props) {
         filterInfo,
         isLeft,
         isShowControlButtons,
+        selectedRows,
+        highlitRows,
         onAddTrack,
         onSortRows,
         onHighlightRows,
@@ -180,6 +185,8 @@ export default function TrackRowInfoVisDendrogram(props) {
             domElement
         });
         
+        drawRowHighlightRect(two, selectedRows, highlitRows, width, height);
+
         // Draw the dendrogram.
         const descendants = root.descendants();
 
@@ -251,7 +258,9 @@ export default function TrackRowInfoVisDendrogram(props) {
             rect.opacity = 1;
         }
 
-        drawVisTitle(field, { two, isLeft, width, height });
+        if(!isShowControlButtons) {
+            drawVisTitle(field, { two, isLeft, width, height });
+        }
 
         const points = descendants.map(pointFromNode);
         const delaunay = d3.delaunay.from(points);
@@ -302,20 +311,20 @@ export default function TrackRowInfoVisDendrogram(props) {
             const mouseViewportY = e.clientY;
             
             let node = ancestor.current;
-            const subtree = [];
+            const ancestors = [];
             while(node.parent) {
-                subtree.push(node.data.name);
+                ancestors.push(node.data.name);
                 node = node.parent;
             }
-            subtree.reverse();
+            ancestors.reverse();
             PubSub.publish(EVENT.CONTEXT_MENU, {
                 x: mouseViewportX,
                 y: mouseViewportY,
                 title: "Options for dendrogram",
                 menuType: CONTEXT_MENU_TYPE.TREE_ANCESTOR,
                 items: [
-                    { title: "Highlight Rows", icon: HIGHLIGHTER, action: () => onHighlightRows(field, "tree", subtree) },
-                    { title: "Filter Rows", icon: FILTER, action: () => onFilterRows(field, "tree", subtree, false) }
+                    { title: "Highlight Rows", icon: HIGHLIGHTER, action: () => onHighlightRows(field, "tree", ancestors) },
+                    { title: "Filter Rows", icon: FILTER, action: () => onFilterRows(field, "tree", ancestors, false) }
                 ]
             });
         }   
@@ -386,13 +395,22 @@ export default function TrackRowInfoVisDendrogram(props) {
                 
                 setHighlightNodeX(pointX);
                 setHighlightNodeY(pointY);
+                
+                const ancestors = [];
+                let node = d;
+                while(node.parent) {
+                    ancestors.push(node.data.name);
+                    node = node.parent;
+                }
+                ancestors.reverse();
+                onHighlightRows(field, "tree", ancestors);
             }
         });
 
         d3.select(canvas).on("mouseout", () => {
             destroyTooltip();
             if(!showMinSimBar) {
-                // onHighlightRows("");
+                onHighlightRows("");
             }
         });
 
@@ -401,7 +419,7 @@ export default function TrackRowInfoVisDendrogram(props) {
             teardownSvg();
             d3.select(div).on("mouseleave", null);
         };
-    }, [width, height, root]);
+    }, [width, height, root, isShowControlButtons]);
 
     // Create the minimum similarity bar element.
     const minSimBar = useMemo(() => {

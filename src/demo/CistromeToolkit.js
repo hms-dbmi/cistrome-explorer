@@ -80,12 +80,6 @@ export default function CistromeToolkit(props) {
     const [isLatestGeneParamsReady, setIsLatestGeneParamsReady] = useState(false);
     const [isLatestPeaksetParamsReady, setIsLatestPeaksetParamsReady] = useState(false);
 
-    useEffect(() => {
-        if(isVisible) {
-            toolkitRef.current.focus();
-        }
-    }, [isVisible]);
-
     // An Interval API can be called outside of `CistromeToolkit`
     useEffect(() => {
         if(intervalAPIParams && validateIntervalParams(intervalAPIParams).success) {
@@ -415,13 +409,6 @@ export default function CistromeToolkit(props) {
         <div ref={toolkitRef}
             className={dragY.current ? "cisvis-data-table-bg-no-transition" : "cisvis-data-table-bg"}
             tabIndex="0"
-            onKeyDown={e => {
-                if(
-                    (e.key === 'Esc' || e.key === 'Escape') && isVisible
-                ) {
-                    setIsVisible(false);
-                }
-            }}
             style={{
                 height: isVisible ? `${height}px` : 0
             }}

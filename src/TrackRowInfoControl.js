@@ -43,7 +43,7 @@ export default function TrackRowInfoControl(props){
     const [filterTop, setFilterTop] = useState(null);
     const [FilterLeft, setFilterLeft] = useState(null);
 
-    const { field, type, title, aggFunction } = fieldInfo;
+    const { field, type, title, aggFunction, resolveYScale } = fieldInfo;
     const controlField = (type === "url" && title ? title : field);
     const controlType = (type === "url" ? "nominal" : type);
 
@@ -60,10 +60,10 @@ export default function TrackRowInfoControl(props){
     })
 
     function onSortAscClick() {
-        onSortRows(controlField, controlType, "ascending");
+        onSortRows(controlField, controlType, "ascending", resolveYScale);
     }
     function onSortDescClick() {
-        onSortRows(controlField, controlType, "descending");
+        onSortRows(controlField, controlType, "descending", resolveYScale);
     }
     function onFilterClick(event) {
         const parentRect = divRef.current.getBoundingClientRect();
