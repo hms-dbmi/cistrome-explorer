@@ -1,4 +1,5 @@
 import zarr
+from numcodecs import Zlib
 import bbi
 import negspy.coordinates as nc
 import numpy as np
@@ -8,17 +9,19 @@ import json
 from tqdm import tqdm
 import resource
 
-from utils import metadata_json_to_row_info
+from utils import metadata_json_to_row_info, name_to_coordsystem, get_manifest_to_outfile_parser
 
 def bigwigs_to_zarr(
     input_bigwig_files,
     input_metadata_files,
     output_file,
-    starting_resolution
+    starting_resolution,
+    name
 ):
 
     # Short-hand for creating a DirectoryStore with a root group.
     f = zarr.open(output_file, mode='w')
+    compressor = Zlib(level=1)
 
     num_samples = len(input_bigwig_files)
 
@@ -26,12 +29,9 @@ def bigwigs_to_zarr(
     zipped_input = zip(input_bigwig_files, input_metadata_files)
 
     # Create level zero groups
-    info_group = f.create_group("info")
     resolutions_group = f.create_group("resolutions")
     chroms_group = f.create_group("chroms")
-
-    # Set info attributes
-    info_group.attrs['tile-size'] = 256
+    # Note: no info_group used for zarr
 
     # Prepare to fill in chroms dataset
     chromosomes = nc.get_chromorder('hg38')
@@ -49,8 +49,7 @@ def bigwigs_to_zarr(
 
     
     # Prepare to fill in resolutions dataset
-    resolutions = [ 1000*(2**x) for x in range(15)]
-    lowest_resolution = resolutions[-1]
+    resolutions = [ starting_resolution*(2**x) for x in range(16)]
     
     # Create each resolution group.
     for resolution in resolutions:
@@ -61,7 +60,7 @@ def bigwigs_to_zarr(
         # Create each chromosome dataset.
         for chr_name, chr_len in zip(chromosomes, chroms_length_arr):
             chr_shape = (math.ceil(chr_len / resolution), num_samples)
-            resolution_values_group.create_dataset(chr_name, shape=chr_shape, dtype="f4", fill_value=np.nan)
+            resolution_values_group.create_dataset(chr_name, shape=chr_shape, dtype="f4", fill_value=np.nan, compressor=compressor)
     
     # Fill in data for each bigwig file.
     for bw_index, bw_file in tqdm(list(enumerate(input_bigwig_files)), desc='bigwigs'):
@@ -91,14 +90,20 @@ def bigwigs_to_zarr(
         row_info = metadata_json_to_row_info(metadata_json)
         row_infos.append(row_info)
     
-    resolutions_group[str(lowest_resolution)].attrs["row_infos"] = row_infos
+    # f.attrs should contain all tileset_info properties
+    # For zarr, more attributes are used here to allow "serverless"
+    f.attrs['row_infos'] = row_infos
+    f.attrs['tile_size'] = 256
+    f.attrs['resolutions'] = sorted(resolutions, reverse=True)
+    f.attrs['min_pos'] = [ 0 ]
+    f.attrs['max_pos'] = [ int(sum(chroms_length_arr)) ]
+    f.attrs['shape'] = [ 256, num_samples ]
+    f.attrs['name'] = name
+    f.attrs['coordSystem'] = name_to_coordsystem(name)
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Create a zarr file.')
-    parser.add_argument('-i', '--input', type=str, required=True, help='The input manifest JSON file.')
-    parser.add_argument('-o', '--output', type=str, required=True, help='The output zarr file.')
-    parser.add_argument('-s', '--starting-resolution', type=int, default=1000, help='The starting resolution.')
+    parser = get_manifest_to_outfile_parser()
     args = parser.parse_args()
 
     with open(args.input) as f:
@@ -110,5 +115,6 @@ if __name__ == "__main__":
         input_bigwig_files,
         input_metadata_files,
         args.output,
-        args.starting_resolution
+        args.starting_resolution,
+        args.name
     )

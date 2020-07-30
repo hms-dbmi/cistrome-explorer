@@ -8,7 +8,7 @@ import json
 from tqdm import tqdm
 import resource
 
-from utils import metadata_json_to_row_info
+from utils import metadata_json_to_row_info, get_manifest_to_outfile_parser
 
 def bigwigs_to_multivec(
     input_bigwig_files,
@@ -48,8 +48,7 @@ def bigwigs_to_multivec(
 
     
     # Prepare to fill in resolutions dataset
-    resolutions = [ 1000*(2**x) for x in range(15)]
-    lowest_resolution = resolutions[-1]
+    resolutions = [ starting_resolution*(2**x) for x in range(16)]
     
     # Create each resolution group.
     for resolution in resolutions:
@@ -110,10 +109,7 @@ def bigwigs_to_multivec(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Create a multivec file.')
-    parser.add_argument('-i', '--input', type=str, required=True, help='The input manifest JSON file.')
-    parser.add_argument('-o', '--output', type=str, required=True, help='The output multivec file.')
-    parser.add_argument('-s', '--starting-resolution', type=int, default=200, help='The starting resolution.')
+    parser = get_manifest_to_outfile_parser()
     args = parser.parse_args()
 
     with open(args.input) as f:
