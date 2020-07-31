@@ -29,9 +29,12 @@ def bigwigs_to_zarr(
     zipped_input = zip(input_bigwig_files, input_metadata_files)
 
     # Create level zero groups
+    info_group = f.create_group("info") # Note: info_group not necessary when serverless.
     resolutions_group = f.create_group("resolutions")
     chroms_group = f.create_group("chroms")
-    # Note: no info_group used for zarr
+    
+    # Set info attributes
+    info_group.attrs['tile-size'] = 256
 
     # Prepare to fill in chroms dataset
     chromosomes = nc.get_chromorder('hg38')
@@ -100,6 +103,7 @@ def bigwigs_to_zarr(
     f.attrs['shape'] = [ 256, num_samples ]
     f.attrs['name'] = name
     f.attrs['coordSystem'] = name_to_coordsystem(name)
+    f.attrs['chromSizes'] = [ [str(t[0]), int(t[1])] for t in list(zip(chromosomes, chroms_length_arr)) ]
 
 
 if __name__ == "__main__":
