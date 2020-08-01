@@ -32,7 +32,7 @@ yarn test --watch
 Build demo app for production:
 
 ```sh
-yarn build
+yarn build-demo
 ```
 
 Build for NPM package:
@@ -40,6 +40,14 @@ Build for NPM package:
 ```sh
 yarn build-pkg
 ```
+
+The `higlass-meta` package is published to the NPM registry by Travis when the version in `package.json` has been updated and pushed to the `master` branch. To perform this update:
+- Check out a new branch for the release,
+    - Update the CHANGELOG.md to remove the "in progress" text from the current version heading.
+    - Update the version by running `npm version [major | minor | patch]` (note: this will add a git commit and a git tag).
+- Make a pull request to merge from the release branch into `master`.
+
+Travis uses the `NPM_EMAIL` and `NPM_TOKEN` variables that can be set using the [web interface](https://travis-ci.org/github/hms-dbmi/cistrome-explorer/settings) (Settings -> Environment Variables).
 
 ### Docs
 
