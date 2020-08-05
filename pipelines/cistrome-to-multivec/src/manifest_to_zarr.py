@@ -31,16 +31,16 @@ def bigwigs_to_zarr(
     # Create level zero groups
     chromosomes_group = f.create_group("chromosomes")
 
-
     # Prepare to fill in chroms dataset
     chromosomes = nc.get_chromorder('hg38')
-    chromosomes = chromosomes[:25] # TODO: should more than chr1-chrM be used?
+    chromosomes = [ str(chr_name) for chr_name in chromosomes[:25] ] # TODO: should more than chr1-chrM be used?
     num_chromosomes = len(chromosomes)
     chroms_length_arr = np.array([ nc.get_chrominfo('hg38').chrom_lengths[x] for x in chromosomes ], dtype="i8")
-    chroms_name_arr = np.array(chromosomes, dtype="S23")
+    chroms_cumsum_arr = np.concatenate((np.array([0]), np.cumsum(chroms_length_arr)))
 
     chromosomes_set = set(chromosomes)
     chrom_name_to_length = dict(zip(chromosomes, chroms_length_arr))
+    chrom_name_to_cumsum = dict(zip(chromosomes, chroms_cumsum_arr))
 
     
     # Prepare to fill in resolutions dataset
@@ -85,29 +85,23 @@ def bigwigs_to_zarr(
     # f.attrs should contain all tileset_info properties
     # For zarr, more attributes are used here to allow "serverless"
     f.attrs['row_infos'] = row_infos
-    f.attrs['tile_size'] = 256
     f.attrs['resolutions'] = sorted(resolutions, reverse=True)
-    f.attrs['min_pos'] = [ 0 ]
-    f.attrs['max_pos'] = [ int(sum(chroms_length_arr)) ]
-    f.attrs['shape'] = [ 256, num_samples ]
+    f.attrs['shape'] = [ num_samples, 256 ]
     f.attrs['name'] = name
     f.attrs['coordSystem'] = name_to_coordsystem(name)
-    f.attrs['chromSizes'] = [
-        [str(chr_name), int(chr_len)]
-        for (chr_name, chr_len) in list(zip(chromosomes, chroms_length_arr))
-    ]
     
-    # 
+    # https://github.com/zarr-developers/zarr-specs/issues/50
     f.attrs['multiscales'] = [
         {
             "version": "0.1",
-            "name": str(chr_name),
+            "name": chr_name,
             "datasets": [
                 { "path": f"chromosomes/{chr_name}/{resolution}" }
                 for resolution in sorted(resolutions, reverse=True)
             ],
             "type": "zarr-multivec",
             "metadata": {
+                "chromoffset": int(chrom_name_to_cumsum[chr_name]),
                 "chromsize": int(chr_len),
             }
         }
