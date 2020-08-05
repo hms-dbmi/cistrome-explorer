@@ -29,12 +29,8 @@ def bigwigs_to_zarr(
     zipped_input = zip(input_bigwig_files, input_metadata_files)
 
     # Create level zero groups
-    info_group = f.create_group("info") # Note: info_group not necessary when serverless.
-    resolutions_group = f.create_group("resolutions")
-    chroms_group = f.create_group("chroms")
-    
-    # Set info attributes
-    info_group.attrs['tile-size'] = 256
+    chromosomes_group = f.create_group("chromosomes")
+
 
     # Prepare to fill in chroms dataset
     chromosomes = nc.get_chromorder('hg38')
@@ -46,24 +42,17 @@ def bigwigs_to_zarr(
     chromosomes_set = set(chromosomes)
     chrom_name_to_length = dict(zip(chromosomes, chroms_length_arr))
 
-    # Fill in chroms dataset entries "length" and "name"
-    chroms_group.create_dataset("length", data=chroms_length_arr)
-    chroms_group.create_dataset("name", data=chroms_name_arr)
-
     
     # Prepare to fill in resolutions dataset
     resolutions = [ starting_resolution*(2**x) for x in range(16)]
-    
-    # Create each resolution group.
-    for resolution in resolutions:
-        resolution_group = resolutions_group.create_group(str(resolution))
-        # TODO: remove the unnecessary "values" layer
-        resolution_values_group = resolution_group.create_group("values")
         
-        # Create each chromosome dataset.
-        for chr_name, chr_len in zip(chromosomes, chroms_length_arr):
-            chr_shape = (math.ceil(chr_len / resolution), num_samples)
-            resolution_values_group.create_dataset(chr_name, shape=chr_shape, dtype="f4", fill_value=np.nan, compressor=compressor)
+    # Create each chromosome dataset.
+    for chr_name, chr_len in chrom_name_to_length.items():
+        chr_group = chromosomes_group.create_group(chr_name)
+        # Create each resolution group.
+        for resolution in resolutions:
+            chr_shape = (num_samples, math.ceil(chr_len / resolution))
+            chr_group.create_dataset(str(resolution), shape=chr_shape, dtype="f4", fill_value=np.nan, compressor=compressor)
     
     # Fill in data for each bigwig file.
     for bw_index, bw_file in tqdm(list(enumerate(input_bigwig_files)), desc='bigwigs'):
@@ -76,9 +65,9 @@ def bigwigs_to_zarr(
                 # Fill in data for each chromosome of a resolution of a bigwig file.
                 for chr_name in matching_chromosomes:
                     chr_len = chrom_name_to_length[chr_name]
-                    chr_shape = (math.ceil(chr_len / resolution), num_samples)
-                    arr = bbi.fetch(bw_file, chr_name, 0, chr_len, chr_shape[0], summary="sum")
-                    resolutions_group[str(resolution)]["values"][chr_name][:,bw_index] = arr
+                    chr_shape = (num_samples, math.ceil(chr_len / resolution))
+                    arr = bbi.fetch(bw_file, chr_name, 0, chr_len, chr_shape[1], summary="sum")
+                    chromosomes_group[chr_name][str(resolution)][bw_index,:] = arr
         else:
             print(f"{bw_file} not is_bigwig")
     
@@ -103,7 +92,27 @@ def bigwigs_to_zarr(
     f.attrs['shape'] = [ 256, num_samples ]
     f.attrs['name'] = name
     f.attrs['coordSystem'] = name_to_coordsystem(name)
-    f.attrs['chromSizes'] = [ [str(t[0]), int(t[1])] for t in list(zip(chromosomes, chroms_length_arr)) ]
+    f.attrs['chromSizes'] = [
+        [str(chr_name), int(chr_len)]
+        for (chr_name, chr_len) in list(zip(chromosomes, chroms_length_arr))
+    ]
+    
+    # 
+    f.attrs['multiscales'] = [
+        {
+            "version": "0.1",
+            "name": str(chr_name),
+            "datasets": [
+                { "path": f"chromosomes/{chr_name}/{resolution}" }
+                for resolution in sorted(resolutions, reverse=True)
+            ],
+            "type": "zarr-multivec",
+            "metadata": {
+                "chromsize": int(chr_len),
+            }
+        }
+        for (chr_name, chr_len) in list(zip(chromosomes, chroms_length_arr))
+    ]
 
 
 if __name__ == "__main__":
