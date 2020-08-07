@@ -1,5 +1,5 @@
 {
-  "name": "cistrome-explorer",
+  "name": "higlass-meta",
   "version": "0.5.0",
   "author": "Gehlenborg Lab (http://gehlenborglab.org/)",
   "license": "MIT",
@@ -28,10 +28,11 @@
     "react-dom": "^16.12.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.8.4",
+    "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.8.4",
     "@babel/preset-react": "^7.8.4",
-    "@rollup/plugin-commonjs": "^11.0.1",
+    "@rollup/plugin-babel": "^5.0.0",
+    "@rollup/plugin-commonjs": "^11.1.0",
     "@rollup/plugin-html": "^0.1.1",
     "@rollup/plugin-json": "^4.0.1",
     "@rollup/plugin-node-resolve": "^7.0.0",
@@ -41,7 +42,6 @@
     "eslint": "^6.8.0",
     "jest": "^25.1.0",
     "rollup": "^1.29.1",
-    "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-livereload": "^1.0.4",
     "rollup-plugin-scss": "^2.1.0",
     "rollup-plugin-serve": "^1.0.1",
@@ -51,7 +51,8 @@
   },
   "scripts": {
     "start": "rollup -c rollup.demo.config.js --environment NODE_ENV:development --watch",
-    "build": "rollup -c rollup.demo.config.js --environment NODE_ENV:production",
+    "build": "yarn build-demo && yarn build-pkg",
+    "build-demo": "rollup -c rollup.demo.config.js --environment NODE_ENV:production",
     "build-pkg": "rollup -c rollup.pkg.config.js --environment NODE_ENV:production",
     "test": "jest -c jest.config.js",
     "docs": "documentation build src/** -f html -o build-docs --config .documentation.yml"
