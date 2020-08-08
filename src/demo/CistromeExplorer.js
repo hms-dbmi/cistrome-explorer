@@ -48,6 +48,7 @@ export default function CistromeExplorer() {
             data: {
                 server: "http://ec2-3-93-68-250.compute-1.amazonaws.com/api/v1",
                 url: "s3://CistromeDB/" + `${species}__${factor}__all`.replace(" ", "_") + ".multires.mv5",
+                filetype: "multivec",
             },
             coordSystem: "hg38",
             options: {
