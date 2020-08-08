@@ -1,10 +1,11 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import pkg from '../../package.json';
 
 import { HiGlassMeta } from '../index.js';
 import CistromeToolkit from './CistromeToolkit.js';
 
 import { UNDO, REDO, TABLE, DOCUMENT, GITHUB, CLOSE, MENU, TRASH } from '../utils/icons.js';
+import { DEFAULT_COLOR_RANGE } from '../utils/color.js';
 import { diffViewOptions } from '../utils/view-history';
 import { demos } from './demo';
 import './CistromeExplorer.scss';
@@ -33,6 +34,28 @@ export default function CistromeExplorer() {
     // Toolkit-related
     const [isToolkitVisible, setIsToolkitVisible] = useState(false);
     const [toolkitParams, setToolkitParams] = useState(undefined);
+
+    const addNewTrack = useCallback((trackDef, viewId, position) => {
+        hmRef.current.api.addNewTrack(trackDef, viewId, position);
+    }, [hmRef]);
+
+    // Callback function for adding a BigWig track.
+    const onAddTrack = useCallback((cistromeDataConfig) => {
+        const { species, factor } = cistromeDataConfig;
+        const firstViewUid = demos[selectedDemo].viewConfig.views[0].uid;
+        addNewTrack({
+            type: 'horizontal-multivec',
+            data: {
+                server: "http://ec2-3-93-68-250.compute-1.amazonaws.com/api/v1",
+                url: "s3://CistromeDB/" + `${species}__${factor}__all`.replace(" ", "_") + ".multires.mv5",
+            },
+            coordSystem: "hg38",
+            options: {
+                colorRange: DEFAULT_COLOR_RANGE,
+            },
+            height: 200,
+        }, firstViewUid, 'top');
+    }, [addNewTrack, selectedDemo]);
 
     // When a user select a different demo, initialize the view history.
     useEffect(() => {
@@ -198,10 +221,7 @@ export default function CistromeExplorer() {
                     <CistromeToolkit
                         isVisible={isToolkitVisible}
                         intervalAPIParams={toolkitParams}
-                        // TODO: After we build DB for cistrome bigwig files, uncomment the following code.
-                        // onAddTrack={(server, tilesetUid, position) => { 
-                        //     onAddBigWigTrack(server, tilesetUid, position);
-                        // }}
+                        onAddTrack={onAddTrack}
                     />
                 </div>
                 <div className="settings" style={{

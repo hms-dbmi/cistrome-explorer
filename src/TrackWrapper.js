@@ -70,14 +70,17 @@ export default function TrackWrapper(props) {
     // Attempt to obtain metadata values from the `tilesetInfo` field of the track.
     let rowInfo = [];
     try {
+        // Obtain the row_infos (array of JSON objects, one object per row) from the track's tileset info.
         if(["meeting-2020-04-29-track"].includes(multivecTrackTrackId)) {
             // TODO: use the below line to use the real metadata coming from the HiGlass Server tileset_info.
             //       see https://github.com/hms-dbmi/cistrome-explorer/issues/26
             rowInfo = multivecTrack.tilesetInfo.row_infos.map(d => (typeof d === "string" ? JSON.parse(d) : d));
-        } else {
+        } else if(Object.keys(fakedata).includes(multivecTrack.id)) {
             // TODO: remove this else clause.
             //       see https://github.com/hms-dbmi/cistrome-explorer/issues/26
             rowInfo = fakedata[multivecTrack.id].tilesetInfo.rowInfo.slice(0, totalNumRows);
+        } else {
+            rowInfo = multivecTrack.tilesetInfo.row_infos;
         }
         
         if(!context.state[multivecTrackViewId] || !context.state[multivecTrackViewId][multivecTrackTrackId]) {
