@@ -1,4 +1,4 @@
-
+import argparse
 
 def p2f(x):
     if type(x) == str:
@@ -6,6 +6,13 @@ def p2f(x):
             return float(x.strip('%'))
         return float(x)
     return x
+
+def name_to_coordsystem(name):
+    if name.startswith("Homo_sapiens"):
+        return "hg38"
+    if name.startswith("Mus_musculus"):
+        return "mm10"
+    return "unknown"
     
 def metadata_json_to_row_info(metadata_json):
 
@@ -79,3 +86,11 @@ def metadata_json_to_row_info(metadata_json):
     }
 
     return row_info
+
+def get_manifest_to_outfile_parser():
+    parser = argparse.ArgumentParser(description='Create an output file by combining multiple bigwig files.')
+    parser.add_argument('-i', '--input', type=str, required=True, help='The input manifest JSON file.')
+    parser.add_argument('-o', '--output', type=str, required=True, help='The output file.')
+    parser.add_argument('-s', '--starting-resolution', type=int, default=200, help='The starting resolution.')
+    parser.add_argument('-n', '--name', type=str, required=True, help='A name to include in tileset_info.')
+    return parser

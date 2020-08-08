@@ -26,7 +26,8 @@ SAMPLE_METADATA_URL = "http://dc2.cistrome.org/api/inspector?id={cid}"
 
 # Process the config
 #GROUP_NAMES = config["groups"].keys() # TODO: uncomment
-GROUP_NAMES = [ name for name, group in config["groups"].items() if len(group) < 100 and name[0] == "H" ][:300]
+GROUP_NAMES = ['Homo_sapiens__AEBP2__all', 'Homo_sapiens__AFF1__all', 'Homo_sapiens__AFF4__all']
+#GROUP_NAMES = [ name for name, group in config["groups"].items() if len(group) < 100 and name[0] == "H" ][:300]
 
 FILETYPE = config.get("filetype", "mv5")
 OUTFILE_WRAPPER = directory if FILETYPE == "zarr" else (lambda x: x)
@@ -54,7 +55,8 @@ rule manifest_to_outfile:
         python {params.script} \
             -i {input.manifest} \
             -o {output} \
-            -s {params.starting_resolution}
+            -s {params.starting_resolution} \
+            -n {wildcards.group_name}
         """
 
 rule bigwigs_to_manifest:

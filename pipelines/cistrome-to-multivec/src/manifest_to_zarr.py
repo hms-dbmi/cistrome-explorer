@@ -1,4 +1,5 @@
 import zarr
+from numcodecs import Zlib
 import bbi
 import negspy.coordinates as nc
 import numpy as np
@@ -8,17 +9,19 @@ import json
 from tqdm import tqdm
 import resource
 
-from utils import metadata_json_to_row_info
+from utils import metadata_json_to_row_info, name_to_coordsystem, get_manifest_to_outfile_parser
 
 def bigwigs_to_zarr(
     input_bigwig_files,
     input_metadata_files,
     output_file,
-    starting_resolution
+    starting_resolution,
+    name
 ):
 
     # Short-hand for creating a DirectoryStore with a root group.
     f = zarr.open(output_file, mode='w')
+    compressor = Zlib(level=1)
 
     num_samples = len(input_bigwig_files)
 
@@ -26,42 +29,30 @@ def bigwigs_to_zarr(
     zipped_input = zip(input_bigwig_files, input_metadata_files)
 
     # Create level zero groups
-    info_group = f.create_group("info")
-    resolutions_group = f.create_group("resolutions")
-    chroms_group = f.create_group("chroms")
-
-    # Set info attributes
-    info_group.attrs['tile-size'] = 256
+    chromosomes_group = f.create_group("chromosomes")
 
     # Prepare to fill in chroms dataset
     chromosomes = nc.get_chromorder('hg38')
-    chromosomes = chromosomes[:25] # TODO: should more than chr1-chrM be used?
+    chromosomes = [ str(chr_name) for chr_name in chromosomes[:25] ] # TODO: should more than chr1-chrM be used?
     num_chromosomes = len(chromosomes)
     chroms_length_arr = np.array([ nc.get_chrominfo('hg38').chrom_lengths[x] for x in chromosomes ], dtype="i8")
-    chroms_name_arr = np.array(chromosomes, dtype="S23")
+    chroms_cumsum_arr = np.concatenate((np.array([0]), np.cumsum(chroms_length_arr)))
 
     chromosomes_set = set(chromosomes)
     chrom_name_to_length = dict(zip(chromosomes, chroms_length_arr))
-
-    # Fill in chroms dataset entries "length" and "name"
-    chroms_group.create_dataset("length", data=chroms_length_arr)
-    chroms_group.create_dataset("name", data=chroms_name_arr)
+    chrom_name_to_cumsum = dict(zip(chromosomes, chroms_cumsum_arr))
 
     
     # Prepare to fill in resolutions dataset
-    resolutions = [ 1000*(2**x) for x in range(15)]
-    lowest_resolution = resolutions[-1]
-    
-    # Create each resolution group.
-    for resolution in resolutions:
-        resolution_group = resolutions_group.create_group(str(resolution))
-        # TODO: remove the unnecessary "values" layer
-        resolution_values_group = resolution_group.create_group("values")
+    resolutions = [ starting_resolution*(2**x) for x in range(16)]
         
-        # Create each chromosome dataset.
-        for chr_name, chr_len in zip(chromosomes, chroms_length_arr):
-            chr_shape = (math.ceil(chr_len / resolution), num_samples)
-            resolution_values_group.create_dataset(chr_name, shape=chr_shape, dtype="f4", fill_value=np.nan)
+    # Create each chromosome dataset.
+    for chr_name, chr_len in chrom_name_to_length.items():
+        chr_group = chromosomes_group.create_group(chr_name)
+        # Create each resolution group.
+        for resolution in resolutions:
+            chr_shape = (num_samples, math.ceil(chr_len / resolution))
+            chr_group.create_dataset(str(resolution), shape=chr_shape, dtype="f4", fill_value=np.nan, compressor=compressor)
     
     # Fill in data for each bigwig file.
     for bw_index, bw_file in tqdm(list(enumerate(input_bigwig_files)), desc='bigwigs'):
@@ -74,9 +65,9 @@ def bigwigs_to_zarr(
                 # Fill in data for each chromosome of a resolution of a bigwig file.
                 for chr_name in matching_chromosomes:
                     chr_len = chrom_name_to_length[chr_name]
-                    chr_shape = (math.ceil(chr_len / resolution), num_samples)
-                    arr = bbi.fetch(bw_file, chr_name, 0, chr_len, chr_shape[0], summary="sum")
-                    resolutions_group[str(resolution)]["values"][chr_name][:,bw_index] = arr
+                    chr_shape = (num_samples, math.ceil(chr_len / resolution))
+                    arr = bbi.fetch(bw_file, chr_name, 0, chr_len, chr_shape[1], summary="sum")
+                    chromosomes_group[chr_name][str(resolution)][bw_index,:] = arr
         else:
             print(f"{bw_file} not is_bigwig")
     
@@ -91,14 +82,35 @@ def bigwigs_to_zarr(
         row_info = metadata_json_to_row_info(metadata_json)
         row_infos.append(row_info)
     
-    resolutions_group[str(lowest_resolution)].attrs["row_infos"] = row_infos
+    # f.attrs should contain all tileset_info properties
+    # For zarr, more attributes are used here to allow "serverless"
+    f.attrs['row_infos'] = row_infos
+    f.attrs['resolutions'] = sorted(resolutions, reverse=True)
+    f.attrs['shape'] = [ num_samples, 256 ]
+    f.attrs['name'] = name
+    f.attrs['coordSystem'] = name_to_coordsystem(name)
+    
+    # https://github.com/zarr-developers/zarr-specs/issues/50
+    f.attrs['multiscales'] = [
+        {
+            "version": "0.1",
+            "name": chr_name,
+            "datasets": [
+                { "path": f"chromosomes/{chr_name}/{resolution}" }
+                for resolution in sorted(resolutions, reverse=True)
+            ],
+            "type": "zarr-multivec",
+            "metadata": {
+                "chromoffset": int(chrom_name_to_cumsum[chr_name]),
+                "chromsize": int(chr_len),
+            }
+        }
+        for (chr_name, chr_len) in list(zip(chromosomes, chroms_length_arr))
+    ]
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Create a zarr file.')
-    parser.add_argument('-i', '--input', type=str, required=True, help='The input manifest JSON file.')
-    parser.add_argument('-o', '--output', type=str, required=True, help='The output zarr file.')
-    parser.add_argument('-s', '--starting-resolution', type=int, default=1000, help='The starting resolution.')
+    parser = get_manifest_to_outfile_parser()
     args = parser.parse_args()
 
     with open(args.input) as f:
@@ -110,5 +122,6 @@ if __name__ == "__main__":
         input_bigwig_files,
         input_metadata_files,
         args.output,
-        args.starting_resolution
+        args.starting_resolution,
+        args.name
     )
