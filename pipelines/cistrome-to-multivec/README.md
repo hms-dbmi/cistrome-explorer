@@ -41,7 +41,7 @@ export AWS_DEFAULT_REGION="us-east-1"
 aws s3 sync /n/scratch3/users/m/mk596/cistrome-explorer/data/processed/ s3://higlass-server/CistromeDB/
 ```
 
-### Troubleshooting
+## Troubleshooting
 
 The Snakemake pipeline will fail to produce output multivec files when the CistromeDB API returns HTML-formatted error pages, because the scripts here are expecting the API to return JSON-formatted metadata. This seems to occur if too many CistromeDB downloads are made in parallel - the server cannot handle it.
 
