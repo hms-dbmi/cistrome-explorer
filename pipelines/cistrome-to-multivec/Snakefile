@@ -25,11 +25,15 @@ SAMPLE_DATA_URL = "http://dc2.cistrome.org/api/datahub/{cid}"
 SAMPLE_METADATA_URL = "http://dc2.cistrome.org/api/inspector?id={cid}"
 
 # Process the config
-#GROUP_NAMES = config["groups"].keys() # TODO: uncomment
-GROUP_NAMES = ['Homo_sapiens__AEBP2__all', 'Homo_sapiens__AFF1__all', 'Homo_sapiens__AFF4__all']
-#GROUP_NAMES = [ name for name, group in config["groups"].items() if len(group) < 100 and name[0] == "H" ][:300]
+#GROUP_NAMES = config["groups"].keys() # TODO: uncomment to create processed files for all available species & factors
+#GROUP_NAMES = ['Homo_sapiens__AEBP2__all', 'Homo_sapiens__AFF1__all', 'Homo_sapiens__AFF4__all'] # TODO: remove
+GROUP_NAMES = [ name for name, group in config["groups"].items() if len(group) < 100 and name[0] == "H" ][:200] # TODO: remove
 
 FILETYPE = config.get("filetype", "mv5")
+
+# Zarr outputs are really directories, so they need to be wrapped in snakemake's directory()
+# function.
+# https://snakemake.readthedocs.io/en/stable/snakefiles/rules.html#directories-as-outputs
 OUTFILE_WRAPPER = directory if FILETYPE == "zarr" else (lambda x: x)
 
 # Rules
@@ -37,6 +41,10 @@ rule all:
     input:
         expand(join(PROCESSED_DIR, f"{{group_name}}.multires.{FILETYPE}"), group_name=GROUP_NAMES),
 
+# Given a manifest file (containing an array of metadata.json file paths and cooresponding bigWig file paths),
+# create a single output file (either multivec or zarr format).
+# Here, we can use the snakemake "groups" feature to reduce the number of cluster job submissions.
+# https://snakemake.readthedocs.io/en/stable/snakefiles/rules.html?highlight=group#defining-groups-for-execution
 rule manifest_to_outfile:
     group: "outfile_group"
     input:
@@ -47,9 +55,7 @@ rule manifest_to_outfile:
         OUTFILE_WRAPPER(join(PROCESSED_DIR, f"{{group_name}}.multires.{FILETYPE}"))
     params:
         starting_resolution=200,
-        script=join(SRC_DIR, f"manifest_to_{FILETYPE}.py"),
-        rm_input_bigwigs=False
-        # TODO: implement rm_input_bigwigs=True in the python script
+        script=join(SRC_DIR, f"manifest_to_{FILETYPE}.py")
     shell:
         """
         python {params.script} \
@@ -59,6 +65,9 @@ rule manifest_to_outfile:
             -n {wildcards.group_name}
         """
 
+# Create a "manifest" file for each output group.
+# This just simplifies the command line arguments for the
+# manifest_to_mv5.py and manifest_to_zarr.py scripts.
 rule bigwigs_to_manifest:
     group: "outfile_group"
     input:
@@ -69,17 +78,27 @@ rule bigwigs_to_manifest:
     script:
         join(SRC_DIR, "bigwigs_to_manifest.py")
 
+# The Cistrome DB API outputs a JSON array,
+# where the first array element contains a URL to
+# the bigWig file associated with the sample ID.
+# We can tell snakemake that this bigwig file is "temporary",
+# so that snakemake will delete it after all rules that use it as an input are completed.
+# https://snakemake.readthedocs.io/en/stable/snakefiles/rules.html#protected-and-temporary-files
 rule download_bigwig:
     group: "outfile_group"
     input:
         join(RAW_DIR, "{cid}.data.json")
     output:
-        join(RAW_DIR, "{cid}.bw")
+        # 
+        temp(join(RAW_DIR, "{cid}.bw"))
     shell:
         '''
         curl -s -S -L -o {output} $(cat {input} | jq '.[0].url' -r)
         '''
 
+# The Cistrome DB has two separate endpoints for each sample:
+# - a "data" endpoint which returns JSON containing the path to the bigwig file for the sample
+# - a "metadata" endpoint which returns JSON metadata for the sample 
 rule download_bigwig_metadata:
     group: "outfile_group"
     output:
