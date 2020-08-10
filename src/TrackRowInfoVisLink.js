@@ -109,7 +109,7 @@ export default function TrackRowInfoVisLink(props) {
         drawRowHighlightRect(two, selectedRows, highlitRows, width, height);
 
         if(!isShowControlButtons) {
-            drawVisTitle(field, { two, isLeft, width, height, titleSuffix });
+            drawVisTitle(title, { two, isLeft, width, height, titleSuffix });
         }
         
         two.update();

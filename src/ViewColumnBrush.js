@@ -40,7 +40,7 @@ export default function ViewColumnBrush(props) {
 
     useEffect(() => {
         if(!assembly) {
-            return null;
+            return () => {};
         }
         let didUnmount = false;
         const absDomain = viewportTrack.viewportXDomain;

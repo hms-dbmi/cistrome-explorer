@@ -7,6 +7,7 @@ import hgDemoViewConfig7 from '../viewconfigs/horizontal-multivec-7.json';
 import hgDemoViewConfig8 from '../viewconfigs/horizontal-multivec-8.json';
 import hgDemoViewConfig9 from '../viewconfigs/horizontal-multivec-9.json';
 import hgDemoViewConfig10 from '../viewconfigs/horizontal-multivec-10.json';
+import hgDemoViewConfig11 from '../viewconfigs/horizontal-multivec-11.json';
 import hgDemoViewConfigApril2020 from '../viewconfigs/meeting-2020-04-29.json';
 
 export const demos = {
@@ -238,5 +239,26 @@ export const demos = {
                 // {field: "Tissue Type", type: "nominal", oneOf: ["Blood", "Bone Marrow"]}
             ]
         }
-    }
+    },
+    "S3-based multivec files": {
+        viewConfig: hgDemoViewConfig11,
+        options: {
+            rowInfoAttributes: [
+                {field: "qc__table__frip__0", title: "QC: FRIP", type: "quantitative", position: "left"},
+                {field: "treats__0__link", title: "View Sample on GEO", type: "url", position: "left"},
+                //{field: "treats__0__factor__name", title: "Factor", type: "nominal", position: "right"},
+                {field: "treats__0__cell_type__name", title: "Cell Type", type: "nominal", position: "right"},
+                {field: "treats__0__cell_line__name", title: "Cell Line", type: "nominal", position: "right"},
+                {field: "treats__0__tissue_type__name", title: "Tissue Type", type: "nominal", position: "right"},
+                {field: "treats__0__species__name", title: "Species", type: "nominal", position: "right"}
+            ],
+            rowSort: [
+                {field: "treats__0__cell_type__name", type: "nominal", order: "ascending"},
+                {field: "qc__table__frip__0", type: "quantitative", order: "descending"}
+            ],
+            rowFilter: [
+
+            ]
+        }
+    },
 };
