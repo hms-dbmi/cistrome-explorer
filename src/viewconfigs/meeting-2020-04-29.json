@@ -26,7 +26,7 @@
           "top": [
             {
               "type": "horizontal-chromosome-labels",
-              "server": "http://higlass.io/api/v1",
+              "server": "https://higlass.io/api/v1",
               "tilesetUid": "NyITQvZsS_mOFNlz5C2LJg",
               "uid": "chromosome-labels-track-1",
               "options": {
@@ -42,7 +42,7 @@
             },
             {
               "type": "horizontal-gene-annotations",
-              "server": "//higlass.io/api/v1",
+              "server": "https://higlass.io/api/v1",
               "tilesetUid": "P0PLbQMwTYGy-5uPIQid7A",
               "uid": "gene-labels-track-1",
               "options": {
@@ -71,7 +71,7 @@
             },
             {
               "type": "horizontal-bar",
-              "server": "//higlass.io/api/v1",
+              "server": "https://higlass.io/api/v1",
               "tilesetUid": "HnOFdNKyQiWEnLkn4Wb1Ug",
               "uid": "conservation-track-1",
               "options": {
