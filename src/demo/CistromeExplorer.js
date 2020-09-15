@@ -4,7 +4,7 @@ import pkg from '../../package.json';
 import { HiGlassMeta } from '../index.js';
 import CistromeToolkit from './CistromeToolkit.js';
 
-import { UNDO, REDO, TABLE, DOCUMENT, GITHUB, CLOSE, MENU, TRASH, SEARCH } from '../utils/icons.js';
+import { UNDO, REDO, TABLE, DOCUMENT, GITHUB, CLOSE, MENU, TRASH, SEARCH, FOLDER, PENCIL } from '../utils/icons.js';
 import { DEFAULT_COLOR_RANGE } from '../utils/color.js';
 import { diffViewOptions } from '../utils/view-history';
 import { demos } from './demo';
@@ -300,8 +300,8 @@ export default function CistromeExplorer() {
                         className="ce-generic-button"
                         style={{ 
                             fontSize: 12,
-                            cursor: 'pointer',
                             display: 'inline-block',
+                            cursor: 'not-allowed',  // TODO: not supported yet
                             color: 'gray', // TODO: not supported yet
                             background: 'white', 
                             border: '1px solid gray',
@@ -369,15 +369,38 @@ export default function CistromeExplorer() {
                     >
                         <svg
                             style={{ color: "rgb(171, 171, 171)", width: 14, height: 14 }}
-                            viewBox={SEARCH.viewBox}
+                            viewBox={FOLDER.viewBox}
                         >
                             <title>Open Metadata</title>
-                            <path d={SEARCH.path} fill="currentColor"/>
+                            <path d={FOLDER.path} fill="currentColor"/>
                         </svg>
                         {' Open Local Metadata (JSON)'}
                     </span>
                     <div className="setting-separater"></div>
                     <h2>View Options</h2>
+                    <span 
+                        className="ce-generic-button"
+                        style={{ 
+                            fontSize: 12,
+                            display: 'inline-block',
+                            cursor: 'not-allowed',  // TODO: not supported yet
+                            color: 'gray',  // TODO: not supported yet
+                            background: 'white', 
+                            border: '1px solid gray',
+                            padding: '4px',
+                            marginTop: '4px'
+                        }}
+                        onClick={() => { }}
+                    >
+                        <svg
+                            style={{ color: "rgb(171, 171, 171)", width: 14, height: 14 }}
+                            viewBox={PENCIL.viewBox}
+                        >
+                            <title>Edit View Options</title>
+                            <path d={PENCIL.path} fill="currentColor"/>
+                        </svg>
+                        {' Edit View Options'}
+                    </span>
                     <span 
                         className="ce-generic-button"
                         style={{ 

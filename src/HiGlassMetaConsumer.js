@@ -83,7 +83,8 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
     }, [baseOptions, baseViewConfig, baseRowInfo]);
     
     useEffect(() => {
-        console.log('updated:', baseRowInfo);
+        // DEBUG
+        // console.log('updated:', baseRowInfo);
     }, [baseRowInfo]);
 
     // Call a callback function when `options` changed.
