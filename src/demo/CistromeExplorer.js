@@ -18,6 +18,18 @@ export default function CistromeExplorer() {
     const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[0]);
     const [isSettingVisible, setIsSettingVisible] = useState(false);
 
+    // metadata
+    const jsonInputFile = useRef(null);
+    const [fileReader, setFileReader] = useState(new FileReader());
+    const [localMetadata, setLocalMetadata] = useState(null);
+
+    useEffect(() => {
+        fileReader.onload = (event) => {
+            const json = JSON.parse(event.target.result);
+            setLocalMetadata(json);
+        };
+    }, [fileReader]);
+
     // Undo and redo
     const [undoable, setUndoable] = useState(false);
     const [redoable, setRedoable] = useState(false);
@@ -234,6 +246,7 @@ export default function CistromeExplorer() {
                         ref={hmRef}
                         viewConfig={demos[selectedDemo].viewConfig}
                         options={demos[selectedDemo].options}
+                        rowInfo={localMetadata}
                         onViewChanged={onViewChanged}
                         onGenomicIntervalSearch={setToolkitParams}
                         onGeneSearch={setGeneSearched}
@@ -246,7 +259,7 @@ export default function CistromeExplorer() {
                     />
                 </div>
                 <div className="settings" style={{
-                    left: isSettingVisible ? 0 : "-300px"
+                    left: isSettingVisible ? 0 : "-400px"
                 }}>
                     <span style={{ 
                         verticalAlign: "middle", 
@@ -282,6 +295,88 @@ export default function CistromeExplorer() {
                         </select>
                     </span>
                     <div className="setting-separater"></div>
+                    <h2>Metadata</h2>
+                    <span 
+                        className="ce-generic-button"
+                        style={{ 
+                            fontSize: 12,
+                            cursor: 'pointer',
+                            display: 'inline-block',
+                            color: 'gray', // TODO: not supported yet
+                            background: 'white', 
+                            border: '1px solid gray',
+                            padding: '4px',
+                            marginTop: '4px'
+                        }}
+                        onClick={() => { }}
+                    >
+                        <svg
+                            style={{ color: "rgb(171, 171, 171)", width: 14, height: 14 }}
+                            viewBox={SEARCH.viewBox}
+                        >
+                            <title>Open Metadata</title>
+                            <path d={SEARCH.path} fill="currentColor"/>
+                        </svg>
+                        {' View Loaded Metadata'}
+                    </span>
+                    <span 
+                        className="ce-generic-button"
+                        style={{ 
+                            fontSize: 12,
+                            cursor: 'pointer',
+                            display: 'inline-block',
+                            color: 'black',
+                            background: 'white', 
+                            border: '1px solid gray',
+                            padding: '4px',
+                            marginTop: '4px'
+                        }}
+                        onClick={() => { 
+                            jsonInputFile.current.value = null;
+                            setLocalMetadata(undefined);
+                        }}
+                    >
+                        <svg
+                            style={{ color: "rgb(171, 171, 171)", width: 14, height: 14 }}
+                            viewBox={TRASH.viewBox}
+                        >
+                            <title>Open Metadata</title>
+                            <path d={TRASH.path} fill="currentColor"/>
+                        </svg>
+                        {' Remove Loaded Metadata'}
+                    </span>
+                    <input 
+                        type="file" 
+                        ref={jsonInputFile} 
+                        style={{ display: 'none' }} 
+                        onChange={(e) => {
+                            fileReader.readAsText(e.target.files[0]);
+                        }
+                    }/>
+                    <span 
+                        className="ce-generic-button"
+                        style={{ 
+                            fontSize: 12,
+                            cursor: 'pointer',
+                            display: 'inline-block',
+                            color: 'black', 
+                            background: 'white', 
+                            border: '1px solid gray',
+                            padding: '4px',
+                            marginTop: '4px'
+                        }}
+                        onClick={() => { jsonInputFile.current.click() }}
+                    >
+                        <svg
+                            style={{ color: "rgb(171, 171, 171)", width: 14, height: 14 }}
+                            viewBox={SEARCH.viewBox}
+                        >
+                            <title>Open Metadata</title>
+                            <path d={SEARCH.path} fill="currentColor"/>
+                        </svg>
+                        {' Open Local Metadata (JSON)'}
+                    </span>
+                    <div className="setting-separater"></div>
                     <h2>View Options</h2>
                     <span 
                         className="ce-generic-button"
@@ -296,8 +391,8 @@ export default function CistromeExplorer() {
                             marginTop: '4px'
                         }}
                         onClick={() => {
-                            hmRef.current.api.onRemoveAllFilters()}
-                        }
+                            hmRef.current.api.onRemoveAllFilters()
+                        }}
                     >
                         <svg
                             style={{ color: "rgb(171, 171, 171)", width: 14, height: 14 }}

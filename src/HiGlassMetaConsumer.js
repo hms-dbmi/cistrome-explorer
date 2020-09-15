@@ -58,6 +58,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
     const {
         viewConfig: baseViewConfig,
         options: baseOptions,
+        rowInfo: baseRowInfo,
         onViewChanged: onViewChangedCallback,
         onGenomicIntervalSearch: onGenomicIntervalSearchCallback,
         onGeneSearch: onGeneSearchCallBack
@@ -79,8 +80,12 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         setMultivecTrackIds([]);
         setViewportTrackIds({});
         setOptions(processWrapperOptions(baseOptions));
-    }, [baseOptions, baseViewConfig]);
+    }, [baseOptions, baseViewConfig, baseRowInfo]);
     
+    useEffect(() => {
+        console.log('updated:', baseRowInfo);
+    }, [baseRowInfo]);
+
     // Call a callback function when `options` changed.
     useEffect(() => {
         if(onViewChangedCallback) {
@@ -520,7 +525,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                 ref={hgRef}
             />
         );
-    }, [baseViewConfig]);
+    }, [baseViewConfig, baseRowInfo]);
 
     //console.log("HiGlassWithMetadataConsumer.render");
     return (
@@ -531,6 +536,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                     key={i}
                     isWheelListening={isWheelListening}
                     options={getTrackWrapperOptions(options, viewId, trackId)}
+                    baseRowInfo={baseRowInfo}
                     multivecTrack={getTrackObject(viewId, trackId)}
                     multivecTrackViewId={viewId}
                     multivecTrackTrackId={trackId}
