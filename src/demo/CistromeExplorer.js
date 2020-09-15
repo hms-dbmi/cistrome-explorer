@@ -4,11 +4,12 @@ import pkg from '../../package.json';
 import { HiGlassMeta } from '../index.js';
 import CistromeToolkit from './CistromeToolkit.js';
 
-import { UNDO, REDO, TABLE, DOCUMENT, GITHUB, CLOSE, MENU, TRASH } from '../utils/icons.js';
+import { UNDO, REDO, TABLE, DOCUMENT, GITHUB, CLOSE, MENU, TRASH, SEARCH } from '../utils/icons.js';
 import { DEFAULT_COLOR_RANGE } from '../utils/color.js';
 import { diffViewOptions } from '../utils/view-history';
 import { demos } from './demo';
 import './CistromeExplorer.scss';
+import { CISTROME_DBTOOLKIT_GENE_DISTANCE, CISTROME_DBTOOLKIT_SPECIES } from '../utils/cistrome';
 
 export default function CistromeExplorer() {
     
@@ -34,6 +35,8 @@ export default function CistromeExplorer() {
     // Toolkit-related
     const [isToolkitVisible, setIsToolkitVisible] = useState(false);
     const [toolkitParams, setToolkitParams] = useState(undefined);
+    const [geneSearched, setGeneSearched] = useState(undefined);
+    const [geneToolkitParams, setGeneToolkitParams] = useState(undefined);
 
     const addNewTrack = useCallback((trackDef, viewId, position) => {
         hmRef.current.api.addNewTrack(trackDef, viewId, position);
@@ -178,6 +181,21 @@ export default function CistromeExplorer() {
                         </span>
                     </span>
                     <span className="header-info">
+                        {geneSearched ? 
+                            <span 
+                                className="ce-generic-button" 
+                                onClick={() => {
+                                    if(geneSearched) {
+                                        setGeneToolkitParams({
+                                            assembly: CISTROME_DBTOOLKIT_SPECIES[0], 
+                                            gene: geneSearched, 
+                                            distance: CISTROME_DBTOOLKIT_GENE_DISTANCE[0]
+                                        });
+                                    }
+                                }}>
+                                {`💡 Search ${geneSearched} in Cistrome Toolkit? `}
+                            </span>
+                            : null}
                         <span 
                             className="ce-generic-button" 
                             onClick={() => setIsToolkitVisible(!isToolkitVisible)}>
@@ -218,10 +236,12 @@ export default function CistromeExplorer() {
                         options={demos[selectedDemo].options}
                         onViewChanged={onViewChanged}
                         onGenomicIntervalSearch={setToolkitParams}
+                        onGeneSearch={setGeneSearched}
                     />
                     <CistromeToolkit
                         isVisible={isToolkitVisible}
                         intervalAPIParams={toolkitParams}
+                        geneAPIParams={geneToolkitParams}
                         onAddTrack={onAddTrack}
                     />
                 </div>

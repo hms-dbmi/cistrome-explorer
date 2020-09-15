@@ -59,7 +59,8 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         viewConfig: baseViewConfig,
         options: baseOptions,
         onViewChanged: onViewChangedCallback,
-        onGenomicIntervalSearch: onGenomicIntervalSearchCallback
+        onGenomicIntervalSearch: onGenomicIntervalSearchCallback,
+        onGeneSearch: onGeneSearchCallBack
     } = props;
 
     const hgRef = useRef();
@@ -486,9 +487,17 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         hgRef.current.api.on('viewConfig', (newViewConfigString) => {
             const newViewConfig = JSON.parse(newViewConfigString);
             onViewConfig(newViewConfig);
-        });         
+        });
 
         return () => hgRef.current.api.off('viewConfig');
+    }, [hgRef]);
+
+    useEffect(() => {
+        hgRef.current.api.on('geneSearch', (e) => {
+            onGeneSearchCallBack(e.geneSymbol);
+        });
+
+        return () => hgRef.current.api.off('geneSearch');
     }, [hgRef]);
 
     // We only want to render HiGlass once.
