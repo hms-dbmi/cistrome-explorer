@@ -1,4 +1,4 @@
-import Cookies from 'js-cookie'
+const SEARCH_ITEM_LIMIT = 999999;
 
 /*
  * Types for Cistrome DB Toolkit API.
@@ -249,7 +249,7 @@ export function requestByInterval({ assembly, chrStartName, chrStartPos, chrEndN
                 }
                 // Generate data for table.
                 const rows = keys.map(k => data[k]);
-                const filteredRows = rows.slice(0, rows.length < 100 ? rows.length : 100);
+                const filteredRows = rows.slice(0, rows.length < SEARCH_ITEM_LIMIT ? rows.length : SEARCH_ITEM_LIMIT);
                 const columns = Object.keys(data[keys[0]]);
                 resolve([filteredRows, columns]);
             });
@@ -288,7 +288,7 @@ export function requestByGene({ assembly, gene, distance }) {
                 }
                 // Generate data for table.
                 const rows = keys.map(k => data[k]);
-                const filteredRows = rows.slice(0, rows.length < 100 ? rows.length : 100);
+                const filteredRows = rows.slice(0, rows.length < SEARCH_ITEM_LIMIT ? rows.length : SEARCH_ITEM_LIMIT);
                 const columns = Object.keys(data[keys[0]]);
                 resolve([filteredRows, columns]);
             });
@@ -344,7 +344,7 @@ export function requestByPeakset({ assembly, tpeak, bedFile }) {
                 }
                 // Generate data for table.
                 const rows = keys.map(k => data[k]);
-                const filteredRows = rows.slice(0, rows.length < 100 ? rows.length : 100);
+                const filteredRows = rows.slice(0, rows.length < SEARCH_ITEM_LIMIT ? rows.length : SEARCH_ITEM_LIMIT);
                 const columns = Object.keys(data[keys[0]]);
                 resolve([filteredRows, columns]);
             });

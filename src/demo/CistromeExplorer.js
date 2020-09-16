@@ -48,7 +48,15 @@ export default function CistromeExplorer() {
     const [isToolkitVisible, setIsToolkitVisible] = useState(false);
     const [toolkitParams, setToolkitParams] = useState(undefined);
     const [geneSearched, setGeneSearched] = useState(undefined);
-    const [geneToolkitParams, setGeneToolkitParams] = useState(undefined);
+    const [geneToolkitParams, setGeneToolkitParams] = useState(
+        // undefined
+        // DEBUG:
+        {
+            assembly: CISTROME_DBTOOLKIT_SPECIES[0], 
+            gene: 'MYC', 
+            distance: CISTROME_DBTOOLKIT_GENE_DISTANCE[0]
+        }
+    );
 
     const addNewTrack = useCallback((trackDef, viewId, position) => {
         hmRef.current.api.addNewTrack(trackDef, viewId, position);
@@ -105,7 +113,7 @@ export default function CistromeExplorer() {
      * @param {object} viewOptions A JSON object that contains updated visualization specs for `HiGlassMeta`.
      * @param {object} viewoptions.options A JSON object that contains options for the metadata visualizations in `HiGlassMeta`.
      */
-    function onViewChanged(viewOptions) {        
+    function onViewChanged(viewOptions) {
         // Make sure not to update the history if there is no difference.
         if(!diffViewOptions(viewOptions.options, viewHistory[indexOfCurrentView].options)) {
             return;
