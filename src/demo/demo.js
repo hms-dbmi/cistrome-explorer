@@ -15,7 +15,7 @@ export const demos = {
         viewConfig: hgDemoViewConfig1,
         options: {
             rowInfoAttributes: [
-                {field: "Cell Type", type: "nominal", position: "left", width: 160},
+                {field: "Cell Type", type: "nominal", position: "left", width: 180},
                 {field: "Tissue Type", type: "nominal", position: "left", width: 120},
                 // {field: "Species", type: "nominal", position: "left", width: 120},
                 {field: "qc_frip", type: "quantitative", position: "left", title: "QC: FRIP"},

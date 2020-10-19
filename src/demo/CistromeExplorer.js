@@ -226,27 +226,11 @@ export default function CistromeExplorer() {
                             </svg>
                             {' Toolkit '}
                         </span>
-                        <span className="ce-generic-button">
-                            <a href={`${pkg.homepage}/docs/`} target="_blank">
-                                <svg xmlns="http://www.w3.org/2000/svg"
-                                    viewBox={DOCUMENT.viewBox}>
-                                    <title>Documents</title>
-                                    <path fill="currentColor" d={DOCUMENT.path}/>
-                                </svg>
-                            </a>
-                        </span>
-                        <span className="ce-generic-button">
-                            <a href={pkg.repository.url} target="_blank">
-                                <svg xmlns="http://www.w3.org/2000/svg"
-                                    viewBox={GITHUB.viewBox}>
-                                    <title>GitHub</title>
-                                    <path fill="currentColor" d={GITHUB.path}/>
-                                </svg>
-                            </a>
-                        </span>
                     </span>
                 </div>
             </div>
+
+            {/* <div className="sub-header"> </div> */}
 
             <div className="visualization-container">
                 <div className="visualization">
@@ -458,6 +442,54 @@ export default function CistromeExplorer() {
                             <path d={TRASH.path} fill="currentColor"/>
                         </svg>
                         {' Remove All Sort'}
+                    </span>
+                    <div className="setting-separater"></div>
+                    <h2>Resource</h2>
+                    <span 
+                        className="ce-generic-button"
+                        style={{ 
+                            fontSize: 12,
+                            cursor: 'pointer',
+                            display: 'inline-block',
+                            color: 'black', 
+                            background: 'white', 
+                            border: '1px solid gray',
+                            padding: '4px',
+                            marginTop: '4px'
+                        }}
+                        onClick={() => {
+                            window.open(`${pkg.homepage}/docs/`)
+                        }}
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            viewBox={DOCUMENT.viewBox}>
+                            <title>Documents</title>
+                            <path fill="currentColor" d={DOCUMENT.path}/>
+                        </svg>
+                        {' Documentation'}
+                    </span>
+                    <span 
+                        className="ce-generic-button"
+                        style={{ 
+                            fontSize: 12,
+                            cursor: 'pointer',
+                            display: 'inline-block',
+                            color: 'black', 
+                            background: 'white', 
+                            border: '1px solid gray',
+                            padding: '4px',
+                            marginTop: '4px'
+                        }}
+                        onClick={() => {
+                            window.open(pkg.repository.url)
+                        }}
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            viewBox={GITHUB.viewBox}>
+                            <title>GitHub</title>
+                            <path fill="currentColor" d={GITHUB.path}/>
+                        </svg>
+                        {' Open Source'}
                     </span>
                 </div>
             </div>

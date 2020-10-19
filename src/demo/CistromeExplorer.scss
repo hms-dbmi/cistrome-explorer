@@ -46,7 +46,7 @@
             .header-control {
                 position: relative;
                 padding-top: 6px;
-                margin-left: 10px;
+                margin-left: 30px;
                 span {
                     margin-right: 10px;
                 }
@@ -67,9 +67,20 @@
             }
         }
     } // End of header-container
+    .sub-header {
+        height: 30px;
+        padding-left: 10px;
+        padding-top: 3px;
+        // background: rgb(233, 233, 233);
+        background: #F6F6F6;
+        // border-bottom: 1px solid lightgray;
+        .ce-generic-button-sm {
+            margin-right: 10px;
+        }
+    }
     .visualization-container {
         width: 100%;
-        height: calc(100% - 45px);
+        height: calc(100% - 45px);// - 30px);
         background: #F6F6F6;
         overflow-x: auto;
         .visualization {
@@ -93,6 +104,7 @@
             padding: 15px;
             z-index: 3;
             transition: left 0.2s ease-out;
+            box-shadow: 0px 0px 10px 0px #888;
             h2 {
                 font-size: 14px;
                 margin: 5px 0px;
@@ -107,7 +119,7 @@
             }
             .viewconf-options {
                 color: black;
-                font-size: 10px;
+                font-size: 12px;
                 select {
                     width: 100%;
                 }
@@ -129,5 +141,5 @@
 .react-resizable-handle {
     // TODO: Support another way to resize HiGlassMeta,
     // and uncomment the below not to support the HiGlass resize feature.
-    // visibility: hidden;
+    visibility: hidden;
 }

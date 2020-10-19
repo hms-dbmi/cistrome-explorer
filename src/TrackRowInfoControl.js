@@ -68,7 +68,7 @@ export default function TrackRowInfoControl(props){
         const parentRect = divRef.current.getBoundingClientRect();
         
         setIsFiltering(true);
-        setFilterTop(event.clientY - parentRect.y);
+        setFilterTop(event.clientY);
         setFilterLeft(event.clientX - parentRect.x);
 
         PubSub.publish(LOCAL_EVENT_FILTER_OPEN, divRef);
