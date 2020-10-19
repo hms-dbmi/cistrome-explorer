@@ -50,8 +50,8 @@
               "tilesetUid": "P0PLbQMwTYGy-5uPIQid7A",
               "uid": "gene-labels-track-1",
               "options": {
-                "plusStrandColor": "blue",
-                "minusStrandColor": "red",
+                "plusStrandColor": "steelblue",
+                "minusStrandColor": "#E15759",
                 "showMousePosition": true,
                 "mousePositionColor": "#000000",
                 "trackBorderWidth": 0,

@@ -55,6 +55,7 @@ export default function TrackRowInfoVisNominalBar(props) {
         onSortRows,
         onHighlightRows,
         onFilterRows,
+        helpActivated,
         drawRegister,
     } = props;
 
@@ -75,8 +76,9 @@ export default function TrackRowInfoVisNominalBar(props) {
             .domain(Array.from(new Set(
                 rowInfo.map(d => aggValue(d)))
             ).sort())
-            .range(d3.schemeTableau10),
+            .range([...d3.schemeTableau10]),
     [rowInfo]);
+    // '#2299DB', '#FC5D5C',
 
     const draw = useCallback((domElement) => {
         const two = new Two({
@@ -260,6 +262,7 @@ export default function TrackRowInfoVisNominalBar(props) {
                 filterInfo={filterInfo}
                 transformedRowInfo={transformedRowInfo}
                 rowInfo={rowInfo}
+                helpActivated={helpActivated}
             />
         </div>
     );

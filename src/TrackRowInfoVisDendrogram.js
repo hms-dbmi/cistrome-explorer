@@ -47,6 +47,7 @@ export default function TrackRowInfoVisDendrogram(props) {
         onSortRows,
         onHighlightRows,
         onFilterRows,
+        helpActivated,
         drawRegister,
     } = props;
     
@@ -484,6 +485,7 @@ export default function TrackRowInfoVisDendrogram(props) {
                     minSimilarity.current = undefined;
                     setShowMinSimBar(!showMinSimBar);
                 } : undefined}
+                helpActivated={helpActivated}
             />
             {cannotAlign ? (
                 <div onClick={() => onSortRows(field, type, "ascending")}

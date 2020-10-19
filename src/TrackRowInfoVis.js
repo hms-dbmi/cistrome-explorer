@@ -61,6 +61,7 @@ export default function TrackRowInfoVis(props) {
         onHighlightRows,
         onFilterRows,
         drawRegister,
+        helpActivated,
         onWidthChanged
     } = props;
 
@@ -156,11 +157,11 @@ export default function TrackRowInfoVis(props) {
                     [lrKey]: resizerMargin,
                     height: `${resizerHeight}px`,
                     width: `${resizerWidth}px`,
-                    opacity: (isHovering ? 1 : 0)
+                    opacity: (helpActivated || isHovering ? 1 : 0)
                 }}
             />
         );
-    }, [isLeft, top, height, isHovering]);
+    }, [isLeft, top, height, helpActivated, isHovering]);
 
     return (
         <div 
@@ -200,6 +201,7 @@ export default function TrackRowInfoVis(props) {
                     onSortRows,
                     onHighlightRows,
                     onFilterRows,
+                    helpActivated,
                     drawRegister,
                     ...(type === "nominal-dynamic" ? {
                         domain,

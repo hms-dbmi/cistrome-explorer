@@ -68,6 +68,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         viewConfig: baseViewConfig,
         options: baseOptions,
         rowInfo: baseRowInfo,
+        helpActivated,
         onViewChanged: onViewChangedCallback,
         onGenomicIntervalSearch: onGenomicIntervalSearchCallback,
         onGeneSearch: onGeneSearchCallBack
@@ -569,6 +570,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                     onMetadataInit={() => {
                         setMetadataToContext(viewId, trackId);
                     }}
+                    helpActivated={helpActivated}
                     drawRegister={drawRegister}
                 />
             ))}
@@ -589,6 +591,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                         hgRef.current.api.setViewConfig(newViewConfig);
                     }}
                     onGenomicIntervalSearch={onGenomicIntervalSearchCallback}
+                    helpActivated={helpActivated}
                     drawRegister={drawRegister}
                 />
             ))}

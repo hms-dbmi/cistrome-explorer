@@ -1,6 +1,6 @@
 import d3 from "./d3.js";
 
-export const HIGHLIGHTING_COLOR = ["gray", "#333", "gold", "steelblue"][3];
+export const HIGHLIGHTING_COLOR = ["gray", "#333", "gold", "#2299DB"][3];
 export const HIGHLIGHTING_STROKE = ["white", "black", "brown", "white"][3];
 export const HIGHLIGHTING_OPACITY = 0.24;
 

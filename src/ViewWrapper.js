@@ -26,6 +26,7 @@ export default function ViewWrapper(props) {
         onSelectGenomicInterval,
         onViewportRemove,
         onGenomicIntervalSearch,
+        helpActivated,
         drawRegister
     } = props;
     
@@ -151,7 +152,7 @@ export default function ViewWrapper(props) {
                     pointerEvents: "none"
                 }}
             >
-                <div className="col-tools-brush-bar" ref={divRef}
+                <div className={"col-tools-brush-bar " + (helpActivated ? "help-highlight" : '')} ref={divRef}
                     style={{
                         top: `${brushBarTop}px`,
                         height: `${brushBarHeight}px`,

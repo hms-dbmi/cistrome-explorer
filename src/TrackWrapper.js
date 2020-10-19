@@ -40,6 +40,7 @@ export default function TrackWrapper(props) {
         onFilterRows,
         onMetadataInit,
         isWheelListening,
+        helpActivated,
         drawRegister
     } = props;
 
@@ -142,6 +143,7 @@ export default function TrackWrapper(props) {
                     onSortRows={onSortRows}
                     onHighlightRows={onHighlightRows}
                     onFilterRows={onFilterRows}
+                    helpActivated={helpActivated}
                     drawRegister={(key, draw, options) => {
                         drawRegister(`${key}-left`, draw, options);
                     }}
@@ -168,6 +170,7 @@ export default function TrackWrapper(props) {
                     onSortRows={onSortRows}
                     onHighlightRows={onHighlightRows}
                     onFilterRows={onFilterRows}
+                    helpActivated={helpActivated}
                     drawRegister={(key, draw, options) => {
                         drawRegister(`${key}-right`, draw, options);
                     }}

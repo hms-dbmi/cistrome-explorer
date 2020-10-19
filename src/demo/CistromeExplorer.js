@@ -4,12 +4,14 @@ import pkg from '../../package.json';
 import { HiGlassMeta } from '../index.js';
 import CistromeToolkit from './CistromeToolkit.js';
 
-import { UNDO, REDO, TABLE, DOCUMENT, GITHUB, CLOSE, MENU, TRASH, SEARCH, FOLDER, PENCIL } from '../utils/icons.js';
+import { UNDO, REDO, TABLE, TABLE_2, DOCUMENT, GITHUB, TOGGLE_ON, TOGGLE_OFF, CLOSE, ELLIPSIS, TRASH, SEARCH, FOLDER, PENCIL } from '../utils/icons.js';
 import { DEFAULT_COLOR_RANGE } from '../utils/color.js';
 import { diffViewOptions } from '../utils/view-history';
 import { demos } from './demo';
-import './CistromeExplorer.scss';
 import { CISTROME_DBTOOLKIT_GENE_DISTANCE, CISTROME_DBTOOLKIT_SPECIES } from '../utils/cistrome';
+import './CistromeExplorer.scss';
+
+const HEADER_COLOR_STR = 'rgb(91, 91, 91)';
 
 export default function CistromeExplorer() {
     
@@ -33,6 +35,9 @@ export default function CistromeExplorer() {
     // Undo and redo
     const [undoable, setUndoable] = useState(false);
     const [redoable, setRedoable] = useState(false);
+
+    // help
+    const [helpActivated, setHelpActivated] = useState(false);
 
     // History of view updates
     const MAX_HISTORY_LENGTH = 50;  // How many previous views should be recorded?
@@ -146,22 +151,38 @@ export default function CistromeExplorer() {
         <div className="cistrome-explorer">
             <div className="header-container">
                 <div className="header">
-                    <span 
-                        className="ce-generic-button"
-                        onClick={() => setIsSettingVisible(!isSettingVisible)}>
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                            viewBox={MENU.viewBox}>
-                            <title>Menu</title>
-                            <path fill="currentColor" d={MENU.path}/>
-                        </svg>
+                    <span className="cisvis-title">
+                        <hl>Cistrome</hl> Explorer
                     </span>
-                    <span className="cisvis-title">Cistrome Explorer</span>
                     <span className="header-control">
                         <span 
-                            className="ce-generic-button-sm"
+                            className="ce-generic-button"
+                            style={{ cursor: 'auto' }}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                viewBox={SEARCH.viewBox}>
+                                <path d={SEARCH.path} fill="currentColor"/>
+                            </svg>
+                            <input
+                                // ref={keywordInputRef}
+                                className={"position-search-box " + (helpActivated ? 'help-highlight' : '')}
+                                type="text"
+                                name="default name"
+                                placeholder="GAPDH or chr6:151690496-152103274"
+                                // onChange={onKeywordChange}
+                                // onKeyDown={onKeyDown}
+                                // style={{
+                                //     width, 
+                                //     height 
+                                // }}
+                            />
+                        </span>
+                    </span>
+                    <span className="header-control">
+                        <span
+                            className={"ce-generic-button " + (undoable ? '' : 'ce-generic-button-deactivated')}
                             style={{ 
-                                cursor: undoable ? 'pointer' : 'not-allowed',
-                                color: undoable ? 'white' : '#999'
+                                cursor: undoable ? 'pointer' : 'not-allowed'
                             }} 
                             onClick={() => {
                                 if(undoable) {
@@ -179,10 +200,9 @@ export default function CistromeExplorer() {
                             {` Undo (${viewHistory.length - indexOfCurrentView - 1})`}
                         </span>
                         <span 
-                            className="ce-generic-button-sm"
+                            className={"ce-generic-button " + (redoable ? '' : 'ce-generic-button-deactivated')}
                             style={{ 
-                                cursor: redoable ? 'pointer' : 'not-allowed',
-                                color: redoable ? 'white' : '#999'
+                                cursor: redoable ? 'pointer' : 'not-allowed'
                             }} 
                             onClick={() => {
                                 if(redoable) {
@@ -200,10 +220,35 @@ export default function CistromeExplorer() {
                             {` Redo (${indexOfCurrentView})`}
                         </span>
                     </span>
+                    <span className="header-control">
+                        <span 
+                            className={"ce-generic-button " + (helpActivated ? 'help-highlight' : '')}
+                            onClick={() => setIsToolkitVisible(!isToolkitVisible)}>
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                viewBox={TABLE_2.viewBox}>
+                                <title>Cistrome DB Toolkit</title>
+                                <path fill="currentColor" d={TABLE_2.path}/>
+                            </svg>
+                            {' Toolkit '}
+                        </span>
+                    </span>
+                    <span className="header-control">
+                        <span 
+                            className={"ce-generic-button-lg " + (helpActivated ? 'ce-generic-button-activated' : '')}
+                            onClick={() => { setHelpActivated(!helpActivated); }}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                viewBox={helpActivated ? TOGGLE_ON.viewBox : TOGGLE_OFF.viewBox}>
+                                <title>Help</title>
+                                <path fill="currentColor" d={helpActivated ? TOGGLE_ON.path : TOGGLE_OFF.path}/>
+                            </svg>
+                            {` Show Instructions`}
+                        </span>
+                    </span>
                     <span className="header-info">
                         {geneSearched ? 
                             <span 
-                                className="ce-generic-button" 
+                                className="ce-generic-button"
                                 onClick={() => {
                                     if(geneSearched) {
                                         setGeneToolkitParams({
@@ -217,14 +262,13 @@ export default function CistromeExplorer() {
                             </span>
                             : null}
                         <span 
-                            className="ce-generic-button" 
-                            onClick={() => setIsToolkitVisible(!isToolkitVisible)}>
+                            className="ce-generic-button"
+                            onClick={() => setIsSettingVisible(!isSettingVisible)}>
                             <svg xmlns="http://www.w3.org/2000/svg"
-                                viewBox={TABLE.viewBox}>
-                                <title>Cistrome DB Toolkit</title>
-                                <path fill="currentColor" d={TABLE.path}/>
+                                viewBox={ELLIPSIS.viewBox}>
+                                <title>Menu</title>
+                                <path fill="currentColor" d={ELLIPSIS.path}/>
                             </svg>
-                            {' Toolkit '}
                         </span>
                     </span>
                 </div>
@@ -239,6 +283,7 @@ export default function CistromeExplorer() {
                         viewConfig={demos[selectedDemo].viewConfig}
                         options={demos[selectedDemo].options}
                         rowInfo={localMetadata}
+                        helpActivated={helpActivated}
                         onViewChanged={onViewChanged}
                         onGenomicIntervalSearch={setToolkitParams}
                         onGeneSearch={setGeneSearched}
@@ -251,7 +296,7 @@ export default function CistromeExplorer() {
                     />
                 </div>
                 <div className="settings" style={{
-                    left: isSettingVisible ? 0 : "-400px"
+                    right: isSettingVisible ? 0 : '-400px'
                 }}>
                     <span style={{ 
                         verticalAlign: "middle", 

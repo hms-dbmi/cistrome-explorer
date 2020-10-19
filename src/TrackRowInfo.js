@@ -55,6 +55,7 @@ export default function TrackRowInfo(props) {
         onSortRows,
         onHighlightRows,
         onFilterRows,
+        helpActivated,
         drawRegister
     } = props;
 
@@ -195,6 +196,7 @@ export default function TrackRowInfo(props) {
                     onSortRows={onSortRows}
                     onHighlightRows={onHighlightRows}
                     onFilterRows={onFilterRows}
+                    helpActivated={helpActivated}
                     drawRegister={(key, draw, options) => {
                         drawRegister(`${key}-${i}`, draw, { top: top + d.top, left: left + d.left, width: d.width, height: d.height })
                     }}

@@ -56,6 +56,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
         onSortRows,
         onHighlightRows,
         onFilterRows,
+        helpActivated,
         drawRegister,
     } = props;
 
@@ -352,6 +353,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                 filterInfo={filterInfo}
                 rowInfo={rowInfo}
                 transformedRowInfo={transformedRowInfo}
+                helpActivated={helpActivated}
             />
         </div>
     );

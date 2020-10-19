@@ -35,7 +35,8 @@ export default function TrackRowInfoControl(props){
         onFilterRows,
         toggleMinSimBar,
         rowInfo,
-        filterInfo
+        filterInfo,
+        helpActivated
     } = props;
 
     const divRef = useRef();
@@ -138,11 +139,11 @@ export default function TrackRowInfoControl(props){
     return (
         <div>
             <div ref={divRef}
-                className={"hm-button-sm-container-vertical"}
+                className={"hm-button-sm-container-vertical " + (helpActivated ? "help-highlight" : '')}
                 style={{
                     top: "4px",
                     left: "4px",
-                    visibility: isVisible ? "visible" : "hidden"
+                    visibility: (isVisible || helpActivated) ? "visible" : "hidden"
                 }}>
                 {buttons.map((button, i) => {
                     let positionClass = "hm-button-middle";
