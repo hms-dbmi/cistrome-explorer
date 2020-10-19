@@ -49,13 +49,13 @@ export default function CistromeExplorer() {
     const [toolkitParams, setToolkitParams] = useState(undefined);
     const [geneSearched, setGeneSearched] = useState(undefined);
     const [geneToolkitParams, setGeneToolkitParams] = useState(
-        // undefined
+        undefined
         // DEBUG:
-        {
-            assembly: CISTROME_DBTOOLKIT_SPECIES[0], 
-            gene: 'MYC', 
-            distance: CISTROME_DBTOOLKIT_GENE_DISTANCE[0]
-        }
+        // {
+        //     assembly: CISTROME_DBTOOLKIT_SPECIES[0], 
+        //     gene: 'MYC', 
+        //     distance: CISTROME_DBTOOLKIT_GENE_DISTANCE[0]
+        // }
     );
 
     const addNewTrack = useCallback((trackDef, viewId, position) => {

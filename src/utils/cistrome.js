@@ -326,7 +326,7 @@ export function requestByPeakset({ assembly, tpeak, bedFile }) {
         body: formData,
     })
         .then((response) => {
-            console.log('response', response);
+            // console.log('response', response);
             if (!response.ok) {
                 return new Promise((resolve, reject) => {
                     reject(`Error: ${response.statusText}`);
@@ -335,7 +335,7 @@ export function requestByPeakset({ assembly, tpeak, bedFile }) {
             return response.json();
         })
         .then((data) => {
-            console.log('data', data);
+            // console.log('data', data);
             const keys = Object.keys(data);
 
             return new Promise((resolve, reject) => {
@@ -350,7 +350,7 @@ export function requestByPeakset({ assembly, tpeak, bedFile }) {
             });
         })
         .catch(error => {
-            console.log('error', error);
+            // console.log('error', error);
             return new Promise((resolve, reject) => {
                 reject(`Error: ${error.message}`);
             });
