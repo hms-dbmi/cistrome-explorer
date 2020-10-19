@@ -90,7 +90,7 @@ export default function TrackRowInfoVisNominalBar(props) {
         const textAreaWidth = width - HIGLASSMETA_DEFAULT.TRACK.MIN_WIDTH;
         const showTextLabel = textAreaWidth > 0;
         const barAreaWidth = width - textAreaWidth;
-        const fontSize = 10;
+        const fontSize = 12;
 
         // Render visual components for each row (i.e., bars and texts).
         const textAlign = isLeft ? "end" : "start";

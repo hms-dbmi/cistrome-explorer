@@ -68,7 +68,7 @@ export default function Tooltip() {
             className="hm-tooltip"
             style={{
                 display: ((left !== null && top !== null) ? 'inline-block' : 'none'),
-                top: `${top}px`,
+                top: `${Math.min(document.body.scrollHeight - 80, top)}px`,
                 left: `${left}px`,
             }}
         >

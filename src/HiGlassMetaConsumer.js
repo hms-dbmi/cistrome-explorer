@@ -42,8 +42,17 @@ import { removeItemFromArray, modifyItemInArray, insertItemToArray } from './uti
 const hgOptionsBase = {
     sizeMode: 'bounded', // Stretch the height of HiGlass to its container <div/>
     pixelPreciseMarginPadding: false,
+    bounded: true,
     containerPaddingX: 0,
     containerPaddingY: 0,
+    viewMarginTop: 0,
+    viewMarginBottom: 0,
+    viewMarginLeft: 0,
+    viewMarginRight: 0,
+    viewPaddingTop: 0,
+    viewPaddingBottom: 0,
+    viewPaddingLeft: 0,
+    viewPaddingRight: 0,
 };
 
 /**

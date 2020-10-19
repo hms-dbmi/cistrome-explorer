@@ -70,20 +70,23 @@
     .visualization-container {
         width: 100%;
         height: calc(100% - 45px);
-        padding-top: 20px;
+        background: #F6F6F6;
         overflow-x: auto;
         .visualization {
-            border: 0px solid gray;
-            height: calc(100% - 86px); // margin for `viewWrapper`
-            width: 40%;
+            background: #F6F6F6;
+            padding: 10px;
+            padding-left: 0px;
+            // border-left: 1px solid black;
+            height: calc(100% - 30px);
+            width: 60%;
             position: relative;
-            margin-left: 30%;
+            margin-left: 40%;
             box-sizing: border-box;
         }
         .settings {
             position: fixed;
             background: #f5f5f5;
-            border-right: 1px solid #e8e8e8;
+            border-right: 1px solid #c1c1c1;
             top: 45px;
             height: calc(100% - 45px);  // margin for `header`
             width: 400px;

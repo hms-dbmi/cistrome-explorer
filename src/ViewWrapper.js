@@ -137,7 +137,7 @@ export default function ViewWrapper(props) {
     }
 
     const { top, left, width, height } = viewBoundingBox;
-    const brushBarTop = height + 4;
+    const brushBarTop = height + 8;
 
     return assembly ? (
         <div className="hm-view-wrapper">
@@ -190,12 +190,12 @@ export default function ViewWrapper(props) {
                     <span style={{
                         marginLeft: "4px",
                         verticalAlign: "middle",
-                        color: "#b7b6b6",
+                        color: "gray",
                         display: "inline-block",
                         pointerEvents: "none"
                     }}>
                         <svg className={'hm-button-sm'}
-                            style={{ color: "#b7b6b6", verticalAlign: "middle" }}
+                            style={{ color: "currentColor", verticalAlign: "middle" }}
                             viewBox={ARROW_H.viewBox}>
                             <path d={ARROW_H.path} fill="currentColor"/>
                         </svg>

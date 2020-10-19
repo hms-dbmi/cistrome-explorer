@@ -129,7 +129,7 @@ export default function TrackWrapper(props) {
                     highlitRows={highlitRows}
                     viewId={multivecTrackViewId}
                     trackId={multivecTrackTrackId}
-                    trackX={trackX}
+                    trackX={trackX - 12}
                     trackY={trackY}
                     trackHeight={trackHeight}
                     trackWidth={trackWidth}
@@ -155,7 +155,7 @@ export default function TrackWrapper(props) {
                     highlitRows={highlitRows}
                     viewId={multivecTrackViewId}
                     trackId={multivecTrackTrackId}
-                    trackX={trackX}
+                    trackX={trackX + 12}
                     trackY={trackY}
                     trackHeight={trackHeight}
                     trackWidth={trackWidth}

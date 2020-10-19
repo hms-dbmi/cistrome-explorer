@@ -15,21 +15,21 @@ export const demos = {
         viewConfig: hgDemoViewConfig1,
         options: {
             rowInfoAttributes: [
+                {field: "Cell Type", type: "nominal", position: "left", width: 160},
+                {field: "Tissue Type", type: "nominal", position: "left", width: 120},
+                // {field: "Species", type: "nominal", position: "left", width: 120},
                 {field: "qc_frip", type: "quantitative", position: "left", title: "QC: FRIP"},
                 {field: "qc_fastqc", type: "quantitative", position: "left", title:  "QC: FastQC"},
-                {field: "cid", type: "nominal-dynamic",  position: "left", title: "Compare Positive and Negative", domain: ["positive", "negative"], range: ["blue", "red"], width: 30},
-                {field: "Metadata URL", alt: "cid", type: "url", position: "left", width: 30},
-                {field: "Hierarchical Clustering (Ward)", type: "tree", position: "left", resolveYScale: true, sort: "ascending", width: 200},
-                {field: "Cell Type", type: "nominal", position: "right", width: 80},
-                {field: "Tissue Type", type: "nominal", position: "right", width: 80},
-                {field: "Species", type: "nominal", position: "right", width: 80},
+                // {field: "cid", type: "nominal-dynamic",  position: "left", title: "Compare Positive and Negative", domain: ["positive", "negative"], range: ["blue", "red"], width: 30},
+                // {field: "Metadata URL", alt: "cid", type: "url", position: "left", width: 30},
+                {field: "Hierarchical Clustering (Ward)", type: "tree", position: "left", resolveYScale: true, sort: "ascending", width: 120},
             ],
             rowSort: [
                 {field: "Cell Type", type: "nominal", order: "ascending"},
                 {field: "qc_frip", type: "quantitative", order: "descending"}
             ],
             rowFilter: [
-                {field: "Tissue Type", type: "nominal", notOneOf: ["None"]}
+                // {field: "Tissue Type", type: "nominal", notOneOf: ["None"]}
             ]
         }
     },
