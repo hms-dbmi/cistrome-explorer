@@ -1,4 +1,4 @@
-import Cookies from 'js-cookie'
+const SEARCH_ITEM_LIMIT = 999999;
 
 /*
  * Types for Cistrome DB Toolkit API.
@@ -249,7 +249,7 @@ export function requestByInterval({ assembly, chrStartName, chrStartPos, chrEndN
                 }
                 // Generate data for table.
                 const rows = keys.map(k => data[k]);
-                const filteredRows = rows.slice(0, rows.length < 100 ? rows.length : 100);
+                const filteredRows = rows.slice(0, rows.length < SEARCH_ITEM_LIMIT ? rows.length : SEARCH_ITEM_LIMIT);
                 const columns = Object.keys(data[keys[0]]);
                 resolve([filteredRows, columns]);
             });
@@ -288,7 +288,7 @@ export function requestByGene({ assembly, gene, distance }) {
                 }
                 // Generate data for table.
                 const rows = keys.map(k => data[k]);
-                const filteredRows = rows.slice(0, rows.length < 100 ? rows.length : 100);
+                const filteredRows = rows.slice(0, rows.length < SEARCH_ITEM_LIMIT ? rows.length : SEARCH_ITEM_LIMIT);
                 const columns = Object.keys(data[keys[0]]);
                 resolve([filteredRows, columns]);
             });
@@ -326,7 +326,7 @@ export function requestByPeakset({ assembly, tpeak, bedFile }) {
         body: formData,
     })
         .then((response) => {
-            console.log('response', response);
+            // console.log('response', response);
             if (!response.ok) {
                 return new Promise((resolve, reject) => {
                     reject(`Error: ${response.statusText}`);
@@ -335,7 +335,7 @@ export function requestByPeakset({ assembly, tpeak, bedFile }) {
             return response.json();
         })
         .then((data) => {
-            console.log('data', data);
+            // console.log('data', data);
             const keys = Object.keys(data);
 
             return new Promise((resolve, reject) => {
@@ -344,13 +344,13 @@ export function requestByPeakset({ assembly, tpeak, bedFile }) {
                 }
                 // Generate data for table.
                 const rows = keys.map(k => data[k]);
-                const filteredRows = rows.slice(0, rows.length < 100 ? rows.length : 100);
+                const filteredRows = rows.slice(0, rows.length < SEARCH_ITEM_LIMIT ? rows.length : SEARCH_ITEM_LIMIT);
                 const columns = Object.keys(data[keys[0]]);
                 resolve([filteredRows, columns]);
             });
         })
         .catch(error => {
-            console.log('error', error);
+            // console.log('error', error);
             return new Promise((resolve, reject) => {
                 reject(`Error: ${error.message}`);
             });

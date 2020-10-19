@@ -13,6 +13,7 @@ import { getAggregatedRowInfo } from './utils/select-rows.js';
 /**
  * Wrapper component associated with a particular HiGlass track.
  * @prop {object} options Options associated with the track. Contains values for all possible options.
+ * @prop {array} baseRowInfo 
  * @prop {object} multivecTrack A `horizontal-multivec` track object returned by `hgc.api.getTrackObject()`.
  * @prop {string} multivecTrackViewId The viewId for the multivecTrack.
  * @prop {string} multivecTrackTrackId The trackId for the multivecTrack.
@@ -27,7 +28,8 @@ import { getAggregatedRowInfo } from './utils/select-rows.js';
  */
 export default function TrackWrapper(props) {
     const {
-        options, 
+        options,
+        baseRowInfo,
         multivecTrack,
         multivecTrackViewId,
         multivecTrackTrackId,
@@ -71,7 +73,9 @@ export default function TrackWrapper(props) {
     let rowInfo = [];
     try {
         // Obtain the row_infos (array of JSON objects, one object per row) from the track's tileset info.
-        if(["meeting-2020-04-29-track"].includes(multivecTrackTrackId)) {
+        if(baseRowInfo) {
+            rowInfo = baseRowInfo.slice(0, totalNumRows);
+        } else if(["meeting-2020-04-29-track"].includes(multivecTrackTrackId)) {
             // TODO: use the below line to use the real metadata coming from the HiGlass Server tileset_info.
             //       see https://github.com/hms-dbmi/cistrome-explorer/issues/26
             rowInfo = multivecTrack.tilesetInfo.row_infos.map(d => (typeof d === "string" ? JSON.parse(d) : d));

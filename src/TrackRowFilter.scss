@@ -11,14 +11,6 @@
         height: auto;
         display: flex;
         align-items: center;
-        .hm-filter-box-input {
-            margin-right: 6px;
-            border: none;
-            border-bottom: solid 1px lightgray;
-        }
-        .hm-filter-box-input:focus{
-            outline: none;
-        }
     }
     .hm-filter-suggestions {
         line-height: 14px;
@@ -48,4 +40,13 @@
 
 .hm-filter-suggestion-text.active-suggestion {
     background: rgb(225, 225, 225);
+}
+
+.hm-filter-box-input {
+    margin-right: 6px;
+    border: none;
+    border-bottom: solid 1px lightgray;
+}
+.hm-filter-box-input:focus{
+    outline: none;
 }

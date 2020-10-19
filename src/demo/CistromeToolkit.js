@@ -36,7 +36,8 @@ export default function CistromeToolkit(props) {
     const {
         isVisible: initIsVisible,
         onAddTrack,
-        intervalAPIParams
+        intervalAPIParams,
+        geneAPIParams
     } = props;
 
     const toolkitRef = useRef(null);
@@ -88,6 +89,14 @@ export default function CistromeToolkit(props) {
             runCistromeToolkitAPI(CISTROME_API_TYPES.INTERVAL, intervalAPIParams);
         }
     }, [intervalAPIParams]);
+
+    useEffect(() => {
+        if(geneAPIParams && validateGeneParams(geneAPIParams).success) {
+            setIsVisible(true);
+            setLatestGeneParams(geneAPIParams);
+            runCistromeToolkitAPI(CISTROME_API_TYPES.GENE, geneAPIParams);
+        }
+    }, [geneAPIParams]);
 
     // Reset the row selection upon mouse click on other history
     useEffect(() => {

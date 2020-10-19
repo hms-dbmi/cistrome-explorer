@@ -4,11 +4,12 @@ import pkg from '../../package.json';
 import { HiGlassMeta } from '../index.js';
 import CistromeToolkit from './CistromeToolkit.js';
 
-import { UNDO, REDO, TABLE, DOCUMENT, GITHUB, CLOSE, MENU, TRASH } from '../utils/icons.js';
+import { UNDO, REDO, TABLE, DOCUMENT, GITHUB, CLOSE, MENU, TRASH, SEARCH, FOLDER, PENCIL } from '../utils/icons.js';
 import { DEFAULT_COLOR_RANGE } from '../utils/color.js';
 import { diffViewOptions } from '../utils/view-history';
 import { demos } from './demo';
 import './CistromeExplorer.scss';
+import { CISTROME_DBTOOLKIT_GENE_DISTANCE, CISTROME_DBTOOLKIT_SPECIES } from '../utils/cistrome';
 
 export default function CistromeExplorer() {
     
@@ -16,6 +17,18 @@ export default function CistromeExplorer() {
 
     const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[0]);
     const [isSettingVisible, setIsSettingVisible] = useState(false);
+
+    // metadata
+    const jsonInputFile = useRef(null);
+    const [fileReader, setFileReader] = useState(new FileReader());
+    const [localMetadata, setLocalMetadata] = useState(null);
+
+    useEffect(() => {
+        fileReader.onload = (event) => {
+            const json = JSON.parse(event.target.result);
+            setLocalMetadata(json);
+        };
+    }, [fileReader]);
 
     // Undo and redo
     const [undoable, setUndoable] = useState(false);
@@ -34,6 +47,16 @@ export default function CistromeExplorer() {
     // Toolkit-related
     const [isToolkitVisible, setIsToolkitVisible] = useState(false);
     const [toolkitParams, setToolkitParams] = useState(undefined);
+    const [geneSearched, setGeneSearched] = useState(undefined);
+    const [geneToolkitParams, setGeneToolkitParams] = useState(
+        undefined
+        // DEBUG:
+        // {
+        //     assembly: CISTROME_DBTOOLKIT_SPECIES[0], 
+        //     gene: 'MYC', 
+        //     distance: CISTROME_DBTOOLKIT_GENE_DISTANCE[0]
+        // }
+    );
 
     const addNewTrack = useCallback((trackDef, viewId, position) => {
         hmRef.current.api.addNewTrack(trackDef, viewId, position);
@@ -90,7 +113,7 @@ export default function CistromeExplorer() {
      * @param {object} viewOptions A JSON object that contains updated visualization specs for `HiGlassMeta`.
      * @param {object} viewoptions.options A JSON object that contains options for the metadata visualizations in `HiGlassMeta`.
      */
-    function onViewChanged(viewOptions) {        
+    function onViewChanged(viewOptions) {
         // Make sure not to update the history if there is no difference.
         if(!diffViewOptions(viewOptions.options, viewHistory[indexOfCurrentView].options)) {
             return;
@@ -178,6 +201,21 @@ export default function CistromeExplorer() {
                         </span>
                     </span>
                     <span className="header-info">
+                        {geneSearched ? 
+                            <span 
+                                className="ce-generic-button" 
+                                onClick={() => {
+                                    if(geneSearched) {
+                                        setGeneToolkitParams({
+                                            assembly: CISTROME_DBTOOLKIT_SPECIES[0], 
+                                            gene: geneSearched, 
+                                            distance: CISTROME_DBTOOLKIT_GENE_DISTANCE[0]
+                                        });
+                                    }
+                                }}>
+                                {`💡 Search ${geneSearched} in Cistrome Toolkit? `}
+                            </span>
+                            : null}
                         <span 
                             className="ce-generic-button" 
                             onClick={() => setIsToolkitVisible(!isToolkitVisible)}>
@@ -216,17 +254,20 @@ export default function CistromeExplorer() {
                         ref={hmRef}
                         viewConfig={demos[selectedDemo].viewConfig}
                         options={demos[selectedDemo].options}
+                        rowInfo={localMetadata}
                         onViewChanged={onViewChanged}
                         onGenomicIntervalSearch={setToolkitParams}
+                        onGeneSearch={setGeneSearched}
                     />
                     <CistromeToolkit
                         isVisible={isToolkitVisible}
                         intervalAPIParams={toolkitParams}
+                        geneAPIParams={geneToolkitParams}
                         onAddTrack={onAddTrack}
                     />
                 </div>
                 <div className="settings" style={{
-                    left: isSettingVisible ? 0 : "-300px"
+                    left: isSettingVisible ? 0 : "-400px"
                 }}>
                     <span style={{ 
                         verticalAlign: "middle", 
@@ -262,7 +303,112 @@ export default function CistromeExplorer() {
                         </select>
                     </span>
                     <div className="setting-separater"></div>
+                    <h2>Metadata</h2>
+                    <span 
+                        className="ce-generic-button"
+                        style={{ 
+                            fontSize: 12,
+                            display: 'inline-block',
+                            cursor: 'not-allowed',  // TODO: not supported yet
+                            color: 'gray', // TODO: not supported yet
+                            background: 'white', 
+                            border: '1px solid gray',
+                            padding: '4px',
+                            marginTop: '4px'
+                        }}
+                        onClick={() => { }}
+                    >
+                        <svg
+                            style={{ color: "rgb(171, 171, 171)", width: 14, height: 14 }}
+                            viewBox={SEARCH.viewBox}
+                        >
+                            <title>Open Metadata</title>
+                            <path d={SEARCH.path} fill="currentColor"/>
+                        </svg>
+                        {' View Loaded Metadata'}
+                    </span>
+                    <span 
+                        className="ce-generic-button"
+                        style={{ 
+                            fontSize: 12,
+                            cursor: 'pointer',
+                            display: 'inline-block',
+                            color: 'black',
+                            background: 'white', 
+                            border: '1px solid gray',
+                            padding: '4px',
+                            marginTop: '4px'
+                        }}
+                        onClick={() => { 
+                            jsonInputFile.current.value = null;
+                            setLocalMetadata(undefined);
+                        }}
+                    >
+                        <svg
+                            style={{ color: "rgb(171, 171, 171)", width: 14, height: 14 }}
+                            viewBox={TRASH.viewBox}
+                        >
+                            <title>Open Metadata</title>
+                            <path d={TRASH.path} fill="currentColor"/>
+                        </svg>
+                        {' Remove Loaded Metadata'}
+                    </span>
+                    <input 
+                        type="file" 
+                        ref={jsonInputFile} 
+                        style={{ display: 'none' }} 
+                        onChange={(e) => {
+                            fileReader.readAsText(e.target.files[0]);
+                        }
+                    }/>
+                    <span 
+                        className="ce-generic-button"
+                        style={{ 
+                            fontSize: 12,
+                            cursor: 'pointer',
+                            display: 'inline-block',
+                            color: 'black', 
+                            background: 'white', 
+                            border: '1px solid gray',
+                            padding: '4px',
+                            marginTop: '4px'
+                        }}
+                        onClick={() => { jsonInputFile.current.click() }}
+                    >
+                        <svg
+                            style={{ color: "rgb(171, 171, 171)", width: 14, height: 14 }}
+                            viewBox={FOLDER.viewBox}
+                        >
+                            <title>Open Metadata</title>
+                            <path d={FOLDER.path} fill="currentColor"/>
+                        </svg>
+                        {' Open Local Metadata (JSON)'}
+                    </span>
+                    <div className="setting-separater"></div>
                     <h2>View Options</h2>
+                    <span 
+                        className="ce-generic-button"
+                        style={{ 
+                            fontSize: 12,
+                            display: 'inline-block',
+                            cursor: 'not-allowed',  // TODO: not supported yet
+                            color: 'gray',  // TODO: not supported yet
+                            background: 'white', 
+                            border: '1px solid gray',
+                            padding: '4px',
+                            marginTop: '4px'
+                        }}
+                        onClick={() => { }}
+                    >
+                        <svg
+                            style={{ color: "rgb(171, 171, 171)", width: 14, height: 14 }}
+                            viewBox={PENCIL.viewBox}
+                        >
+                            <title>Edit View Options</title>
+                            <path d={PENCIL.path} fill="currentColor"/>
+                        </svg>
+                        {' Edit View Options'}
+                    </span>
                     <span 
                         className="ce-generic-button"
                         style={{ 
@@ -276,8 +422,8 @@ export default function CistromeExplorer() {
                             marginTop: '4px'
                         }}
                         onClick={() => {
-                            hmRef.current.api.onRemoveAllFilters()}
-                        }
+                            hmRef.current.api.onRemoveAllFilters()
+                        }}
                     >
                         <svg
                             style={{ color: "rgb(171, 171, 171)", width: 14, height: 14 }}
