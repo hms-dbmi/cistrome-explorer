@@ -20,7 +20,7 @@ export function destroyTooltip() {
  * @prop {string} color A color related to the value/title.
  */
 export function TooltipContent(props) {
-    const { title, value, color: background, warning } = props;
+    const { title, value, color: background, warning, help } = props;
     return (
         <div className="hm-tooltip-content">
             <div className="hm-tooltip-title">{title}</div>
@@ -32,7 +32,7 @@ export function TooltipContent(props) {
                     : null
                 }
                 {value ? 
-                    <div style={{color: warning ? "red" : "black"}}>{value}</div>
+                    <div className={warning ? 'hm-tooltip-warning' : ''}>{value}</div>
                     : null
                 }
             </div>
@@ -50,12 +50,14 @@ export default function Tooltip() {
     const [left, setLeft] = useState(null);
     const [top, setTop] = useState(null);
     const [content, setContent] = useState("");
+    const [help, setHelp] = useState(false);
 
     useEffect(() => {
         const tooltipToken = PubSub.subscribe(EVENT.TOOLTIP, (msg, data) => {
             setLeft(data.x);
             setTop(data.y);
             setContent(data.content);
+            setHelp(data.help);
         });
 
         return () => {
@@ -65,7 +67,7 @@ export default function Tooltip() {
 
     return (
         <div
-            className="hm-tooltip"
+            className={"hm-tooltip " + (help ? "hm-tooltip-help" : '')}
             style={{
                 display: ((left !== null && top !== null) ? 'inline-block' : 'none'),
                 top: `${Math.min(document.body.scrollHeight - 80, top)}px`,

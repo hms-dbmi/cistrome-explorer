@@ -2,17 +2,23 @@
     position: fixed;
     z-index: 1;
     margin: 17px 0 0 9px;
-    padding: 0.25rem;
-    font-size: 0.8em;
+    padding: 0.5rem;
+    font-size: 14px;
     pointer-events: none;
     background: white;
     border-radius: 0.25rem;
     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1),
-                0 0 3px 0 rgba(0, 0, 0, 0.075),
-                0 0 7px 0 rgba(0, 0, 0, 0.05);
+                0 0 3px 0 rgba(0, 0, 0, 0.1),
+                0 0 7px 0 rgba(0, 0, 0, 0.1);
+}
+
+.hm-tooltip-help {
+    color: white !important;
+    background: #474747 !important;
 }
 
 .hm-tooltip-title {
+    font-size: 14px;
     margin-bottom: 3px;
     font-weight: bold;
 }
@@ -31,4 +37,8 @@
     width: 12px;
     height: 12px;
     margin-right: 3px;
+}
+
+.hm-tooltip-warning {
+    color: 'red';
 }

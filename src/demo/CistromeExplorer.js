@@ -9,9 +9,12 @@ import { DEFAULT_COLOR_RANGE } from '../utils/color.js';
 import { diffViewOptions } from '../utils/view-history';
 import { demos } from './demo';
 import { CISTROME_DBTOOLKIT_GENE_DISTANCE, CISTROME_DBTOOLKIT_SPECIES } from '../utils/cistrome';
-import './CistromeExplorer.scss';
 
-const HEADER_COLOR_STR = 'rgb(91, 91, 91)';
+import PubSub from "pubsub-js";
+import { TooltipContent, destroyTooltip } from "../Tooltip.js";
+import { EVENT } from "../utils/constants.js";
+
+import './CistromeExplorer.scss';
 
 export default function CistromeExplorer() {
     
@@ -158,9 +161,24 @@ export default function CistromeExplorer() {
                         <span 
                             className="ce-generic-button"
                             style={{ cursor: 'auto' }}
+                            onMouseOver={(e) => {
+                                if(helpActivated) {
+                                    PubSub.publish(EVENT.TOOLTIP, {
+                                        x: e.clientX,
+                                        y: e.clientY,
+                                        content: <TooltipContent 
+                                            title="💡 Search Gene or Genomic Interval"
+                                            value={'You can quickly reposition the heatmap on the right by entering a gene name or genomic interval, such as GAPDH or chr6:151690496-152103274.'}
+                                        />,
+                                        help: true
+                                    });
+                                }
+                            }}
+                            onMouseLeave={() => destroyTooltip()}
                         >
                             <svg xmlns="http://www.w3.org/2000/svg"
-                                viewBox={SEARCH.viewBox}>
+                                viewBox={SEARCH.viewBox}
+                            >
                                 <path d={SEARCH.path} fill="currentColor"/>
                             </svg>
                             <input
