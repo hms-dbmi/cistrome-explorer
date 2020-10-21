@@ -10,9 +10,7 @@ import { diffViewOptions } from '../utils/view-history';
 import { demos } from './demo';
 import { CISTROME_DBTOOLKIT_GENE_DISTANCE, CISTROME_DBTOOLKIT_SPECIES } from '../utils/cistrome';
 
-import PubSub from "pubsub-js";
-import { TooltipContent, destroyTooltip } from "../Tooltip.js";
-import { EVENT } from "../utils/constants.js";
+import { publishHelpTooltip, destroyTooltip } from "../Tooltip.js";
 
 import './CistromeExplorer.scss';
 
@@ -157,24 +155,18 @@ export default function CistromeExplorer() {
                     <span className="cisvis-title">
                         <hl>Cistrome</hl> Explorer
                     </span>
-                    <span className="header-control">
+                    <span 
+                        className="header-control"
+                        onMouseMove={(e) => publishHelpTooltip(e,
+                            "Search Gene or Genomic Interval",
+                            "You can quickly reposition the heatmap on the right by entering a gene name or genomic interval, such as GAPDH or chr6:151690496-152103274.",
+                            helpActivated
+                        )}
+                        onMouseLeave={() => destroyTooltip()}
+                    >
                         <span 
                             className="ce-generic-button"
                             style={{ cursor: 'auto' }}
-                            onMouseOver={(e) => {
-                                if(helpActivated) {
-                                    PubSub.publish(EVENT.TOOLTIP, {
-                                        x: e.clientX,
-                                        y: e.clientY,
-                                        content: <TooltipContent 
-                                            title="💡 Search Gene or Genomic Interval"
-                                            value={'You can quickly reposition the heatmap on the right by entering a gene name or genomic interval, such as GAPDH or chr6:151690496-152103274.'}
-                                        />,
-                                        help: true
-                                    });
-                                }
-                            }}
-                            onMouseLeave={() => destroyTooltip()}
                         >
                             <svg xmlns="http://www.w3.org/2000/svg"
                                 viewBox={SEARCH.viewBox}
@@ -238,7 +230,14 @@ export default function CistromeExplorer() {
                             {` Redo (${indexOfCurrentView})`}
                         </span>
                     </span>
-                    <span className="header-control">
+                    <span className="header-control"
+                        onMouseMove={(e) => publishHelpTooltip(e,
+                            "Cistrome Data Browser Toolkit",
+                            "You can query for transcription factors that are likely to bind in the region of your intrest based on the thousand of samples available in Cistrome Data Browser",
+                            helpActivated
+                        )}
+                        onMouseLeave={() => destroyTooltip()}
+                    >
                         <span 
                             className={"ce-generic-button " + (helpActivated ? 'help-highlight' : '')}
                             onClick={() => setIsToolkitVisible(!isToolkitVisible)}>

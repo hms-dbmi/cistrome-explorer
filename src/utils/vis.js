@@ -17,17 +17,17 @@ export function drawVisTitle(text, options) {
         width,
         height,
         titleSuffix = "",
-        backgroundColor = "white"
+        backgroundColor = "#F5F5F5"
     } = options;
     
     const margin = 4;
-    const titleFontSize = 12;
+    const titleFontSize = 14;
     const titleLeftInitial = isLeft ? margin : (width - margin);
     const titleRotate = isLeft ? -Math.PI/2 : Math.PI/2;
     const fullText = `${text}${titleSuffix}`;
 
     const title = new TwoText(titleLeftInitial, 0, width, height, fullText);
-    title.fill = "gray";
+    title.fill = "#434343";
     title.fontsize = titleFontSize;
     title.align = isLeft ? "end" : "start";
     title.baseline = isLeft ? "top" : "bottom";

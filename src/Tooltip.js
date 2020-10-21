@@ -14,6 +14,27 @@ export function destroyTooltip() {
 }
 
 /**
+ * Publish tooltip of instructions
+ * @param {Object} e Mouse event.
+ * @param {string} title The title of an instruction.
+ * @param {string} subtitle The detailed instruction to be shown in the tooltip.
+ * @param {boolean} helpActivated Whether to show tooltip instruction or not.
+ */
+export function publishHelpTooltip(e, title, subtitle, helpActivated) {
+    if(helpActivated && title && subtitle) {
+        PubSub.publish(EVENT.TOOLTIP, {
+            x: e.clientX,
+            y: e.clientY,
+            content: <TooltipContent 
+                title={'💡 ' + title}
+                value={subtitle}
+            />,
+            help: true
+        });
+    }
+}
+
+/**
  * Generate tooltip contents.
  * @prop {string} title The title of tooltip.
  * @prop {number} value A value to show in tooltip.
@@ -70,7 +91,7 @@ export default function Tooltip() {
             className={"hm-tooltip " + (help ? "hm-tooltip-help" : '')}
             style={{
                 display: ((left !== null && top !== null) ? 'inline-block' : 'none'),
-                top: `${Math.min(document.body.scrollHeight - 80, top)}px`,
+                top: `${Math.min(document.body.scrollHeight - 100, top)}px`,
                 left: `${left}px`,
             }}
         >

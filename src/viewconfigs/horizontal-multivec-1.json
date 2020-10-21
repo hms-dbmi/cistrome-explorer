@@ -34,7 +34,7 @@
                 "mousePositionColor": "#000000",
                 "trackBorderWidth": 0,
                 "trackBorderColor": "black",
-                "color": "gray",
+                "color": "#434343",
                 "stroke": "#F6F6F6",
                 "fontSize": 12,
                 "fontIsLeftAligned": false

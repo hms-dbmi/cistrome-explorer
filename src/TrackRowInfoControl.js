@@ -4,6 +4,7 @@ import PubSub from 'pubsub-js';
 import { SORT_ASC, SORT_DESC, FILTER, RESET, TOGGLE_ON } from './utils/icons.js';
 import TrackRowFilter from './TrackRowFilter.js';
 import { getAggregatedValue } from './utils/aggregate.js';
+import { destroyTooltip, publishHelpTooltip } from './Tooltip.js';
 
 const LOCAL_EVENT_FILTER_OPEN = "filter-open";
 
@@ -99,13 +100,17 @@ export default function TrackRowInfoControl(props){
             onClick: onSortAscClick,
             icon: SORT_ASC,
             title: "Sort rows in ascending order",
-            highlit: sortAsceButtonHighlit
+            highlit: sortAsceButtonHighlit,
+            helpTitle: "Sort Samples in Ascending Order",
+            helpSubtitle: "Sort samples in ascending order based on the value shown in this track."
         });
         buttons.push({
             onClick: onSortDescClick,
             icon: SORT_DESC,
             title: "Sort rows in descending order",
-            highlit: sortDescButtonHighlit
+            highlit: sortDescButtonHighlit,
+            helpTitle: "Sort Samples in Descending Order",
+            helpSubtitle: "Sort samples in descending order based on the value shown in this track."
         });
     }
 
@@ -114,7 +119,9 @@ export default function TrackRowInfoControl(props){
             onClick: onFilterClick,
             icon: FILTER,
             title: "Filter rows",
-            highlit: filterButtonHighlit
+            highlit: filterButtonHighlit,
+            helpTitle: "Apply Filter",
+            helpSubtitle: "Apply filters in this track to remove certain samples that are not interested."
         });
     }
 
@@ -132,7 +139,9 @@ export default function TrackRowInfoControl(props){
             onClick: onReset,
             icon: RESET,
             title: "Remove all filters",
-            highlit: false
+            highlit: false,
+            helpTitle: "Remove All Filter",
+            helpSubtitle: "Remove all filters that are applied in the tracks."
         });
     }
 
@@ -160,6 +169,12 @@ export default function TrackRowInfoControl(props){
                             className={`${button.highlit ? "hm-button-sm-hl" : "hm-button-sm"} ${positionClass}`}
                             onClick={button.onClick} 
                             viewBox={button.icon.viewBox}
+                            onMouseMove={(e) => publishHelpTooltip(e,
+                                button.helpTitle,
+                                button.helpSubtitle,
+                                helpActivated
+                            )}
+                            onMouseLeave={() => destroyTooltip()}
                         >
                             <title>{button.title}</title>
                             <path d={button.icon.path} fill="currentColor"/>

@@ -110,7 +110,7 @@ export default function ViewColumnBrush(props) {
                                     x: e.clientX,
                                     y: e.clientY,
                                     content: <TooltipContent 
-                                        title="Search bind TFs from Cistrome DB"
+                                        title="Search Transcription Factors from Cistrome DB"
                                         value={tooltipValue}
                                         warning={!intervalValid}
                                     />

@@ -6,6 +6,7 @@ import { resolveIntervalCoordinates } from './utils/genome.js';
 import { getRange } from './utils/viewport.js';
 import { ARROW_H } from './utils/icons.js';
 import './ViewWrapper.scss';
+import { destroyTooltip, publishHelpTooltip } from './Tooltip.js';
 
 /**
  * Component for rendering genome interval selection tools.
@@ -153,6 +154,12 @@ export default function ViewWrapper(props) {
                 }}
             >
                 <div className={"col-tools-brush-bar " + (helpActivated ? "help-highlight" : '')} ref={divRef}
+                    onMouseMove={(e) => publishHelpTooltip(e,
+                        "Select Genomic Region & Query for Transcription Factors",
+                        "You can select the genomic region of your interest by mouse dragging and search transcription factors that are likely to bind based on Cistrome Data Browser.",
+                        helpActivated
+                    )}
+                    onMouseLeave={() => destroyTooltip()}
                     style={{
                         top: `${brushBarTop}px`,
                         height: `${brushBarHeight}px`,
