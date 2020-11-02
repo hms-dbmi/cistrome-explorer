@@ -28,10 +28,11 @@ export default function ViewColumnBrush(props) {
     } = props;
 
     const [isLoading, setIsLoading] = useState(true);
-    const [chrStartName, setChrStartName] = useState(null);
-    const [chrStartPos, setChrStartPos] = useState(null);
-    const [chrEndName, setChrEndName] = useState(null);
-    const [chrEndPos, setChrEndPos] = useState(null);
+    const [positionInfo, setPositionInfo] = useState(null);
+
+    const [onSearchButton, setOnSearchButton] = useState({
+        on: false, x: undefined, y: undefined
+    });
 
     const assembly = multivecTrack.tilesetInfo.coordSystem;
     const absDomain = viewportTrack.viewportXDomain;
@@ -49,31 +50,47 @@ export default function ViewColumnBrush(props) {
                 if(!didUnmount) {
                     // Only update state if the component has not yet unmounted.
                     // See https://github.com/facebook/react/issues/14369#issuecomment-468267798
-                    setChrStartName(result[0][0]);
-                    setChrStartPos(result[0][1]);
-                    setChrEndName(result[1][0]);
-                    setChrEndPos(result[1][1]);
+                    setPositionInfo({
+                        chrStartName: result[0][0],
+                        chrStartPos: result[0][1],
+                        chrEndName: result[1][0],
+                        chrEndPos: result[1][1],
+                    });
                     setIsLoading(false);
                 }
             });
 
         return (() => { didUnmount = true; });
-    });
+    }, [viewBoundingBox, viewportTrack, multivecTrack, onViewportRemove, onRequestIntervalTFs]);
 
     const { start, end } = getRange(startX, endX, 0, viewBoundingBox.width);
     const { 
         msg: intervalInvalidMsg, 
         success: intervalValid 
-    } = validateIntervalParams({ assembly, chrStartName, chrStartPos, chrEndName, chrEndPos });
+    } = validateIntervalParams({ assembly, ...positionInfo, });
 
-    const tooltipValue = (isLoading
-        ? 'Loading...'
-        : (!intervalValid
-            ? intervalInvalidMsg 
-            : `${chrStartName}:${chrStartPos}-${chrEndPos}`
-        )
-    );
-                                        
+    // Force update the loading message if changed while hovered already
+    useEffect(() => {
+        if(onSearchButton.on && onSearchButton.x && onSearchButton.y) {
+            const tooltipValue = (isLoading
+                ? 'Loading metadata...'
+                : (!intervalValid
+                    ? intervalInvalidMsg 
+                    : `${positionInfo?.chrStartName}:${positionInfo?.chrStartPos}-${positionInfo?.chrEndPos}`
+                )
+            );
+
+            PubSub.publish(EVENT.TOOLTIP, {
+                x: onSearchButton.x,
+                y: onSearchButton.y,
+                content: <TooltipContent 
+                    title="Search Transcription Factors from Cistrome DB"
+                    value={tooltipValue}
+                    warning={!intervalValid}
+                />
+            });
+        }
+    }, [onSearchButton, isLoading]);
 
     if(end === null && start === null) {
         // Do not show range when they are ourside.
@@ -105,26 +122,20 @@ export default function ViewColumnBrush(props) {
                         // Show the search icon only when `onIntervalSearch` is defined.
                         <svg className={"hm-button-sm hm-button-middle"} 
                             style={{ height: "100%" }}
-                            onMouseOver={(e) => {
-                                PubSub.publish(EVENT.TOOLTIP, {
-                                    x: e.clientX,
-                                    y: e.clientY,
-                                    content: <TooltipContent 
-                                        title="Search Transcription Factors from Cistrome DB"
-                                        value={tooltipValue}
-                                        warning={!intervalValid}
-                                    />
-                                });
+                            onMouseOver={(e) => setOnSearchButton({
+                                on: true,
+                                x: e.clientX,
+                                y: e.clientY
+                            })}
+                            onMouseLeave={() => {
+                                setOnSearchButton({on: false});
+                                destroyTooltip();
                             }}
-                            onMouseLeave={() => destroyTooltip()}
                             onClick={() => {
                                 if(intervalValid) {
                                     onRequestIntervalTFs({
                                         assembly,
-                                        chrStartName,
-                                        chrStartPos,
-                                        chrEndName,
-                                        chrEndPos
+                                        ...positionInfo
                                     });
                                 }
                             }}

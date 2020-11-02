@@ -121,16 +121,17 @@ export default function ViewWrapper(props) {
         }
     });
 
-    useEffect(() => {
-        if(assembly && multivecTrack._xScale) {
-            const domainX = multivecTrack._xScale.invert(mouseHoverX);
-            resolveIntervalCoordinates(assembly, domainX)
-                .then(result => {
-                    setChrName(result[0][0]);
-                    setChrPos(result[0][1].toLocaleString("en"));
-                });
-        }
-    }, [mouseHoverX]);
+    // Let's remove this functionality, which looks to be making the query slow
+    // useEffect(() => {
+    //     if(assembly && multivecTrack._xScale) {
+    //         const domainX = multivecTrack._xScale.invert(mouseHoverX);
+    //         resolveIntervalCoordinates(assembly, domainX)
+    //             .then(result => {
+    //                 setChrName(result[0][0]);
+    //                 setChrPos(result[0][1].toLocaleString("en"));
+    //             });
+    //     }
+    // }, [mouseHoverX]);
 
     // All hooks must be above this return statement, since they need to be executed in the same order.
     if(!viewBoundingBox || !multivecTrack || !multivecTrack.tilesetInfo) {
@@ -226,14 +227,14 @@ export default function ViewWrapper(props) {
                             style={{ left: `${mouseHoverX}px` }}
                         />
                     : null}
-                    {mouseHoverX  ? 
+                    {/* {mouseHoverX  ? 
                         // Text label of chromosome position.
                         <div className="col-tools-hover-line-info" 
                             style={{ top: "1px", left: `${mouseHoverX}px` }}
                         >
                             {`${chrName}: ${chrPos}`}
                         </div>
-                    : null}
+                    : null} */}
                 </div>
             </div>
         </div>
