@@ -14,6 +14,15 @@ import { publishHelpTooltip, destroyTooltip } from "../Tooltip.js";
 
 import './CistromeExplorer.scss';
 
+import StackedBarTrack from 'higlass-multivec/es/StackedBarTrack';
+import higlassRegister from 'higlass-register';
+
+higlassRegister({
+    name: 'StackedBarTrack',
+    track: StackedBarTrack,
+    config: StackedBarTrack.config,
+  });
+
 export default function CistromeExplorer() {
     
     const hmRef = useRef();
