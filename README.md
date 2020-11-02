@@ -1,6 +1,6 @@
-# cistrome-explorer
+# Cistrome Explorer
 
-_wrapper component for [HiGlass](http://higlass.io/), with features for viewing [CistromeDB](http://cistrome.org/db/) data and querying [CistromeDB Toolkit](http://dbtoolkit.cistrome.org/)_
+Interactive visual analytic tool for exploring epigenomics data w/ associated metadata, powered by [HiGlass](http://higlass.io/) and [Cistrome Data Browser Toolkit](http://dbtoolkit.cistrome.org/)
 
 - [Demo](http://cisvis.gehlenborglab.org/)
 - [Documentation](http://cisvis.gehlenborglab.org/docs/)
