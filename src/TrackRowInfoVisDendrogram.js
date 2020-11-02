@@ -34,7 +34,7 @@ import { drawRowHighlightRect } from "./utils/linking.js";
  */
 export default function TrackRowInfoVisDendrogram(props) {
     const {
-        left, top, width, height,
+        left, top, width, height, titleHeight,
         field, type, alt, title, aggFunction, resolveYScale,
         rowInfo,
         transformedRowInfo,
@@ -126,7 +126,7 @@ export default function TrackRowInfoVisDendrogram(props) {
         }
     }
     const treeLayout = d3.cluster()
-        .size([height, visWidth])
+        .size([height - titleHeight, visWidth])
         .separation(() => 1);
     treeLayout(root);
 
@@ -185,7 +185,7 @@ export default function TrackRowInfoVisDendrogram(props) {
             domElement
         });
         
-        drawRowHighlightRect(two, selectedRows, highlitRows, width, height);
+        drawRowHighlightRect(two, selectedRows, highlitRows, titleHeight, width, height - titleHeight);
 
         // Draw the dendrogram.
         const descendants = root.descendants();
@@ -232,10 +232,10 @@ export default function TrackRowInfoVisDendrogram(props) {
             } else {
                 pathFunction = (d) => {
                     return two.makePath(
-                        visWidth - d.parent.y, top + d.parent.x,
-                        visWidth - d.parent.y, top + d.x,
-                        visWidth - d.y, top + d.x,
-                        visWidth - d.parent.y, top + d.x
+                        visWidth - d.parent.y, top + d.parent.x + titleHeight + 30,
+                        visWidth - d.parent.y, top + d.x + titleHeight + 30,
+                        visWidth - d.y, top + d.x + titleHeight + 30,
+                        visWidth - d.parent.y, top + d.x + titleHeight + 30
                     );
                 }
             }
@@ -254,13 +254,13 @@ export default function TrackRowInfoVisDendrogram(props) {
 
         if(cannotAlign) {
             const rect = two.makeRect(0, 0, width, height);
-            rect.fill = "white";
+            rect.fill = "#F6F6F6";
             rect.opacity = 1;
         }
 
-        if(!isShowControlButtons) {
+        // if(!isShowControlButtons) {
             drawVisTitle(field, { two, isLeft, width, height });
-        }
+        // }
 
         const points = descendants.map(pointFromNode);
         const delaunay = d3.delaunay.from(points);
@@ -287,9 +287,9 @@ export default function TrackRowInfoVisDendrogram(props) {
         
         d3.select(domElement)
             .attr("width", visWidth)
-            .attr("height", axisHeight)
+            .attr("height", axisHeight + titleHeight)
             .append("g")
-                .attr("transform", `translate(${-1}, 0)`)
+                .attr("transform", `translate(${-1}, ${titleHeight})`)
                 .call(axis);
         
         d3.select(domElement)
@@ -468,12 +468,12 @@ export default function TrackRowInfoVisDendrogram(props) {
             />
             <TrackRowInfoControl
                 isLeft={isLeft}
+                top={titleHeight}
                 isVisible={isShowControlButtons}
                 field={field}
                 type={type}
                 title={title}
                 aggFunction={aggFunction}
-                searchTop={top}
                 searchLeft={left}
                 onFilterRows={onFilterRows}
                 rowInfo={rowInfo}

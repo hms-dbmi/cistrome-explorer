@@ -198,14 +198,14 @@ export default function ViewWrapper(props) {
                     <span style={{
                         marginLeft: "4px",
                         verticalAlign: "middle",
-                        color: "gray",
+                        color: "black",
                         display: "inline-block",
                         pointerEvents: "none"
                     }}>
                         <svg className={'hm-button-sm'}
-                            style={{ color: "currentColor", verticalAlign: "middle" }}
+                            style={{ color: "gray", verticalAlign: "middle" }}
                             viewBox={ARROW_H.viewBox}>
-                            <path d={ARROW_H.path} fill="currentColor"/>
+                            <path d={ARROW_H.path} fill="black"/>
                         </svg>
                         Genomic Interval Selection
                     </span> 

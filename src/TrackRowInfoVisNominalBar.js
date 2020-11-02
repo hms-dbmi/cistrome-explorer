@@ -40,7 +40,7 @@ export const margin = 5;
  */
 export default function TrackRowInfoVisNominalBar(props) {
     const {
-        left, top, width, height,
+        left, top, width, height, titleHeight,
         field, type, alt, title, aggFunction, resolveYScale,
         isLeft,
         isShowControlButtons,
@@ -68,7 +68,7 @@ export default function TrackRowInfoVisNominalBar(props) {
 
     const yScale = d3.scaleBand()
         .domain(range(transformedRowInfo.length))
-        .range([0, height]);
+        .range([titleHeight, height]);
     const rowHeight = yScale.bandwidth();
 
     const colorScale = useMemo(() => 
@@ -87,7 +87,14 @@ export default function TrackRowInfoVisNominalBar(props) {
             domElement
         });
 
-        drawRowHighlightRect(two, selectedRows, highlitRows, width, height);
+        drawRowHighlightRect(
+            two, 
+            selectedRows, 
+            highlitRows, 
+            titleHeight, 
+            width, 
+            height - titleHeight
+        );
                 
         const textAreaWidth = width - HIGLASSMETA_DEFAULT.TRACK.MIN_WIDTH;
         const showTextLabel = textAreaWidth > 0;
@@ -117,7 +124,7 @@ export default function TrackRowInfoVisNominalBar(props) {
                 return;
             }
 
-            const barTop = aggregateStartIdx !== -1 ? yScale(aggregateStartIdx) : yScale(i);
+            const barTop = (aggregateStartIdx !== -1 ? yScale(aggregateStartIdx) : yScale(i));
             const barHeight = rowHeight * sameCategoriesNearby;
             const barWidth = barAreaWidth;
             const barLeft = (isLeft ? width - barWidth : 0);
@@ -141,9 +148,9 @@ export default function TrackRowInfoVisNominalBar(props) {
             sameCategoriesNearby = 1;
         });
 
-        if(!isShowControlButtons) {
+        // if(!isShowControlButtons) {
             drawVisTitle(title, { two, isLeft, width, height, titleSuffix });
-        }
+        // }
 
         two.update();
         return two.teardown;
@@ -228,6 +235,7 @@ export default function TrackRowInfoVisNominalBar(props) {
         <div
             ref={divRef}
             style={{
+                top: `${top}px`,
                 position: 'relative',
                 width: `${width}px`,
                 height: `${height}px`,
@@ -238,9 +246,9 @@ export default function TrackRowInfoVisNominalBar(props) {
                 onContextMenu={onContextMenu}
                 style={{
                     top: 0,
-                    left: 0, 
+                    left: 0,
                     width: `${width}px`,
-                    height: `${height}px`,
+                    height: `${(height)}px`,
                     position: 'relative'
                 }}
             />
@@ -251,7 +259,7 @@ export default function TrackRowInfoVisNominalBar(props) {
                 type={type}
                 title={title}
                 aggFunction={aggFunction}
-                searchTop={top}
+                top={titleHeight}
                 searchLeft={left}
                 sortAsceButtonHighlit={sortInfo && sortInfo.order === "ascending"}
                 sortDescButtonHighlit={sortInfo && sortInfo.order === "descending"}

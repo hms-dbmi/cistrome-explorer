@@ -41,7 +41,7 @@ export const margin = 5;
  */
 export default function TrackRowInfoVisQuantitativeBar(props) {
     const {
-        left, top, width, height,
+        left, top, width, height, titleHeight,
         field, type, alt, title, aggFunction, resolveYScale,
         isLeft,
         isShowControlButtons,
@@ -79,7 +79,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
     let xScale = d3.scaleLinear();
     const yScale = d3.scaleBand()
         .domain(range(transformedRowInfo.length))
-        .range([0, height]);
+        .range([titleHeight, height]);
     const rowHeight = yScale.bandwidth();
 
     // Array to store information for mouse events, such as unique color.
@@ -108,7 +108,14 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             domElement
         });
 
-        drawRowHighlightRect(two, selectedRows, highlitRows, width, height);
+        drawRowHighlightRect(
+            two, 
+            selectedRows, 
+            highlitRows, 
+            titleHeight, 
+            width, 
+            height - titleHeight
+        );
 
         const isTextLabel = width > minTrackWidth;
 
@@ -213,9 +220,9 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             });
         }
 
-        if(!isShowControlButtons) {
-            drawVisTitle(title, { two, isLeft, width, height, titleSuffix });
-        }
+        // if(!isShowControlButtons) {
+        drawVisTitle(title, { two, isLeft, width, height, titleSuffix });
+        // }
 
         two.update();
         return two.teardown;
@@ -230,9 +237,9 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
         
         d3.select(domElement)
             .attr("width", width)
-            .attr("height", axisHeight)
+            .attr("height", axisHeight + titleHeight)
             .append("g")
-                .attr("transform", `translate(${isLeft ? textAreaWidth - 1 : 1}, 0)`)
+                .attr("transform", `translate(${isLeft ? textAreaWidth - 1 : 1}, ${titleHeight})`)
                 .call(axis);
         
         d3.select(domElement)
@@ -342,7 +349,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                 type={type}
                 title={title}
                 aggFunction={aggFunction}
-                searchTop={top + axisHeight}
+                top={titleHeight}
                 searchLeft={left}
                 sortAsceButtonHighlit={sortInfo && sortInfo.order === "ascending"}
                 sortDescButtonHighlit={sortInfo && sortInfo.order === "descending"}

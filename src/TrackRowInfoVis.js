@@ -18,6 +18,9 @@ const fieldTypeToVisComponent = {
     "band": TrackRowInfoVisBand,
 };
 
+// Height of a track title
+export const TRACK_TITLE_HEIGHT = 30;
+
 /**
  * General component for visualization of a particular row info attribute.
  * @prop {number} left The left position of this view.
@@ -177,9 +180,10 @@ export default function TrackRowInfoVis(props) {
                 fieldTypeToVisComponent[type],
                 {
                     left,
-                    top: 0,
+                    top: top - TRACK_TITLE_HEIGHT,
                     width,
-                    height,
+                    height: height + TRACK_TITLE_HEIGHT,
+                    titleHeight: TRACK_TITLE_HEIGHT,
                     isLeft,
                     isShowControlButtons: isHovering,
                     field,

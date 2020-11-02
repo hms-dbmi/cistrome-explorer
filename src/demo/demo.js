@@ -17,18 +17,18 @@ export const demos = {
             viewId: "cistrome-view-1",
             trackId: "cistrome-track-1",
             rowInfoAttributes: [
-                {field: "Cell Type", type: "nominal", position: "right", width: 140},
+                {field: "Cell Type", type: "nominal", position: "right", width: 150},
                 {field: "Tissue Type", type: "nominal", position: "right", width: 120},
                 {field: "qc_frip", type: "quantitative", position: "right", title: "QC: FRIP"},
                 {field: "qc_fastqc", type: "quantitative", position: "right", title:  "QC: FastQC"},
                 // {field: "Species", type: "nominal", position: "left", width: 120},
                 // {field: "cid", type: "nominal-dynamic",  position: "left", title: "Compare Positive and Negative", domain: ["positive", "negative"], range: ["blue", "red"], width: 30},
                 // {field: "Metadata URL", alt: "cid", type: "url", position: "left", width: 30},
-                {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right", resolveYScale: true, sort: "ascending", width: 120},
+                {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right", width: 200},
             ],
             rowSort: [
-                {field: "Cell Type", type: "nominal", order: "ascending"},
-                {field: "qc_frip", type: "quantitative", order: "descending"}
+                {field: "Hierarchical Clustering (Ward)", type: "tree", order: "ascending"},
+                // {field: "qc_frip", type: "quantitative", order: "descending"}
             ],
             rowFilter: [
                 // {field: "Tissue Type", type: "nominal", notOneOf: ["None"]}

@@ -28,7 +28,7 @@ const BAND_PADDING = 10;
  */
 export default function TrackRowInfoVisBand(props) {
     const {
-        left, top, width, height,
+        left, top, width, height, titleHeight,
         leftSelectedRows,
         rightSelectedRows,
         selectedRows,
@@ -41,11 +41,11 @@ export default function TrackRowInfoVisBand(props) {
 
     const yScaleLeft = d3.scaleBand()
         .domain(leftSelectedRows ?? [])
-        .range([0, height]);
+        .range([titleHeight, height]);
 
     const yScaleRight = d3.scaleBand()
         .domain(rightSelectedRows ?? [])
-        .range([0, height]);
+        .range([titleHeight, height]);
 
     const bandWidth = leftSelectedRows ? height / leftSelectedRows.length : 1;
 
@@ -130,10 +130,10 @@ export default function TrackRowInfoVisBand(props) {
         }
 
         // left and right axes
-        const axisL = two.makeLine(TRACK_PADDING, 0, TRACK_PADDING, height);
+        const axisL = two.makeLine(TRACK_PADDING, titleHeight, TRACK_PADDING, height);
         axisL.stroke = "black";
         axisL.linewidth = 2;
-        const axisR = two.makeLine(width - TRACK_PADDING, 0, width - TRACK_PADDING, height);
+        const axisR = two.makeLine(width - TRACK_PADDING, titleHeight, width - TRACK_PADDING, height);
         axisR.stroke = "black";
         axisR.linewidth = 2;
 
@@ -158,6 +158,7 @@ export default function TrackRowInfoVisBand(props) {
         <div
             ref={divRef}
             style={{
+                top: `${top}px`,
                 position: 'relative',
                 width: `${width}px`,
                 height: `${height}px`,

@@ -27,6 +27,7 @@ export default function TrackRowInfoControl(props){
     const {
         isLeft,
         isVisible, 
+        top,
         field, type, alt, title, aggFunction, resolveYScale,
         sortAsceButtonHighlit,
         sortDescButtonHighlit,
@@ -150,7 +151,7 @@ export default function TrackRowInfoControl(props){
             <div ref={divRef}
                 className={"hm-button-sm-container-vertical " + (helpActivated ? "help-highlight" : '')}
                 style={{
-                    top: "4px",
+                    top: `${top + 4}px`,
                     left: "4px",
                     visibility: (isVisible || helpActivated) ? "visible" : "hidden"
                 }}>

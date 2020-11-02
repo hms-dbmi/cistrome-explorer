@@ -48,7 +48,7 @@ function createTooltipText(domain) {
  */
 export default function TrackRowInfoVisComparison(props) {
     const {
-        left, top, width, height,
+        left, top, width, height, titleHeight,
         field, type, alt, title, aggFunction, resolveYScale,
         domain: nominalDomain, range: nominalRange,
         isLeft,
@@ -124,7 +124,7 @@ export default function TrackRowInfoVisComparison(props) {
             rowRect.opacity = 0.7 + (hoverIndex !== null && i === hoverIndex ? 0.3 : 0);
 
             if(shouldRenderText && isTextLabel) {
-                const text = two.makeText(textLeft, textTop + rowHeight/2, width, rowHeight, rowId);
+                const text = two.makeText(textLeft, 30 + textTop + rowHeight/2, width, rowHeight, rowId);
                 text.fill = "#333";
                 text.fontsize = fontSize;
                 text.align = textAlign;
@@ -132,9 +132,9 @@ export default function TrackRowInfoVisComparison(props) {
                 text.overflow = "ellipsis";
             }
         });
-        if(!isShowControlButtons) {
+        // if(!isShowControlButtons) {
             drawVisTitle(title, { two, isLeft, width, height, titleSuffix });
-        }
+        // }
         
         two.update();
         return two.teardown;
@@ -213,6 +213,7 @@ export default function TrackRowInfoVisComparison(props) {
         <div
             ref={divRef}
             style={{
+                top: `${top}px`,
                 position: 'relative',
                 width: `${width}px`,
                 height: `${height}px`
@@ -231,6 +232,7 @@ export default function TrackRowInfoVisComparison(props) {
             />
             <TrackRowInfoControl
                 isLeft={isLeft}
+                top={titleHeight}
                 isVisible={isShowControlButtons}
                 field={field}
                 type={type}

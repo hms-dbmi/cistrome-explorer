@@ -36,7 +36,7 @@ const margin = 5;
  */
 export default function TrackRowInfoVisLink(props) {
     const {
-        left, top, width, height,
+        left, top, width, height, titleHeight,
         field, type, alt, title, aggFunction, resolveYScale,
         isLeft,
         isShowControlButtons,
@@ -106,11 +106,11 @@ export default function TrackRowInfoVisLink(props) {
             });
         }
         
-        drawRowHighlightRect(two, selectedRows, highlitRows, width, height);
+        drawRowHighlightRect(two, selectedRows, highlitRows, 0, width, height);
 
-        if(!isShowControlButtons) {
+        // if(!isShowControlButtons) {
             drawVisTitle(title, { two, isLeft, width, height, titleSuffix });
-        }
+        // }
         
         two.update();
         return two.teardown;
@@ -179,6 +179,7 @@ export default function TrackRowInfoVisLink(props) {
         <div
             ref={divRef}
             style={{
+                top: `${top}px`,
                 position: 'relative',
                 width: `${width}px`,
                 height: `${height}px`
@@ -197,6 +198,7 @@ export default function TrackRowInfoVisLink(props) {
             />
             <TrackRowInfoControl
                 isLeft={isLeft}
+                top={titleHeight}
                 isVisible={isShowControlButtons}
                 field={field}
                 type={type}

@@ -33,11 +33,24 @@ export function drawVisTitle(text, options) {
     title.baseline = isLeft ? "top" : "bottom";
     title.rotation = titleRotate;
 
-    const titleDims = two.measureText(title);
-    const titleLeft = isLeft ? titleLeftInitial : titleLeftInitial - titleDims.height;
+    let titleDims = two.measureText(title);
+    let titleLeft = isLeft ? titleLeftInitial : titleLeftInitial - titleDims.height;
     title.x = titleLeft;
 
-    if(backgroundColor) {
+    // Experimental, place the title on the top in the horizontal direction.
+    const IS_TITLE_HORIZONTAL = true;
+    if(IS_TITLE_HORIZONTAL) {
+        title.text = text;
+        title.align = "start";
+        title.baseline = "bottom";
+        title.rotation = null;
+        titleDims = two.measureText(title);
+        title.x = 2;
+        title.y = 30 - 6;
+        title.overflow = "ellipsis";
+    }
+
+    if(backgroundColor && !IS_TITLE_HORIZONTAL) {
         const rect = new TwoRectangle(titleLeft - 2, 0, titleDims.height + 6, titleDims.width);
         rect.fill = backgroundColor;
         rect.stroke = null;
