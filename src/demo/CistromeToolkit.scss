@@ -14,7 +14,7 @@
     z-index: 4;
     .cisvis-data-table-header {
         height: 3px;
-        background: #666;
+        background: black;
         cursor: ns-resize;
     }
     .cisvis-data-table-container{
@@ -32,13 +32,6 @@
             display: inline-block;
             color: gray;
             position: relative;
-            .cisvis-progress-ring {
-                display: inline-block;
-                left: auto;
-                margin-left: 2px;
-                margin-right: 6px;
-                top: 4px;
-            }
         }
         .toolkit-btn-add-track,
         .toolkit-btn-add-track-active {
@@ -160,12 +153,18 @@
 .cisvis-progress-ring {
     left: calc(50% - 10px);
     position: relative;
-    border: 3px solid #f3f3f3;
+    border: 3px solid white;
     border-top: 3px solid #2689ff;
     border-radius: 50%;
     width: 20px;
     height: 20px;
     animation: spin 1s linear infinite;
+    
+    display: inline-block;
+    left: auto;
+    margin-left: 2px;
+    margin-right: 6px;
+    top: 4px;
 }
 
 @keyframes spin {
