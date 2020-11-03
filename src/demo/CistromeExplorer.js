@@ -15,13 +15,20 @@ import { publishHelpTooltip, destroyTooltip } from "../Tooltip.js";
 import './CistromeExplorer.scss';
 
 import StackedBarTrack from 'higlass-multivec/es/StackedBarTrack';
+import ScaleLegendTrack from '../scale-legend/ScaleLegendTrack';
 import higlassRegister from 'higlass-register';
 
 higlassRegister({
     name: 'StackedBarTrack',
     track: StackedBarTrack,
     config: StackedBarTrack.config,
-  });
+});
+
+higlassRegister({
+    name: 'ScaleLegendTrack',
+    track: ScaleLegendTrack,
+    config: ScaleLegendTrack.config,
+});
 
 export default function CistromeExplorer() {
     

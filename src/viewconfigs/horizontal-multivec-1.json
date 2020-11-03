@@ -25,6 +25,17 @@
         "tracks": {
           "top": [
             {
+              "type": "scale-legend",
+              "options": {
+                "background": "#F6F6F6",
+                "color": "#333333",
+                "trackStrokeWidth": 0,
+                "lineStyle": "dotted",
+                "text": "Gene annotation (hg38)"
+              },
+              "height": 25
+            },
+            {
               "type": "horizontal-gene-annotations",
               "server": "https://higlass.io/api/v1",
               "tilesetUid": "P0PLbQMwTYGy-5uPIQid7A",
@@ -51,7 +62,6 @@
                 "geneLabelPosition": "outside",
                 "geneStrandSpacing": 4
               },
-              "width": 568,
               "height": 68
             },
             {
@@ -362,6 +372,7 @@
                 "labelShowResolution": false,
                 "backgroundColor": "white",
                 "minHeight": 100,
+                "colorbarBackgroundOpacity": 0,
                 "colorbarPosition": "bottomRight",
                 "zeroValueColor": "dimgray",
                 "selectRowsAggregationWithRelativeHeight": false,
