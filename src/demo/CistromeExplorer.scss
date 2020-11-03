@@ -172,7 +172,14 @@
 }
 
 .help-highlight {
+    // animation: animateBox 3s infinite !important;
     box-shadow: 0 0 0 2px #2299DB, 0 0 12px 0 #2299DB !important;
+}
+
+@keyframes animateBox {
+    50% {
+        box-shadow: 0 0 0 2px #2299DB, 0 0 12px 0 #2299DB;
+    }
 }
 
 .react-resizable-handle {

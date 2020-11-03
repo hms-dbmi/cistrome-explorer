@@ -198,7 +198,6 @@ export default function ViewWrapper(props) {
                     : null}
                     <span style={{
                         marginLeft: "4px",
-                        verticalAlign: "middle",
                         color: "black",
                         display: "inline-block",
                         pointerEvents: "none"
