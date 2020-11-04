@@ -15,6 +15,7 @@ import { publishHelpTooltip, destroyTooltip } from "../Tooltip.js";
 import './CistromeExplorer.scss';
 
 import StackedBarTrack from 'higlass-multivec/es/StackedBarTrack';
+// import BasicMultipleBarChart from 'higlass-multivec/es/BasicMultipleBarChart';
 import ScaleLegendTrack from '../scale-legend/ScaleLegendTrack';
 import higlassRegister from 'higlass-register';
 
@@ -23,6 +24,12 @@ higlassRegister({
     track: StackedBarTrack,
     config: StackedBarTrack.config,
 });
+
+// higlassRegister({
+//     name: 'BasicMultipleBarChart',
+//     track: BasicMultipleBarChart,
+//     config: BasicMultipleBarChart.config,
+// });
 
 higlassRegister({
     name: 'ScaleLegendTrack',
