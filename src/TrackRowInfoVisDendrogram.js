@@ -365,20 +365,18 @@ export default function TrackRowInfoVisDendrogram(props) {
             const mouseViewportX = d3.event.clientX;
             const mouseViewportY = d3.event.clientY;
 
-            PubSub.publish(EVENT.TOOLTIP, {
-                x: mouseViewportX,
-                y: mouseViewportY,
-                content: <TooltipContent 
-                    title={(cannotAlign
-                        ? "Dendrogram is hidden since its leaf ordering does not align with the current row ordering."
-                        : "Right-click to view highlight and filter options.")}
-                />
-            });
-
             if(cannotAlign) {
                 setHighlightNodeX(null);
                 setHighlightNodeY(null);
             } else {
+                PubSub.publish(EVENT.TOOLTIP, {
+                    x: mouseViewportX,
+                    y: mouseViewportY,
+                    content: <TooltipContent 
+                        title={"Right-click to view highlight and filter options."}
+                    />
+                });
+
                 // The dendrogram is visible, so show a tooltip with information about right-clicking.
                 if(showMinSimBar) {
                     // Do not want to select nearest branch when min similarity bar shown.
@@ -466,40 +464,54 @@ export default function TrackRowInfoVisDendrogram(props) {
                     height: `${height}px`
                 }}
             />
-            <TrackRowInfoControl
-                isLeft={isLeft}
-                top={titleHeight}
-                isVisible={isShowControlButtons}
-                field={field}
-                type={type}
-                title={title}
-                aggFunction={aggFunction}
-                searchLeft={left}
-                onFilterRows={onFilterRows}
-                rowInfo={rowInfo}
-                transformedRowInfo={transformedRowInfo}
-                filterButtonHighlit={showMinSimBar}
-                toggleMinSimBar={maxDistance && !cannotAlign ? () => {
-                    // Show the minimum similarity bar only when similarity distance is available.
-                    setMinSimBarLeft(initialMinSimBarLeft);
-                    minSimilarity.current = undefined;
-                    setShowMinSimBar(!showMinSimBar);
-                } : undefined}
-                helpActivated={helpActivated}
-            />
+            {cannotAlign ? null : 
+                <TrackRowInfoControl
+                    isLeft={isLeft}
+                    top={titleHeight}
+                    isVisible={isShowControlButtons}
+                    field={field}
+                    type={type}
+                    title={title}
+                    aggFunction={aggFunction}
+                    searchLeft={left}
+                    onFilterRows={onFilterRows}
+                    rowInfo={rowInfo}
+                    transformedRowInfo={transformedRowInfo}
+                    filterButtonHighlit={showMinSimBar}
+                    toggleMinSimBar={maxDistance && !cannotAlign ? () => {
+                        // Show the minimum similarity bar only when similarity distance is available.
+                        setMinSimBarLeft(initialMinSimBarLeft);
+                        minSimilarity.current = undefined;
+                        setShowMinSimBar(!showMinSimBar);
+                    } : undefined}
+                    helpActivated={helpActivated}
+                />}
             {cannotAlign ? (
-                <div onClick={() => onSortRows(field, type, "ascending")}
-                    style={{
-                        position: "absolute",
-                        top: `${height / 2.0 - 17}px`,
-                        left: `${width / 2.0 - 17}px`,
-                        color: "lightgray"
-                    }}>
-                    <svg className={"hm-button-lg"}
-                        viewBox={SORT_TREE.viewBox}>
-                        <title>{"Sort rows by hierarchy leaf order"}</title>
-                        <path d={SORT_TREE.path} fill="currentColor"/>
-                    </svg>
+                <div style={{
+                    position: "absolute",
+                    top: `${30}px`,
+                    left: '0px',
+                    width: "100%",
+                    border: '1px dotted gray',
+                    height: "calc(100% - 30px)",
+                    padding: "10px",
+                    color: "gray",
+                    fontWeight: "bold"
+                }}>
+                    Dendrogram is hidden since its leaf ordering does not align with the current row ordering.
+                    <div onClick={() => onSortRows(field, type, "ascending")}
+                        style={{
+                            position: "absolute",
+                            top: `${height / 2.0 - 17}px`,
+                            left: `${width / 2.0 - 17}px`,
+                            color: "lightgray"
+                        }}>
+                        <svg className={"hm-button-lg"}
+                            viewBox={SORT_TREE.viewBox}>
+                            <title>{"Sort rows by hierarchy leaf order"}</title>
+                            <path d={SORT_TREE.path} fill="currentColor"/>
+                        </svg>
+                    </div>
                 </div>
             ) : null}
             {(isShowControlButtons && highlightNodeX && highlightNodeY) ? (
