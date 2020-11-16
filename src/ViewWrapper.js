@@ -147,7 +147,7 @@ export default function ViewWrapper(props) {
             <div 
                 style={{
                     position: "absolute",
-                    top: `${top}px`,
+                    top: `${0}px`,
                     left: `${left}px`,
                     width: `${width}px`, 
                     height: `${height}px`,
@@ -162,7 +162,7 @@ export default function ViewWrapper(props) {
                     )}
                     onMouseLeave={() => destroyTooltip()}
                     style={{
-                        top: `${brushBarTop}px`,
+                        top: `${-brushBarHeight - 8}px`,
                         height: `${brushBarHeight}px`,
                     }}
                 >
