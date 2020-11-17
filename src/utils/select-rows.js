@@ -217,7 +217,7 @@ export function highlightRowsFromSearch(rowInfo, field, type, conditions, option
         newHighlitRows = conditions;
     } else if(type === "nominal") {
         const filteredRows = aggregatedRowInfo.filter(
-            d => getAggregatedValue(d[1], field, 'nominal', aggFuncName).toString().toUpperCase().includes(conditions.toUpperCase())
+            d => getAggregatedValue(d[1], field, 'nominal', aggFuncName).toString().toUpperCase().includes(conditions.toString().toUpperCase())
         );
         newHighlitRows = filteredRows.map(d => d[0]);
     } else if(type === "quantitative") {

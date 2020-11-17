@@ -55,6 +55,9 @@ const hgOptionsBase = {
     viewPaddingRight: 0,
 };
 
+// If this string tag is contained in the track id, ignore showing metadata visualization.
+export const NO_METAVIS_TAG_TRACKID = '-no-metavis-';
+
 /**
  * HiGlassMeta passes its props through, and wraps this component with the context provider.
  * @prop {object} viewConfig A HiGlass viewConfig object.
@@ -154,7 +157,8 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
      * to sibling `viewport-projection-horizontal` track IDs.
      */
     const onViewConfig = useCallback((newViewConfig) => {
-        const newTrackIds = getHMTrackIdsFromViewConfig(newViewConfig);
+        const newTrackIds = getHMTrackIdsFromViewConfig(newViewConfig)
+            .filter(({trackId}) => !trackId.includes(NO_METAVIS_TAG_TRACKID));
         
         // Add viewport projection horizontal track IDs for each view.
         const newViewportTrackIds = {};
@@ -445,7 +449,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
     }, [options]);
     
     // Callback function for adding a track.
-    const onAddTrack = useCallback((viewId, trackId, field, type, notOneOf, position) => {
+    const onAddTrack = useCallback((viewId, trackId, field, type, notOneOf, position, selected = '') => {
         if(viewId === DEFAULT_OPTIONS_KEY || trackId === DEFAULT_OPTIONS_KEY) {
             console.log("A view or track ID is a default ID.");
             return;
@@ -455,7 +459,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         const newTrackId = getUniqueViewOrTrackId(currViewConfig, { 
             baseId: trackId, 
             idKey: "trackId", 
-            interfix: "detail-view"
+            interfix: NO_METAVIS_TAG_TRACKID
         });
         
         // Add options for the new track.
@@ -473,11 +477,14 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         let newTrackDef = getTrackDefFromViewConfig(currViewConfig, viewId, trackId);
         newTrackDef = {
             ...newTrackDef,
-            height: 200,
+            height: 30,
             uid: newTrackId,
+            // type: 'horizontal-stacked-bar',
             options: {
                 ...newTrackDef.options,
-                selectRows: newSelectedRows
+                name: selected,
+                selectRows: newSelectedRows,
+                // barBorder: false,
             }
         }
         addNewTrack(newTrackDef, viewId, position);
@@ -556,36 +563,36 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         <div className="hm-root">
             {hgComponent}
             {multivecTrackIds.map(({ viewId, trackId, trackTilesetId }, i) => (
-                <TrackWrapper
-                    key={i}
-                    isWheelListening={isWheelListening}
-                    options={getTrackWrapperOptions(options, viewId, trackId)}
-                    baseRowInfo={baseRowInfo}
-                    multivecTrack={getTrackObject(viewId, trackId)}
-                    multivecTrackViewId={viewId}
-                    multivecTrackTrackId={trackId}
-                    multivecTrackTilesetId={trackTilesetId}
-                    onAddTrack={(field, type, notOneOf, position) => {
-                        onAddTrack(viewId, trackId, field, type, notOneOf, position);
-                    }}
-                    onSortRows={(field, type, order, isTrackIndependent) => {
-                        onSortRows(viewId, trackId, field, type, order, isTrackIndependent);
-                    }}
-                    onHighlightRows={(field, type, condition) => {
-                        onHighlightRows(viewId, trackId, field, type, condition);
-                    }}
-                    onFilterRows={(field, type, condition, isRemove) => {
-                        onFilterRows(viewId, trackId, field, type, condition, isRemove);
-                    }}
-                    onZoomRows={(y, deltaY, deltaMode) => {
-                        onZoomRows(viewId, trackId, y, deltaY, deltaMode);
-                    }}
-                    onMetadataInit={() => {
-                        setMetadataToContext(viewId, trackId);
-                    }}
-                    helpActivated={helpActivated}
-                    drawRegister={drawRegister}
-                />
+                    <TrackWrapper
+                        key={i}
+                        isWheelListening={isWheelListening}
+                        options={getTrackWrapperOptions(options, viewId, trackId)}
+                        baseRowInfo={baseRowInfo}
+                        multivecTrack={getTrackObject(viewId, trackId)}
+                        multivecTrackViewId={viewId}
+                        multivecTrackTrackId={trackId}
+                        multivecTrackTilesetId={trackTilesetId}
+                        onAddTrack={(field, type, notOneOf, position, selected) => {
+                            onAddTrack(viewId, trackId, field, type, notOneOf, position, selected);
+                        }}
+                        onSortRows={(field, type, order, isTrackIndependent) => {
+                            onSortRows(viewId, trackId, field, type, order, isTrackIndependent);
+                        }}
+                        onHighlightRows={(field, type, condition) => {
+                            onHighlightRows(viewId, trackId, field, type, condition);
+                        }}
+                        onFilterRows={(field, type, condition, isRemove) => {
+                            onFilterRows(viewId, trackId, field, type, condition, isRemove);
+                        }}
+                        onZoomRows={(y, deltaY, deltaMode) => {
+                            onZoomRows(viewId, trackId, y, deltaY, deltaMode);
+                        }}
+                        onMetadataInit={() => {
+                            setMetadataToContext(viewId, trackId);
+                        }}
+                        helpActivated={helpActivated}
+                        drawRegister={drawRegister}
+                    />
             ))}
             {Array.from(new Set(multivecTrackIds.map(d => d.viewId))).map((viewId, i) => (
                 <ViewWrapper

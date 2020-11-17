@@ -34,10 +34,10 @@ const margin = 5;
  * @prop {function} onFilterRows The function to call upon a filter interaction.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
-export default function TrackRowInfoVisLink(props) {
+export default function TrackRowInfoVisClick(props) {
     const {
         left, top, width, height, titleHeight,
-        field, type, alt, title, aggFunction, resolveYScale, shortName = 'Link', addTrackOnClick,
+        field, type, alt, title, aggFunction, resolveYScale, addTrackOnClick,
         isLeft,
         isShowControlButtons,
         rowInfo,
@@ -51,7 +51,6 @@ export default function TrackRowInfoVisLink(props) {
         onSortRows,
         onHighlightRows,
         onFilterRows,
-        helpActivated,
         drawRegister,
     } = props;
 
@@ -70,7 +69,7 @@ export default function TrackRowInfoVisLink(props) {
     // Scales
     const yScale = d3.scaleBand()
         .domain(range(transformedRowInfo.length))
-        .range([titleHeight, height]);
+        .range([0, height]);
     const rowHeight = yScale.bandwidth();
 
     const draw = useCallback((domElement) => {
@@ -87,7 +86,7 @@ export default function TrackRowInfoVisLink(props) {
             transformedRowInfo.forEach((info, i) => {
                 const textTop = yScale(i);
                 const textLeft = isLeft ? width - margin : margin;
-                const diplayText = isTextLabel ? aggValue(info, alt ? alt : field) : shortName;
+                const diplayText = isTextLabel ? aggValue(info, alt ? alt : field) : "Link";
                 const text = two.makeText(textLeft, textTop + rowHeight/2, width, rowHeight, diplayText);
                 text.fill = "#23527C";
                 text.fontsize = fontSize;
@@ -107,14 +106,7 @@ export default function TrackRowInfoVisLink(props) {
             });
         }
         
-        drawRowHighlightRect(
-            two, 
-            selectedRows, 
-            highlitRows, 
-            titleHeight, 
-            width, 
-            height - titleHeight
-        );
+        drawRowHighlightRect(two, selectedRows, highlitRows, 0, width, height);
 
         // if(!isShowControlButtons) {
             drawVisTitle(title, { two, isLeft, width, height, titleSuffix });
@@ -164,18 +156,13 @@ export default function TrackRowInfoVisLink(props) {
         d3.select(canvas).on("click", () => {
             const [mouseX, mouseY] = d3.mouse(canvas);
 
-            const y = yScale.invert(mouseY);
-            const hoverValue = aggValue(transformedRowInfo[y], field);
-
-            if(y !== undefined) {
-                if(addTrackOnClick) {
-                    const notOneOf = transformedRowInfo.map(d => aggValue(d, field));
-                    notOneOf.splice(notOneOf.indexOf(hoverValue), 1);
-                    onAddTrack(field, "nominal", notOneOf, "top", hoverValue)
-                    console.log()
-                }
-                else {
-                    window.open(hoverValue);
+            if(addTrackOnClick) {
+                onAddTrack(field, "nominal", notOneOf, "top")
+            }
+            else {
+                const y = yScale.invert(mouseY);
+                if(y !== undefined) {
+                    window.open(transformedRowInfo[y][field]);
                 }
             }
         });
@@ -231,7 +218,6 @@ export default function TrackRowInfoVisLink(props) {
                 filterInfo={filterInfo}
                 rowInfo={rowInfo}
                 transformedRowInfo={transformedRowInfo}
-                helpActivated={helpActivated}
             />
         </div>
     );

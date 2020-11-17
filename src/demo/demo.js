@@ -19,12 +19,13 @@ export const demos = {
             rowInfoAttributes: [
                 {field: "Cell Type", type: "nominal", position: "right", width: 150},
                 {field: "Tissue Type", type: "nominal", position: "right", width: 120},
-                {field: "qc_frip", type: "quantitative", position: "right", title: "QC: FRIP"},
-                {field: "qc_fastqc", type: "quantitative", position: "right", title:  "QC: FastQC"},
+                {field: "qc_frip", type: "quantitative", position: "right", title: "QC: FRIP", width: 80},
+                {field: "qc_fastqc", type: "quantitative", position: "right", title:  "QC: FastQC", width: 80},
                 {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right", width: 200},
                 // {field: "Species", type: "nominal", position: "left", width: 120},
                 // {field: "cid", type: "nominal-dynamic",  position: "left", title: "Compare Positive and Negative", domain: ["positive", "negative"], range: ["blue", "red"], width: 30},
-                // {field: "Metadata URL", alt: "cid", type: "url", position: "right", width: 30},
+                {field: "ID", type: "url", shortName: "➕", position: "right", title: "Add Track (GID)", width: 30, addTrackOnClick: true},
+                // {field: "Metadata URL", alt: "cid", type: "url", position: "right", width: 70},
             ],
             rowAggregate: [
                 // {field: "Cell Type", type: "nominal", notOneOf: []},

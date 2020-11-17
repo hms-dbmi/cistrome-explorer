@@ -46,7 +46,7 @@ export default function TrackRowInfoControl(props){
     const [filterTop, setFilterTop] = useState(null);
     const [FilterLeft, setFilterLeft] = useState(null);
 
-    const controlField = (type === "url" && title ? title : field);
+    const controlField = (type === "url" && alt ? alt : field);
     const controlType = (type === "url" ? "nominal" : type);
 
     // Subscribe to the filter open events of other TrackRowInfoControl components,

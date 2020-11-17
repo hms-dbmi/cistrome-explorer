@@ -92,7 +92,7 @@ export default function Tooltip() {
             style={{
                 display: ((left !== null && top !== null) ? 'inline-block' : 'none'),
                 top: `${Math.min(document.body.scrollHeight - 100, top)}px`,
-                left: `${left}px`,
+                left: `${Math.min(document.body.scrollWidth - 200, left)}px`,
             }}
         >
             {content}
