@@ -18,6 +18,7 @@ import StackedBarTrack from 'higlass-multivec/es/StackedBarTrack';
 // import BasicMultipleBarChart from 'higlass-multivec/es/BasicMultipleBarChart';
 import ScaleLegendTrack from '../scale-legend/ScaleLegendTrack';
 import higlassRegister from 'higlass-register';
+import { modifyItemInArray } from '../utils/array';
 
 higlassRegister({
     name: 'StackedBarTrack',
@@ -60,8 +61,9 @@ export default function CistromeExplorer() {
     const [undoable, setUndoable] = useState(false);
     const [redoable, setRedoable] = useState(false);
 
-    // help
+    // toggle
     const [helpActivated, setHelpActivated] = useState(false);
+    const [aggActivated, setAggActivated] = useState(false);
 
     // History of view updates
     const MAX_HISTORY_LENGTH = 50;  // How many previous views should be recorded?
@@ -170,6 +172,18 @@ export default function CistromeExplorer() {
         setViewHistory(newViewHistory);
         setIndexOfCurrentView(0);
     }
+
+    // const aggregatedOptions = !aggActivated ? demos[selectedDemo].options : (
+    //     Array.isArray(demos[selectedDemo].options)
+    //     ? modifyItemInArray(demos[selectedDemo].options, 0, {
+    //         ...demos[selectedDemo].options[0],
+    //         rowAggregate: [ {field: "Tissue Type", type: "nominal", notOneOf: []} ]
+    //     })
+    //     : {
+    //         ...demos[selectedDemo].options,
+    //         rowAggregate: [ {field: "Tissue Type", type: "nominal", notOneOf: []} ],
+    //     }
+    // )
 
     return (
         <div className="cistrome-explorer">
@@ -285,6 +299,26 @@ export default function CistromeExplorer() {
                             {` Show Instructions`}
                         </span>
                     </span>
+                    <span className="header-control"
+                        onMouseMove={(e) => publishHelpTooltip(e,
+                            "Aggregate Samples By Tissue Type",
+                            "You can aggregate samples with the same tissue type into a single row in the visualization",
+                            helpActivated
+                        )}
+                        onMouseLeave={() => destroyTooltip()}
+                    >
+                        <span 
+                            className={"ce-generic-button-lg " + (aggActivated ? 'ce-generic-button-activated ' : '') + (helpActivated ? 'help-highlight' : '')}
+                            onClick={() => { setAggActivated(!aggActivated); }}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                viewBox={aggActivated ? TOGGLE_ON.viewBox : TOGGLE_OFF.viewBox}>
+                                <title>Aggregate Rows By Tissue Type</title>
+                                <path fill="currentColor" d={aggActivated ? TOGGLE_ON.path : TOGGLE_OFF.path}/>
+                            </svg>
+                            {` Aggregate By Tissue`}
+                        </span>
+                    </span>
                     <span className="header-info">
                         {geneSearched ? 
                             <span 
@@ -323,6 +357,7 @@ export default function CistromeExplorer() {
                         viewConfig={demos[selectedDemo].viewConfig}
                         options={demos[selectedDemo].options}
                         rowInfo={localMetadata}
+                        aggregateRowBy={aggActivated ? "Tissue Type" : undefined}
                         helpActivated={helpActivated}
                         onViewChanged={onViewChanged}
                         onGenomicIntervalSearch={setToolkitParams}

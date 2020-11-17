@@ -69,6 +69,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         options: baseOptions,
         rowInfo: baseRowInfo,
         helpActivated,
+        aggregateRowBy,
         onViewChanged: onViewChangedCallback,
         onGenomicIntervalSearch: onGenomicIntervalSearchCallback,
         onGeneSearch: onGeneSearchCallBack
@@ -332,6 +333,18 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         const newOptions = updateWrapperOptions(options, newRowHighlight, "rowHighlight", viewId, trackId, { isReplace: true });
         setOptions(newOptions);
     }, [options]);
+
+    // Aggregating rows
+    useEffect(() => {
+        if(!multivecTrackIds || multivecTrackIds.length === 0) {
+            // do not have enough information
+            return;
+        }
+        const { viewId, trackId } = multivecTrackIds[0];
+        const newRowAggregate = aggregateRowBy ? [{ field: aggregateRowBy, type: 'nominal', notOneOf: [] }] : [];
+        const newOptions = updateWrapperOptions(options, newRowAggregate, "rowAggregate", viewId, trackId, { isReplace: true });
+        setOptions(newOptions);
+    }, [aggregateRowBy]);
 
     // Callback function for filtering.
     const onFilterRows = useCallback((viewId, trackId, field, type, condition, isRemove) => {
