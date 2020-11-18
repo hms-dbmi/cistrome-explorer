@@ -56,6 +56,7 @@ export default function TrackRowInfo(props) {
         onHighlightRows,
         onFilterRows,
         helpActivated,
+        rowAggregated,
         drawRegister
     } = props;
 
@@ -197,6 +198,7 @@ export default function TrackRowInfo(props) {
                     onHighlightRows={onHighlightRows}
                     onFilterRows={onFilterRows}
                     helpActivated={helpActivated}
+                    rowAggregated={rowAggregated}
                     drawRegister={(key, draw, options) => {
                         drawRegister(`${key}-${i}`, draw, { top: top + d.top, left: left + d.left, width: d.width, height: d.height })
                     }}

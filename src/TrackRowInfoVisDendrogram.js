@@ -48,6 +48,7 @@ export default function TrackRowInfoVisDendrogram(props) {
         onHighlightRows,
         onFilterRows,
         helpActivated,
+        rowAggregated,
         drawRegister,
     } = props;
     
@@ -496,22 +497,34 @@ export default function TrackRowInfoVisDendrogram(props) {
                     height: "calc(100% - 30px)",
                     padding: "10px",
                     color: "gray",
-                    fontWeight: "bold"
+                    fontWeight: "bold",
+                    overflow: 'auto'
                 }}>
-                    Dendrogram is hidden since its leaf ordering does not align with the current row ordering.
-                    <div onClick={() => onSortRows(field, type, "ascending")}
-                        style={{
-                            position: "absolute",
-                            top: `${height / 2.0 - 17}px`,
-                            left: `${width / 2.0 - 17}px`,
-                            color: "lightgray"
-                        }}>
-                        <svg className={"hm-button-lg"}
-                            viewBox={SORT_TREE.viewBox}>
-                            <title>{"Sort rows by hierarchy leaf order"}</title>
-                            <path d={SORT_TREE.path} fill="currentColor"/>
-                        </svg>
-                    </div>
+                    Dendrogram is hidden since the ordering leaf nodes does not align with the current row ordering.
+                    <br/>
+                    <br/> 
+                    💡
+                    <span style={{fontStyle: 'italic', fontWeight: 'normal'}}>
+                        {rowAggregated ? 
+                            <>To see the dendrogram, you need to first deactivate <span style={{color: '#2299DB'}}>Aggregate By Tissue</span>.</> : 
+                            <>You need to click on the button below to see the dendrogram.</>
+                        }
+                    </span>
+                    
+                    {!rowAggregated ?
+                        <div onClick={() => onSortRows(field, type, "ascending")}
+                            style={{
+                                position: "absolute",
+                                top: `${height / 2.0 - 17}px`,
+                                left: `${width / 2.0 - 17}px`,
+                                color: "lightgray"
+                            }}>
+                            <svg className={"hm-button-lg"}
+                                viewBox={SORT_TREE.viewBox}>
+                                <title>{"Sort rows by hierarchy leaf order"}</title>
+                                <path d={SORT_TREE.path} fill="currentColor"/>
+                            </svg>
+                        </div> : null}
                 </div>
             ) : null}
             {(isShowControlButtons && highlightNodeX && highlightNodeY) ? (

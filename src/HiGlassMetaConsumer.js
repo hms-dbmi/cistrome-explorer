@@ -591,6 +591,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                             setMetadataToContext(viewId, trackId);
                         }}
                         helpActivated={helpActivated}
+                        rowAggregated={aggregateRowBy !== undefined}
                         drawRegister={drawRegister}
                     />
             ))}

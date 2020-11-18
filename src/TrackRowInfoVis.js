@@ -65,6 +65,7 @@ export default function TrackRowInfoVis(props) {
         onFilterRows,
         drawRegister,
         helpActivated,
+        rowAggregated,
         onWidthChanged
     } = props;
 
@@ -208,6 +209,7 @@ export default function TrackRowInfoVis(props) {
                     onHighlightRows,
                     onFilterRows,
                     helpActivated,
+                    rowAggregated,
                     drawRegister,
                     ...(type === "nominal-dynamic" ? {
                         domain,

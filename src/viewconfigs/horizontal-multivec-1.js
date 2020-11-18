@@ -1,4 +1,4 @@
-{
+export const hgDemoViewConfig1 ={
     "editable": false,
     "zoomFixed": false,
     "trackSourceServers": [
@@ -62,7 +62,7 @@
                 "geneLabelPosition": "outside",
                 "geneStrandSpacing": 4
               },
-              "height": 68
+              "height": 78
             },
             {
               "type": "horizontal-stacked-bar",
@@ -326,7 +326,7 @@
               "width": 1607,
               "height": 31
             }
-          ],
+          ].slice(0, 2),
           "bottom": [
             {
               "type": "horizontal-chromosome-labels",

@@ -1,4 +1,4 @@
-import hgDemoViewConfig1 from '../viewconfigs/horizontal-multivec-1.json';
+import { hgDemoViewConfig1} from '../viewconfigs/horizontal-multivec-1';
 import hgDemoViewConfig1b from '../viewconfigs/horizontal-multivec-1b.json';
 import hgDemoViewConfig2 from '../viewconfigs/horizontal-multivec-2.json';
 import hgDemoViewConfig2b from '../viewconfigs/horizontal-multivec-2b.json';
