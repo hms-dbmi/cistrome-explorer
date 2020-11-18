@@ -500,14 +500,14 @@ export default function TrackRowInfoVisDendrogram(props) {
                     fontWeight: "bold",
                     overflow: 'auto'
                 }}>
-                    Dendrogram is hidden since the ordering leaf nodes does not align with the current row ordering.
+                    Dendrogram is hidden since the ordering of leaf nodes does not align with the current row ordering.
                     <br/>
                     <br/> 
                     💡
                     <span style={{fontStyle: 'italic', fontWeight: 'normal'}}>
                         {rowAggregated ? 
                             <>To see the dendrogram, you need to first deactivate <span style={{color: '#2299DB'}}>Aggregate By Tissue</span>.</> : 
-                            <>You need to click on the button below to see the dendrogram.</>
+                            <>Click on the Sort button below to see the dendrogram.</>
                         }
                     </span>
                     
