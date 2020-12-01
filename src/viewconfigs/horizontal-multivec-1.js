@@ -65,6 +65,24 @@ export const hgDemoViewConfig1 ={
               "height": 78
             },
             {
+              "type": "horizontal-chromosome-labels",
+              "server": "https://higlass.io/api/v1",
+              "tilesetUid": "NyITQvZsS_mOFNlz5C2LJg",
+              "uid": "chromosome-labels-track-1",
+              "options": {
+                "showMousePosition": true,
+                "mousePositionColor": "#000000",
+                "trackBorderWidth": 0,
+                "trackBorderColor": "black",
+                "color": "black",
+                "stroke": "#F6F6F6",
+                "fontSize": 14,
+                "fontIsLeftAligned": false,
+                "reverseOrientation": false
+              },
+              "height": 30
+            },
+            {
               "type": "horizontal-stacked-bar",
               "uid": "cistrome-track-1-aggregated",
               "tilesetUid": "UvVPeLHuRDiYA3qwFlm7xQ",
@@ -326,28 +344,8 @@ export const hgDemoViewConfig1 ={
               "width": 1607,
               "height": 31
             }
-          ].slice(0, 2),
-          "bottom": [
-            {
-              "type": "horizontal-chromosome-labels",
-              "server": "https://higlass.io/api/v1",
-              "tilesetUid": "NyITQvZsS_mOFNlz5C2LJg",
-              "uid": "chromosome-labels-track-1",
-              "options": {
-                "showMousePosition": true,
-                "mousePositionColor": "#000000",
-                "trackBorderWidth": 0,
-                "trackBorderColor": "black",
-                "color": "black",
-                "stroke": "#F6F6F6",
-                "fontSize": 14,
-                "fontIsLeftAligned": false,
-                "reverseOrientation": true
-              },
-              "width": 1027,
-              "height": 30
-            }
-          ],
+          ].slice(0, 3),
+          "bottom": [],
           "left": [],
           "center": [
             {
