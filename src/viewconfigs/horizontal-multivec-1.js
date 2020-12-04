@@ -344,7 +344,7 @@ export const hgDemoViewConfig1 ={
               "width": 1607,
               "height": 31
             }
-          ].slice(0, 3),
+          ],//.slice(0, 3),
           "bottom": [],
           "left": [],
           "center": [

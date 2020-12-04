@@ -479,12 +479,12 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
             ...newTrackDef,
             height: 30,
             uid: newTrackId,
-            // type: 'horizontal-stacked-bar',
+            type: 'horizontal-stacked-bar',
             options: {
                 ...newTrackDef.options,
                 name: selected,
                 selectRows: newSelectedRows,
-                // barBorder: false,
+                barBorder: false,
             }
         }
         addNewTrack(newTrackDef, viewId, position);
