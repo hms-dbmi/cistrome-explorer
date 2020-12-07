@@ -41,6 +41,7 @@ import './HiGlassMetaConsumer.scss';
 import cloneDeep from 'lodash/cloneDeep';
 import { removeItemFromArray, modifyItemInArray, insertItemToArray } from './utils/array.js';
 import { CLOSE } from './utils/icons.js';
+import { HG38_START_POSITIONS } from './utils/chromsizes.js';
 
 const hgOptionsBase = {
     sizeMode: 'bounded', // Stretch the height of HiGlass to its container <div/>
@@ -251,6 +252,23 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                 onRemoveAllFilters: () => removeAllFilters(),
                 onRemoveAllSort: () => removeAllSort(),
                 addNewTrack: (trackDef, viewId, position) => addNewTrack(trackDef, viewId, position),
+                zoomTo: (keyword) => {
+                    if(!keyword.includes('chr') || !keyword.includes('-')) {
+                        console.warn('Genomic interval you entered is not in a correct format.');
+                        return;
+                    }
+                    const chrStart = HG38_START_POSITIONS.find(d => d.chr === keyword.split(':')[0])?.position;
+                    if(typeof chrStart === undefined) {
+                        console.warn('Chromosome name is not valid', keyword.split(':')[0]);
+                        return;
+                    }
+                    const [s, e] = keyword.split(':')[1].split('-');
+                    const start = +s + chrStart;
+                    const end = +e + chrStart;
+                    Array.from(new Set(multivecTrackIds.map(d => d.viewId))).map((viewId) => {
+                        hgRef.current.api.zoomTo(viewId, start, end, start, end, 1000);
+                    });
+                },
                 zoomToGene: (gene) => {
                     Array.from(new Set(multivecTrackIds.map(d => d.viewId))).map((viewId) => {
                         hgRef.current.api.zoomToGene(viewId, gene, 1000);

@@ -213,10 +213,10 @@ export default function CistromeExplorer() {
                                 className={"position-search-box " + (helpActivated ? 'help-highlight' : '')}
                                 type="text"
                                 name="default name"
-                                placeholder="GAPDH" // or chr6:151690496-152103274"
+                                placeholder="GAPDH or chr6:151690496-152103274"
                                 onChange={(e) => {
                                     const keyword = e.target.value;
-                                    if(keyword !== '') {
+                                    if(keyword !== '' && !keyword.startsWith('c')) {
                                         hmRef.current.api.suggestGene(keyword, (suggestions) => {
                                             setGeneSuggestions(suggestions);
                                         });
@@ -237,7 +237,11 @@ export default function CistromeExplorer() {
                                             break;
                                         case 'Enter':
                                             setGeneSuggestions([]);
-                                            hmRef.current.api.zoomToGene(searchKeyword);
+                                            if(searchKeyword.includes('chr')) {
+                                                hmRef.current.api.zoomTo(searchKeyword);
+                                            } else {
+                                                hmRef.current.api.zoomToGene(searchKeyword);
+                                            }
                                             break;
                                         case 'Esc':
                                         case 'Escape':
@@ -375,6 +379,7 @@ export default function CistromeExplorer() {
                             <ul>
                                 {geneSuggestions.map((d, i) => (
                                     <li style={{textAlign: 'right', color: 'gray'}}
+                                        key={d.geneName + d.score}
                                         onClick={() => {
                                             searchBoxRef.current.value = d.geneName;
                                             setGeneSuggestions([]);
