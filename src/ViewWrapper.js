@@ -207,7 +207,7 @@ export default function ViewWrapper(props) {
                             viewBox={ARROW_H.viewBox}>
                             <path d={ARROW_H.path} fill="black"/>
                         </svg>
-                        Genomic Interval Selection
+                        Genomic Interval Selection (Click and Drag)
                     </span> 
                 </div>
                 <div className="col-tools-hg-overlay">

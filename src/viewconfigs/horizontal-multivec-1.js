@@ -16,8 +16,10 @@ export const hgDemoViewConfig1 ={
           1519273483.6875255
         ],
         "genomePositionSearchBoxVisible": true,
+        "chromInfoPath": '//aveit.s3.amazonaws.com/higlass/data/sequence/hg38.mod.chrom.sizes',
         "genomePositionSearchBox": {
           "autocompleteServer": "https://higlass.io/api/v1",
+          "autocompleteId": 'P0PLbQMwTYGy-5uPIQid7A',
           "chromInfoServer": "https://higlass.io/api/v1",
           "visible": true,
           "chromInfoId": "hg38"
@@ -34,6 +36,24 @@ export const hgDemoViewConfig1 ={
                 "text": "Gene annotation (hg38)"
               },
               "height": 25
+            },
+            {
+              "type": "horizontal-chromosome-labels",
+              "server": "https://higlass.io/api/v1",
+              "tilesetUid": "NyITQvZsS_mOFNlz5C2LJg",
+              "uid": "chromosome-labels-track-1",
+              "options": {
+                "showMousePosition": true,
+                "mousePositionColor": "#000000",
+                "trackBorderWidth": 0,
+                "trackBorderColor": "black",
+                "color": "black",
+                "stroke": "#F6F6F6",
+                "fontSize": 14,
+                "fontIsLeftAligned": false,
+                "reverseOrientation": false
+              },
+              "height": 30
             },
             {
               "type": "horizontal-gene-annotations",
@@ -63,24 +83,6 @@ export const hgDemoViewConfig1 ={
                 "geneStrandSpacing": 4
               },
               "height": 78
-            },
-            {
-              "type": "horizontal-chromosome-labels",
-              "server": "https://higlass.io/api/v1",
-              "tilesetUid": "NyITQvZsS_mOFNlz5C2LJg",
-              "uid": "chromosome-labels-track-1",
-              "options": {
-                "showMousePosition": true,
-                "mousePositionColor": "#000000",
-                "trackBorderWidth": 0,
-                "trackBorderColor": "black",
-                "color": "black",
-                "stroke": "#F6F6F6",
-                "fontSize": 14,
-                "fontIsLeftAligned": false,
-                "reverseOrientation": false
-              },
-              "height": 30
             },
             {
               "type": "horizontal-stacked-bar",

@@ -57,6 +57,12 @@ export default function CistromeExplorer() {
         };
     }, [fileReader]);
 
+    // search
+    const searchBoxRef = useRef();
+    const [searchKeyword, setSearchKeyword] = useState('');
+    const [geneSuggestions, setGeneSuggestions] = useState([]);
+    const [suggestionPosition, setSuggestionPosition] = useState({left: 0, top: 0});
+
     // Undo and redo
     const [undoable, setUndoable] = useState(false);
     const [redoable, setRedoable] = useState(false);
@@ -211,17 +217,41 @@ export default function CistromeExplorer() {
                                 <path d={SEARCH.path} fill="currentColor"/>
                             </svg>
                             <input
-                                // ref={keywordInputRef}
+                                ref={searchBoxRef}
                                 className={"position-search-box " + (helpActivated ? 'help-highlight' : '')}
                                 type="text"
                                 name="default name"
-                                placeholder="GAPDH or chr6:151690496-152103274"
-                                // onChange={onKeywordChange}
-                                // onKeyDown={onKeyDown}
-                                // style={{
-                                //     width, 
-                                //     height 
-                                // }}
+                                placeholder="GAPDH" // or chr6:151690496-152103274"
+                                onChange={(e) => {
+                                    const keyword = e.target.value;
+                                    if(keyword !== '') {
+                                        hmRef.current.api.suggestGene(keyword, (suggestions) => {
+                                            setGeneSuggestions(suggestions);
+                                        });
+                                        setSuggestionPosition({
+                                            left: searchBoxRef.current.getBoundingClientRect().left,
+                                            top: searchBoxRef.current.getBoundingClientRect().top + searchBoxRef.current.getBoundingClientRect().height,
+                                        });
+                                    } else {
+                                        setGeneSuggestions([]);
+                                    }
+                                    setSearchKeyword(keyword);
+                                }}
+                                onKeyDown={(e) => {
+                                    switch(e.key){
+                                        case 'ArrowUp':
+                                            break;
+                                        case 'ArrowDown':
+                                            break;
+                                        case 'Enter':
+                                            setGeneSuggestions([]);
+                                            hmRef.current.api.zoomToGene(searchKeyword);
+                                            break;
+                                        case 'Esc':
+                                        case 'Escape':
+                                            break;
+                                    }
+                                }}
                             />
                         </span>
                     </span>
@@ -283,20 +313,7 @@ export default function CistromeExplorer() {
                                 <title>Cistrome DB Toolkit</title>
                                 <path fill="currentColor" d={TABLE_2.path}/>
                             </svg>
-                            {' Toolkit '}
-                        </span>
-                    </span>
-                    <span className="header-control">
-                        <span 
-                            className={"ce-generic-button-lg " + (helpActivated ? 'ce-generic-button-activated' : '')}
-                            onClick={() => { setHelpActivated(!helpActivated); }}
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                viewBox={helpActivated ? TOGGLE_ON.viewBox : TOGGLE_OFF.viewBox}>
-                                <title>Help</title>
-                                <path fill="currentColor" d={helpActivated ? TOGGLE_ON.path : TOGGLE_OFF.path}/>
-                            </svg>
-                            {` Show Instructions`}
+                            {' Cistrome Search '}
                         </span>
                     </span>
                     <span className="header-control"
@@ -317,6 +334,19 @@ export default function CistromeExplorer() {
                                 <path fill="currentColor" d={aggActivated ? TOGGLE_ON.path : TOGGLE_OFF.path}/>
                             </svg>
                             {` Aggregate By Tissue`}
+                        </span>
+                    </span>
+                    <span className="header-control">
+                        <span 
+                            className={"ce-generic-button-lg " + (helpActivated ? 'ce-generic-button-activated' : '')}
+                            onClick={() => { setHelpActivated(!helpActivated); }}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                viewBox={helpActivated ? TOGGLE_ON.viewBox : TOGGLE_OFF.viewBox}>
+                                <title>Help</title>
+                                <path fill="currentColor" d={helpActivated ? TOGGLE_ON.path : TOGGLE_OFF.path}/>
+                            </svg>
+                            {` Show Instructions`}
                         </span>
                     </span>
                     <span className="header-info">
@@ -345,6 +375,28 @@ export default function CistromeExplorer() {
                             </svg>
                         </span>
                     </span>
+                    {geneSuggestions.length !== 0 ? 
+                        <div className="gene-suggestion" style={{
+                            left: suggestionPosition.left,
+                            top: suggestionPosition.top                        
+                        }}>
+                            <ul>
+                                {geneSuggestions.map((d, i) => (
+                                    <li style={{textAlign: 'right', color: 'gray'}}
+                                        onClick={() => {
+                                            searchBoxRef.current.value = d.geneName;
+                                            setGeneSuggestions([]);
+                                            hmRef.current.api.zoomToGene(d.geneName);
+                                        }}
+                                    >
+                                        <strong style={{float: 'left', color: 'black'}}>{d.geneName}</strong>
+                                        {`${d.chr}:${d.txStart}-${d.txEnd}`}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                        : null
+                    }
                 </div>
             </div>
 

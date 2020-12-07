@@ -172,6 +172,30 @@
     outline: none;
 }
 
+.gene-suggestion {
+    position: absolute;
+    z-index: 1;
+    background: white;
+    line-height: 14px;
+    border-left: 1px solid silver;
+    border-right: 1px solid silver;
+    border-bottom: 1px solid silver;
+    position: absolute;
+    background: white;
+    width: 300px;
+    ul {
+        list-style-type: none;
+        padding: 0;
+        margin-bottom: 0;
+        li {
+            padding: 10px 6px 10px 6px;
+        }
+        li:hover {
+            background: #eeeeee;
+        }
+    }
+}
+
 .help-highlight {
     // animation: animateBox 3s infinite !important;
     box-shadow: 0 0 0 2px #2299DB, 0 0 12px 0 #2299DB !important;

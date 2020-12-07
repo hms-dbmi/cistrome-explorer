@@ -236,9 +236,24 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                 onRemoveAllFilters: () => removeAllFilters(),
                 onRemoveAllSort: () => removeAllSort(),
                 addNewTrack: (trackDef, viewId, position) => addNewTrack(trackDef, viewId, position),
+                zoomToGene: (gene) => {
+                    Array.from(new Set(multivecTrackIds.map(d => d.viewId))).map((viewId) => {
+                        hgRef.current.api.zoomToGene(viewId, gene, 1000);
+                    });
+                },
+                suggestGene: (keyword, callback) => {
+                    if(multivecTrackIds.length > 0) {
+                        const viewId = multivecTrackIds[0].viewId;
+                        hgRef.current.api.suggestGene(viewId, keyword, (suggestions) => {
+                            if(suggestions && suggestions.length > 0) {
+                                callback(suggestions);
+                            }
+                        });
+                    }
+                }
             }
         }
-    }, [ref, addNewTrack]);
+    }, [ref, addNewTrack, multivecTrackIds]);
 
     const setSelectedRowsToViewConfig = useCallback((viewId, trackId, selectedRows) => {
         const currViewConfig = hgRef.current.api.getViewConfig();
@@ -485,6 +500,8 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                 name: selected,
                 selectRows: newSelectedRows,
                 barBorder: false,
+                backgroundColor: "#F6F6F6",
+                colorScale: ["gray"],
             }
         }
         addNewTrack(newTrackDef, viewId, position);
