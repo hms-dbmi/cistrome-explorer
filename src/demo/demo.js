@@ -24,7 +24,7 @@ export const demos = {
                 {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right", width: 200},
                 // {field: "Species", type: "nominal", position: "left", width: 120},
                 // {field: "cid", type: "nominal-dynamic",  position: "left", title: "Compare Positive and Negative", domain: ["positive", "negative"], range: ["blue", "red"], width: 30},
-                {field: "ID", type: "url", shortName: "📊", position: "right", title: "Add Detail Track", width: 30, addTrackOnClick: true},
+                {field: "ID", type: "url", shortName: "📊", position: "right", title: "➕ Add Detail Track", width: 35, addTrackOnClick: true},
                 // {field: "Metadata URL", alt: "cid", type: "url", position: "right", width: 70},
             ],
             rowAggregate: [

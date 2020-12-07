@@ -31,13 +31,16 @@ import {
     getTrackDefFromViewConfig,
     addTrackDefToViewConfig,
     getAllViewAndTrackPairs,
-    removeViewportFromViewConfig
+    removeViewportFromViewConfig,
+    getTrackIdsFromViewConfig,
+    removeTopTrackFromViewConfig
 } from './utils/viewconf.js';
 import { wrapSvg } from './utils/wrap-svg.js';
 
 import './HiGlassMetaConsumer.scss';
 import cloneDeep from 'lodash/cloneDeep';
 import { removeItemFromArray, modifyItemInArray, insertItemToArray } from './utils/array.js';
+import { CLOSE } from './utils/icons.js';
 
 const hgOptionsBase = {
     sizeMode: 'bounded', // Stretch the height of HiGlass to its container <div/>
@@ -57,6 +60,7 @@ const hgOptionsBase = {
 
 // If this string tag is contained in the track id, ignore showing metadata visualization.
 export const NO_METAVIS_TAG_TRACKID = '-no-metavis-';
+export const REMOVE_ALLOWED_TAG_TRACKID = '-allow-remove-';
 
 /**
  * HiGlassMeta passes its props through, and wraps this component with the context provider.
@@ -84,6 +88,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
     const [options, setOptions] = useState(processWrapperOptions(baseOptions));
     const [multivecTrackIds, setMultivecTrackIds] = useState([]);
     const [viewportTrackIds, setViewportTrackIds] = useState({});
+    const [stackedBarTrackIds, setStackedBarTrackIds] = useState([]);
     const [isWheelListening, setIsWheelListening] = useState(false);
     
     const context = useContext(InfoContext);
@@ -166,6 +171,9 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
             newViewportTrackIds[viewId] = getSiblingVPHTrackIdsFromViewConfig(newViewConfig, viewId);
         });
 
+        // Tracks that are interactively added.
+        const newStackedBarTrackIds = getTrackIdsFromViewConfig(newViewConfig, REMOVE_ALLOWED_TAG_TRACKID);
+
         // Get selected rows from the view config and update context.
         for(let trackIds of newTrackIds) {
             const newSelectedRows = getHMSelectedRowsFromViewConfig(newViewConfig, trackIds.viewId, trackIds.trackId);
@@ -186,6 +194,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         }
         setMultivecTrackIds(newTrackIds);
         setViewportTrackIds(newViewportTrackIds);
+        setStackedBarTrackIds(newStackedBarTrackIds);
     }, []);
 
     // Function to get a track object from the higlass API.
@@ -225,6 +234,12 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
     const addNewTrack = useCallback((trackDef, viewId, position) => {
         const currViewConfig = hgRef.current.api.getViewConfig();
         const newViewConfig = addTrackDefToViewConfig(currViewConfig, trackDef, viewId, position);
+        hgRef.current.api.setViewConfig(newViewConfig);
+    }, [hgRef]);
+
+    const removeTrack = useCallback((viewId, trackId) => {
+        const currViewConfig = hgRef.current.api.getViewConfig();
+        const newViewConfig = removeTopTrackFromViewConfig(currViewConfig, viewId, trackId);
         hgRef.current.api.setViewConfig(newViewConfig);
     }, [hgRef]);
 
@@ -474,7 +489,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         const newTrackId = getUniqueViewOrTrackId(currViewConfig, { 
             baseId: trackId, 
             idKey: "trackId", 
-            interfix: NO_METAVIS_TAG_TRACKID
+            interfix: REMOVE_ALLOWED_TAG_TRACKID
         });
         
         // Add options for the new track.
@@ -499,9 +514,12 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                 ...newTrackDef.options,
                 name: selected,
                 selectRows: newSelectedRows,
-                barBorder: false,
+                trackBorderWidth: 0,
+                trackBorderColor: "white",
+                // barBorder: false,
+                labelColor: "black",
                 backgroundColor: "#F6F6F6",
-                colorScale: ["gray"],
+                colorScale: ["lightgray"],
             }
         }
         addNewTrack(newTrackDef, viewId, position);
@@ -580,38 +598,62 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         <div className="hm-root">
             {hgComponent}
             {multivecTrackIds.map(({ viewId, trackId, trackTilesetId }, i) => (
-                    <TrackWrapper
-                        key={i}
-                        isWheelListening={isWheelListening}
-                        options={getTrackWrapperOptions(options, viewId, trackId)}
-                        baseRowInfo={baseRowInfo}
-                        multivecTrack={getTrackObject(viewId, trackId)}
-                        multivecTrackViewId={viewId}
-                        multivecTrackTrackId={trackId}
-                        multivecTrackTilesetId={trackTilesetId}
-                        onAddTrack={(field, type, notOneOf, position, selected) => {
-                            onAddTrack(viewId, trackId, field, type, notOneOf, position, selected);
-                        }}
-                        onSortRows={(field, type, order, isTrackIndependent) => {
-                            onSortRows(viewId, trackId, field, type, order, isTrackIndependent);
-                        }}
-                        onHighlightRows={(field, type, condition) => {
-                            onHighlightRows(viewId, trackId, field, type, condition);
-                        }}
-                        onFilterRows={(field, type, condition, isRemove) => {
-                            onFilterRows(viewId, trackId, field, type, condition, isRemove);
-                        }}
-                        onZoomRows={(y, deltaY, deltaMode) => {
-                            onZoomRows(viewId, trackId, y, deltaY, deltaMode);
-                        }}
-                        onMetadataInit={() => {
-                            setMetadataToContext(viewId, trackId);
-                        }}
-                        helpActivated={helpActivated}
-                        rowAggregated={aggregateRowBy !== undefined}
-                        drawRegister={drawRegister}
-                    />
+                <TrackWrapper
+                    key={i}
+                    isWheelListening={isWheelListening}
+                    options={getTrackWrapperOptions(options, viewId, trackId)}
+                    baseRowInfo={baseRowInfo}
+                    multivecTrack={getTrackObject(viewId, trackId)}
+                    multivecTrackViewId={viewId}
+                    multivecTrackTrackId={trackId}
+                    multivecTrackTilesetId={trackTilesetId}
+                    onAddTrack={(field, type, notOneOf, position, selected) => {
+                        onAddTrack(viewId, trackId, field, type, notOneOf, position, selected);
+                    }}
+                    onSortRows={(field, type, order, isTrackIndependent) => {
+                        onSortRows(viewId, trackId, field, type, order, isTrackIndependent);
+                    }}
+                    onHighlightRows={(field, type, condition) => {
+                        onHighlightRows(viewId, trackId, field, type, condition);
+                    }}
+                    onFilterRows={(field, type, condition, isRemove) => {
+                        onFilterRows(viewId, trackId, field, type, condition, isRemove);
+                    }}
+                    onZoomRows={(y, deltaY, deltaMode) => {
+                        onZoomRows(viewId, trackId, y, deltaY, deltaMode);
+                    }}
+                    onMetadataInit={() => {
+                        setMetadataToContext(viewId, trackId);
+                    }}
+                    helpActivated={helpActivated}
+                    rowAggregated={aggregateRowBy !== undefined}
+                    drawRegister={drawRegister}
+                />
             ))}
+            {stackedBarTrackIds.map(({ viewId, trackId }, i) => {
+                const track = getTrackObject(viewId, trackId);
+                if(!track) {
+                    // did not find any track with the given viewid and trackId
+                    return;  
+                }
+
+                const [left, top] = track.position;
+                const [w, h] = track.dimensions;
+                return (
+                    <div style={{ left: left + w, top, position: 'absolute', height: h }}
+                        onClick={() => removeTrack(viewId, trackId)}
+                    >
+                        <svg
+                            className={'hm-button'}
+                            style={{ color: "rgb(171, 171, 171)", background: "none", height: '30px' }}
+                            viewBox={CLOSE.viewBox}
+                        >
+                            <title>Remove Track</title>
+                            <path d={CLOSE.path} fill="currentColor"/>
+                        </svg>
+                    </div>
+                );
+            })}
             {Array.from(new Set(multivecTrackIds.map(d => d.viewId))).map((viewId, i) => (
                 <ViewWrapper
                     key={i}

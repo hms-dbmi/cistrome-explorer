@@ -4,7 +4,7 @@ import pkg from '../../package.json';
 import { HiGlassMeta } from '../index.js';
 import CistromeToolkit from './CistromeToolkit.js';
 
-import { UNDO, REDO, TABLE, TABLE_2, DOCUMENT, GITHUB, TOGGLE_ON, TOGGLE_OFF, CLOSE, ELLIPSIS, TRASH, SEARCH, FOLDER, PENCIL } from '../utils/icons.js';
+import { UNDO, REDO, TABLE_2, DOCUMENT, GITHUB, TOGGLE_ON, TOGGLE_OFF, CLOSE, ELLIPSIS, TRASH, SEARCH, FOLDER, PENCIL } from '../utils/icons.js';
 import { DEFAULT_COLOR_RANGE } from '../utils/color.js';
 import { diffViewOptions } from '../utils/view-history';
 import { demos } from './demo';
@@ -15,22 +15,14 @@ import { publishHelpTooltip, destroyTooltip } from "../Tooltip.js";
 import './CistromeExplorer.scss';
 
 import StackedBarTrack from 'higlass-multivec/es/StackedBarTrack';
-// import BasicMultipleBarChart from 'higlass-multivec/es/BasicMultipleBarChart';
 import ScaleLegendTrack from '../scale-legend/ScaleLegendTrack';
 import higlassRegister from 'higlass-register';
-import { modifyItemInArray } from '../utils/array';
 
 higlassRegister({
     name: 'StackedBarTrack',
     track: StackedBarTrack,
     config: StackedBarTrack.config,
 });
-
-// higlassRegister({
-//     name: 'BasicMultipleBarChart',
-//     track: BasicMultipleBarChart,
-//     config: BasicMultipleBarChart.config,
-// });
 
 higlassRegister({
     name: 'ScaleLegendTrack',
