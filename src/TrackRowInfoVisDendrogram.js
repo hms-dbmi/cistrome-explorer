@@ -388,12 +388,13 @@ export default function TrackRowInfoVisDendrogram(props) {
 
                 // Show hover indicator.
                 const [mouseX, mouseY] = d3.mouse(canvas);
-                const i = delaunayRef.current.find(mouseX, mouseY);
+                
+                const i = delaunayRef.current.find(mouseX, mouseY - titleHeight);
                 const d = ancestor.current = descendantsRef.current[i];
                 const [pointX, pointY] = pointFromNode(d);
                 
                 setHighlightNodeX(pointX);
-                setHighlightNodeY(pointY);
+                setHighlightNodeY(pointY + titleHeight);
                 
                 const ancestors = [];
                 let node = d;
