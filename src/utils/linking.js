@@ -1,7 +1,7 @@
 import d3 from "./d3.js";
 
-export const HIGHLIGHTING_COLOR = ["#333", "gold", "#399AB6"][0];
-export const HIGHLIGHTING_STROKE = ["black", "brown", "#265D8A"][0];
+export const HIGHLIGHTING_COLOR = ["gray", "#333", "gold", "#2299DB"][3];
+export const HIGHLIGHTING_STROKE = ["white", "black", "brown", "white"][3];
 export const HIGHLIGHTING_OPACITY = 0.24;
 
 /**
@@ -13,14 +13,14 @@ export const HIGHLIGHTING_OPACITY = 0.24;
  * @param {number} height Size of a track along y-axis.
  * @param {boolean} styles.isStroke Should draw stroke? 
  */
-export function drawRowHighlightRect(two, selectedRows, highlitRows, width, height, styles) {
+export function drawRowHighlightRect(two, selectedRows, highlitRows, top, width, height, styles) {
     if(!highlitRows || !selectedRows) {
         return;
     }
 
     const yScale = d3.scaleBand()
         .domain(selectedRows)
-        .range([0, height]);
+        .range([top + 0, top + height]);
     const rowHeight = yScale.bandwidth();
 
     let aggregatedRows = 1;

@@ -18,6 +18,7 @@ import { drawRowHighlightRect } from "./utils/linking.js";
  * @prop {number} top The top position of this view.
  * @prop {number} width The width of this view.
  * @prop {number} height The height of this view.
+ * @prop {number} titleHeight The height of the track title.
  * @prop {object[]} rowInfo The array of JSON Object containing row information.
  * @prop {object[]} transformedRowInfo The `rowInfo` array after aggregating, filtering, and sorting rows.
  * @prop {array} selectedRows The array of selected indices. 
@@ -30,11 +31,13 @@ import { drawRowHighlightRect } from "./utils/linking.js";
  * @prop {function} onSortRows The function to call upon a sort interaction.
  * @prop {function} onHighlightRows The function to call upon a highlight interaction.
  * @prop {function} onFilterRows The function to call upon a filter interaction.
+ * @prop {boolean} helpActivated Whether to show help instructions or not.
+ * @prop {boolean} rowAggregated Whether the row is aggregated or not.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function TrackRowInfoVisDendrogram(props) {
     const {
-        left, top, width, height,
+        left, top, width, height, titleHeight,
         field, type, alt, title, aggFunction, resolveYScale,
         rowInfo,
         transformedRowInfo,
@@ -47,6 +50,8 @@ export default function TrackRowInfoVisDendrogram(props) {
         onSortRows,
         onHighlightRows,
         onFilterRows,
+        helpActivated,
+        rowAggregated,
         drawRegister,
     } = props;
     
@@ -125,7 +130,7 @@ export default function TrackRowInfoVisDendrogram(props) {
         }
     }
     const treeLayout = d3.cluster()
-        .size([height, visWidth])
+        .size([height - titleHeight, visWidth])
         .separation(() => 1);
     treeLayout(root);
 
@@ -184,7 +189,7 @@ export default function TrackRowInfoVisDendrogram(props) {
             domElement
         });
         
-        drawRowHighlightRect(two, selectedRows, highlitRows, width, height);
+        drawRowHighlightRect(two, selectedRows, highlitRows, titleHeight, width, height - titleHeight);
 
         // Draw the dendrogram.
         const descendants = root.descendants();
@@ -231,10 +236,10 @@ export default function TrackRowInfoVisDendrogram(props) {
             } else {
                 pathFunction = (d) => {
                     return two.makePath(
-                        visWidth - d.parent.y, top + d.parent.x,
-                        visWidth - d.parent.y, top + d.x,
-                        visWidth - d.y, top + d.x,
-                        visWidth - d.parent.y, top + d.x
+                        visWidth - d.parent.y, top + d.parent.x + titleHeight + 30,
+                        visWidth - d.parent.y, top + d.x + titleHeight + 30,
+                        visWidth - d.y, top + d.x + titleHeight + 30,
+                        visWidth - d.parent.y, top + d.x + titleHeight + 30
                     );
                 }
             }
@@ -253,13 +258,13 @@ export default function TrackRowInfoVisDendrogram(props) {
 
         if(cannotAlign) {
             const rect = two.makeRect(0, 0, width, height);
-            rect.fill = "white";
+            rect.fill = "#F6F6F6";
             rect.opacity = 1;
         }
 
-        if(!isShowControlButtons) {
+        // if(!isShowControlButtons) {
             drawVisTitle(field, { two, isLeft, width, height });
-        }
+        // }
 
         const points = descendants.map(pointFromNode);
         const delaunay = d3.delaunay.from(points);
@@ -286,9 +291,9 @@ export default function TrackRowInfoVisDendrogram(props) {
         
         d3.select(domElement)
             .attr("width", visWidth)
-            .attr("height", axisHeight)
+            .attr("height", axisHeight + titleHeight)
             .append("g")
-                .attr("transform", `translate(${-1}, 0)`)
+                .attr("transform", `translate(${-1}, ${titleHeight})`)
                 .call(axis);
         
         d3.select(domElement)
@@ -364,20 +369,18 @@ export default function TrackRowInfoVisDendrogram(props) {
             const mouseViewportX = d3.event.clientX;
             const mouseViewportY = d3.event.clientY;
 
-            PubSub.publish(EVENT.TOOLTIP, {
-                x: mouseViewportX,
-                y: mouseViewportY,
-                content: <TooltipContent 
-                    title={(cannotAlign
-                        ? "Dendrogram is hidden since its leaf ordering does not align with the current row ordering."
-                        : "Right-click to view highlight and filter options.")}
-                />
-            });
-
             if(cannotAlign) {
                 setHighlightNodeX(null);
                 setHighlightNodeY(null);
             } else {
+                PubSub.publish(EVENT.TOOLTIP, {
+                    x: mouseViewportX,
+                    y: mouseViewportY,
+                    content: <TooltipContent 
+                        title={"Right-click to view highlight and filter options."}
+                    />
+                });
+
                 // The dendrogram is visible, so show a tooltip with information about right-clicking.
                 if(showMinSimBar) {
                     // Do not want to select nearest branch when min similarity bar shown.
@@ -388,12 +391,13 @@ export default function TrackRowInfoVisDendrogram(props) {
 
                 // Show hover indicator.
                 const [mouseX, mouseY] = d3.mouse(canvas);
-                const i = delaunayRef.current.find(mouseX, mouseY);
+                
+                const i = delaunayRef.current.find(mouseX, mouseY - titleHeight);
                 const d = ancestor.current = descendantsRef.current[i];
                 const [pointX, pointY] = pointFromNode(d);
                 
                 setHighlightNodeX(pointX);
-                setHighlightNodeY(pointY);
+                setHighlightNodeY(pointY + titleHeight);
                 
                 const ancestors = [];
                 let node = d;
@@ -465,39 +469,66 @@ export default function TrackRowInfoVisDendrogram(props) {
                     height: `${height}px`
                 }}
             />
-            <TrackRowInfoControl
-                isLeft={isLeft}
-                isVisible={isShowControlButtons}
-                field={field}
-                type={type}
-                title={title}
-                aggFunction={aggFunction}
-                searchTop={top}
-                searchLeft={left}
-                onFilterRows={onFilterRows}
-                rowInfo={rowInfo}
-                transformedRowInfo={transformedRowInfo}
-                filterButtonHighlit={showMinSimBar}
-                toggleMinSimBar={maxDistance && !cannotAlign ? () => {
-                    // Show the minimum similarity bar only when similarity distance is available.
-                    setMinSimBarLeft(initialMinSimBarLeft);
-                    minSimilarity.current = undefined;
-                    setShowMinSimBar(!showMinSimBar);
-                } : undefined}
-            />
+            {cannotAlign ? null : 
+                <TrackRowInfoControl
+                    isLeft={isLeft}
+                    top={titleHeight}
+                    isVisible={isShowControlButtons}
+                    field={field}
+                    type={type}
+                    title={title}
+                    aggFunction={aggFunction}
+                    searchLeft={left}
+                    onFilterRows={onFilterRows}
+                    rowInfo={rowInfo}
+                    transformedRowInfo={transformedRowInfo}
+                    filterButtonHighlit={showMinSimBar}
+                    toggleMinSimBar={maxDistance && !cannotAlign ? () => {
+                        // Show the minimum similarity bar only when similarity distance is available.
+                        setMinSimBarLeft(initialMinSimBarLeft);
+                        minSimilarity.current = undefined;
+                        setShowMinSimBar(!showMinSimBar);
+                    } : undefined}
+                    helpActivated={helpActivated}
+                />}
             {cannotAlign ? (
-                <div onClick={() => onSortRows(field, type, "ascending")}
-                    style={{
-                        position: "absolute",
-                        top: `${height / 2.0 - 17}px`,
-                        left: `${width / 2.0 - 17}px`,
-                        color: "lightgray"
-                    }}>
-                    <svg className={"hm-button-lg"}
-                        viewBox={SORT_TREE.viewBox}>
-                        <title>{"Sort rows by hierarchy leaf order"}</title>
-                        <path d={SORT_TREE.path} fill="currentColor"/>
-                    </svg>
+                <div style={{
+                    position: "absolute",
+                    top: `${30}px`,
+                    left: '0px',
+                    width: "100%",
+                    border: '1px dotted gray',
+                    height: "calc(100% - 30px)",
+                    padding: "10px",
+                    color: "gray",
+                    fontWeight: "bold",
+                    overflow: 'auto'
+                }}>
+                    Dendrogram is hidden since the ordering of leaf nodes does not align with the current row ordering.
+                    <br/>
+                    <br/> 
+                    💡
+                    <span style={{fontStyle: 'italic', fontWeight: 'normal'}}>
+                        {rowAggregated ? 
+                            <>To see the dendrogram, you need to first deactivate <span style={{color: '#2299DB'}}>Aggregate By Tissue</span>.</> : 
+                            <>Click on the Sort button below to see the dendrogram.</>
+                        }
+                    </span>
+                    
+                    {!rowAggregated ?
+                        <div onClick={() => onSortRows(field, type, "ascending")}
+                            style={{
+                                position: "absolute",
+                                top: `${height / 2.0 - 17}px`,
+                                left: `${width / 2.0 - 17}px`,
+                                color: "lightgray"
+                            }}>
+                            <svg className={"hm-button-lg"}
+                                viewBox={SORT_TREE.viewBox}>
+                                <title>{"Sort rows by hierarchy leaf order"}</title>
+                                <path d={SORT_TREE.path} fill="currentColor"/>
+                            </svg>
+                        </div> : null}
                 </div>
             ) : null}
             {(isShowControlButtons && highlightNodeX && highlightNodeY) ? (

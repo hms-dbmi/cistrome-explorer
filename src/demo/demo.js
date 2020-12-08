@@ -1,4 +1,4 @@
-import hgDemoViewConfig1 from '../viewconfigs/horizontal-multivec-1.json';
+import { hgDemoViewConfig1} from '../viewconfigs/horizontal-multivec-1';
 import hgDemoViewConfig1b from '../viewconfigs/horizontal-multivec-1b.json';
 import hgDemoViewConfig2 from '../viewconfigs/horizontal-multivec-2.json';
 import hgDemoViewConfig2b from '../viewconfigs/horizontal-multivec-2b.json';
@@ -13,25 +13,31 @@ import hgDemoViewConfigApril2020 from '../viewconfigs/meeting-2020-04-29.json';
 export const demos = {
     "H3K27ac Demo (1 View, Center Track)": {
         viewConfig: hgDemoViewConfig1,
-        options: {
+        options: [{
+            viewId: "cistrome-view-1",
+            trackId: "cistrome-track-1",
             rowInfoAttributes: [
-                {field: "qc_frip", type: "quantitative", position: "left", title: "QC: FRIP"},
-                {field: "qc_fastqc", type: "quantitative", position: "left", title:  "QC: FastQC"},
-                {field: "cid", type: "nominal-dynamic",  position: "left", title: "Compare Positive and Negative", domain: ["positive", "negative"], range: ["blue", "red"], width: 30},
-                {field: "Metadata URL", alt: "cid", type: "url", position: "left", width: 30},
-                {field: "Hierarchical Clustering (Ward)", type: "tree", position: "left", resolveYScale: true, sort: "ascending", width: 200},
-                {field: "Cell Type", type: "nominal", position: "right", width: 80},
-                {field: "Tissue Type", type: "nominal", position: "right", width: 80},
-                {field: "Species", type: "nominal", position: "right", width: 80},
+                {field: "Cell Type", type: "nominal", position: "right", width: 150},
+                {field: "Tissue Type", type: "nominal", position: "right", width: 120},
+                {field: "qc_frip", type: "quantitative", position: "right", title: "QC: FRIP", width: 80},
+                {field: "qc_fastqc", type: "quantitative", position: "right", title:  "QC: FastQC", width: 80},
+                {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right", width: 100},
+                // {field: "Species", type: "nominal", position: "left", width: 120},
+                // {field: "cid", type: "nominal-dynamic",  position: "left", title: "Compare Positive and Negative", domain: ["positive", "negative"], range: ["blue", "red"], width: 30},
+                {field: "ID", type: "url", shortName: "📊", position: "right", title: "➕ Add Detail Track", width: 35, addTrackOnClick: true},
+                // {field: "Metadata URL", alt: "cid", type: "url", position: "right", width: 70},
+            ],
+            rowAggregate: [
+                // {field: "Cell Type", type: "nominal", notOneOf: []},
+                // {field: "Tissue Type", type: "nominal", notOneOf: []}
             ],
             rowSort: [
-                {field: "Cell Type", type: "nominal", order: "ascending"},
-                {field: "qc_frip", type: "quantitative", order: "descending"}
+                {field: "Hierarchical Clustering (Ward)", type: "tree", order: "ascending"}
             ],
             rowFilter: [
-                {field: "Tissue Type", type: "nominal", notOneOf: ["None"]}
+                // ...
             ]
-        }
+        }]
     },
     "H3K27ac Demo (1 View, Center Track, Rows Aggregated)": {
         viewConfig: hgDemoViewConfig1b,

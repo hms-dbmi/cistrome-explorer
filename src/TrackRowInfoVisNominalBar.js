@@ -22,6 +22,7 @@ export const margin = 5;
  * @prop {number} top The top position of this view.
  * @prop {number} width The width of this view.
  * @prop {number} height The height of this view.
+ * @prop {number} titleHeight The height of the track title.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  * @prop {boolean} isShowControlButtons Determine if control buttons should be shown.
@@ -36,11 +37,12 @@ export const margin = 5;
  * @prop {function} onSortRows The function to call upon a sort interaction.
  * @prop {function} onHighlightRows The function to call upon a highlight interaction.
  * @prop {function} onFilterRows The function to call upon a filter interaction.
+ * @prop {boolean} helpActivated Whether to show help instructions or not.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function TrackRowInfoVisNominalBar(props) {
     const {
-        left, top, width, height,
+        left, top, width, height, titleHeight,
         field, type, alt, title, aggFunction, resolveYScale,
         isLeft,
         isShowControlButtons,
@@ -55,6 +57,7 @@ export default function TrackRowInfoVisNominalBar(props) {
         onSortRows,
         onHighlightRows,
         onFilterRows,
+        helpActivated,
         drawRegister,
     } = props;
 
@@ -67,7 +70,7 @@ export default function TrackRowInfoVisNominalBar(props) {
 
     const yScale = d3.scaleBand()
         .domain(range(transformedRowInfo.length))
-        .range([0, height]);
+        .range([titleHeight, height]);
     const rowHeight = yScale.bandwidth();
 
     const colorScale = useMemo(() => 
@@ -75,8 +78,9 @@ export default function TrackRowInfoVisNominalBar(props) {
             .domain(Array.from(new Set(
                 rowInfo.map(d => aggValue(d)))
             ).sort())
-            .range(d3.schemeTableau10),
+            .range([...d3.schemeTableau10]),
     [rowInfo]);
+    // '#2299DB', '#FC5D5C',
 
     const draw = useCallback((domElement) => {
         const two = new Two({
@@ -85,12 +89,19 @@ export default function TrackRowInfoVisNominalBar(props) {
             domElement
         });
 
-        drawRowHighlightRect(two, selectedRows, highlitRows, width, height);
+        drawRowHighlightRect(
+            two, 
+            selectedRows, 
+            highlitRows, 
+            titleHeight, 
+            width, 
+            height - titleHeight
+        );
                 
         const textAreaWidth = width - HIGLASSMETA_DEFAULT.TRACK.MIN_WIDTH;
         const showTextLabel = textAreaWidth > 0;
         const barAreaWidth = width - textAreaWidth;
-        const fontSize = 10;
+        const fontSize = 12;
 
         // Render visual components for each row (i.e., bars and texts).
         const textAlign = isLeft ? "end" : "start";
@@ -115,7 +126,7 @@ export default function TrackRowInfoVisNominalBar(props) {
                 return;
             }
 
-            const barTop = aggregateStartIdx !== -1 ? yScale(aggregateStartIdx) : yScale(i);
+            const barTop = (aggregateStartIdx !== -1 ? yScale(aggregateStartIdx) : yScale(i));
             const barHeight = rowHeight * sameCategoriesNearby;
             const barWidth = barAreaWidth;
             const barLeft = (isLeft ? width - barWidth : 0);
@@ -139,9 +150,9 @@ export default function TrackRowInfoVisNominalBar(props) {
             sameCategoriesNearby = 1;
         });
 
-        if(!isShowControlButtons) {
+        // if(!isShowControlButtons) {
             drawVisTitle(title, { two, isLeft, width, height, titleSuffix });
-        }
+        // }
 
         two.update();
         return two.teardown;
@@ -167,7 +178,7 @@ export default function TrackRowInfoVisNominalBar(props) {
             items: [
                 { title: "Highlight Rows", icon: HIGHLIGHTER, action: () => onHighlightRows(field, "nominal", hoverValue) },
                 { title: "Filter Rows", icon: FILTER, action: () => onFilterRows(field, "nominal", notOneOf) },
-                { title: "Add Top Track with Selected Rows", icon: ARROW_UP, action: () => onAddTrack(field, "nominal", notOneOf, "top") },
+                { title: "Add Top Track with Selected Rows", icon: ARROW_UP, action: () => onAddTrack(field, "nominal", notOneOf, "top", hoverValue) },
                 { title: "Add Bottom Track with Selected Rows", icon: ARROW_DOWN, action: () => onAddTrack(field, "nominal", notOneOf, "bottom") }
             ]
         });    
@@ -226,6 +237,7 @@ export default function TrackRowInfoVisNominalBar(props) {
         <div
             ref={divRef}
             style={{
+                top: `${top}px`,
                 position: 'relative',
                 width: `${width}px`,
                 height: `${height}px`,
@@ -236,9 +248,9 @@ export default function TrackRowInfoVisNominalBar(props) {
                 onContextMenu={onContextMenu}
                 style={{
                     top: 0,
-                    left: 0, 
+                    left: 0,
                     width: `${width}px`,
-                    height: `${height}px`,
+                    height: `${(height)}px`,
                     position: 'relative'
                 }}
             />
@@ -249,7 +261,7 @@ export default function TrackRowInfoVisNominalBar(props) {
                 type={type}
                 title={title}
                 aggFunction={aggFunction}
-                searchTop={top}
+                top={titleHeight}
                 searchLeft={left}
                 sortAsceButtonHighlit={sortInfo && sortInfo.order === "ascending"}
                 sortDescButtonHighlit={sortInfo && sortInfo.order === "descending"}
@@ -260,6 +272,7 @@ export default function TrackRowInfoVisNominalBar(props) {
                 filterInfo={filterInfo}
                 transformedRowInfo={transformedRowInfo}
                 rowInfo={rowInfo}
+                helpActivated={helpActivated}
             />
         </div>
     );

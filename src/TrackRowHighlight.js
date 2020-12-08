@@ -55,7 +55,7 @@ export default function TrackRowHighlight(props) {
             domElement
         });
 
-        drawRowHighlightRect(two, selectedRows, highlitRows, width, height, { isStroke: true });
+        drawRowHighlightRect(two, selectedRows, highlitRows, 0, width, height, { isStroke: true });
 
         two.update();
         return two.teardown;

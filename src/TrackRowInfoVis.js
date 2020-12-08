@@ -18,6 +18,9 @@ const fieldTypeToVisComponent = {
     "band": TrackRowInfoVisBand,
 };
 
+// Height of a track title
+export const TRACK_TITLE_HEIGHT = 30;
+
 /**
  * General component for visualization of a particular row info attribute.
  * @prop {number} left The left position of this view.
@@ -40,6 +43,8 @@ const fieldTypeToVisComponent = {
  * @prop {function} onHighlightRows The function to call upon a highlight interaction.
  * @prop {function} onFilterRows The function to call upon a filter interaction.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
+ * @prop {boolean} helpActivated Whether to show help instructions or not.
+ * @prop {boolean} rowAggregated Whether the row is aggregated or not.
  * @prop {function} onWidthChanged The function to call when the component resize element has been dragged.
  */
 export default function TrackRowInfoVis(props) {
@@ -61,10 +66,12 @@ export default function TrackRowInfoVis(props) {
         onHighlightRows,
         onFilterRows,
         drawRegister,
+        helpActivated,
+        rowAggregated,
         onWidthChanged
     } = props;
 
-    const { type, field, alt, aggFunction, resolveYScale, domain, range } = fieldInfo;
+    const { type, field, alt, shortName, aggFunction, resolveYScale, domain, range, addTrackOnClick } = fieldInfo;
 
     let title;
     if(aggFunction === "count") {
@@ -156,11 +163,11 @@ export default function TrackRowInfoVis(props) {
                     [lrKey]: resizerMargin,
                     height: `${resizerHeight}px`,
                     width: `${resizerWidth}px`,
-                    opacity: (isHovering ? 1 : 0)
+                    opacity: (helpActivated || isHovering ? 1 : 0)
                 }}
             />
         );
-    }, [isLeft, top, height, isHovering]);
+    }, [isLeft, top, height, helpActivated, isHovering]);
 
     return (
         <div 
@@ -176,15 +183,18 @@ export default function TrackRowInfoVis(props) {
                 fieldTypeToVisComponent[type],
                 {
                     left,
-                    top: 0,
+                    top: top - TRACK_TITLE_HEIGHT,
                     width,
-                    height,
+                    height: height + TRACK_TITLE_HEIGHT,
+                    titleHeight: TRACK_TITLE_HEIGHT,
                     isLeft,
                     isShowControlButtons: isHovering,
                     field,
                     type,
                     title: (title || field),
                     alt,
+                    shortName,
+                    addTrackOnClick,
                     aggFunction,
                     resolveYScale,
                     transformedRowInfo,
@@ -200,6 +210,8 @@ export default function TrackRowInfoVis(props) {
                     onSortRows,
                     onHighlightRows,
                     onFilterRows,
+                    helpActivated,
+                    rowAggregated,
                     drawRegister,
                     ...(type === "nominal-dynamic" ? {
                         domain,

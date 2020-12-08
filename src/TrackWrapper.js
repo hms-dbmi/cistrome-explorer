@@ -24,6 +24,8 @@ import { getAggregatedRowInfo } from './utils/select-rows.js';
  * @prop {function} onFilterRows The function to call upon a filer interaction.
  * @prop {function} onMetadataInit The function to call upon rowInfo being initially set to Context.
  * @prop {boolean} isWheelListening Whether or not to listen for wheel events for vertical zooming.
+ * @prop {boolean} helpActivated Whether to show help instructions or not.
+ * @prop {boolean} rowAggregated Whether the row is aggregated or not.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function TrackWrapper(props) {
@@ -40,6 +42,8 @@ export default function TrackWrapper(props) {
         onFilterRows,
         onMetadataInit,
         isWheelListening,
+        helpActivated,
+        rowAggregated,
         drawRegister
     } = props;
 
@@ -129,7 +133,7 @@ export default function TrackWrapper(props) {
                     highlitRows={highlitRows}
                     viewId={multivecTrackViewId}
                     trackId={multivecTrackTrackId}
-                    trackX={trackX}
+                    trackX={trackX - 12}
                     trackY={trackY}
                     trackHeight={trackHeight}
                     trackWidth={trackWidth}
@@ -142,6 +146,8 @@ export default function TrackWrapper(props) {
                     onSortRows={onSortRows}
                     onHighlightRows={onHighlightRows}
                     onFilterRows={onFilterRows}
+                    helpActivated={helpActivated}
+                    rowAggregated={rowAggregated}
                     drawRegister={(key, draw, options) => {
                         drawRegister(`${key}-left`, draw, options);
                     }}
@@ -155,7 +161,7 @@ export default function TrackWrapper(props) {
                     highlitRows={highlitRows}
                     viewId={multivecTrackViewId}
                     trackId={multivecTrackTrackId}
-                    trackX={trackX}
+                    trackX={trackX + 12}
                     trackY={trackY}
                     trackHeight={trackHeight}
                     trackWidth={trackWidth}
@@ -168,6 +174,8 @@ export default function TrackWrapper(props) {
                     onSortRows={onSortRows}
                     onHighlightRows={onHighlightRows}
                     onFilterRows={onFilterRows}
+                    helpActivated={helpActivated}
+                    rowAggregated={rowAggregated}
                     drawRegister={(key, draw, options) => {
                         drawRegister(`${key}-right`, draw, options);
                     }}

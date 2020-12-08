@@ -89,6 +89,14 @@ const baseSchema = {
                     "type": "string",
                     "description": "A key for an alternative name to display in axis label elements."
                 },
+                "shortName": {
+                    "type": "string",
+                    "description": "A short version of an alternative name to display in axis label elements when they are assigned to narrow space."
+                },
+                "addTrackOnClick": {
+                    "type": "boolean",
+                    "description": "Add a selected track as a `top` track upon clicking on a track?"
+                },
                 "title": {
                     "type": "string",
                     "description": "A human-readable title of the data field to display in axis titles and tooltip elements."

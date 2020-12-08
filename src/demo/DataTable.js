@@ -20,7 +20,7 @@ export default function DataTable(props) {
     } = props;
 
     const [filterByField, setFilterByField] = useState({});
-    const [sortByField, setSortByField] = useState({field: undefined, isAscending: false});
+    const [sortByField, setSortByField] = useState({field: 'Overlap Ratio', isAscending: false});
     const [transformedRows, setTransformedRows] = useState(transform(rows));
     const [uniqueFactors, setUniqueFactors] = useState(Array.from(new Set(transform(rows).map(d => d['Factor']))));
     const [selectedFactor, setSelectedFactor] = useState(Array.from(new Set(transform(rows).map(d => d['Factor'])))[0]);
@@ -52,7 +52,7 @@ export default function DataTable(props) {
         });
 
         // sort
-        if(sortByField.field) {
+        if(sortByField.field && columns?.indexOf(sortByField.field) !== -1) {
             const {field, isAscending} = sortByField;
             transformed = transformed.sort((a, b) => isAscending ? a[field] > b[field] : a[field] < b[field]);
         }

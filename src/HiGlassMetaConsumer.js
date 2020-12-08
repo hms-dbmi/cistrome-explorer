@@ -31,20 +31,36 @@ import {
     getTrackDefFromViewConfig,
     addTrackDefToViewConfig,
     getAllViewAndTrackPairs,
-    removeViewportFromViewConfig
+    removeViewportFromViewConfig,
+    getTrackIdsFromViewConfig,
+    removeTopTrackFromViewConfig
 } from './utils/viewconf.js';
 import { wrapSvg } from './utils/wrap-svg.js';
 
 import './HiGlassMetaConsumer.scss';
 import cloneDeep from 'lodash/cloneDeep';
 import { removeItemFromArray, modifyItemInArray, insertItemToArray } from './utils/array.js';
+import { CLOSE } from './utils/icons.js';
+import { HG38_START_POSITIONS } from './utils/chromsizes.js';
 
 const hgOptionsBase = {
     sizeMode: 'bounded', // Stretch the height of HiGlass to its container <div/>
     pixelPreciseMarginPadding: false,
+    bounded: true,
     containerPaddingX: 0,
     containerPaddingY: 0,
+    viewMarginTop: 0,
+    viewMarginBottom: 0,
+    viewMarginLeft: 0,
+    viewMarginRight: 0,
+    viewPaddingTop: 0,
+    viewPaddingBottom: 0,
+    viewPaddingLeft: 0,
+    viewPaddingRight: 0,
 };
+
+// If this string tag is included in the track id, allow showing the 'x' button to remove the track.
+export const REMOVE_ALLOWED_TAG_TRACKID = '-allow-remove-';
 
 /**
  * HiGlassMeta passes its props through, and wraps this component with the context provider.
@@ -59,6 +75,8 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         viewConfig: baseViewConfig,
         options: baseOptions,
         rowInfo: baseRowInfo,
+        helpActivated,
+        aggregateRowBy,
         onViewChanged: onViewChangedCallback,
         onGenomicIntervalSearch: onGenomicIntervalSearchCallback,
         onGeneSearch: onGeneSearchCallBack
@@ -70,6 +88,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
     const [options, setOptions] = useState(processWrapperOptions(baseOptions));
     const [multivecTrackIds, setMultivecTrackIds] = useState([]);
     const [viewportTrackIds, setViewportTrackIds] = useState({});
+    const [stackedBarTrackIds, setStackedBarTrackIds] = useState([]);
     const [isWheelListening, setIsWheelListening] = useState(false);
     
     const context = useContext(InfoContext);
@@ -151,6 +170,9 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
             newViewportTrackIds[viewId] = getSiblingVPHTrackIdsFromViewConfig(newViewConfig, viewId);
         });
 
+        // Tracks that are interactively added.
+        const newStackedBarTrackIds = getTrackIdsFromViewConfig(newViewConfig, REMOVE_ALLOWED_TAG_TRACKID);
+
         // Get selected rows from the view config and update context.
         for(let trackIds of newTrackIds) {
             const newSelectedRows = getHMSelectedRowsFromViewConfig(newViewConfig, trackIds.viewId, trackIds.trackId);
@@ -171,6 +193,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         }
         setMultivecTrackIds(newTrackIds);
         setViewportTrackIds(newViewportTrackIds);
+        setStackedBarTrackIds(newStackedBarTrackIds);
     }, []);
 
     // Function to get a track object from the higlass API.
@@ -213,6 +236,12 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         hgRef.current.api.setViewConfig(newViewConfig);
     }, [hgRef]);
 
+    const removeTrack = useCallback((viewId, trackId) => {
+        const currViewConfig = hgRef.current.api.getViewConfig();
+        const newViewConfig = removeTopTrackFromViewConfig(currViewConfig, viewId, trackId);
+        hgRef.current.api.setViewConfig(newViewConfig);
+    }, [hgRef]);
+
     // HiGlassMeta APIs that can be called outside the library.
     useEffect(() => {
         ref.current = {
@@ -221,9 +250,41 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                 onRemoveAllFilters: () => removeAllFilters(),
                 onRemoveAllSort: () => removeAllSort(),
                 addNewTrack: (trackDef, viewId, position) => addNewTrack(trackDef, viewId, position),
+                zoomTo: (keyword) => {
+                    if(!keyword.includes('chr') || !keyword.includes('-')) {
+                        console.warn('Genomic interval you entered is not in a correct format.');
+                        return;
+                    }
+                    const chrStart = HG38_START_POSITIONS.find(d => d.chr === keyword.split(':')[0])?.position;
+                    if(typeof chrStart === undefined) {
+                        console.warn('Chromosome name is not valid', keyword.split(':')[0]);
+                        return;
+                    }
+                    const [s, e] = keyword.split(':')[1].split('-');
+                    const start = +s + chrStart;
+                    const end = +e + chrStart;
+                    Array.from(new Set(multivecTrackIds.map(d => d.viewId))).map((viewId) => {
+                        hgRef.current.api.zoomTo(viewId, start, end, start, end, 1000);
+                    });
+                },
+                zoomToGene: (gene) => {
+                    Array.from(new Set(multivecTrackIds.map(d => d.viewId))).map((viewId) => {
+                        hgRef.current.api.zoomToGene(viewId, gene, 1000);
+                    });
+                },
+                suggestGene: (keyword, callback) => {
+                    if(multivecTrackIds.length > 0) {
+                        const viewId = multivecTrackIds[0].viewId;
+                        hgRef.current.api.suggestGene(viewId, keyword, (suggestions) => {
+                            if(suggestions && suggestions.length > 0) {
+                                callback(suggestions);
+                            }
+                        });
+                    }
+                }
             }
         }
-    }, [ref, addNewTrack]);
+    }, [ref, addNewTrack, multivecTrackIds]);
 
     const setSelectedRowsToViewConfig = useCallback((viewId, trackId, selectedRows) => {
         const currViewConfig = hgRef.current.api.getViewConfig();
@@ -322,6 +383,18 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         const newOptions = updateWrapperOptions(options, newRowHighlight, "rowHighlight", viewId, trackId, { isReplace: true });
         setOptions(newOptions);
     }, [options]);
+
+    // Aggregating rows
+    useEffect(() => {
+        if(!multivecTrackIds || multivecTrackIds.length === 0) {
+            // do not have enough information
+            return;
+        }
+        const { viewId, trackId } = multivecTrackIds[0];
+        const newRowAggregate = aggregateRowBy ? [{ field: aggregateRowBy, type: 'nominal', notOneOf: [] }] : [];
+        const newOptions = updateWrapperOptions(options, newRowAggregate, "rowAggregate", viewId, trackId, { isReplace: true });
+        setOptions(newOptions);
+    }, [aggregateRowBy]);
 
     // Callback function for filtering.
     const onFilterRows = useCallback((viewId, trackId, field, type, condition, isRemove) => {
@@ -422,7 +495,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
     }, [options]);
     
     // Callback function for adding a track.
-    const onAddTrack = useCallback((viewId, trackId, field, type, notOneOf, position) => {
+    const onAddTrack = useCallback((viewId, trackId, field, type, notOneOf, position, selected = '') => {
         if(viewId === DEFAULT_OPTIONS_KEY || trackId === DEFAULT_OPTIONS_KEY) {
             console.log("A view or track ID is a default ID.");
             return;
@@ -432,7 +505,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         const newTrackId = getUniqueViewOrTrackId(currViewConfig, { 
             baseId: trackId, 
             idKey: "trackId", 
-            interfix: "detail-view"
+            interfix: REMOVE_ALLOWED_TAG_TRACKID
         });
         
         // Add options for the new track.
@@ -450,11 +523,19 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         let newTrackDef = getTrackDefFromViewConfig(currViewConfig, viewId, trackId);
         newTrackDef = {
             ...newTrackDef,
-            height: 200,
+            height: 30,
             uid: newTrackId,
+            type: 'horizontal-stacked-bar',
             options: {
                 ...newTrackDef.options,
-                selectRows: newSelectedRows
+                name: selected,
+                selectRows: newSelectedRows,
+                trackBorderWidth: 0,
+                trackBorderColor: "white",
+                barBorder: true,
+                labelColor: "black",
+                backgroundColor: "#F6F6F6",
+                colorScale: ["lightgray"],
             }
         }
         addNewTrack(newTrackDef, viewId, position);
@@ -542,8 +623,8 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                     multivecTrackViewId={viewId}
                     multivecTrackTrackId={trackId}
                     multivecTrackTilesetId={trackTilesetId}
-                    onAddTrack={(field, type, notOneOf, position) => {
-                        onAddTrack(viewId, trackId, field, type, notOneOf, position);
+                    onAddTrack={(field, type, notOneOf, position, selected) => {
+                        onAddTrack(viewId, trackId, field, type, notOneOf, position, selected);
                     }}
                     onSortRows={(field, type, order, isTrackIndependent) => {
                         onSortRows(viewId, trackId, field, type, order, isTrackIndependent);
@@ -560,9 +641,35 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                     onMetadataInit={() => {
                         setMetadataToContext(viewId, trackId);
                     }}
+                    helpActivated={helpActivated}
+                    rowAggregated={aggregateRowBy !== undefined}
                     drawRegister={drawRegister}
                 />
             ))}
+            {stackedBarTrackIds.map(({ viewId, trackId }, i) => {
+                const track = getTrackObject(viewId, trackId);
+                if(!track) {
+                    // did not find any track with the given viewid and trackId
+                    return;  
+                }
+
+                const [left, top] = track.position;
+                const [w, h] = track.dimensions;
+                return (
+                    <div style={{ left: left + w, top, position: 'absolute', height: h }}
+                        onClick={() => removeTrack(viewId, trackId)}
+                    >
+                        <svg
+                            className={'hm-button'}
+                            style={{ color: "rgb(171, 171, 171)", background: "none", height: '30px' }}
+                            viewBox={CLOSE.viewBox}
+                        >
+                            <title>Remove Track</title>
+                            <path d={CLOSE.path} fill="currentColor"/>
+                        </svg>
+                    </div>
+                );
+            })}
             {Array.from(new Set(multivecTrackIds.map(d => d.viewId))).map((viewId, i) => (
                 <ViewWrapper
                     key={i}
@@ -580,6 +687,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                         hgRef.current.api.setViewConfig(newViewConfig);
                     }}
                     onGenomicIntervalSearch={onGenomicIntervalSearchCallback}
+                    helpActivated={helpActivated}
                     drawRegister={drawRegister}
                 />
             ))}

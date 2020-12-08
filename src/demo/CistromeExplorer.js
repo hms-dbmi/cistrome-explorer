@@ -4,12 +4,31 @@ import pkg from '../../package.json';
 import { HiGlassMeta } from '../index.js';
 import CistromeToolkit from './CistromeToolkit.js';
 
-import { UNDO, REDO, TABLE, DOCUMENT, GITHUB, CLOSE, MENU, TRASH, SEARCH, FOLDER, PENCIL } from '../utils/icons.js';
+import { UNDO, REDO, TABLE_2, DOCUMENT, GITHUB, TOGGLE_ON, TOGGLE_OFF, CLOSE, ELLIPSIS, TRASH, SEARCH, FOLDER, PENCIL } from '../utils/icons.js';
 import { DEFAULT_COLOR_RANGE } from '../utils/color.js';
 import { diffViewOptions } from '../utils/view-history';
 import { demos } from './demo';
-import './CistromeExplorer.scss';
 import { CISTROME_DBTOOLKIT_GENE_DISTANCE, CISTROME_DBTOOLKIT_SPECIES } from '../utils/cistrome';
+
+import { publishHelpTooltip, destroyTooltip } from "../Tooltip.js";
+
+import './CistromeExplorer.scss';
+
+import StackedBarTrack from 'higlass-multivec/es/StackedBarTrack';
+import ScaleLegendTrack from '../scale-legend/ScaleLegendTrack';
+import higlassRegister from 'higlass-register';
+
+higlassRegister({
+    name: 'StackedBarTrack',
+    track: StackedBarTrack,
+    config: StackedBarTrack.config,
+});
+
+higlassRegister({
+    name: 'ScaleLegendTrack',
+    track: ScaleLegendTrack,
+    config: ScaleLegendTrack.config,
+});
 
 export default function CistromeExplorer() {
     
@@ -30,9 +49,19 @@ export default function CistromeExplorer() {
         };
     }, [fileReader]);
 
+    // search
+    const searchBoxRef = useRef();
+    const [searchKeyword, setSearchKeyword] = useState('');
+    const [geneSuggestions, setGeneSuggestions] = useState([]);
+    const [suggestionPosition, setSuggestionPosition] = useState({left: 0, top: 0});
+
     // Undo and redo
     const [undoable, setUndoable] = useState(false);
     const [redoable, setRedoable] = useState(false);
+
+    // toggle
+    const [helpActivated, setHelpActivated] = useState(false);
+    const [aggActivated, setAggActivated] = useState(false);
 
     // History of view updates
     const MAX_HISTORY_LENGTH = 50;  // How many previous views should be recorded?
@@ -142,26 +171,91 @@ export default function CistromeExplorer() {
         setIndexOfCurrentView(0);
     }
 
+    // const aggregatedOptions = !aggActivated ? demos[selectedDemo].options : (
+    //     Array.isArray(demos[selectedDemo].options)
+    //     ? modifyItemInArray(demos[selectedDemo].options, 0, {
+    //         ...demos[selectedDemo].options[0],
+    //         rowAggregate: [ {field: "Tissue Type", type: "nominal", notOneOf: []} ]
+    //     })
+    //     : {
+    //         ...demos[selectedDemo].options,
+    //         rowAggregate: [ {field: "Tissue Type", type: "nominal", notOneOf: []} ],
+    //     }
+    // )
+
     return (
         <div className="cistrome-explorer">
             <div className="header-container">
                 <div className="header">
-                    <span 
-                        className="ce-generic-button"
-                        onClick={() => setIsSettingVisible(!isSettingVisible)}>
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                            viewBox={MENU.viewBox}>
-                            <title>Menu</title>
-                            <path fill="currentColor" d={MENU.path}/>
-                        </svg>
+                    <span className="cisvis-title">
+                        <hl>Cistrome</hl> Explorer
                     </span>
-                    <span className="cisvis-title">Cistrome Explorer</span>
-                    <span className="header-control">
+                    <span 
+                        className="header-control"
+                        onMouseMove={(e) => publishHelpTooltip(e,
+                            "Search Gene or Genomic Interval",
+                            "You can quickly reposition the heatmap on the right by entering a gene name or genomic interval, such as GAPDH or chr6:151690496-152103274.",
+                            helpActivated
+                        )}
+                        onMouseLeave={() => destroyTooltip()}
+                    >
                         <span 
-                            className="ce-generic-button-sm"
+                            className="ce-generic-button"
+                            style={{ cursor: 'auto' }}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                viewBox={SEARCH.viewBox}
+                            >
+                                <path d={SEARCH.path} fill="currentColor"/>
+                            </svg>
+                            <input
+                                ref={searchBoxRef}
+                                className={"position-search-box " + (helpActivated ? 'help-highlight' : '')}
+                                type="text"
+                                name="default name"
+                                placeholder="GAPDH or chr6:151690496-152103274"
+                                onChange={(e) => {
+                                    const keyword = e.target.value;
+                                    if(keyword !== '' && !keyword.startsWith('c')) {
+                                        hmRef.current.api.suggestGene(keyword, (suggestions) => {
+                                            setGeneSuggestions(suggestions);
+                                        });
+                                        setSuggestionPosition({
+                                            left: searchBoxRef.current.getBoundingClientRect().left,
+                                            top: searchBoxRef.current.getBoundingClientRect().top + searchBoxRef.current.getBoundingClientRect().height,
+                                        });
+                                    } else {
+                                        setGeneSuggestions([]);
+                                    }
+                                    setSearchKeyword(keyword);
+                                }}
+                                onKeyDown={(e) => {
+                                    switch(e.key){
+                                        case 'ArrowUp':
+                                            break;
+                                        case 'ArrowDown':
+                                            break;
+                                        case 'Enter':
+                                            setGeneSuggestions([]);
+                                            if(searchKeyword.includes('chr')) {
+                                                hmRef.current.api.zoomTo(searchKeyword);
+                                            } else {
+                                                hmRef.current.api.zoomToGene(searchKeyword);
+                                            }
+                                            break;
+                                        case 'Esc':
+                                        case 'Escape':
+                                            break;
+                                    }
+                                }}
+                            />
+                        </span>
+                    </span>
+                    <span className="header-control">
+                        <span
+                            className={"ce-generic-button " + (undoable ? '' : 'ce-generic-button-deactivated')}
                             style={{ 
-                                cursor: undoable ? 'pointer' : 'not-allowed',
-                                color: undoable ? 'white' : '#999'
+                                cursor: undoable ? 'pointer' : 'not-allowed'
                             }} 
                             onClick={() => {
                                 if(undoable) {
@@ -179,10 +273,9 @@ export default function CistromeExplorer() {
                             {` Undo (${viewHistory.length - indexOfCurrentView - 1})`}
                         </span>
                         <span 
-                            className="ce-generic-button-sm"
+                            className={"ce-generic-button " + (redoable ? '' : 'ce-generic-button-deactivated')}
                             style={{ 
-                                cursor: redoable ? 'pointer' : 'not-allowed',
-                                color: redoable ? 'white' : '#999'
+                                cursor: redoable ? 'pointer' : 'not-allowed'
                             }} 
                             onClick={() => {
                                 if(redoable) {
@@ -200,10 +293,62 @@ export default function CistromeExplorer() {
                             {` Redo (${indexOfCurrentView})`}
                         </span>
                     </span>
+                    <span className="header-control"
+                        onMouseMove={(e) => publishHelpTooltip(e,
+                            "Cistrome Data Browser Toolkit",
+                            "You can query for transcription factors that are likely to bind in the region of your intrest based on the thousand of samples available in Cistrome Data Browser",
+                            helpActivated
+                        )}
+                        onMouseLeave={() => destroyTooltip()}
+                    >
+                        <span 
+                            className={"ce-generic-button " + (helpActivated ? 'help-highlight' : '')}
+                            onClick={() => setIsToolkitVisible(!isToolkitVisible)}>
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                viewBox={TABLE_2.viewBox}>
+                                <title>Cistrome DB Toolkit</title>
+                                <path fill="currentColor" d={TABLE_2.path}/>
+                            </svg>
+                            {' Cistrome Search '}
+                        </span>
+                    </span>
+                    <span className="header-control"
+                        onMouseMove={(e) => publishHelpTooltip(e,
+                            "Aggregate Samples By Tissue Type",
+                            "You can aggregate samples with the same tissue type into a single row in the visualization",
+                            helpActivated
+                        )}
+                        onMouseLeave={() => destroyTooltip()}
+                    >
+                        <span 
+                            className={"ce-generic-button-lg " + (aggActivated ? 'ce-generic-button-activated ' : '') + (helpActivated ? 'help-highlight' : '')}
+                            onClick={() => { setAggActivated(!aggActivated); }}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                viewBox={aggActivated ? TOGGLE_ON.viewBox : TOGGLE_OFF.viewBox}>
+                                <title>Aggregate Rows By Tissue Type</title>
+                                <path fill="currentColor" d={aggActivated ? TOGGLE_ON.path : TOGGLE_OFF.path}/>
+                            </svg>
+                            {` Aggregate By Tissue`}
+                        </span>
+                    </span>
+                    <span className="header-control">
+                        <span 
+                            className={"ce-generic-button-lg " + (helpActivated ? 'ce-generic-button-activated' : '')}
+                            onClick={() => { setHelpActivated(!helpActivated); }}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                viewBox={helpActivated ? TOGGLE_ON.viewBox : TOGGLE_OFF.viewBox}>
+                                <title>Help</title>
+                                <path fill="currentColor" d={helpActivated ? TOGGLE_ON.path : TOGGLE_OFF.path}/>
+                            </svg>
+                            {` Show Instructions`}
+                        </span>
+                    </span>
                     <span className="header-info">
                         {geneSearched ? 
                             <span 
-                                className="ce-generic-button" 
+                                className="ce-generic-button"
                                 onClick={() => {
                                     if(geneSearched) {
                                         setGeneToolkitParams({
@@ -217,36 +362,42 @@ export default function CistromeExplorer() {
                             </span>
                             : null}
                         <span 
-                            className="ce-generic-button" 
-                            onClick={() => setIsToolkitVisible(!isToolkitVisible)}>
+                            className="ce-generic-button"
+                            onClick={() => setIsSettingVisible(!isSettingVisible)}>
                             <svg xmlns="http://www.w3.org/2000/svg"
-                                viewBox={TABLE.viewBox}>
-                                <title>Cistrome DB Toolkit</title>
-                                <path fill="currentColor" d={TABLE.path}/>
+                                viewBox={ELLIPSIS.viewBox}>
+                                <title>Menu</title>
+                                <path fill="currentColor" d={ELLIPSIS.path}/>
                             </svg>
-                            {' Toolkit '}
-                        </span>
-                        <span className="ce-generic-button">
-                            <a href={`${pkg.homepage}/docs/`} target="_blank">
-                                <svg xmlns="http://www.w3.org/2000/svg"
-                                    viewBox={DOCUMENT.viewBox}>
-                                    <title>Documents</title>
-                                    <path fill="currentColor" d={DOCUMENT.path}/>
-                                </svg>
-                            </a>
-                        </span>
-                        <span className="ce-generic-button">
-                            <a href={pkg.repository.url} target="_blank">
-                                <svg xmlns="http://www.w3.org/2000/svg"
-                                    viewBox={GITHUB.viewBox}>
-                                    <title>GitHub</title>
-                                    <path fill="currentColor" d={GITHUB.path}/>
-                                </svg>
-                            </a>
                         </span>
                     </span>
+                    {geneSuggestions.length !== 0 ? 
+                        <div className="gene-suggestion" style={{
+                            left: suggestionPosition.left,
+                            top: suggestionPosition.top                        
+                        }}>
+                            <ul>
+                                {geneSuggestions.map((d, i) => (
+                                    <li style={{textAlign: 'right', color: 'gray'}}
+                                        key={d.geneName + d.score}
+                                        onClick={() => {
+                                            searchBoxRef.current.value = d.geneName;
+                                            setGeneSuggestions([]);
+                                            hmRef.current.api.zoomToGene(d.geneName);
+                                        }}
+                                    >
+                                        <strong style={{float: 'left', color: 'black'}}>{d.geneName}</strong>
+                                        {`${d.chr}:${d.txStart}-${d.txEnd}`}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                        : null
+                    }
                 </div>
             </div>
+
+            {/* <div className="sub-header"> </div> */}
 
             <div className="visualization-container">
                 <div className="visualization">
@@ -255,6 +406,8 @@ export default function CistromeExplorer() {
                         viewConfig={demos[selectedDemo].viewConfig}
                         options={demos[selectedDemo].options}
                         rowInfo={localMetadata}
+                        aggregateRowBy={aggActivated ? "Tissue Type" : undefined}
+                        helpActivated={helpActivated}
                         onViewChanged={onViewChanged}
                         onGenomicIntervalSearch={setToolkitParams}
                         onGeneSearch={setGeneSearched}
@@ -267,7 +420,7 @@ export default function CistromeExplorer() {
                     />
                 </div>
                 <div className="settings" style={{
-                    left: isSettingVisible ? 0 : "-400px"
+                    right: isSettingVisible ? 0 : '-400px'
                 }}>
                     <span style={{ 
                         verticalAlign: "middle", 
@@ -458,6 +611,54 @@ export default function CistromeExplorer() {
                             <path d={TRASH.path} fill="currentColor"/>
                         </svg>
                         {' Remove All Sort'}
+                    </span>
+                    <div className="setting-separater"></div>
+                    <h2>Resource</h2>
+                    <span 
+                        className="ce-generic-button"
+                        style={{ 
+                            fontSize: 12,
+                            cursor: 'pointer',
+                            display: 'inline-block',
+                            color: 'black', 
+                            background: 'white', 
+                            border: '1px solid gray',
+                            padding: '4px',
+                            marginTop: '4px'
+                        }}
+                        onClick={() => {
+                            window.open(`${pkg.homepage}/docs/`)
+                        }}
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            viewBox={DOCUMENT.viewBox}>
+                            <title>Documents</title>
+                            <path fill="currentColor" d={DOCUMENT.path}/>
+                        </svg>
+                        {' Documentation'}
+                    </span>
+                    <span 
+                        className="ce-generic-button"
+                        style={{ 
+                            fontSize: 12,
+                            cursor: 'pointer',
+                            display: 'inline-block',
+                            color: 'black', 
+                            background: 'white', 
+                            border: '1px solid gray',
+                            padding: '4px',
+                            marginTop: '4px'
+                        }}
+                        onClick={() => {
+                            window.open(pkg.repository.url)
+                        }}
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            viewBox={GITHUB.viewBox}>
+                            <title>GitHub</title>
+                            <path fill="currentColor" d={GITHUB.path}/>
+                        </svg>
+                        {' Open Source'}
                     </span>
                 </div>
             </div>

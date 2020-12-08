@@ -136,6 +136,12 @@ export default function CistromeToolkit(props) {
         }
         if(parameter) {
             setRequestStatus({ msg: "Receiving Cistrome DB API response...", isLoading: true });
+            addRequestHistory(
+                apiType,
+                parameter,
+                [],
+                []
+            );
             requestDBToolkitAPI(apiType, parameter)
                 .then(([rows]) => {
                     const [customColumns, customRows] = getReadableTable(apiType, rows);
@@ -412,7 +418,7 @@ export default function CistromeToolkit(props) {
                 // TODO: Support Peak Set API
             }
         });
-    }, [requestHistory, selectedRequestIndex]);
+    }, [requestHistory, selectedRequestIndex, requestStatus]);
     
     return (
         <div ref={toolkitRef}
@@ -455,7 +461,7 @@ export default function CistromeToolkit(props) {
                 </span>
                 <span style={{ 
                     verticalAlign: "middle", 
-                    display: "inline-block", 
+                    display: "inline-block",
                     position: "absolute", 
                     right: 40,
                     top: 15

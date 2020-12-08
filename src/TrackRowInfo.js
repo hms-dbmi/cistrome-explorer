@@ -34,6 +34,8 @@ const TRACK_TYPE = Object.freeze({
  * @prop {function} onSortRows The function to call upon a sort interaction.
  * @prop {function} onHighlightRows The function to call upon a highlight interaction.
  * @prop {function} onFilterRows The function to call upon a filter interaction.
+ * @prop {boolean} helpActivated Whether to show help instructions or not.
+ * @prop {boolean} rowAggregated Whether the row is aggregated or not.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function TrackRowInfo(props) {
@@ -55,6 +57,8 @@ export default function TrackRowInfo(props) {
         onSortRows,
         onHighlightRows,
         onFilterRows,
+        helpActivated,
+        rowAggregated,
         drawRegister
     } = props;
 
@@ -195,6 +199,8 @@ export default function TrackRowInfo(props) {
                     onSortRows={onSortRows}
                     onHighlightRows={onHighlightRows}
                     onFilterRows={onFilterRows}
+                    helpActivated={helpActivated}
+                    rowAggregated={rowAggregated}
                     drawRegister={(key, draw, options) => {
                         drawRegister(`${key}-${i}`, draw, { top: top + d.top, left: left + d.left, width: d.width, height: d.height })
                     }}

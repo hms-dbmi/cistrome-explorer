@@ -6,6 +6,7 @@ import { resolveIntervalCoordinates } from './utils/genome.js';
 import { getRange } from './utils/viewport.js';
 import { ARROW_H } from './utils/icons.js';
 import './ViewWrapper.scss';
+import { destroyTooltip, publishHelpTooltip } from './Tooltip.js';
 
 /**
  * Component for rendering genome interval selection tools.
@@ -15,6 +16,7 @@ import './ViewWrapper.scss';
  * @prop {function} onSelectGenomicInterval The function to call upon selection of a genomic interval.
  * @prop {function} onViewportRemove The function to call upon removing a viewport track.
  * @prop {function} onGenomicIntervalSearch A function to call upon searching for TFs by using the selected interval. Optional.
+ * @prop {boolean} helpActivated Whether to show help instructions or not.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function ViewWrapper(props) {
@@ -26,6 +28,7 @@ export default function ViewWrapper(props) {
         onSelectGenomicInterval,
         onViewportRemove,
         onGenomicIntervalSearch,
+        helpActivated,
         drawRegister
     } = props;
     
@@ -119,16 +122,17 @@ export default function ViewWrapper(props) {
         }
     });
 
-    useEffect(() => {
-        if(assembly && multivecTrack._xScale) {
-            const domainX = multivecTrack._xScale.invert(mouseHoverX);
-            resolveIntervalCoordinates(assembly, domainX)
-                .then(result => {
-                    setChrName(result[0][0]);
-                    setChrPos(result[0][1].toLocaleString("en"));
-                });
-        }
-    }, [mouseHoverX]);
+    // Let's remove this functionality, which looks to be making the query slow
+    // useEffect(() => {
+    //     if(assembly && multivecTrack._xScale) {
+    //         const domainX = multivecTrack._xScale.invert(mouseHoverX);
+    //         resolveIntervalCoordinates(assembly, domainX)
+    //             .then(result => {
+    //                 setChrName(result[0][0]);
+    //                 setChrPos(result[0][1].toLocaleString("en"));
+    //             });
+    //     }
+    // }, [mouseHoverX]);
 
     // All hooks must be above this return statement, since they need to be executed in the same order.
     if(!viewBoundingBox || !multivecTrack || !multivecTrack.tilesetInfo) {
@@ -137,23 +141,29 @@ export default function ViewWrapper(props) {
     }
 
     const { top, left, width, height } = viewBoundingBox;
-    const brushBarTop = height + 4;
+    const brushBarTop = height + 8;
 
     return assembly ? (
         <div className="hm-view-wrapper">
             <div 
                 style={{
                     position: "absolute",
-                    top: `${top}px`,
+                    top: `${0}px`,
                     left: `${left}px`,
                     width: `${width}px`, 
                     height: `${height}px`,
                     pointerEvents: "none"
                 }}
             >
-                <div className="col-tools-brush-bar" ref={divRef}
+                <div className={"col-tools-brush-bar " + (helpActivated ? "help-highlight" : '')} ref={divRef}
+                    onMouseMove={(e) => publishHelpTooltip(e,
+                        "Select Genomic Region & Query for Transcription Factors",
+                        "You can select the genomic region of your interest by mouse dragging and search transcription factors that are likely to bind based on Cistrome Data Browser.",
+                        helpActivated
+                    )}
+                    onMouseLeave={() => destroyTooltip()}
                     style={{
-                        top: `${brushBarTop}px`,
+                        top: `${-brushBarHeight - 8}px`,
                         height: `${brushBarHeight}px`,
                     }}
                 >
@@ -189,17 +199,16 @@ export default function ViewWrapper(props) {
                     : null}
                     <span style={{
                         marginLeft: "4px",
-                        verticalAlign: "middle",
-                        color: "#b7b6b6",
+                        color: "black",
                         display: "inline-block",
                         pointerEvents: "none"
                     }}>
                         <svg className={'hm-button-sm'}
-                            style={{ color: "#b7b6b6", verticalAlign: "middle" }}
+                            style={{ color: "gray", verticalAlign: "middle" }}
                             viewBox={ARROW_H.viewBox}>
-                            <path d={ARROW_H.path} fill="currentColor"/>
+                            <path d={ARROW_H.path} fill="black"/>
                         </svg>
-                        Genomic Interval Selection
+                        Genomic Interval Selection (Click and Drag)
                     </span> 
                 </div>
                 <div className="col-tools-hg-overlay">
@@ -218,14 +227,14 @@ export default function ViewWrapper(props) {
                             style={{ left: `${mouseHoverX}px` }}
                         />
                     : null}
-                    {mouseHoverX  ? 
+                    {/* {mouseHoverX  ? 
                         // Text label of chromosome position.
                         <div className="col-tools-hover-line-info" 
                             style={{ top: "1px", left: `${mouseHoverX}px` }}
                         >
                             {`${chrName}: ${chrPos}`}
                         </div>
-                    : null}
+                    : null} */}
                 </div>
             </div>
         </div>

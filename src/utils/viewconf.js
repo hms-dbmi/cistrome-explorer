@@ -2,7 +2,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import uuidv4 from 'uuid/v4';
 
 import { TRACK_TYPE } from './constants.js';
-import { removeItemFromArray } from './array.js';
+import { insertItemToArray, removeItemFromArray } from './array.js';
 import { VIEWPORT_OPTIONS } from './viewport.js';
 
 /**
@@ -114,7 +114,13 @@ export function addTrackDefToViewConfig(currViewConfig, trackDef, targetViewId, 
         }
     });
     if(viewIndex !== -1) {
-        newViewConfig.views[viewIndex].tracks[position].push(trackDef);
+        const length = newViewConfig.views[viewIndex].tracks[position].length;
+        if(length === 0) {
+            newViewConfig.views[viewIndex].tracks[position].push(trackDef);
+        } else {
+            // insert to the one index before the last one just to show the tracks upper the "Aggregated" track
+            newViewConfig.views[viewIndex].tracks[position] = insertItemToArray(newViewConfig.views[viewIndex].tracks[position], length - 1, trackDef);
+        }
     } else {
         console.warn(`The following view is not found (${targetViewId}) in addTrackDefToViewConfig().`);
     }
@@ -133,6 +139,25 @@ export function getHMTrackIdsFromViewConfig(viewConf) {
         if(trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC) {
             mvTracks.push({ viewId, trackId, trackTilesetId });
         } else if(trackType === TRACK_TYPE.COMBINED && innerTrackType === TRACK_TYPE.HORIZONTAL_MULTIVEC) {
+            mvTracks.push({ viewId, trackId: innerTrackId, trackTilesetId: innerTrackTilesetId, combinedTrackId: trackId });
+        }
+    });
+    return mvTracks;
+}
+
+/**
+ * This function finds tracks with the given trackId tag.
+ * @param {object} viewConf A valid HiGlass viewConfig object.
+ * @param {string} tag A substring to search for.
+ * @returns {array} Array containing `{ viewId, trackId, ... }` for each track.
+ */
+export function getTrackIdsFromViewConfig(viewConf, tag) {
+    const mvTracks = [];
+    traverseViewConfig(viewConf, ({ viewId, trackType, trackId, trackTilesetId, innerTrackType, innerTrackId, innerTrackTilesetId }) => {
+        // The horizontal-multivec track could be standalone, or within a "combined" track.
+        if(trackId && trackId.includes(tag)) {
+            mvTracks.push({ viewId, trackId, trackTilesetId });
+        } else if(trackType === TRACK_TYPE.COMBINED && innerTrackId && innerTrackId.includes(tag)) {
             mvTracks.push({ viewId, trackId: innerTrackId, trackTilesetId: innerTrackTilesetId, combinedTrackId: trackId });
         }
     });
@@ -178,6 +203,29 @@ export function removeViewportFromViewConfig(viewConfig, viewId, trackId) {
         const viewportIndex = foundView.tracks['whole'].findIndex(d => d.uid === trackId);
         foundView.tracks['whole'] = removeItemFromArray(foundView.tracks['whole'], viewportIndex);
         newViewConfig.views[foundViewIndex] = foundView;
+    }
+    return newViewConfig;
+}
+
+/**
+ * This function removes a track on the top position from a view config.
+ * @param {object} viewConfig The current HiGlass view config.
+ * @param {string} viewId The uid of view containing the `viewport-horizontal` track that was the target of the action.
+ * @param {string} trackId The uid of the `viewport-horizontal` track that was the target of the action.
+ * @returns {object} The updated HiGlass view config.
+ */
+export function removeTopTrackFromViewConfig(viewConfig, viewId, trackId) {
+    const newViewConfig = cloneDeep(viewConfig);
+
+    // Find the view associated with this viewId.
+    const foundViewIndex = newViewConfig.views.findIndex(v => v.uid === viewId);
+    const foundView = newViewConfig.views[foundViewIndex];
+
+    if(foundView.tracks['top'] || foundView.tracks['top'].find(d => d.uid === trackId)) {
+        const trackIndex = foundView.tracks['top'].findIndex(d => d.uid === trackId);
+        foundView.tracks['top'] = removeItemFromArray(foundView.tracks['top'], trackIndex);
+        newViewConfig.views[foundViewIndex] = foundView;
+        return newViewConfig;
     }
     return newViewConfig;
 }

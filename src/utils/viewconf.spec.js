@@ -14,7 +14,7 @@ import {
     removeViewportFromViewConfig
 } from './viewconf.js';
 
-import hgDemoViewConfig1 from '../viewconfigs/horizontal-multivec-1.json';
+import { hgDemoViewConfig1} from '../viewconfigs/horizontal-multivec-1';
 import hgDemoViewConfig2 from '../viewconfigs/horizontal-multivec-2.json';
 import hgDemoViewConfig3 from '../viewconfigs/horizontal-multivec-3.json';
 import hgDemoViewConfig4 from '../viewconfigs/horizontal-multivec-4.json';

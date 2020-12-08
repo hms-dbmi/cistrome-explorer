@@ -19,11 +19,14 @@ const margin = 5;
  * @prop {number} top The top position of this view.
  * @prop {number} width The width of this view.
  * @prop {number} height The height of this view.
+ * @prop {number} titleHeight The height of the track title.
  * @prop {object[]} rowInfo The array of JSON Object containing row information.
  * @prop {object[]} transformedRowInfo The `rowInfo` array after aggregating, filtering, and sorting rows.
  * @prop {array} selectedRows The array of selected indices. 
  * @prop {array} highlitRows The array of highlit indices.
  * @prop {object} fieldInfo The name and type of data field.
+ * @prop {string} shortName Alternative string value to show when the track is too narrow.
+ * @prop {function} addTrackOnClick A callback function upon click on a row that adds a separate track on the top.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  * @prop {string} titleSuffix The suffix of a title, information about sorting and filtering status.
  * @prop {object} sortInfo The options for sorting rows of the field used in this track.
@@ -32,12 +35,13 @@ const margin = 5;
  * @prop {function} onSortRows The function to call upon a sort interaction.
  * @prop {function} onHighlightRows The function to call upon a highlight interaction.
  * @prop {function} onFilterRows The function to call upon a filter interaction.
+ * @prop {boolean} helpActivated Whether to show help instructions or not.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function TrackRowInfoVisLink(props) {
     const {
-        left, top, width, height,
-        field, type, alt, title, aggFunction, resolveYScale,
+        left, top, width, height, titleHeight,
+        field, type, alt, title, aggFunction, resolveYScale, shortName = 'Link', addTrackOnClick,
         isLeft,
         isShowControlButtons,
         rowInfo,
@@ -51,6 +55,7 @@ export default function TrackRowInfoVisLink(props) {
         onSortRows,
         onHighlightRows,
         onFilterRows,
+        helpActivated,
         drawRegister,
     } = props;
 
@@ -69,7 +74,7 @@ export default function TrackRowInfoVisLink(props) {
     // Scales
     const yScale = d3.scaleBand()
         .domain(range(transformedRowInfo.length))
-        .range([0, height]);
+        .range([titleHeight, height]);
     const rowHeight = yScale.bandwidth();
 
     const draw = useCallback((domElement) => {
@@ -86,7 +91,7 @@ export default function TrackRowInfoVisLink(props) {
             transformedRowInfo.forEach((info, i) => {
                 const textTop = yScale(i);
                 const textLeft = isLeft ? width - margin : margin;
-                const diplayText = isTextLabel ? aggValue(info, alt ? alt : field) : "Link";
+                const diplayText = isTextLabel ? aggValue(info, alt ? alt : field) : shortName;
                 const text = two.makeText(textLeft, textTop + rowHeight/2, width, rowHeight, diplayText);
                 text.fill = "#23527C";
                 text.fontsize = fontSize;
@@ -106,11 +111,18 @@ export default function TrackRowInfoVisLink(props) {
             });
         }
         
-        drawRowHighlightRect(two, selectedRows, highlitRows, width, height);
+        drawRowHighlightRect(
+            two, 
+            selectedRows, 
+            highlitRows, 
+            titleHeight, 
+            width, 
+            height - titleHeight
+        );
 
-        if(!isShowControlButtons) {
+        // if(!isShowControlButtons) {
             drawVisTitle(title, { two, isLeft, width, height, titleSuffix });
-        }
+        // }
         
         two.update();
         return two.teardown;
@@ -157,8 +169,18 @@ export default function TrackRowInfoVisLink(props) {
             const [mouseX, mouseY] = d3.mouse(canvas);
 
             const y = yScale.invert(mouseY);
+            const hoverValue = aggValue(transformedRowInfo[y], field);
+
             if(y !== undefined) {
-               window.open(transformedRowInfo[y][field]);
+                if(addTrackOnClick) {
+                    const notOneOf = transformedRowInfo.map(d => aggValue(d, field));
+                    notOneOf.splice(notOneOf.indexOf(hoverValue), 1);
+                    onAddTrack(field, "nominal", notOneOf, "top", hoverValue)
+                    console.log()
+                }
+                else {
+                    window.open(hoverValue);
+                }
             }
         });
 
@@ -179,6 +201,7 @@ export default function TrackRowInfoVisLink(props) {
         <div
             ref={divRef}
             style={{
+                top: `${top}px`,
                 position: 'relative',
                 width: `${width}px`,
                 height: `${height}px`
@@ -197,6 +220,7 @@ export default function TrackRowInfoVisLink(props) {
             />
             <TrackRowInfoControl
                 isLeft={isLeft}
+                top={titleHeight}
                 isVisible={isShowControlButtons}
                 field={field}
                 type={type}
@@ -211,6 +235,7 @@ export default function TrackRowInfoVisLink(props) {
                 filterInfo={filterInfo}
                 rowInfo={rowInfo}
                 transformedRowInfo={transformedRowInfo}
+                helpActivated={helpActivated}
             />
         </div>
     );

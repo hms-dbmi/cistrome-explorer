@@ -6,7 +6,7 @@
 
 import { select, create } from "d3-selection";
 import { format } from "d3-format";
-import { schemeSet3, schemeTableau10, interpolateViridis } from "d3-scale-chromatic";
+import { schemeSet1, schemeSet2, schemeSet3, schemeTableau10, schemeCategory10, interpolateOranges, interpolateYlGnBu, interpolateViridis, interpolateCool, interpolatePlasma } from "d3-scale-chromatic";
 import { mouse, event as d3_event } from "d3-selection";
 import { scaleLinear, scaleOrdinal, scaleThreshold } from "d3-scale";
 import { axisTop, axisBottom } from "d3-axis";
@@ -30,9 +30,16 @@ export default {
     select,
     create,
     format,
+    schemeSet1,
+    schemeSet2,
     schemeSet3,
+    schemeCategory10,
     schemeTableau10,
+    interpolateCool,
+    interpolateOranges,
+    interpolateYlGnBu,
     interpolateViridis,
+    interpolatePlasma,
     mouse,
     scaleLinear,
     scaleOrdinal,
