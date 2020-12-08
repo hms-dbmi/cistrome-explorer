@@ -43,6 +43,8 @@ export const TRACK_TITLE_HEIGHT = 30;
  * @prop {function} onHighlightRows The function to call upon a highlight interaction.
  * @prop {function} onFilterRows The function to call upon a filter interaction.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
+ * @prop {boolean} helpActivated Whether to show help instructions or not.
+ * @prop {boolean} rowAggregated Whether the row is aggregated or not.
  * @prop {function} onWidthChanged The function to call when the component resize element has been dragged.
  */
 export default function TrackRowInfoVis(props) {

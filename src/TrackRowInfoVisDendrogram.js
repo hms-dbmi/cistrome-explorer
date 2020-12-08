@@ -18,6 +18,7 @@ import { drawRowHighlightRect } from "./utils/linking.js";
  * @prop {number} top The top position of this view.
  * @prop {number} width The width of this view.
  * @prop {number} height The height of this view.
+ * @prop {number} titleHeight The height of the track title.
  * @prop {object[]} rowInfo The array of JSON Object containing row information.
  * @prop {object[]} transformedRowInfo The `rowInfo` array after aggregating, filtering, and sorting rows.
  * @prop {array} selectedRows The array of selected indices. 
@@ -30,6 +31,8 @@ import { drawRowHighlightRect } from "./utils/linking.js";
  * @prop {function} onSortRows The function to call upon a sort interaction.
  * @prop {function} onHighlightRows The function to call upon a highlight interaction.
  * @prop {function} onFilterRows The function to call upon a filter interaction.
+ * @prop {boolean} helpActivated Whether to show help instructions or not.
+ * @prop {boolean} rowAggregated Whether the row is aggregated or not.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function TrackRowInfoVisDendrogram(props) {

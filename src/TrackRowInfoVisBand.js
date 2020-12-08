@@ -20,6 +20,7 @@ const BAND_PADDING = 10;
  * @prop {number} top The top position of this view.
  * @prop {number} width The width of this view.
  * @prop {number} height The height of this view.
+ * @prop {number} titleHeight The height of the track title.
  * @prop {array} leftSelectedRows The array of selected indices on the left track.
  * @prop {array} rightSelectedRows The array of selected indices on the right track.
  * @prop {array} selectedRows The array of selected indices. 

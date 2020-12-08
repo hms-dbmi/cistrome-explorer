@@ -59,8 +59,7 @@ const hgOptionsBase = {
     viewPaddingRight: 0,
 };
 
-// If this string tag is contained in the track id, ignore showing metadata visualization.
-export const NO_METAVIS_TAG_TRACKID = '-no-metavis-';
+// If this string tag is included in the track id, allow showing the 'x' button to remove the track.
 export const REMOVE_ALLOWED_TAG_TRACKID = '-allow-remove-';
 
 /**
@@ -163,8 +162,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
      * to sibling `viewport-projection-horizontal` track IDs.
      */
     const onViewConfig = useCallback((newViewConfig) => {
-        const newTrackIds = getHMTrackIdsFromViewConfig(newViewConfig)
-            .filter(({trackId}) => !trackId.includes(NO_METAVIS_TAG_TRACKID));
+        const newTrackIds = getHMTrackIdsFromViewConfig(newViewConfig);
         
         // Add viewport projection horizontal track IDs for each view.
         const newViewportTrackIds = {};
@@ -534,7 +532,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                 selectRows: newSelectedRows,
                 trackBorderWidth: 0,
                 trackBorderColor: "white",
-                // barBorder: false,
+                barBorder: true,
                 labelColor: "black",
                 backgroundColor: "#F6F6F6",
                 colorScale: ["lightgray"],

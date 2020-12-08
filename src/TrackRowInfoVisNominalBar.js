@@ -22,6 +22,7 @@ export const margin = 5;
  * @prop {number} top The top position of this view.
  * @prop {number} width The width of this view.
  * @prop {number} height The height of this view.
+ * @prop {number} titleHeight The height of the track title.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  * @prop {boolean} isShowControlButtons Determine if control buttons should be shown.
@@ -36,6 +37,7 @@ export const margin = 5;
  * @prop {function} onSortRows The function to call upon a sort interaction.
  * @prop {function} onHighlightRows The function to call upon a highlight interaction.
  * @prop {function} onFilterRows The function to call upon a filter interaction.
+ * @prop {boolean} helpActivated Whether to show help instructions or not.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function TrackRowInfoVisNominalBar(props) {

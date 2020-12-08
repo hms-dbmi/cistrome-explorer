@@ -22,6 +22,7 @@ const LOCAL_EVENT_FILTER_OPEN = "filter-open";
  * @prop {function} toggleMinSimBar Toggle showing the minimum similarity bar in dendrogram.
  * @prop {object[]} rowInfo The array of JSON Object containing row information.
  * @prop {object} filterInfo The options for filtering rows of the field used in this track.
+ * @prop {boolean} helpActivated Whether to show help instructions or not.
  */
 export default function TrackRowInfoControl(props){
     const {

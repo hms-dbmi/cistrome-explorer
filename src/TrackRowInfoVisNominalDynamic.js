@@ -33,6 +33,7 @@ function createTooltipText(domain) {
  * @prop {number} top The top position of this view.
  * @prop {number} width The width of this view.
  * @prop {number} height The height of this view.
+ * @prop {number} titleHeight The height of the track title.
  * @prop {object[]} rowInfo The array of JSON Object containing row information.
  * @prop {object[]} transformedRowInfo The `rowInfo` array after aggregating, filtering, and sorting rows.
  * @prop {object} fieldInfo The name and type of data field.

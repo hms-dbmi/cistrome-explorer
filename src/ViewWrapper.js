@@ -16,6 +16,7 @@ import { destroyTooltip, publishHelpTooltip } from './Tooltip.js';
  * @prop {function} onSelectGenomicInterval The function to call upon selection of a genomic interval.
  * @prop {function} onViewportRemove The function to call upon removing a viewport track.
  * @prop {function} onGenomicIntervalSearch A function to call upon searching for TFs by using the selected interval. Optional.
+ * @prop {boolean} helpActivated Whether to show help instructions or not.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function ViewWrapper(props) {

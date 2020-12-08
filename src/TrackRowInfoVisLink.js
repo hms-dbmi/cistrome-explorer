@@ -19,11 +19,14 @@ const margin = 5;
  * @prop {number} top The top position of this view.
  * @prop {number} width The width of this view.
  * @prop {number} height The height of this view.
+ * @prop {number} titleHeight The height of the track title.
  * @prop {object[]} rowInfo The array of JSON Object containing row information.
  * @prop {object[]} transformedRowInfo The `rowInfo` array after aggregating, filtering, and sorting rows.
  * @prop {array} selectedRows The array of selected indices. 
  * @prop {array} highlitRows The array of highlit indices.
  * @prop {object} fieldInfo The name and type of data field.
+ * @prop {string} shortName Alternative string value to show when the track is too narrow.
+ * @prop {function} addTrackOnClick A callback function upon click on a row that adds a separate track on the top.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  * @prop {string} titleSuffix The suffix of a title, information about sorting and filtering status.
  * @prop {object} sortInfo The options for sorting rows of the field used in this track.
@@ -32,6 +35,7 @@ const margin = 5;
  * @prop {function} onSortRows The function to call upon a sort interaction.
  * @prop {function} onHighlightRows The function to call upon a highlight interaction.
  * @prop {function} onFilterRows The function to call upon a filter interaction.
+ * @prop {boolean} helpActivated Whether to show help instructions or not.
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function TrackRowInfoVisLink(props) {

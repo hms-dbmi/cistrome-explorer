@@ -23,6 +23,7 @@ export const margin = 5;
  * @prop {number} top The top position of this view.
  * @prop {number} width The width of this view.
  * @prop {number} height The height of this view.
+ * @prop {number} titleHeight The height of the track title.
  * @prop {object} fieldInfo The name and type of data field.
  * @prop {boolean} isLeft Is this view on the left side of the track?
  * @prop {boolean} isShowControlButtons Determine if control buttons should be shown.
