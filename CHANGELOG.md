@@ -1,4 +1,13 @@
-## 0.5.0 - in progress
+## 0.6.0 - in progress
+- Changed the overall layout of the tool to be more visually organized and less complex
+- Removed a search bar in the higlass track, and add it in a title bar of the Cistrome Explorer.
+- Added a 'Show Instructions' button to show the hidden control buttons entirely and provide detailed textual instructions w/ tooltips upon mouse hover
+- Supported aggregating rows by tissue type
+- Showed aggregated bar charts for all samples
+- Allowed adding a bar track for selected row
+- Added a scale track (arrow) on the top that shows the length of current view window
+
+## 0.5.0
 
 ### Added
 - Undo/Redu interactions added in Cistrome Explorer.
