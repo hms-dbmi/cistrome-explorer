@@ -19,7 +19,6 @@ import StackedBarTrack from 'higlass-multivec/es/StackedBarTrack';
 import ScaleLegendTrack from '../scale-legend/ScaleLegendTrack';
 import { default as higlassRegister } from 'higlass-register';
 
-console.log(geminid);
 higlassRegister({
     name: 'GeminidTrack',
     track: geminid.GeminidTrack,
@@ -47,17 +46,39 @@ export default function CistromeExplorer() {
     const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[0]);
     const [isSettingVisible, setIsSettingVisible] = useState(false);
 
-    // metadata
+    // local files
+    const fileFormat = useRef(null); // either 'json' or 'metadata'
+    // const [fileFormat, setFileFormat] = useState(undefined); 
+    const bedInputFile = useRef(null);
     const jsonInputFile = useRef(null);
     const [fileReader, setFileReader] = useState(new FileReader());
+    const [localBed, setLocalBed] = useState(null);
     const [localMetadata, setLocalMetadata] = useState(null);
 
     useEffect(() => {
         fileReader.onload = (event) => {
-            const json = JSON.parse(event.target.result);
-            setLocalMetadata(json);
+            if(fileFormat.current === 'json') {
+                const json = JSON.parse(event.target.result);
+                setLocalMetadata(json);
+            } 
+            else if(fileFormat.current === 'bed') {
+                const data = [];
+                const rows = event.target.result.split('\n');
+                rows.forEach(row => {
+                    const obj = {};
+                    row.split('\t').forEach((v, i) => {
+                        obj['column' + (i + 1)] = v;
+                    });
+                    data.push(obj);
+                });
+                setLocalBed(data);
+            }
         };
     }, [fileReader]);
+
+    useEffect(() => {
+        // console.log(localBed);
+    }, [localBed]);
 
     // search
     const searchBoxRef = useRef();
@@ -305,8 +326,38 @@ export default function CistromeExplorer() {
                     </span>
                     <span className="header-control"
                         onMouseMove={(e) => publishHelpTooltip(e,
+                            "Open a BED file (Beta)",
+                            "You can open a BED file to show peaks with a bar chart. The BED file should be tab-delimited with no column row and the peak values should be stored on the fifth column.",
+                            helpActivated
+                        )}
+                        onMouseLeave={() => destroyTooltip()}
+                    >
+                        <input 
+                            type="file" 
+                            ref={bedInputFile} 
+                            style={{ display: 'none' }} 
+                            onChange={(e) => {
+                                fileReader.readAsText(e.target.files[0]);
+                            }
+                        }/>
+                        <span 
+                            className={"ce-generic-button " + (helpActivated ? 'help-highlight' : '')}
+                            onClick={() => { 
+                                fileFormat.current = 'bed';
+                                bedInputFile.current.click(); 
+                            }}>
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                viewBox={FOLDER.viewBox}>
+                                <title>Open BED file</title>
+                                <path fill="currentColor" d={FOLDER.path}/>
+                            </svg>
+                            {' BED File'} <small>beta</small>
+                        </span>
+                    </span>
+                    <span className="header-control"
+                        onMouseMove={(e) => publishHelpTooltip(e,
                             "Cistrome Data Browser Toolkit",
-                            "You can query for transcription factors that are likely to bind in the region of your intrest based on the thousand of samples available in Cistrome Data Browser",
+                            "You can query for transcription factors that are likely to bind in the region of your intrest based on the thousand of samples available in Cistrome Data Browser.",
                             helpActivated
                         )}
                         onMouseLeave={() => destroyTooltip()}
@@ -416,6 +467,7 @@ export default function CistromeExplorer() {
                         viewConfig={demos[selectedDemo].viewConfig}
                         options={demos[selectedDemo].options}
                         rowInfo={localMetadata}
+                        localBEDFile={localBed}
                         aggregateRowBy={aggActivated ? "Tissue Type" : undefined}
                         helpActivated={helpActivated}
                         onViewChanged={onViewChanged}
@@ -536,7 +588,10 @@ export default function CistromeExplorer() {
                             padding: '4px',
                             marginTop: '4px'
                         }}
-                        onClick={() => { jsonInputFile.current.click() }}
+                        onClick={() => { 
+                            fileFormat.current = 'json';
+                            jsonInputFile.current.click();
+                        }}
                     >
                         <svg
                             style={{ color: "rgb(171, 171, 171)", width: 14, height: 14 }}
