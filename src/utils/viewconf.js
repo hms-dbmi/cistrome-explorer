@@ -154,7 +154,7 @@ export function getHMTrackIdsFromViewConfig(viewConf) {
 export function getTrackIdsFromViewConfig(viewConf, tag) {
     const mvTracks = [];
     traverseViewConfig(viewConf, ({ viewId, trackType, trackId, trackTilesetId, innerTrackType, innerTrackId, innerTrackTilesetId }) => {
-        // The horizontal-multivec track could be standalone, or within a "combined" track.
+        // The track could be standalone, or within a "combined" track.
         if(trackId && trackId.includes(tag)) {
             mvTracks.push({ viewId, trackId, trackTilesetId });
         } else if(trackType === TRACK_TYPE.COMBINED && innerTrackId && innerTrackId.includes(tag)) {

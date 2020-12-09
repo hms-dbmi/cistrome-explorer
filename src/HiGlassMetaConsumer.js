@@ -1,6 +1,7 @@
 import React, { forwardRef, useRef, useEffect, useState, useMemo, useCallback, useContext } from 'react';
 import isEqual from 'lodash/isEqual';
 import clamp from 'lodash/clamp';
+import uuidv4 from 'uuid/v4';
 
 import { HiGlassComponent } from 'higlass';
 
@@ -75,6 +76,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         viewConfig: baseViewConfig,
         options: baseOptions,
         rowInfo: baseRowInfo,
+        localBEDFile,
         helpActivated,
         aggregateRowBy,
         onViewChanged: onViewChangedCallback,
@@ -105,6 +107,65 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         // DEBUG
         // console.log('updated:', baseRowInfo);
     }, [baseRowInfo]);
+
+    useEffect(() => {
+        if(localBEDFile !== null) {
+            
+            // DEBUG
+            // console.log('updated:', localBEDFile);
+
+            multivecTrackIds.forEach(({ viewId }) => {
+                const trackSpec = {
+                    type: "gemini-track",
+                    uid: uuidv4() + REMOVE_ALLOWED_TAG_TRACKID,
+                    options: {
+                        showMousePosition: true,
+                        mousePositionColor: "#000000",
+                        backgroundColor: "transparent",
+                        name: "Local BED file",
+                        fontSize: 12,
+                        labelColor: "black",
+                        labelPosition: "topLeft",
+                        labelBackgroundColor: "#F6F6F6",
+                        labelTextOpacity: 0.6,
+                        labelLeftMargin: 4,
+                        labelRightMargin: 0,
+                        labelTopMargin: 2,
+                        labelBottomMargin: 0,
+                        spec: {
+                        mark: "point",
+                        color: {value: "#4E79A7"},
+                        x: {
+                            field: "column2",
+                            type: "genomic"
+                        },
+                        xe: {
+                            field: "column3",
+                            type: "genomic"
+                        },
+                        y: {field: "column5", type: "quantitative", range: [3, 27]},
+                        size: { value: 3 },
+                        opacity: { value: 0.5 },
+                        // strokeWidth: {value: 1},
+                        // stroke: {value: "#F28E2C"},
+                        style: {outline: "gray"},
+                        height: 30,
+                        width: 1000
+                        }
+                    },
+                    "data": {
+                        type: "json",
+                        values: localBEDFile,
+                        chromosomeField: "column1",
+                        genomicFields: ["column2", "column3"],
+                        quantitativeFields: ["column5"]
+                    },
+                    "height": 30
+                };
+                addNewTrack(trackSpec, viewId, 'top');
+            });
+        }
+    }, [localBEDFile]);
 
     // Call a callback function when `options` changed.
     useEffect(() => {
