@@ -36,7 +36,7 @@ describe('Utilities for processing higlass view config objects', () => {
     it('Should get a view config of a specific track', () => {
         const viewConfig = getTrackDefFromViewConfig(hgDemoViewConfig1, "cistrome-view-1", "cistrome-track-1");
         expect(viewConfig.tilesetUid == "UvVPeLHuRDiYA3qwFlm7xQ").toEqual(true);
-        expect(viewConfig.options.name == "my_file_genome_wide.multires.mv5").toEqual(true);
+        expect(viewConfig.options.name == "H3K27ac ChIP-seq from Cistrome DB").toEqual(true);
     });
 
     it('Should add a view config of a specific track in top position', () => {
