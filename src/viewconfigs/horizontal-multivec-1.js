@@ -76,6 +76,27 @@ export const hgDemoViewConfig1 ={
                 "spec": {
                   "superpose": [
                     {
+                      mark: 'text',
+                      dataTransform: {
+                          filter: [{ field: 'Stain', oneOf: ['acen'], not: true }]
+                      },
+                      text: { field: 'Name', type: 'nominal' },
+                      color: {
+                          field: 'Stain',
+                          type: 'nominal',
+                          domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar'],
+                          range: ['black', 'black', 'black', 'black', 'white', 'black']
+                      },
+                      visibility: {
+                          operation: 'less-than',
+                          condition: { width: '|xe-x|', transitionPadding: 10 },
+                          target: 'mark'
+                      },
+                      style: {
+                          textStrokeWidth: 0
+                      }
+                    },
+                    {
                       "mark": "rect",
                       "dataTransform": {
                         "filter": [
