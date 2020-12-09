@@ -42,6 +42,7 @@ export const hgDemoViewConfig1 ={
               "server": "https://higlass.io/api/v1",
               "tilesetUid": "NyITQvZsS_mOFNlz5C2LJg",
               "uid": "chromosome-labels-track-1",
+              "chromInfoPath": "//aveit.s3.amazonaws.com/higlass/data/sequence/hg38.mod.chrom.sizes",
               "options": {
                 "showMousePosition": true,
                 "mousePositionColor": "#000000",
@@ -53,7 +54,92 @@ export const hgDemoViewConfig1 ={
                 "fontIsLeftAligned": false,
                 "reverseOrientation": false
               },
-              "height": 30
+              "height": 25
+            },
+            {
+              "type": "gemini-track",
+              "height": 18,
+              "options": {
+                "showMousePosition": true,
+                "mousePositionColor": "#000000",
+                "backgroundColor": "transparent",
+                "name": "hg38 | Cytoband",
+                "fontSize": 12,
+                "labelColor": "black",
+                "labelPosition": "topLeft",
+                "labelBackgroundColor": "#F6F6F6",
+                "labelTextOpacity": 0.6,
+                "labelLeftMargin": 4,
+                "labelRightMargin": 0,
+                "labelTopMargin": 2,
+                "labelBottomMargin": 0,
+                "spec": {
+                  "superpose": [
+                    {
+                      "mark": "rect",
+                      "dataTransform": {
+                        "filter": [
+                          {"field": "Stain", "oneOf": ["acen"], "not": true}
+                        ]
+                      },
+                      "color": {
+                        "field": "Stain",
+                        "type": "nominal",
+                        "domain": [
+                          "gneg",
+                          "gpos25",
+                          "gpos50",
+                          "gpos75",
+                          "gpos100",
+                          "gvar"
+                        ],
+                        "range": [
+                          "white",
+                          "#D9D9D9",
+                          "#979797",
+                          "#636363",
+                          "black",
+                          "#82A3D0"
+                        ]
+                      }
+                    },
+                    {
+                      "mark": "triangle-r",
+                      "dataTransform": {
+                        "filter": [{"field": "Name", "include": "q", "not": false}, {"field": "Stain", "oneOf": ["acen"], "not": false}]
+                      },
+                      "color": {"value": "#E9413B"}
+                    },
+                    {
+                      "mark": "triangle-l",
+                      "dataTransform": {
+                        "filter": [
+                          {"field": "Stain", "oneOf": ["acen"], "not": false},
+                          {"field": "Name", "include": "p", "not": false}
+                        ]
+                      },
+                      "color": {"value": "#E9413B"}
+                    }
+                  ],
+                  "x": {
+                    "field": "chromStart",
+                    "type": "genomic",
+                  },
+                  "xe": {"field": "chromEnd", "type": "genomic"},
+                  "size": {"value": 17},
+                  "stroke": {"value": "gray"},
+                  "strokeWidth": {"value": 1},
+                  "style": {"outline": "#F6F6F6"},
+                  "width": 800,
+                  "height": 18
+                }
+              },
+              "data": {
+                "url": "https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv",
+                "type": "csv",
+                "chromosomeField": "Chromosome",
+                "genomicFields": ["chromStart", "chromEnd"]
+              }
             },
             {
               "type": "horizontal-gene-annotations",
@@ -67,7 +153,7 @@ export const hgDemoViewConfig1 ={
                 "mousePositionColor": "#000000",
                 "trackBorderWidth": 0,
                 "trackBorderColor": "gray",
-                "name": "Gene annotation (hg38)",
+                "name": "hg38 | Gene annotation",
                 "fontSize": 12,
                 "labelColor": "black",
                 "labelPosition": "topLeft",
@@ -95,7 +181,7 @@ export const hgDemoViewConfig1 ={
                 "labelTextOpacity": 0.6,
                 "valueScaling": "linear",
                 "heatmapValueScaling": "log",
-                "name": "Aggregation of all 200 samples",
+                "name": "hg38 | Aggregation of all 200 samples",
                 "labelTopMargin": 2,
                 "labelLeftMargin": 4,
                 "labelBottomMargin": 0,
