@@ -481,7 +481,7 @@ export const hgDemoViewConfig1 ={
                 "minHeight": 100,
                 "colorbarBackgroundOpacity": 0,
                 "colorbarPosition": "bottomRight",
-                "zeroValueColor": "dimgray",
+                "zeroValueColor": "white",
                 "selectRowsAggregationWithRelativeHeight": false,
                 "selectRowsAggregationMode": "mean",
                 "showMousePosition": true,
