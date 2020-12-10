@@ -28,6 +28,17 @@ export default function DataTable(props) {
     useEffect(() => {
         setTransformedRows(transform(rows));
         setFilterByField({});
+        
+        if(columns?.indexOf(sortByField.field) === -1) {
+            // If the sort field is not defined, we use other default field names
+            if(columns?.indexOf('Regulatory Potential') !== -1) {
+                // Default sorting field used for the gene API
+                setSortByField({field: 'Regulatory Potential', isAscending: false});
+            } else if(columns?.indexOf('Overlap Ratio') !== -1) {
+                // Default sorting field used for the interval API
+                setSortByField({field: 'Overlap Ratio', isAscending: false});
+            }
+        }
     }, [rows]);
 
     useEffect(() => {

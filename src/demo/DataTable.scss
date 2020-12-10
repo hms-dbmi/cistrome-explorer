@@ -18,10 +18,12 @@
         height: 30px;
         padding: 10px 8px;
         font-size: small;
+        overflow: auto;
         // text-align: center;
     }
     tr, td {
         padding: 10px 8px;
         outline: none;
+        overflow: auto;
     }
 }

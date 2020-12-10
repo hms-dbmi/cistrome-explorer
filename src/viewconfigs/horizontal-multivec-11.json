@@ -123,7 +123,7 @@
                 "labelShowResolution": true,
                 "minHeight": 100,
                 "colorbarPosition": "bottomLeft",
-                "zeroValueColor": "dimgray",
+                "zeroValueColor": "white",
                 "selectRowsAggregationWithRelativeHeight": false,
                 "selectRowsAggregationMode": "mean",
                 "selectRowsAggregationMethod": "server",

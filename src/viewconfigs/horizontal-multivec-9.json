@@ -118,7 +118,7 @@
                 "labelShowResolution": true,
                 "minHeight": 100,
                 "colorbarPosition": "bottomLeft",
-                "zeroValueColor": "dimgray",
+                "zeroValueColor": "white",
                 "labelShowAssembly": true,
                 "selectRows": [
                     147,
@@ -166,7 +166,7 @@
                 "labelShowResolution": true,
                 "minHeight": 100,
                 "colorbarPosition": "bottomLeft",
-                "zeroValueColor": "dimgray",
+                "zeroValueColor": "white",
                 "labelShowAssembly": true,
                 "selectRows": null,
                 "colorbarBackgroundColor": "#ffffff",
