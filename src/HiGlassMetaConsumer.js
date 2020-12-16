@@ -593,10 +593,10 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                 selectRows: newSelectedRows,
                 trackBorderWidth: 0,
                 trackBorderColor: "white",
-                barBorder: true,
+                barBorder: false,
                 labelColor: "black",
                 backgroundColor: "#F6F6F6",
-                colorScale: ["lightgray"],
+                colorScale: ["#B1B1B1"],
             }
         }
         addNewTrack(newTrackDef, viewId, position);
