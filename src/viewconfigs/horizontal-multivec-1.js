@@ -200,6 +200,7 @@ export const hgDemoViewConfig1 ={
                 "labelPosition": "topLeft",
                 "labelColor": "black",
                 "labelTextOpacity": 0.6,
+                "barBorder": false,
                 "valueScaling": "linear",
                 "heatmapValueScaling": "log",
                 "name": "hg38 | Aggregation of all 200 samples",
