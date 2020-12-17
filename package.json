@@ -41,6 +41,7 @@
     "documentation": "^12.1.4",
     "eslint": "^6.8.0",
     "jest": "^25.1.0",
+    "levenary": "^1.1.1",
     "rollup": "^1.29.1",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-livereload": "^1.0.4",
