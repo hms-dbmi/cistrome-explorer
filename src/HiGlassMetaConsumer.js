@@ -109,10 +109,10 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
     }, [baseRowInfo]);
 
     useEffect(() => {
-        if(localBEDFile !== null) {
+        if(localBEDFile !== null && localBEDFile.data !== null) {
             
             // DEBUG
-            // console.log('updated:', localBEDFile);
+            console.log('updated:', localBEDFile);
 
             multivecTrackIds.forEach(({ viewId }) => {
                 const trackSpec = {
@@ -122,7 +122,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                         showMousePosition: true,
                         mousePositionColor: "#000000",
                         backgroundColor: "transparent",
-                        name: "Local BED file",
+                        name: localBEDFile.name ?? "Local BED file",
                         fontSize: 12,
                         labelColor: "black",
                         labelPosition: "topLeft",
@@ -133,34 +133,37 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                         labelTopMargin: 2,
                         labelBottomMargin: 0,
                         spec: {
-                        mark: "point",
-                        color: {value: "#4E79A7"},
-                        x: {
-                            field: "column2",
-                            type: "genomic"
-                        },
-                        xe: {
-                            field: "column3",
-                            type: "genomic"
-                        },
-                        y: {field: "column5", type: "quantitative", range: [3, 27]},
-                        size: { value: 3 },
-                        opacity: { value: 0.5 },
-                        // strokeWidth: {value: 1},
-                        // stroke: {value: "#F28E2C"},
-                        style: {outline: "gray"},
-                        height: 30,
-                        width: 1000
+                            superpose: [
+                                {mark: "point", size: { value: 3 }},
+                                {mark: "bar", size: { value: 1 }},
+                            ],
+                            color: {value: "gray"},
+                            x: {
+                                field: "column2",
+                                type: "genomic"
+                            },
+                            xe: {
+                                field: "column3",
+                                type: "genomic"
+                            },
+                            y: {field: "column5", type: "quantitative"},
+                            opacity: { value: 0.7 },
+                            // strokeWidth: {value: 1},
+                            // stroke: {value: "#F28E2C"},
+                            style: {outline: "gray"},
+                            height: 30,
+                            width: 1000
                         }
                     },
-                    "data": {
+                    data: {
                         type: "json",
-                        values: localBEDFile,
+                        values: localBEDFile.data,
                         chromosomeField: "column1",
                         genomicFields: ["column2", "column3"],
-                        quantitativeFields: ["column5"]
+                        quantitativeFields: ["column5"],
+                        
                     },
-                    "height": 30
+                    height: 30
                 };
                 addNewTrack(trackSpec, viewId, 'top');
             });

@@ -71,7 +71,7 @@ export default function CistromeExplorer() {
                     });
                     data.push(obj);
                 });
-                setLocalBed(data);
+                setLocalBed({ data, name: fileReader.fileName });
             }
         };
     }, [fileReader]);
@@ -338,6 +338,7 @@ export default function CistromeExplorer() {
                             style={{ display: 'none' }} 
                             onChange={(e) => {
                                 fileReader.readAsText(e.target.files[0]);
+                                fileReader.fileName = e.target.files[0].name;
                             }
                         }/>
                         <span 
