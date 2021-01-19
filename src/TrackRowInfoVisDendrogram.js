@@ -327,7 +327,8 @@ export default function TrackRowInfoVisDendrogram(props) {
                 title: "Options for dendrogram",
                 menuType: CONTEXT_MENU_TYPE.TREE_ANCESTOR,
                 items: [
-                    { title: "Highlight Rows", icon: HIGHLIGHTER, action: () => onHighlightRows(field, "tree", ancestors) },
+                    // TODO: Temporally removing a highlighting feature
+                    // { title: "Highlight Rows", icon: HIGHLIGHTER, action: () => onHighlightRows(field, "tree", ancestors) },
                     { title: "Filter Rows", icon: FILTER, action: () => onFilterRows(field, "tree", ancestors, false) }
                 ]
             });
@@ -347,7 +348,8 @@ export default function TrackRowInfoVisDendrogram(props) {
                 title: "Options for dendrogram",
                 menuType: CONTEXT_MENU_TYPE.TREE_ANCESTOR,
                 items: [
-                    { title: "Highlight Rows", icon: HIGHLIGHTER, action: () => onHighlightRows(field, "tree", minSimilarity.current) },
+                    // TODO: Temporally removing a highlighting feature
+                    // { title: "Highlight Rows", icon: HIGHLIGHTER, action: () => onHighlightRows(field, "tree", minSimilarity.current) },
                     { title: "Filter Rows", icon: FILTER, action: () => {
                         onFilterRows(field, "tree", minSimilarity.current, false);
                         setMinSimBarLeft(initialMinSimBarLeft); // Move to the original position.

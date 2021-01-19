@@ -176,10 +176,11 @@ export default function TrackRowInfoVisNominalBar(props) {
             menuType: CONTEXT_MENU_TYPE.NOMINAL_BAR,
             title: `Selected category: ${hoverValue}`,
             items: [
-                { title: "Highlight Rows", icon: HIGHLIGHTER, action: () => onHighlightRows(field, "nominal", hoverValue) },
+                // TODO: Temporally removing a highlighting feature
+                // { title: "Highlight Rows", icon: HIGHLIGHTER, action: () => onHighlightRows(field, "nominal", hoverValue) },
                 { title: "Filter Rows", icon: FILTER, action: () => onFilterRows(field, "nominal", notOneOf) },
-                { title: "Add Top Track with Selected Rows", icon: ARROW_UP, action: () => onAddTrack(field, "nominal", notOneOf, "top", hoverValue) },
-                { title: "Add Bottom Track with Selected Rows", icon: ARROW_DOWN, action: () => onAddTrack(field, "nominal", notOneOf, "bottom") }
+                // { title: "Add Top Track with Selected Rows", icon: ARROW_UP, action: () => onAddTrack(field, "nominal", notOneOf, "top", hoverValue) },
+                // { title: "Add Bottom Track with Selected Rows", icon: ARROW_DOWN, action: () => onAddTrack(field, "nominal", notOneOf, "bottom") }
             ]
         });    
     }
