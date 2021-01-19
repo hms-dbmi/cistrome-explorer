@@ -65,7 +65,9 @@ export default function DataTable(props) {
         // sort
         if(sortByField.field && columns?.indexOf(sortByField.field) !== -1) {
             const {field, isAscending} = sortByField;
-            transformed = transformed.sort((a, b) => isAscending ? a[field] > b[field] : a[field] < b[field]);
+            transformed = transformed.sort((a, b) => {
+                return (a[field] > b[field] ? 1 : -1) * (isAscending ? 1 : -1);
+            });
         }
 
         return transformed;
