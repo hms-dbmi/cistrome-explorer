@@ -94,6 +94,7 @@ export default function CistromeExplorer() {
     // toggle
     const [helpActivated, setHelpActivated] = useState(false);
     const [aggActivated, setAggActivated] = useState(false);
+    const [aggregateRowBy, setSggregateRowBy] = useState('Tissue Type');
 
     // History of view updates
     const MAX_HISTORY_LENGTH = 50;  // How many previous views should be recorded?
@@ -377,8 +378,8 @@ export default function CistromeExplorer() {
                     </span>
                     <span className="header-control"
                         onMouseMove={(e) => publishHelpTooltip(e,
-                            "Aggregate Samples By Tissue Type",
-                            "You can aggregate samples with the same tissue type into a single row in the visualization",
+                            "Aggregate Samples By Categorical Value",
+                            "You can aggregate samples with the categorical value into a single row in the visualization",
                             helpActivated
                         )}
                         onMouseLeave={() => destroyTooltip()}
@@ -389,10 +390,20 @@ export default function CistromeExplorer() {
                         >
                             <svg xmlns="http://www.w3.org/2000/svg"
                                 viewBox={aggActivated ? TOGGLE_ON.viewBox : TOGGLE_OFF.viewBox}>
-                                <title>Aggregate Rows By Tissue Type</title>
+                                <title>Aggregate Rows By Categorical Value</title>
                                 <path fill="currentColor" d={aggActivated ? TOGGLE_ON.path : TOGGLE_OFF.path}/>
                             </svg>
-                            {` Aggregate By Tissue`}
+                            {` Aggregate By `}
+                            <span>
+                                <select 
+                                    onChange={e => { setSggregateRowBy(e.target.value) }}
+                                    defaultValue={"Tissue"}
+                                >
+                                    {["Tissue Type", "Cell Type"].map(f => (
+                                        <option key={f} value={f}>{f}</option>
+                                    ))}
+                                </select>
+                            </span>
                         </span>
                     </span>
                     <span className="header-control">
@@ -470,7 +481,7 @@ export default function CistromeExplorer() {
                         options={demos[selectedDemo].options}
                         rowInfo={localMetadata}
                         localBEDFile={localBed}
-                        aggregateRowBy={aggActivated ? "Tissue Type" : undefined}
+                        aggregateRowBy={aggActivated ? aggregateRowBy : undefined}
                         helpActivated={helpActivated}
                         onViewChanged={onViewChanged}
                         onGenomicIntervalSearch={setToolkitParams}
