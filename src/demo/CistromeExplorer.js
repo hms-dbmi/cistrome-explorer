@@ -72,6 +72,7 @@ export default function CistromeExplorer() {
                     data.push(obj);
                 });
                 setLocalBed({ data, name: fileReader.fileName });
+                bedInputFile.current.value = '';
             }
         };
     }, [fileReader]);
@@ -326,7 +327,7 @@ export default function CistromeExplorer() {
                     </span>
                     <span className="header-control"
                         onMouseMove={(e) => publishHelpTooltip(e,
-                            "Open a BED file (Beta)",
+                            "Open a BED file",
                             "You can open a BED file to show peaks with a bar chart. The BED file should be tab-delimited with no column row and the peak values should be stored on the fifth column.",
                             helpActivated
                         )}
@@ -352,7 +353,7 @@ export default function CistromeExplorer() {
                                 <title>Open BED file</title>
                                 <path fill="currentColor" d={FOLDER.path}/>
                             </svg>
-                            {' BED File'} <small>beta</small>
+                            {' BED File'}
                         </span>
                     </span>
                     <span className="header-control"
