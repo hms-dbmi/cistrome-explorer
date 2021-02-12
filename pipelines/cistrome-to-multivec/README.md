@@ -37,11 +37,28 @@ export AWS_ACCESS_KEY_ID="{my_access_key_id}"
 export AWS_SECRET_ACCESS_KEY="{my_secret_access_key}"
 export AWS_DEFAULT_REGION="us-east-1"
 
-# replace with your O2 username details
-# .../users/{first_letter_of_username}/{username}/cistrome-explorer/...
+# replace "mk596" with your O2 username in the command below
 aws s3 sync /n/scratch3/users/m/mk596/cistrome-explorer/data/processed/ s3://higlass-server/CistromeDB/
 ```
 
+## Troubleshooting
+
+The Snakemake pipeline will fail to produce output multivec files when the CistromeDB API returns HTML-formatted error pages, because the scripts here are expecting the API to return JSON-formatted metadata. This seems to occur if too many CistromeDB downloads are made in parallel - the server cannot handle it.
+
+The following script can be used to check for (and remove) any poorly formatted JSON files following a pipeline execution.
+
+To run this script locally:
+
+```sh
+bash ./troubleshoot.sh .
+```
+
+To run this script on O2:
+
+```sh
+# replace "mk596" with your O2 username in the command below
+bash ./troubleshoot.sh /n/scratch3/users/m/mk596/cistrome-explorer
+```
 
 ### Using parallel hdf5 via h5py and mpi4py
 
