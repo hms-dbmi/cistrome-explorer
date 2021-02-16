@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import pkg from '../../package.json';
+import d3 from '../utils/d3.js';
 
 import { HiGlassMeta } from '../index.js';
 import CistromeToolkit from './CistromeToolkit.js';
@@ -106,6 +107,10 @@ export default function CistromeExplorer() {
     }]);
     const [indexOfCurrentView, setIndexOfCurrentView] = useState(0); // The most recent view will be stored at the index zero.
 
+    // v-separator position
+    const resizerRef = useRef();
+    const [heatmapWidth, setHeatmapWidth] = useState(800);
+
     // Toolkit-related
     const [isToolkitVisible, setIsToolkitVisible] = useState(false);
     const [toolkitParams, setToolkitParams] = useState(undefined);
@@ -142,6 +147,44 @@ export default function CistromeExplorer() {
             height: 200,
         }, firstViewUid, 'top');
     }, [addNewTrack, selectedDemo]);
+
+    // Drag event for resizing heatmaps
+    const dragX = useRef(null);
+
+    // Set up the d3-drag handler functions (started, ended, dragged).
+    const started = useCallback(() => {
+        const event = d3.event;
+        dragX.current = event.sourceEvent.clientX;
+    }, [dragX, heatmapWidth])
+
+    const ended = useCallback(() => {
+        dragX.current = null;
+    }, [dragX, heatmapWidth]);
+
+    const dragged = useCallback(() => {
+        const event = d3.event;
+        const diff = event.sourceEvent.clientX - dragX.current;
+        let newWidth = heatmapWidth + diff;
+
+        if(newWidth < 300) {
+            newWidth = 300;
+        }
+        setHeatmapWidth(newWidth);
+    }, [dragX, heatmapWidth]);
+
+    // Detect drag events for the resize element.
+    useEffect(() => {
+        const resizer = resizerRef.current;
+
+        const drag = d3.drag()
+            .on("start", started)
+            .on("drag", dragged)
+            .on("end", ended);
+
+        d3.select(resizer).call(drag);
+
+        return () => d3.select(resizer).on(".drag", null);
+    }, [resizerRef, started, dragged, ended]);
 
     // When a user select a different demo, initialize the view history.
     useEffect(() => {
@@ -386,9 +429,11 @@ export default function CistromeExplorer() {
                     >
                         <span 
                             className={"ce-generic-button-lg " + (aggActivated ? 'ce-generic-button-activated ' : '') + (helpActivated ? 'help-highlight' : '')}
-                            onClick={() => { setAggActivated(!aggActivated); }}
+                            style={{ cursor: 'auto' }}
                         >
                             <svg xmlns="http://www.w3.org/2000/svg"
+                                style={{cursor: 'pointer'}}
+                                onClick={() => { setAggActivated(!aggActivated); }}
                                 viewBox={aggActivated ? TOGGLE_ON.viewBox : TOGGLE_OFF.viewBox}>
                                 <title>Aggregate Rows By Categorical Value</title>
                                 <path fill="currentColor" d={aggActivated ? TOGGLE_ON.path : TOGGLE_OFF.path}/>
@@ -474,7 +519,18 @@ export default function CistromeExplorer() {
             {/* <div className="sub-header"> </div> */}
 
             <div className="visualization-container">
-                <div className="visualization">
+                <div className="h-resizer"
+                    ref={resizerRef}
+                    style={{
+                        left: `${heatmapWidth - 7}px`
+                    }}
+                />
+                <div 
+                    className="visualization"
+                    style={{
+                        width: `${heatmapWidth}px`
+                    }}
+                >
                     <HiGlassMeta
                         ref={hmRef}
                         viewConfig={demos[selectedDemo].viewConfig}
