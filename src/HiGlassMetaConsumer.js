@@ -41,7 +41,7 @@ import { wrapSvg } from './utils/wrap-svg.js';
 import './HiGlassMetaConsumer.scss';
 import cloneDeep from 'lodash/cloneDeep';
 import { removeItemFromArray, modifyItemInArray, insertItemToArray } from './utils/array.js';
-import { CLOSE } from './utils/icons.js';
+import { CLOSE, THIN_CLOSE } from './utils/icons.js';
 import { HG38_START_POSITIONS } from './utils/chromsizes.js';
 
 const hgOptionsBase = {
@@ -720,16 +720,16 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                 const [left, top] = track.position;
                 const [w, h] = track.dimensions;
                 return (
-                    <div style={{ left: left + w, top, position: 'absolute', height: h }}
+                    <div style={{ left: left + w - 20, top: top + 3, position: 'absolute', height: h }}
                         onClick={() => removeTrack(viewId, trackId)}
                     >
                         <svg
                             className={'hm-button'}
-                            style={{ color: "rgb(171, 171, 171)", background: "none", height: '30px' }}
-                            viewBox={CLOSE.viewBox}
+                            style={{ color: "rgb(121, 121, 121)", background: "none", height: '30px' }}
+                            viewBox={THIN_CLOSE.viewBox}
                         >
                             <title>Remove Track</title>
-                            <path d={CLOSE.path} fill="currentColor"/>
+                            <path d={THIN_CLOSE.path} fill="currentColor"/>
                         </svg>
                     </div>
                 );
