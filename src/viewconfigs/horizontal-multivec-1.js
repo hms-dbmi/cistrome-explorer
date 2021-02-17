@@ -58,6 +58,115 @@ export const hgDemoViewConfig1 ={
             },
             {
               "type": "gemini-track",
+              "height": 30,
+              "server": "https://cgap-higlass.com/api/v1",
+              "tilesetUid": "clinvar_20200824_hg38",
+              "chromInfoPath": "//aveit.s3.amazonaws.com/higlass/data/sequence/hg38.mod.chrom.sizes",
+              "options": {
+                "showMousePosition": true,
+                "mousePositionColor": "#000000",
+                "backgroundColor": "transparent",
+                "name": "hg38 | ClinVar (Pathogenicity)",
+                "fontSize": 12,
+                "labelColor": "black",
+                "labelPosition": "topLeft",
+                "labelBackgroundColor": "#F6F6F6",
+                "labelTextOpacity": 0.6,
+                "labelLeftMargin": 4,
+                "labelRightMargin": 0,
+                "labelTopMargin": 2,
+                "labelBottomMargin": 0,
+                "spec": {
+                  "data": {
+                    "url": "https://cgap-higlass.com/api/v1/tileset_info/?d=clinvar_20200824_hg38",
+                    "type": "bed",
+                  },
+                  "metadata": {
+                    "type": "higlass-bed",
+                    "genomicFields": [
+                      {"index": 1, "name": "start"},
+                      {"index": 2, "name": "end"}
+                    ],
+                    "valueFields": [
+                      {"index": 3, "name": "Reference", "type": "nominal"},
+                      {"index": 4, "name": "Alternative", "type": "nominal"},
+                      {"index": 6, "name": "Review Score", "type": "nominal"},
+                      {"index": 7, "name": "Significance", "type": "nominal"},
+                      {"index": 9, "name": "Variant Type", "type": "nominal"},
+                      {"index": 11, "name": "Molecular Consequence", "type": "nominal"},
+                      {"index": 12, "name": "Disease Name", "type": "nominal"},
+                      {"index": 13, "name": "HGVS", "type": "nominal"},
+                    ]
+                  },
+                  "mark": "rect",
+                  "row": {
+                    "field": "Significance",
+                    "type": "nominal",
+                    "domain": [
+                      "Pathogenic",
+                      "Pathogenic/Likely_pathogenic",
+                      "Likely_pathogenic",
+                      "Uncertain_significance",
+                      "Likely_benign",
+                      "Benign/Likely_benign",
+                      "Benign"
+                    ]
+                  },
+                  // "stackY": true,
+                  "color": {
+                    "field": "Significance",
+                    "type": "nominal",
+                    "domain": [
+                      "Pathogenic",
+                      "Pathogenic/Likely_pathogenic",
+                      "Likely_pathogenic",
+                      "Uncertain_significance",
+                      "Likely_benign",
+                      "Benign/Likely_benign",
+                      "Benign"
+                    ],
+                    "range": [
+                      "#b2182b", "#ef8a62", "#fddbc7", "gray", "#d1e5f0", "#67a9cf", "#2166ac"
+                    ]
+                  },
+                  // "size": { "value": 10 },
+                  "stroke": {
+                    "field": "Significance",
+                    "type": "nominal",
+                    "domain": [
+                      "Pathogenic",
+                      "Pathogenic/Likely_pathogenic",
+                      "Likely_pathogenic",
+                      "Uncertain_significance",
+                      "Likely_benign",
+                      "Benign/Likely_benign",
+                      "Benign"
+                    ],
+                    "range": [
+                      "#b2182b", "#ef8a62", "#fddbc7", "gray", "#d1e5f0", "#67a9cf", "#2166ac"
+                    ]
+                  },
+                  "strokeWidth": { "value": 1 },
+                  "tooltip": [
+                      { "field": "Significance", "type": "nominal"},
+                      { "field": "Reference", "type": "nominal"},
+                      { "field": "Alternative", "type": "nominal"},
+                      { "field": "Variant Type", "type": "nominal"},
+                      { "field": "Molecular Consequence", "type": "nominal"},
+                      { "field": "Disease Name", "type": "nominal"},
+                      { "field": "HGVS", "type": "nominal"},
+                      { "field": "Review Score", "type": "nominal"},
+                  ],
+                  "opacity": {"value": 0.8},
+                  "x": {"field": "start", "type": "genomic"},
+                  // "xe": {"field": "end", "type": "genomic"},
+                  "style": {"outline": "#F6F6F6"},
+                  "height": 30
+                }
+              }
+            },
+            {
+              "type": "gemini-track",
               "height": 18,
               "options": {
                 "showMousePosition": true,
