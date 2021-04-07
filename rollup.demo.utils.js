@@ -6,6 +6,7 @@ const peerScripts = {
         <script crossorigin type="text/javascript" src="https://unpkg.com/pixi.js@5/dist/pixi.js"></script>
         <script crossorigin type="text/javascript" src="https://unpkg.com/react-bootstrap@0.32.1/dist/react-bootstrap.js"></script>
         <script crossorigin type="text/javascript" src="https://unpkg.com/higlass@${hgVersion}/dist/hglib.js"></script>
+        <script crossorigin type="text/javascript" src="https://unpkg.com/gosling.js@0.7.3/dist/gosling.js"></script>
     `,
     'production': `
         <script crossorigin type="text/javascript" src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
@@ -13,6 +14,7 @@ const peerScripts = {
         <script crossorigin type="text/javascript" src="https://unpkg.com/pixi.js@5/dist/pixi.min.js"></script>
         <script crossorigin type="text/javascript" src="https://unpkg.com/react-bootstrap@0.32.1/dist/react-bootstrap.min.js"></script>
         <script crossorigin type="text/javascript" src="https://unpkg.com/higlass@${hgVersion}/dist/hglib.min.js"></script>
+        <script crossorigin type="text/javascript" src="https://unpkg.com/gosling.js@0.7.3/dist/gosling.js"></script>
     `
 };
 

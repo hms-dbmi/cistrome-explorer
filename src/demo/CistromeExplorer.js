@@ -15,19 +15,13 @@ import { publishHelpTooltip, destroyTooltip } from "../Tooltip.js";
 
 import './CistromeExplorer.scss';
 
-import { default as geminid } from "geminid";
 import StackedBarTrack from 'higlass-multivec/es/StackedBarTrack';
 import ScaleLegendTrack from '../scale-legend/ScaleLegendTrack';
 import { default as higlassRegister } from 'higlass-register';
+import gosling from 'gosling.js';
 
-higlassRegister({
-    name: 'GeminidTrack',
-    track: geminid.GeminidTrack,
-    config: geminid.GeminidTrack.config
-});
-higlassRegister({ dataFetcher: geminid.RawDataFetcher, config: geminid.RawDataFetcher.config }, { pluginType: 'dataFetcher' });
-higlassRegister({ dataFetcher: geminid.CSVDataFetcher, config: geminid.CSVDataFetcher.config }, { pluginType: 'dataFetcher' });
-  
+gosling.init();
+ 
 higlassRegister({
     name: 'StackedBarTrack',
     track: StackedBarTrack,

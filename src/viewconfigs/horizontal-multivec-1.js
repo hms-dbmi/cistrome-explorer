@@ -57,116 +57,153 @@ export const hgDemoViewConfig1 ={
               "height": 25
             },
             {
-              "type": "gemini-track",
+              "type": "combined",
+              "width": 800,
               "height": 30,
-              "server": "https://cgap-higlass.com/api/v1",
-              "tilesetUid": "clinvar_20200824_hg38",
-              "chromInfoPath": "//aveit.s3.amazonaws.com/higlass/data/sequence/hg38.mod.chrom.sizes",
-              "options": {
-                "showMousePosition": true,
-                "mousePositionColor": "#000000",
-                "backgroundColor": "transparent",
-                "name": "hg38 | ClinVar (Pathogenicity)",
-                "fontSize": 12,
-                "labelColor": "black",
-                "labelPosition": "topLeft",
-                "labelBackgroundColor": "#F6F6F6",
-                "labelTextOpacity": 0.6,
-                "labelLeftMargin": 4,
-                "labelRightMargin": 0,
-                "labelTopMargin": 2,
-                "labelBottomMargin": 0,
-                "spec": {
-                  "data": {
-                    "url": "https://cgap-higlass.com/api/v1/tileset_info/?d=clinvar_20200824_hg38",
-                    "type": "bed",
-                  },
-                  "metadata": {
-                    "type": "higlass-bed",
-                    "genomicFields": [
-                      {"index": 1, "name": "start"},
-                      {"index": 2, "name": "end"}
-                    ],
-                    "valueFields": [
-                      {"index": 3, "name": "Reference", "type": "nominal"},
-                      {"index": 4, "name": "Alternative", "type": "nominal"},
-                      {"index": 6, "name": "Review Score", "type": "nominal"},
-                      {"index": 7, "name": "Significance", "type": "nominal"},
-                      {"index": 9, "name": "Variant Type", "type": "nominal"},
-                      {"index": 11, "name": "Molecular Consequence", "type": "nominal"},
-                      {"index": 12, "name": "Disease Name", "type": "nominal"},
-                      {"index": 13, "name": "HGVS", "type": "nominal"},
-                    ]
-                  },
-                  "mark": "rect",
-                  "row": {
-                    "field": "Significance",
-                    "type": "nominal",
-                    "domain": [
-                      "Pathogenic",
-                      "Pathogenic/Likely_pathogenic",
-                      "Likely_pathogenic",
-                      "Uncertain_significance",
-                      "Likely_benign",
-                      "Benign/Likely_benign",
-                      "Benign"
-                    ]
-                  },
-                  // "stackY": true,
-                  "color": {
-                    "field": "Significance",
-                    "type": "nominal",
-                    "domain": [
-                      "Pathogenic",
-                      "Pathogenic/Likely_pathogenic",
-                      "Likely_pathogenic",
-                      "Uncertain_significance",
-                      "Likely_benign",
-                      "Benign/Likely_benign",
-                      "Benign"
-                    ],
-                    "range": [
-                      "#b2182b", "#ef8a62", "#fddbc7", "gray", "#d1e5f0", "#67a9cf", "#2166ac"
-                    ]
-                  },
-                  // "size": { "value": 10 },
-                  "stroke": {
-                    "field": "Significance",
-                    "type": "nominal",
-                    "domain": [
-                      "Pathogenic",
-                      "Pathogenic/Likely_pathogenic",
-                      "Likely_pathogenic",
-                      "Uncertain_significance",
-                      "Likely_benign",
-                      "Benign/Likely_benign",
-                      "Benign"
-                    ],
-                    "range": [
-                      "#b2182b", "#ef8a62", "#fddbc7", "gray", "#d1e5f0", "#67a9cf", "#2166ac"
-                    ]
-                  },
-                  "strokeWidth": { "value": 1 },
-                  "tooltip": [
-                      { "field": "Significance", "type": "nominal"},
-                      { "field": "Reference", "type": "nominal"},
-                      { "field": "Alternative", "type": "nominal"},
-                      { "field": "Variant Type", "type": "nominal"},
-                      { "field": "Molecular Consequence", "type": "nominal"},
-                      { "field": "Disease Name", "type": "nominal"},
-                      { "field": "HGVS", "type": "nominal"},
-                      { "field": "Review Score", "type": "nominal"},
-                  ],
-                  "opacity": {"value": 0.8},
-                  "x": {"field": "start", "type": "genomic"},
-                  // "xe": {"field": "end", "type": "genomic"},
-                  "style": {"outline": "#F6F6F6"},
-                  "height": 30
+              "contents": [
+                {
+                  "type": "gosling-track",
+                  "server": "https://server.gosling-lang.org/api/v1/",
+                  "tilesetUid": "gwas-multivec",
+                  "options": {
+                    "showMousePosition": true,
+                    "mousePositionColor": "black",
+                    "labelPosition": "none",
+                    "fontSize": 12,
+                    "labelColor": "black",
+                    "labelShowResolution": false,
+                    "labelBackgroundColor": "white",
+                    "labelTextOpacity": 1,
+                    "labelLeftMargin": 1,
+                    "labelTopMargin": 1,
+                    "labelRightMargin": 0,
+                    "labelBottomMargin": 0,
+                    "backgroundColor": "transparent",
+                    "spec": {
+                      "width": 800,
+                      "height": 30,
+                      "assembly": "hg38",
+                      "orientation": "horizontal",
+                      "static": false,
+                      "centerRadius": 0.3,
+                      "spacing": 20,
+                      "data": {
+                        "url": "https://server.gosling-lang.org/api/v1/tileset_info/?d=gwas-multivec",
+                        "type": "multivec",
+                        "row": "base",
+                        "column": "position",
+                        "value": "count",
+                        "categories": ["A"],
+                        "start": "start",
+                        "end": "end",
+                        // "binSize": 2
+                      },
+                      "mark": "rect",
+                      "x": {
+                        "field": "start",
+                        "type": "genomic",
+                        "axis": "none"
+                      },
+                      "xe": {"field": "end", "type": "genomic"},
+                      "opacity": {"field": "count", "type": "quantitative"},
+                      "color": {"value": "gray"},
+                      "style": {"outline": "#F6F6F6"},
+                      "overlayOnPreviousTrack": false
+                    }
+                  }
+                },
+                {
+                  "type": "gosling-track",
+                  "server": "https://server.gosling-lang.org/api/v1/",
+                  "tilesetUid": "gwas-beddb",
+                  "options": {
+                    "showMousePosition": true,
+                    "mousePositionColor": "black",
+                    "name": "hg38 | GWAS",
+                    "labelPosition": "topLeft",
+                    "fontSize": 12,
+                    "labelColor": "black",
+                    "labelShowResolution": false,
+                    "labelBackgroundColor": "white",
+                    "labelBackgroundColor": "#F6F6F6",
+                    "labelTextOpacity": 0.6,
+                    "labelLeftMargin": 4,
+                    "labelRightMargin": 0,
+                    "labelTopMargin": 2,
+                    "labelBottomMargin": 0,
+                    "backgroundColor": "transparent",
+                    "spec": {
+                      "height": 30,
+                      "width": 800,
+                      "assembly": "hg38",
+                      "layout": "linear",
+                      "orientation": "horizontal",
+                      "static": false,
+                      "centerRadius": 0.3,
+                      "spacing": 20,
+                      "data": {
+                        "url": "https://server.gosling-lang.org/api/v1/tileset_info/?d=gwas-beddb",
+                        "type": "beddb",
+                        "genomicFields": [
+                          {"index": 1, "name": "start"},
+                          {"index": 2, "name": "end"}
+                        ],
+                        "valueFields": [
+                          {"index": 3, "name": "pubmedid", "type": "nominal"},
+                          {"index": 4, "name": "date", "type": "nominal"},
+                          {"index": 5, "name": "link", "type": "nominal"},
+                          {"index": 6, "name": "pvalue", "type": "quantitative"},
+                          {"index": 8, "name": "disease", "type": "nominal"},
+                          {
+                            "index": 9,
+                            "name": "pvalue_log",
+                            "type": "quantitative"
+                          },
+                          {"index": 10, "name": "pvalue_txt", "type": "nominal"}
+                        ]
+                      },
+                      "mark": "point",
+                      "x": {
+                        "field": "start",
+                        "type": "genomic", "axis": "none"
+                      },
+                      "xe": {"field": "end", "type": "genomic"},
+                      "y": {
+                        "field": "pvalue_log",
+                        "type": "quantitative",
+                        "range": [3, 25]
+                      },
+                      "size": {"field": "pvalue_log", "type": "quantitative"},
+                      "color": {
+                        "field": "pvalue_log",
+                        "type": "quantitative",
+                        "range": "warm"
+                      },
+                      "tooltip": [
+                        {"field": "disease", "type": "nominal", "alt": "Disease"},
+                        {"field": "link", "type": "nominal", "alt": "Link"},
+                        { "field": "pvalue", "type": "quantitative", "alt": "p-value" },
+                        {
+                          "field": "pvalue_log",
+                          "type": "quantitative",
+                          "alt": "-log(p-value)"
+                        },
+                        {
+                          "field": "pvalue_txt",
+                          "type": "nominal",
+                          "alt": "Context of p-value"
+                        },
+                        {"field": "pubmedid", "type": "nominal", "alt": "PubMed"}
+                      ],
+                      "style": {"outline": "#F6F6F6"},
+                      "overlayOnPreviousTrack": true
+                    }
+                  }
                 }
-              }
+              ]
             },
             {
-              "type": "gemini-track",
+              "type": "gosling-track",
               "height": 18,
               "options": {
                 "showMousePosition": true,
@@ -183,7 +220,14 @@ export const hgDemoViewConfig1 ={
                 "labelTopMargin": 2,
                 "labelBottomMargin": 0,
                 "spec": {
-                  "superpose": [
+                  "data": {
+                    "url": "https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv",
+                    "type": "csv",
+                    "chromosomeField": "Chromosome",
+                    "genomicFields": ["chromStart", "chromEnd"],
+                    "assembly": "hg38"
+                  },
+                  "overlay": [
                     {
                       mark: 'text',
                       dataTransform: {
@@ -196,11 +240,13 @@ export const hgDemoViewConfig1 ={
                           domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar'],
                           range: ['black', 'black', 'black', 'black', 'white', 'black']
                       },
-                      visibility: {
+                      visibility: [{
                           operation: 'less-than',
-                          condition: { width: '|xe-x|', transitionPadding: 10 },
+                          measure: 'width',
+                          threshold: '|xe-x|', 
+                          transitionPadding: 10,
                           target: 'mark'
-                      },
+                      }],
                       style: {
                           textStrokeWidth: 0
                       }
@@ -234,14 +280,14 @@ export const hgDemoViewConfig1 ={
                       }
                     },
                     {
-                      "mark": "triangle-r",
+                      "mark": "triangleRight",
                       "dataTransform": {
                         "filter": [{"field": "Name", "include": "q", "not": false}, {"field": "Stain", "oneOf": ["acen"], "not": false}]
                       },
                       "color": {"value": "#E9413B"}
                     },
                     {
-                      "mark": "triangle-l",
+                      "mark": "triangleLeft",
                       "dataTransform": {
                         "filter": [
                           {"field": "Stain", "oneOf": ["acen"], "not": false},
@@ -260,6 +306,11 @@ export const hgDemoViewConfig1 ={
                   "stroke": {"value": "gray"},
                   "strokeWidth": {"value": 1},
                   "style": {"outline": "#F6F6F6"},
+                  "assembly": "hg38",
+                  "layout": "linear",
+                  "orientation": "horizontal",
+                  "static": true,
+                  "overlayOnPreviousTrack": false,
                   "width": 800,
                   "height": 18
                 }
@@ -268,7 +319,8 @@ export const hgDemoViewConfig1 ={
                 "url": "https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv",
                 "type": "csv",
                 "chromosomeField": "Chromosome",
-                "genomicFields": ["chromStart", "chromEnd"]
+                "genomicFields": ["chromStart", "chromEnd"],
+                "assembly": "hg38"
               }
             },
             {
