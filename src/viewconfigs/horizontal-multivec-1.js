@@ -323,6 +323,40 @@ export const hgDemoViewConfig1 ={
                 "assembly": "hg38"
               }
             },
+            // {
+            //   "data": {
+            //     "type": "cistrome-bigwig",
+            //     "cid": "1",
+            //     // "url": "http://dbtoolkit.cistrome.org/api_bigwig?sid=1",
+            //     "chromSizesUrl": "https://aveit.s3.amazonaws.com/higlass/data/sequence/hg38.chrom.sizes",
+            //   },
+            //   "uid": "bw",
+            //   "type": "bar",
+            //   "options": {
+            //     "align": "bottom",
+            //     "labelColor": "[glyph-color]",
+            //     "labelPosition": "topLeft",
+            //     "labelLeftMargin": 0,
+            //     "labelRightMargin": 0,
+            //     "labelTopMargin": 0,
+            //     "labelBottomMargin": 0,
+            //     "labelShowResolution": false,
+            //     "labelShowAssembly": true,
+            //     "axisLabelFormatting": "scientific",
+            //     "axisPositionHorizontal": "right",
+            //     "barFillColor": "darkgreen",
+            //     "valueScaling": "linear",
+            //     "trackBorderWidth": 0,
+            //     "trackBorderColor": "black",
+            //     "labelTextOpacity": 0.4,
+            //     "barOpacity": 1,
+            //     "valueScaleMin": 0,
+            //     //"valueScaleMax": 80,
+            //     "name": "GnomAD coverage"
+            //   },
+            //   "width": 20,
+            //   "height": 100
+            // },
             {
               "type": "horizontal-gene-annotations",
               "server": "https://higlass.io/api/v1",
