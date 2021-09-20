@@ -13,6 +13,7 @@
     "d3": "^5.15.0",
     "d3-delaunay": "^5.2.1",
     "geminid": "0.0.9",
+    "gosling.js": "^0.9.8",
     "higlass-multivec": "0.2.8",
     "higlass-register": "^0.3.0",
     "js-cookie": "^2.2.1",
@@ -41,6 +42,7 @@
     "deep-diff": "^1.0.2",
     "documentation": "^12.1.4",
     "eslint": "^6.8.0",
+    "gh-pages": "^3.2.3",
     "jest": "^25.1.0",
     "levenary": "^1.1.1",
     "rollup": "^1.29.1",
@@ -57,7 +59,9 @@
     "build": "rollup -c rollup.demo.config.js --environment NODE_ENV:production",
     "build-pkg": "rollup -c rollup.pkg.config.js --environment NODE_ENV:production",
     "test": "jest -c jest.config.js",
-    "docs": "documentation build src/** -f html -o build-docs --config .documentation.yml"
+    "docs": "documentation build src/** -f html -o build-docs --config .documentation.yml",
+    "predeploy": "yarn build; echo \"cisvis.gehlenborglab.org\" >> build/CNAME",
+    "deploy": "gh-pages -d build"
   },
   "main": "build-pkg/index.umd.js",
   "unpkg": "build-pkg/index.min.js",

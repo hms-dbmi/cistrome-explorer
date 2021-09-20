@@ -134,7 +134,7 @@ export const hgDemoViewConfig1 ={
                     "backgroundColor": "transparent",
                     "spec": {
                       "height": 30,
-                      "width": 800,
+                      "width": 2048,
                       "assembly": "hg38",
                       "layout": "linear",
                       "orientation": "horizontal",
