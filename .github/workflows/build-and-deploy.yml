@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [ 10.x, 12.x, 14.x ]
+        node-version: [ 12.x, 14.x ]
 
     steps:
     - uses: actions/checkout@v2
@@ -23,14 +23,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: yarn install
     - run: yarn test
-      env:
-        NODE_OPTIONS: '--max_old_space_size=4096'
     - run: yarn build
-      env:
-        NODE_OPTIONS: '--max_old_space_size=4096'
-    - uses: codecov/codecov-action@v1
-      with:
-        fail_ci_if_error: true
   
   deploy:
     name: Deploy
