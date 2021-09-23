@@ -59,7 +59,7 @@
     "build-pkg": "rollup -c rollup.pkg.config.js --environment NODE_ENV:production",
     "test": "jest -c jest.config.js",
     "docs": "documentation build src/** -f html -o build-docs --config .documentation.yml",
-    "predeploy": "yarn build; echo \"cisvis.gehlenborglab.org\" >> build/CNAME",
+    "predeploy": "yarn build; echo \"cisvis.gehlenborglab.org\" >> build-demo/CNAME",
     "deploy": "gh-pages -d build"
   },
   "main": "build-pkg/index.umd.js",
