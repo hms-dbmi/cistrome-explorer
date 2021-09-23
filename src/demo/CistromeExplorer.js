@@ -17,7 +17,6 @@ import './CistromeExplorer.scss';
 
 import StackedBarTrack from 'higlass-multivec/es/StackedBarTrack';
 import ScaleLegendTrack from '../scale-legend/ScaleLegendTrack';
-import CistromeBigWigDataFetcher from '../cistrome-bw-fetcher/index';
 import { default as higlassRegister } from 'higlass-register';
 import gosling from 'gosling.js';
 
@@ -34,11 +33,6 @@ higlassRegister({
     track: ScaleLegendTrack,
     config: ScaleLegendTrack.config,
 });
-
-higlassRegister(
-    { dataFetcher: CistromeBigWigDataFetcher, config: CistromeBigWigDataFetcher.config },
-    { pluginType: "dataFetcher" }
-  );
 
 export default function CistromeExplorer() {
     
