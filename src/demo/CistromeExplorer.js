@@ -38,7 +38,7 @@ export default function CistromeExplorer() {
     
     const hmRef = useRef();
 
-    const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[0]);
+    const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[1]);
     const [isSettingVisible, setIsSettingVisible] = useState(false);
 
     // local files
@@ -89,7 +89,7 @@ export default function CistromeExplorer() {
     // toggle
     const [helpActivated, setHelpActivated] = useState(false);
     const [aggActivated, setAggActivated] = useState(false);
-    const [aggregateRowBy, setSggregateRowBy] = useState('Tissue Type');
+    const [aggregateRowBy, setSggregateRowBy] = useState('Cell Type');
 
     // History of view updates
     const MAX_HISTORY_LENGTH = 50;  // How many previous views should be recorded?
@@ -436,7 +436,7 @@ export default function CistromeExplorer() {
                             <span>
                                 <select 
                                     onChange={e => { setSggregateRowBy(e.target.value) }}
-                                    defaultValue={"Tissue"}
+                                    defaultValue={"Cell Type"}
                                 >
                                     {["Tissue Type", "Cell Type"].map(f => (
                                         <option key={f} value={f}>{f}</option>

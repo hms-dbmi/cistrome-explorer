@@ -1,0 +1,1134 @@
+[
+    {
+        "id": 0,
+        "Cell Type": "Vein endothelial cell"
+    },
+    {
+        "id": 1,
+        "Cell Type": "Vein endothelial cell"
+    },
+    {
+        "id": 2,
+        "Cell Type": "Vein endothelial cell"
+    },
+    {
+        "id": 3,
+        "Cell Type": "Vein endothelial cell"
+    },
+    {
+        "id": 4,
+        "Cell Type": "Vein endothelial cell"
+    },
+    {
+        "id": 5,
+        "Cell Type": "Vein endothelial cell"
+    },
+    {
+        "id": 6,
+        "Cell Type": "Vein endothelial cell"
+    },
+    {
+        "id": 7,
+        "Cell Type": "Vein endothelial cell"
+    },
+    {
+        "id": 8,
+        "Cell Type": "Vein endothelial cell"
+    },
+    {
+        "id": 9,
+        "Cell Type": "Vein endothelial cell"
+    },
+    {
+        "id": 10,
+        "Cell Type": "Vein endothelial cell"
+    },
+    {
+        "id": 11,
+        "Cell Type": "Vein endothelial cell"
+    },
+    {
+        "id": 12,
+        "Cell Type": "Vein endothelial cell"
+    },
+    {
+        "id": 13,
+        "Cell Type": "Vein endothelial cell"
+    },
+    {
+        "id": 14,
+        "Cell Type": "Aortic endothelial cell"
+    },
+    {
+        "id": 15,
+        "Cell Type": "Aortic endothelial cell"
+    },
+    {
+        "id": 16,
+        "Cell Type": "Aortic endothelial cell"
+    },
+    {
+        "id": 17,
+        "Cell Type": "Aortic endothelial cell"
+    },
+    {
+        "id": 18,
+        "Cell Type": "Aortic endothelial cell"
+    },
+    {
+        "id": 19,
+        "Cell Type": "Aortic endothelial cell"
+    },
+    {
+        "id": 20,
+        "Cell Type": "Aortic endothelial cell"
+    },
+    {
+        "id": 21,
+        "Cell Type": "Aortic endothelial cell"
+    },
+    {
+        "id": 22,
+        "Cell Type": "Aortic endothelial cell"
+    },
+    {
+        "id": 23,
+        "Cell Type": "Aortic endothelial cell"
+    },
+    {
+        "id": 24,
+        "Cell Type": "Aortic endothelial cell"
+    },
+    {
+        "id": 25,
+        "Cell Type": "Aortic endothelial cell"
+    },
+    {
+        "id": 26,
+        "Cell Type": "Aortic endothelial cell"
+    },
+    {
+        "id": 27,
+        "Cell Type": "Aortic endothelial cell"
+    },
+    {
+        "id": 28,
+        "Cell Type": "Cervix epithelium"
+    },
+    {
+        "id": 29,
+        "Cell Type": "Cervix epithelium"
+    },
+    {
+        "id": 30,
+        "Cell Type": "Cervix epithelium"
+    },
+    {
+        "id": 31,
+        "Cell Type": "Cervix epithelium"
+    },
+    {
+        "id": 32,
+        "Cell Type": "Cervix epithelium"
+    },
+    {
+        "id": 33,
+        "Cell Type": "Cervix epithelium"
+    },
+    {
+        "id": 34,
+        "Cell Type": "Cervix epithelium"
+    },
+    {
+        "id": 35,
+        "Cell Type": "Cervix epithelium"
+    },
+    {
+        "id": 36,
+        "Cell Type": "Cervix epithelium"
+    },
+    {
+        "id": 37,
+        "Cell Type": "Cervix epithelium"
+    },
+    {
+        "id": 38,
+        "Cell Type": "Cervix epithelium"
+    },
+    {
+        "id": 39,
+        "Cell Type": "Cervix epithelium"
+    },
+    {
+        "id": 40,
+        "Cell Type": "Lung epithelium"
+    },
+    {
+        "id": 41,
+        "Cell Type": "Lung epithelium"
+    },
+    {
+        "id": 42,
+        "Cell Type": "Lung epithelium"
+    },
+    {
+        "id": 43,
+        "Cell Type": "Lung epithelium"
+    },
+    {
+        "id": 44,
+        "Cell Type": "Lung epithelium"
+    },
+    {
+        "id": 45,
+        "Cell Type": "Lung epithelium"
+    },
+    {
+        "id": 46,
+        "Cell Type": "Lung epithelium"
+    },
+    {
+        "id": 47,
+        "Cell Type": "Lung epithelium"
+    },
+    {
+        "id": 48,
+        "Cell Type": "Lung epithelium"
+    },
+    {
+        "id": 49,
+        "Cell Type": "Lung epithelium"
+    },
+    {
+        "id": 50,
+        "Cell Type": "Skin fibroblast"
+    },
+    {
+        "id": 51,
+        "Cell Type": "Skin fibroblast"
+    },
+    {
+        "id": 52,
+        "Cell Type": "Skin fibroblast"
+    },
+    {
+        "id": 53,
+        "Cell Type": "Skin fibroblast"
+    },
+    {
+        "id": 54,
+        "Cell Type": "Skin fibroblast"
+    },
+    {
+        "id": 55,
+        "Cell Type": "Skin fibroblast"
+    },
+    {
+        "id": 56,
+        "Cell Type": "Skin fibroblast"
+    },
+    {
+        "id": 57,
+        "Cell Type": "Skin fibroblast"
+    },
+    {
+        "id": 58,
+        "Cell Type": "Skin fibroblast"
+    },
+    {
+        "id": 59,
+        "Cell Type": "Skin fibroblast"
+    },
+    {
+        "id": 60,
+        "Cell Type": "Skin fibroblast"
+    },
+    {
+        "id": 61,
+        "Cell Type": "Skin fibroblast"
+    },
+    {
+        "id": 62,
+        "Cell Type": "Skin fibroblast"
+    },
+    {
+        "id": 63,
+        "Cell Type": "Adipocyte"
+    },
+    {
+        "id": 64,
+        "Cell Type": "Adipocyte"
+    },
+    {
+        "id": 65,
+        "Cell Type": "Adipocyte"
+    },
+    {
+        "id": 66,
+        "Cell Type": "Adipocyte"
+    },
+    {
+        "id": 67,
+        "Cell Type": "Adipocyte"
+    },
+    {
+        "id": 68,
+        "Cell Type": "Adipocyte"
+    },
+    {
+        "id": 69,
+        "Cell Type": "Adipocyte"
+    },
+    {
+        "id": 70,
+        "Cell Type": "Adipocyte"
+    },
+    {
+        "id": 71,
+        "Cell Type": "Adipocyte"
+    },
+    {
+        "id": 72,
+        "Cell Type": "Adipocyte"
+    },
+    {
+        "id": 73,
+        "Cell Type": "Adipocyte"
+    },
+    {
+        "id": 74,
+        "Cell Type": "Adipocyte"
+    },
+    {
+        "id": 75,
+        "Cell Type": "Smooth muscle cell"
+    },
+    {
+        "id": 76,
+        "Cell Type": "Smooth muscle cell"
+    },
+    {
+        "id": 77,
+        "Cell Type": "Smooth muscle cell"
+    },
+    {
+        "id": 78,
+        "Cell Type": "Smooth muscle cell"
+    },
+    {
+        "id": 79,
+        "Cell Type": "Smooth muscle cell"
+    },
+    {
+        "id": 80,
+        "Cell Type": "Smooth muscle cell"
+    },
+    {
+        "id": 81,
+        "Cell Type": "Smooth muscle cell"
+    },
+    {
+        "id": 82,
+        "Cell Type": "Myoblast"
+    },
+    {
+        "id": 83,
+        "Cell Type": "Myoblast"
+    },
+    {
+        "id": 84,
+        "Cell Type": "Myoblast"
+    },
+    {
+        "id": 85,
+        "Cell Type": "Myoblast"
+    },
+    {
+        "id": 86,
+        "Cell Type": "Monocytes"
+    },
+    {
+        "id": 87,
+        "Cell Type": "Monocytes"
+    },
+    {
+        "id": 88,
+        "Cell Type": "Monocytes"
+    },
+    {
+        "id": 89,
+        "Cell Type": "Monocytes"
+    },
+    {
+        "id": 90,
+        "Cell Type": "Monocytes"
+    },
+    {
+        "id": 91,
+        "Cell Type": "Monocytes"
+    },
+    {
+        "id": 92,
+        "Cell Type": "Monocytes"
+    },
+    {
+        "id": 93,
+        "Cell Type": "Monocytes"
+    },
+    {
+        "id": 94,
+        "Cell Type": "Monocytes"
+    },
+    {
+        "id": 95,
+        "Cell Type": "Monocytes"
+    },
+    {
+        "id": 96,
+        "Cell Type": "Monocytes"
+    },
+    {
+        "id": 97,
+        "Cell Type": "Monocytes"
+    },
+    {
+        "id": 98,
+        "Cell Type": "Monocytes"
+    },
+    {
+        "id": 99,
+        "Cell Type": "Monocytes"
+    },
+    {
+        "id": 100,
+        "Cell Type": "Macrophage"
+    },
+    {
+        "id": 101,
+        "Cell Type": "Macrophage"
+    },
+    {
+        "id": 102,
+        "Cell Type": "Macrophage"
+    },
+    {
+        "id": 103,
+        "Cell Type": "Microglial cell"
+    },
+    {
+        "id": 104,
+        "Cell Type": "Microglial cell"
+    },
+    {
+        "id": 105,
+        "Cell Type": "Microglial cell"
+    },
+    {
+        "id": 106,
+        "Cell Type": "Microglial cell"
+    },
+    {
+        "id": 107,
+        "Cell Type": "Macrophage"
+    },
+    {
+        "id": 108,
+        "Cell Type": "Macrophage"
+    },
+    {
+        "id": 109,
+        "Cell Type": "Macrophage"
+    },
+    {
+        "id": 110,
+        "Cell Type": "Macrophage"
+    },
+    {
+        "id": 111,
+        "Cell Type": "Macrophage"
+    },
+    {
+        "id": 112,
+        "Cell Type": "Macrophage"
+    },
+    {
+        "id": 113,
+        "Cell Type": "Macrophage"
+    },
+    {
+        "id": 114,
+        "Cell Type": "Macrophage"
+    },
+    {
+        "id": 115,
+        "Cell Type": "Macrophage"
+    },
+    {
+        "id": 116,
+        "Cell Type": "Macrophage"
+    },
+    {
+        "id": 117,
+        "Cell Type": "Macrophage"
+    },
+    {
+        "id": 118,
+        "Cell Type": "GM12878"
+    },
+    {
+        "id": 119,
+        "Cell Type": "GM12878"
+    },
+    {
+        "id": 120,
+        "Cell Type": "GM12878"
+    },
+    {
+        "id": 121,
+        "Cell Type": "GM12878"
+    },
+    {
+        "id": 122,
+        "Cell Type": "GM12878"
+    },
+    {
+        "id": 123,
+        "Cell Type": "GM12878"
+    },
+    {
+        "id": 124,
+        "Cell Type": "GM12878"
+    },
+    {
+        "id": 125,
+        "Cell Type": "GM12878"
+    },
+    {
+        "id": 126,
+        "Cell Type": "GM12878"
+    },
+    {
+        "id": 127,
+        "Cell Type": "GM12878"
+    },
+    {
+        "id": 128,
+        "Cell Type": "GM12878"
+    },
+    {
+        "id": 129,
+        "Cell Type": "GM12878"
+    },
+    {
+        "id": 130,
+        "Cell Type": "GM12878"
+    },
+    {
+        "id": 131,
+        "Cell Type": "GM12878"
+    },
+    {
+        "id": 132,
+        "Cell Type": "CD4-positive helper T cell"
+    },
+    {
+        "id": 133,
+        "Cell Type": "CD4-positive helper T cell"
+    },
+    {
+        "id": 134,
+        "Cell Type": "CD4-positive helper T cell"
+    },
+    {
+        "id": 135,
+        "Cell Type": "CD4-positive helper T cell"
+    },
+    {
+        "id": 136,
+        "Cell Type": "CD4-positive helper T cell"
+    },
+    {
+        "id": 137,
+        "Cell Type": "CD4-positive helper T cell"
+    },
+    {
+        "id": 138,
+        "Cell Type": "CD4-positive, alpha-beta memory T cell"
+    },
+    {
+        "id": 139,
+        "Cell Type": "CD4-positive, alpha-beta memory T cell"
+    },
+    {
+        "id": 140,
+        "Cell Type": "CD4-positive, alpha-beta memory T cell"
+    },
+    {
+        "id": 141,
+        "Cell Type": "CD4 T cell"
+    },
+    {
+        "id": 142,
+        "Cell Type": "CD4-positive, alpha-beta memory T cell"
+    },
+    {
+        "id": 143,
+        "Cell Type": "CD8-positive, alpha-beta T cell"
+    },
+    {
+        "id": 144,
+        "Cell Type": "CD8-positive, alpha-beta T cell"
+    },
+    {
+        "id": 145,
+        "Cell Type": "CD8-positive, alpha-beta T cell"
+    },
+    {
+        "id": 146,
+        "Cell Type": "Natural killer cell"
+    },
+    {
+        "id": 147,
+        "Cell Type": "Natural killer cell"
+    },
+    {
+        "id": 148,
+        "Cell Type": "Natural killer cell"
+    },
+    {
+        "id": 149,
+        "Cell Type": "Natural killer cell"
+    },
+    {
+        "id": 150,
+        "Cell Type": "Natural killer cell"
+    },
+    {
+        "id": 151,
+        "Cell Type": "Natural killer cell"
+    },
+    {
+        "id": 152,
+        "Cell Type": "Natural killer cell"
+    },
+    {
+        "id": 153,
+        "Cell Type": "Natural killer cell"
+    },
+    {
+        "id": 154,
+        "Cell Type": "Natural killer cell"
+    },
+    {
+        "id": 155,
+        "Cell Type": "Natural killer cell"
+    },
+    {
+        "id": 156,
+        "Cell Type": "Natural killer cell"
+    },
+    {
+        "id": 157,
+        "Cell Type": "Natural killer cell"
+    },
+    {
+        "id": 158,
+        "Cell Type": "Natural killer cell"
+    },
+    {
+        "id": 159,
+        "Cell Type": "Natural killer cell"
+    },
+    {
+        "id": 160,
+        "Cell Type": "Dendritic cell"
+    },
+    {
+        "id": 161,
+        "Cell Type": "Dendritic cell"
+    },
+    {
+        "id": 162,
+        "Cell Type": "Dendritic cell"
+    },
+    {
+        "id": 163,
+        "Cell Type": "Dendritic cell"
+    },
+    {
+        "id": 164,
+        "Cell Type": "Dendritic cell"
+    },
+    {
+        "id": 165,
+        "Cell Type": "Dendritic cell"
+    },
+    {
+        "id": 166,
+        "Cell Type": "Dendritic cell"
+    },
+    {
+        "id": 167,
+        "Cell Type": "Dendritic cell"
+    },
+    {
+        "id": 168,
+        "Cell Type": "Dendritic cell"
+    },
+    {
+        "id": 169,
+        "Cell Type": "Dendritic cell"
+    },
+    {
+        "id": 170,
+        "Cell Type": "Dendritic cell"
+    },
+    {
+        "id": 171,
+        "Cell Type": "Dendritic cell"
+    },
+    {
+        "id": 172,
+        "Cell Type": "Dendritic cell"
+    },
+    {
+        "id": 173,
+        "Cell Type": "Dendritic cell"
+    },
+    {
+        "id": 174,
+        "Cell Type": "Jurkat T cells"
+    },
+    {
+        "id": 175,
+        "Cell Type": "Jurkat T cells"
+    },
+    {
+        "id": 176,
+        "Cell Type": "Jurkat T cells"
+    },
+    {
+        "id": 177,
+        "Cell Type": "Jurkat T cells"
+    },
+    {
+        "id": 178,
+        "Cell Type": "Jurkat T cells"
+    },
+    {
+        "id": 179,
+        "Cell Type": "Jurkat T cells"
+    },
+    {
+        "id": 180,
+        "Cell Type": "Jurkat T cells"
+    },
+    {
+        "id": 181,
+        "Cell Type": "Jurkat T cells"
+    },
+    {
+        "id": 182,
+        "Cell Type": "Jurkat T cells"
+    },
+    {
+        "id": 183,
+        "Cell Type": "Jurkat T cells"
+    },
+    {
+        "id": 184,
+        "Cell Type": "Jurkat T cells"
+    },
+    {
+        "id": 185,
+        "Cell Type": "Jurkat T cells"
+    },
+    {
+        "id": 186,
+        "Cell Type": "Jurkat T cells"
+    },
+    {
+        "id": 187,
+        "Cell Type": "Jurkat T cells"
+    },
+    {
+        "id": 188,
+        "Cell Type": "CD4-positive helper T cell"
+    },
+    {
+        "id": 189,
+        "Cell Type": "CD4-positive helper T cell"
+    },
+    {
+        "id": 190,
+        "Cell Type": "Breast epithelium"
+    },
+    {
+        "id": 191,
+        "Cell Type": "Breast epithelium"
+    },
+    {
+        "id": 192,
+        "Cell Type": "Breast epithelium"
+    },
+    {
+        "id": 193,
+        "Cell Type": "Breast epithelium"
+    },
+    {
+        "id": 194,
+        "Cell Type": "Breast epithelium"
+    },
+    {
+        "id": 195,
+        "Cell Type": "Breast epithelium"
+    },
+    {
+        "id": 196,
+        "Cell Type": "Breast epithelium"
+    },
+    {
+        "id": 197,
+        "Cell Type": "Breast epithelium"
+    },
+    {
+        "id": 198,
+        "Cell Type": "Breast epithelium"
+    },
+    {
+        "id": 199,
+        "Cell Type": "Breast epithelium"
+    },
+    {
+        "id": 200,
+        "Cell Type": "Breast epithelium"
+    },
+    {
+        "id": 201,
+        "Cell Type": "Breast epithelium"
+    },
+    {
+        "id": 202,
+        "Cell Type": "Breast epithelium"
+    },
+    {
+        "id": 203,
+        "Cell Type": "Breast epithelium"
+    },
+    {
+        "id": 204,
+        "Cell Type": "Prostate epithelium"
+    },
+    {
+        "id": 205,
+        "Cell Type": "Prostate epithelium"
+    },
+    {
+        "id": 206,
+        "Cell Type": "Prostate epithelium"
+    },
+    {
+        "id": 207,
+        "Cell Type": "Prostate epithelium"
+    },
+    {
+        "id": 208,
+        "Cell Type": "Prostate epithelium"
+    },
+    {
+        "id": 209,
+        "Cell Type": "Prostate epithelium"
+    },
+    {
+        "id": 210,
+        "Cell Type": "Prostate epithelium"
+    },
+    {
+        "id": 211,
+        "Cell Type": "Prostate epithelium"
+    },
+    {
+        "id": 212,
+        "Cell Type": "Prostate epithelium"
+    },
+    {
+        "id": 213,
+        "Cell Type": "Prostate epithelium"
+    },
+    {
+        "id": 214,
+        "Cell Type": "Prostate epithelium"
+    },
+    {
+        "id": 215,
+        "Cell Type": "Prostate epithelium"
+    },
+    {
+        "id": 216,
+        "Cell Type": "Prostate epithelium"
+    },
+    {
+        "id": 217,
+        "Cell Type": "Prostate epithelium"
+    },
+    {
+        "id": 218,
+        "Cell Type": "Pluripotent stem cell"
+    },
+    {
+        "id": 219,
+        "Cell Type": "Pluripotent stem cell"
+    },
+    {
+        "id": 220,
+        "Cell Type": "Pluripotent stem cell"
+    },
+    {
+        "id": 221,
+        "Cell Type": "Pluripotent stem cell"
+    },
+    {
+        "id": 222,
+        "Cell Type": "Pluripotent stem cell"
+    },
+    {
+        "id": 223,
+        "Cell Type": "Pluripotent stem cell"
+    },
+    {
+        "id": 224,
+        "Cell Type": "Pluripotent stem cell"
+    },
+    {
+        "id": 225,
+        "Cell Type": "Pluripotent stem cell"
+    },
+    {
+        "id": 226,
+        "Cell Type": "Pluripotent stem cell"
+    },
+    {
+        "id": 227,
+        "Cell Type": "Pluripotent stem cell"
+    },
+    {
+        "id": 228,
+        "Cell Type": "Pluripotent stem cell"
+    },
+    {
+        "id": 229,
+        "Cell Type": "Pluripotent stem cell"
+    },
+    {
+        "id": 230,
+        "Cell Type": "Central nervous system neuron"
+    },
+    {
+        "id": 231,
+        "Cell Type": "Central nervous system neuron"
+    },
+    {
+        "id": 232,
+        "Cell Type": "Central nervous system neuron"
+    },
+    {
+        "id": 233,
+        "Cell Type": "Central nervous system neuron"
+    },
+    {
+        "id": 234,
+        "Cell Type": "Central nervous system neuron"
+    },
+    {
+        "id": 235,
+        "Cell Type": "CD8-positive, alpha-beta T cell"
+    },
+    {
+        "id": 236,
+        "Cell Type": "B cell"
+    },
+    {
+        "id": 237,
+        "Cell Type": "B cell"
+    },
+    {
+        "id": 238,
+        "Cell Type": "B cell"
+    },
+    {
+        "id": 239,
+        "Cell Type": "B cell"
+    },
+    {
+        "id": 240,
+        "Cell Type": "Interneuron"
+    },
+    {
+        "id": 241,
+        "Cell Type": "Interneuron"
+    },
+    {
+        "id": 242,
+        "Cell Type": "Interneuron"
+    },
+    {
+        "id": 243,
+        "Cell Type": "Neural precursor"
+    },
+    {
+        "id": 244,
+        "Cell Type": "Neural precursor"
+    },
+    {
+        "id": 245,
+        "Cell Type": "Neural precursor"
+    },
+    {
+        "id": 246,
+        "Cell Type": "Lung epithelium"
+    },
+    {
+        "id": 247,
+        "Cell Type": "Lung epithelium"
+    },
+    {
+        "id": 248,
+        "Cell Type": "Cervix epithelium"
+    },
+    {
+        "id": 249,
+        "Cell Type": "Cervix epithelium"
+    },
+    {
+        "id": 250,
+        "Cell Type": "Lung epithelium"
+    },
+    {
+        "id": 251,
+        "Cell Type": "Embryonic stem cell"
+    },
+    {
+        "id": 252,
+        "Cell Type": "Smooth muscle cell"
+    },
+    {
+        "id": 253,
+        "Cell Type": "Embryonic stem cell"
+    },
+    {
+        "id": 254,
+        "Cell Type": "Skin fibroblast"
+    },
+    {
+        "id": 255,
+        "Cell Type": "Keratinocyte"
+    },
+    {
+        "id": 256,
+        "Cell Type": "Granulocytes"
+    },
+    {
+        "id": 257,
+        "Cell Type": "Ectodermal cell"
+    },
+    {
+        "id": 258,
+        "Cell Type": "Chondrocyte"
+    },
+    {
+        "id": 259,
+        "Cell Type": "Chondrocyte"
+    },
+    {
+        "id": 260,
+        "Cell Type": "Chondrocyte"
+    },
+    {
+        "id": 261,
+        "Cell Type": "Chondrocyte"
+    },
+    {
+        "id": 262,
+        "Cell Type": "Chondrocyte"
+    },
+    {
+        "id": 263,
+        "Cell Type": "Chondrocyte"
+    },
+    {
+        "id": 264,
+        "Cell Type": "Chondrocyte"
+    },
+    {
+        "id": 265,
+        "Cell Type": "Chondrocyte"
+    },
+    {
+        "id": 266,
+        "Cell Type": "Chondrocyte"
+    },
+    {
+        "id": 267,
+        "Cell Type": "Chondrocyte"
+    },
+    {
+        "id": 268,
+        "Cell Type": "Chondrocyte"
+    },
+    {
+        "id": 269,
+        "Cell Type": "Pluripotent stem cell"
+    },
+    {
+        "id": 270,
+        "Cell Type": "Embryonic stem cell"
+    },
+    {
+        "id": 271,
+        "Cell Type": "Embryonic stem cell"
+    },
+    {
+        "id": 272,
+        "Cell Type": "Embryonic stem cell"
+    },
+    {
+        "id": 273,
+        "Cell Type": "Embryonic stem cell"
+    },
+    {
+        "id": 274,
+        "Cell Type": "Embryonic stem cell"
+    },
+    {
+        "id": 275,
+        "Cell Type": "Embryonic stem cell"
+    },
+    {
+        "id": 276,
+        "Cell Type": "Pluripotent stem cell"
+    },
+    {
+        "id": 277,
+        "Cell Type": "Embryonic stem cell"
+    },
+    {
+        "id": 278,
+        "Cell Type": "Embryonic stem cell"
+    },
+    {
+        "id": 279,
+        "Cell Type": "Embryonic stem cell"
+    },
+    {
+        "id": 280,
+        "Cell Type": "Embryonic stem cell"
+    },
+    {
+        "id": 281,
+        "Cell Type": "Embryonic stem cell"
+    },
+    {
+        "id": 282,
+        "Cell Type": "Embryonic stem cell"
+    }
+]
