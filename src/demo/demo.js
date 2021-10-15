@@ -46,11 +46,11 @@ export const demos = {
             viewId: "cistrome-view-atac",
             trackId: "cistrome-track-atac",
             rowInfoAttributes: [
-                {field: "Cell Type", type: "nominal", position: "right", width: 150},
+                {field: "Cell Type", type: "nominal", position: "right", width: 200},
                 // {field: "Tissue Type", type: "nominal", position: "right", width: 120},
                 // {field: "qc_frip", type: "quantitative", position: "right", title: "QC: FRIP", width: 80},
                 // {field: "qc_fastqc", type: "quantitative", position: "right", title:  "QC: FastQC", width: 80},
-                // {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right", width: 100},
+                {field: "Clustering", type: "tree", position: "right", width: 200},
                 // {field: "Species", type: "nominal", position: "left", width: 120},
                 // {field: "cid", type: "nominal-dynamic",  position: "left", title: "Compare Positive and Negative", domain: ["positive", "negative"], range: ["blue", "red"], width: 30},
                 // {field: "ID", type: "url", shortName: "📊", position: "right", title: "➕ Add Detail Track", width: 35, addTrackOnClick: true},
@@ -61,7 +61,7 @@ export const demos = {
                 // {field: "Tissue Type", type: "nominal", notOneOf: []}
             ],
             rowSort: [
-                // {field: "Hierarchical Clustering (Ward)", type: "tree", order: "ascending"}
+                {field: "Clustering", type: "tree", order: "ascending"}
             ],
             rowFilter: [
                 // ...

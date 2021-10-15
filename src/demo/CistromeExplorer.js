@@ -38,7 +38,7 @@ export default function CistromeExplorer() {
     
     const hmRef = useRef();
 
-    const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[1]);
+    const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[0]);
     const [isSettingVisible, setIsSettingVisible] = useState(false);
 
     // local files
