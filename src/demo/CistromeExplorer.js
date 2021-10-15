@@ -15,10 +15,11 @@ import { publishHelpTooltip, destroyTooltip } from "../Tooltip.js";
 
 import "./CistromeExplorer.scss";
 
-import StackedBarTrack from "higlass-multivec/es/StackedBarTrack";
-import ScaleLegendTrack from "../scale-legend/ScaleLegendTrack";
-import { default as higlassRegister } from "higlass-register";
-import gosling from "gosling.js";
+import StackedBarTrack from 'higlass-multivec/es/StackedBarTrack';
+import ScaleLegendTrack from '../scale-legend/ScaleLegendTrack';
+import CistromeBigWigDataFetcher from '../cistrome-api/bigwig';
+import { default as higlassRegister } from 'higlass-register';
+import gosling from 'gosling.js';
 
 gosling.init();
  
@@ -33,6 +34,11 @@ higlassRegister({
     track: ScaleLegendTrack,
     config: ScaleLegendTrack.config,
 });
+
+higlassRegister(
+    { dataFetcher: CistromeBigWigDataFetcher, config: CistromeBigWigDataFetcher.config },
+    { pluginType: "dataFetcher" }
+);
 
 export default function CistromeExplorer() {
     

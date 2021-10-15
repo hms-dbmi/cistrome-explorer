@@ -41,6 +41,40 @@ export const hgDemoViewConfig1 = {
                         },
                         height: 25,
                     },
+{
+              "data": {
+                "type": "cistrome-bigwig",
+                "cid": "1",
+                // "url": "http://dbtoolkit.cistrome.org/api_bigwig?sid=1",
+                "chromSizesUrl": "https://aveit.s3.amazonaws.com/higlass/data/sequence/hg38.chrom.sizes",
+              },
+              "uid": "bw",
+              "type": "bar",
+              "options": {
+                "labelPosition": "topLeft",
+                "labelColor": "black",
+                "labelTextOpacity": 0.6,
+                "barBorder": false,
+                "valueScaling": "linear",
+                "labelTopMargin": 2,
+                "labelLeftMargin": 4,
+                "labelBottomMargin": 0,
+                "labelRightMargin": 0,
+                "labelBackgroundColor": "#F6F6F6",
+                "labelShowResolution": false,
+                "backgroundColor": "#F6F6F6",
+                "minHeight": 100,
+                "colorbarPosition": "hidden",
+                "colorScale": ["gray"],
+                "zeroValueColor": "white",
+                "showMousePosition": true,
+                "mousePositionColor": "#000000",
+                "name": "Cistrome Track Using API"
+              },
+              "width": 100,
+              "height": 40
+            },
+
                     {
                         type: "horizontal-chromosome-labels",
                         server: "https://higlass.io/api/v1",
