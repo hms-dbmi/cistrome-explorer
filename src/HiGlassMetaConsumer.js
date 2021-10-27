@@ -11,6 +11,7 @@ import TrackWrapper from "./TrackWrapper.js";
 import ViewWrapper from "./ViewWrapper.js";
 import Tooltip from "./Tooltip.js";
 import ContextMenu, { destroyContextMenu } from "./ContextMenu.js";
+import GwasFilter from "./GwasFilter.js";
 
 import { 
     DEFAULT_OPTIONS_KEY,
@@ -34,15 +35,17 @@ import {
     getAllViewAndTrackPairs,
     removeViewportFromViewConfig,
     getTrackIdsFromViewConfig,
-    removeTopTrackFromViewConfig
+    removeTopTrackFromViewConfig,
+    setDataTransformOfTopTrackFromViewConfig
 } from "./utils/viewconf.js";
 import { wrapSvg } from "./utils/wrap-svg.js";
 
 import "./HiGlassMetaConsumer.scss";
 import cloneDeep from "lodash/cloneDeep";
 import { removeItemFromArray, modifyItemInArray, insertItemToArray } from "./utils/array.js";
-import { CLOSE, THIN_CLOSE } from "./utils/icons.js";
+import { CLOSE, THIN_CLOSE, FILTER } from "./utils/icons.js";
 import { HG38_START_POSITIONS } from "./utils/chromsizes.js";
+import {TRAITS} from "./utils/gwas.js";
 
 const hgOptionsBase = {
     sizeMode: "bounded", // Stretch the height of HiGlass to its container <div/>
@@ -91,6 +94,9 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
     const [multivecTrackIds, setMultivecTrackIds] = useState([]);
     const [viewportTrackIds, setViewportTrackIds] = useState({});
     const [stackedBarTrackIds, setStackedBarTrackIds] = useState([]);
+    const [gwasTrackIds, setGwasTrackIds] = useState([]);
+    const [showGwasFilter, setShowGwasFilter] = useState(false);
+    const [gwasOneOf, setGwasOneOf] = useState(TRAITS);
     const [isWheelListening, setIsWheelListening] = useState(false);
     
     const context = useContext(InfoContext);
@@ -237,6 +243,9 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         // Tracks that are interactively added.
         const newStackedBarTrackIds = getTrackIdsFromViewConfig(newViewConfig, REMOVE_ALLOWED_TAG_TRACKID);
 
+        // A GWAS track
+        const newGwasTrackIds = getTrackIdsFromViewConfig(newViewConfig, "gwas");
+
         // Get selected rows from the view config and update context.
         for(let trackIds of newTrackIds) {
             const newSelectedRows = getHMSelectedRowsFromViewConfig(newViewConfig, trackIds.viewId, trackIds.trackId);
@@ -258,6 +267,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         setMultivecTrackIds(newTrackIds);
         setViewportTrackIds(newViewportTrackIds);
         setStackedBarTrackIds(newStackedBarTrackIds);
+        setGwasTrackIds(newGwasTrackIds);
     }, []);
 
     // Function to get a track object from the higlass API.
@@ -305,6 +315,17 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         const newViewConfig = removeTopTrackFromViewConfig(currViewConfig, viewId, trackId);
         hgRef.current.api.setViewConfig(newViewConfig);
     }, [hgRef]);
+
+    useEffect(() => {
+        const currViewConfig = hgRef.current.api.getViewConfig();
+        const newViewConfig = setDataTransformOfTopTrackFromViewConfig(
+            currViewConfig, 
+            ["cistrome-view-1", "cistrome-view-atac"], 
+            "gwas", 
+            [{ type: "filter", field: "MAPPED_TRAIT", oneOf: gwasOneOf, not: false}]
+        );
+        hgRef.current.api.setViewConfig(newViewConfig);
+    }, [gwasOneOf]);
 
     // HiGlassMeta APIs that can be called outside the library.
     useEffect(() => {
@@ -734,6 +755,39 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                     </div>
                 );
             })}
+            {gwasTrackIds.map(({ viewId, trackId }, i) => {
+                const track = getTrackObject(viewId, trackId);
+                if(!track) {
+                    // did not find any track with the given viewid and trackId
+                    return;  
+                }
+
+                const [left, top] = track.position;
+                const [w, h] = track.dimensions;
+                return (
+                    <div key={i} style={{ left: left + w - 20, top: top, position: "absolute", height: h }}
+                        onClick={() => setShowGwasFilter(!showGwasFilter)}
+                    >
+                        <svg
+                            className={"hm-button"}
+                            style={{ color: "rgb(121, 121, 121)", background: "none", height: "30px" }}
+                            viewBox={FILTER.viewBox}
+                        >
+                            <title>Filter Traits</title>
+                            <path d={FILTER.path} fill="currentColor"/>
+                        </svg>
+                    </div>
+                );
+            })}
+            {!showGwasFilter ? null : (
+                <GwasFilter 
+                    top={100} 
+                    left={100} 
+                    oneOf={gwasOneOf} 
+                    onFilter={(oneOf) => setGwasOneOf(oneOf)}
+                    onClose={() => { setShowGwasFilter(false); }}
+                />
+            )}
             {Array.from(new Set(multivecTrackIds.map(d => d.viewId))).map((viewId, i) => (
                 <ViewWrapper
                     key={i}

@@ -231,6 +231,29 @@ export function removeTopTrackFromViewConfig(viewConfig, viewId, trackId) {
 }
 
 /**
+ * This function updates `DataTransform` of a gosling track from a view config.
+ * @param {object} viewConfig The current HiGlass view config.
+ * @param {string} viewIds The uids of view containing the `viewport-horizontal` track that was the target of the action.
+ * @param {string} trackId The uid of the `viewport-horizontal` track that was the target of the action.
+ * @returns {object} The updated HiGlass view config.
+ */
+export function setDataTransformOfTopTrackFromViewConfig(viewConfig, viewIds, trackId, spec) {
+    const newViewConfig = cloneDeep(viewConfig);
+
+    // Find the view associated with this viewId.
+    const foundViewIndex = newViewConfig.views.findIndex(v => viewIds.indexOf(v.uid) !== -1);
+    const foundView = newViewConfig.views[foundViewIndex];
+
+    if(foundView.tracks["top"] && foundView.tracks["top"].find(d => d.uid === trackId)) {
+        const trackIndex = foundView.tracks["top"].findIndex(d => d.uid === trackId);
+        foundView.tracks["top"][trackIndex].options.spec["dataTransform"] = spec;
+        newViewConfig.views[foundViewIndex] = foundView;
+        return newViewConfig;
+    }
+    return newViewConfig;
+}
+
+/**
  * This function updates the view config when the user would like to create a genomic interval selection.
  * @param {object} viewConfig The current HiGlass view config.
  * @param {string} viewId The uid of view containing the `horizontal-multivec` track that was the target of the action.

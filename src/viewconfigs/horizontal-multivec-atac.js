@@ -60,273 +60,221 @@ export const hgDemoViewConfigAtac ={
                         },
                         "height": 25
                     },
-                    {
-                        "type": "combined",
-                        "width": 800,
-                        "height": 30,
-                        "contents": [
-                            {
-                                "type": "gosling-track",
-                                "server": "https://server.gosling-lang.org/api/v1/",
-                                "tilesetUid": "gwas-multivec",
-                                "options": {
-                                    "showMousePosition": true,
-                                    "mousePositionColor": "black",
-                                    "labelPosition": "none",
-                                    "fontSize": 12,
-                                    "labelColor": "black",
-                                    "labelShowResolution": false,
-                                    "labelBackgroundColor": "white",
-                                    "labelTextOpacity": 1,
-                                    "labelLeftMargin": 1,
-                                    "labelTopMargin": 1,
-                                    "labelRightMargin": 0,
-                                    "labelBottomMargin": 0,
-                                    "backgroundColor": "transparent",
-                                    "spec": {
-                                        "width": 800,
-                                        "height": 30,
-                                        "assembly": "hg38",
-                                        "orientation": "horizontal",
-                                        "static": false,
-                                        "centerRadius": 0.3,
-                                        "spacing": 20,
-                                        "data": {
-                                            "url": "https://server.gosling-lang.org/api/v1/tileset_info/?d=gwas-multivec",
-                                            "type": "multivec",
-                                            "row": "base",
-                                            "column": "position",
-                                            "value": "count",
-                                            "categories": ["A"],
-                                            "start": "start",
-                                            "end": "end",
-                                            // "binSize": 2
-                                        },
-                                        "mark": "rect",
-                                        "x": {
-                                            "field": "start",
-                                            "type": "genomic",
-                                            "axis": "none"
-                                        },
-                                        "xe": {"field": "end", "type": "genomic"},
-                                        "opacity": {"field": "count", "type": "quantitative"},
-                                        "color": {"value": "gray"},
-                                        "style": {"outline": "#F6F6F6"},
-                                        "overlayOnPreviousTrack": false
-                                    }
-                                }
+                     {
+                        uid: "gwas",
+                        height: 30,
+                        width: 2048,
+                        type: "gosling-track",
+                        data: {
+                            chromosomeField: "CHR_ID",
+                            genomicFields: ["CHR_POS"],
+                            quantitativeFields: ["P-VALUE"],
+                            sampleLength: 10000,
+                            type: "csv",
+                            url: "https://s3.amazonaws.com/gosling-lang.org/data/test/filtered_gwas_catalog_v1.0.2-associations_e104_r2021-10-06.tsv",
+                        },
+                        options: {
+                            showMousePosition: true,
+                            mousePositionColor: "black",
+                            name: "hg38 | GWAS",
+                            labelPosition: "topLeft",
+                            fontSize: 12,
+                            labelColor: "black",
+                            labelShowResolution: false,
+                            labelBackgroundColor: "#F6F6F6",
+                            labelTextOpacity: 0.6,
+                            labelLeftMargin: 4,
+                            labelRightMargin: 0,
+                            labelTopMargin: 2,
+                            labelBottomMargin: 0,
+                            backgroundColor: "transparent",
+                            theme,
+                            spec: {
+                                height: 30,
+                                width: 2048,
+                                assembly: "hg38",
+                                layout: "linear",
+                                orientation: "horizontal",
+                                static: false,
+                                centerRadius: 0.3,
+                                spacing: 20,
+                                data: {
+                                    chromosomeField: "CHR_ID",
+                                    genomicFields: ["CHR_POS"],
+                                    quantitativeFields: ["P-VALUE"],
+                                    sampleLength: 10000,
+                                    type: "csv",
+                                    url: "https://s3.amazonaws.com/gosling-lang.org/data/test/filtered_gwas_catalog_v1.0.2-associations_e104_r2021-10-06.tsv",
+                                },
+                                mark: "point",
+                                opacity: { value: 0.5 },
+                                stroke: { value: "white" },
+                                strokeWidth: { value: 0 },
+                                style: { outline: "#F6F6F6", enableSmoothPath: true, outlineWidth: 1 },
+                                x: { field: "CHR_POS", type: "genomic" },
+                                y: {
+                                    field: "PVALUE_MLOG",
+                                    type: "quantitative",
+                                    range: [3, 25],
+                                    axis: "none",
+                                },
+                                size: { field: "PVALUE_MLOG", type: "quantitative" },
+                                color: {
+                                    field: "PVALUE_MLOG",
+                                    type: "quantitative",
+                                    range: "warm",
+                                },
+                                tooltip: [
+                                    { field: "MAPPED_TRAIT", type: "nominal", alt: "Trait" },
+                                    { field: "LINK", type: "nominal", alt: "Link" },
+                                    //   { "field": "pvalue", "type": "quantitative", "alt": "p-value" },
+                                    {
+                                        field: "PVALUE_MLOG",
+                                        type: "quantitative",
+                                        alt: "-log(p-value)",
+                                    },
+                                    //   {
+                                    //     "field": "pvalue_txt",
+                                    //     "type": "nominal",
+                                    //     "alt": "Context of p-value"
+                                    //   },
+                                    //   {"field": "pubmedid", "type": "nominal", "alt": "PubMed"}
+                                ],
                             },
-                            {
-                                "type": "gosling-track",
-                                "server": "https://server.gosling-lang.org/api/v1/",
-                                "tilesetUid": "gwas-beddb",
-                                "options": {
-                                    "showMousePosition": true,
-                                    "mousePositionColor": "black",
-                                    "name": "hg38 | GWAS",
-                                    "labelPosition": "topLeft",
-                                    "fontSize": 12,
-                                    "labelColor": "black",
-                                    "labelShowResolution": false,
-                                    "labelBackgroundColor": "#F6F6F6",
-                                    "labelTextOpacity": 0.6,
-                                    "labelLeftMargin": 4,
-                                    "labelRightMargin": 0,
-                                    "labelTopMargin": 2,
-                                    "labelBottomMargin": 0,
-                                    "backgroundColor": "transparent",
-                                    "spec": {
-                                        "height": 30,
-                                        "width": 2048,
-                                        "assembly": "hg38",
-                                        "layout": "linear",
-                                        "orientation": "horizontal",
-                                        "static": false,
-                                        "centerRadius": 0.3,
-                                        "spacing": 20,
-                                        "data": {
-                                            "url": "https://server.gosling-lang.org/api/v1/tileset_info/?d=gwas-beddb",
-                                            "type": "beddb",
-                                            "genomicFields": [
-                                                {"index": 1, "name": "start"},
-                                                {"index": 2, "name": "end"}
-                                            ],
-                                            "valueFields": [
-                                                {"index": 3, "name": "pubmedid", "type": "nominal"},
-                                                {"index": 4, "name": "date", "type": "nominal"},
-                                                {"index": 5, "name": "link", "type": "nominal"},
-                                                {"index": 6, "name": "pvalue", "type": "quantitative"},
-                                                {"index": 8, "name": "disease", "type": "nominal"},
-                                                {
-                                                    "index": 9,
-                                                    "name": "pvalue_log",
-                                                    "type": "quantitative"
-                                                },
-                                                {"index": 10, "name": "pvalue_txt", "type": "nominal"}
-                                            ]
-                                        },
-                                        "mark": "point",
-                                        "x": {
-                                            "field": "start",
-                                            "type": "genomic", "axis": "none"
-                                        },
-                                        "xe": {"field": "end", "type": "genomic"},
-                                        "y": {
-                                            "field": "pvalue_log",
-                                            "type": "quantitative",
-                                            "range": [3, 25]
-                                        },
-                                        "size": {"field": "pvalue_log", "type": "quantitative"},
-                                        "color": {
-                                            "field": "pvalue_log",
-                                            "type": "quantitative",
-                                            "range": "warm"
-                                        },
-                                        "tooltip": [
-                                            {"field": "disease", "type": "nominal", "alt": "Disease"},
-                                            {"field": "link", "type": "nominal", "alt": "Link"},
-                                            { "field": "pvalue", "type": "quantitative", "alt": "p-value" },
-                                            {
-                                                "field": "pvalue_log",
-                                                "type": "quantitative",
-                                                "alt": "-log(p-value)"
-                                            },
-                                            {
-                                                "field": "pvalue_txt",
-                                                "type": "nominal",
-                                                "alt": "Context of p-value"
-                                            },
-                                            {"field": "pubmedid", "type": "nominal", "alt": "PubMed"}
-                                        ],
-                                        "style": {"outline": "#F6F6F6"},
-                                        "overlayOnPreviousTrack": true
-                                    }
-                                }
-                            }
-                        ]
+                        },
                     },
                     {
-                        "type": "gosling-track",
-                        "height": 18,
-                        "options": {
-                            "showMousePosition": true,
-                            "mousePositionColor": "#000000",
-                            "backgroundColor": "transparent",
-                            "name": "hg38 | Cytoband",
-                            "fontSize": 12,
-                            "labelColor": "black",
-                            "labelPosition": "topLeft",
-                            "labelBackgroundColor": "#F6F6F6",
-                            "labelTextOpacity": 0.6,
-                            "labelLeftMargin": 4,
-                            "labelRightMargin": 0,
-                            "labelTopMargin": 2,
-                            "labelBottomMargin": 0,
-                            "spec": {
-                                "data": {
-                                    "url": "https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv",
-                                    "type": "csv",
-                                    "chromosomeField": "Chromosome",
-                                    "genomicFields": ["chromStart", "chromEnd"],
-                                    "assembly": "hg38"
+                        type: "gosling-track",
+                        height: 18,
+                        options: {
+                            showMousePosition: true,
+                            mousePositionColor: "#000000",
+                            backgroundColor: "transparent",
+                            name: "hg38 | Cytoband",
+                            fontSize: 12,
+                            labelColor: "black",
+                            labelPosition: "topLeft",
+                            labelBackgroundColor: "#F6F6F6",
+                            labelTextOpacity: 0.6,
+                            labelLeftMargin: 4,
+                            labelRightMargin: 0,
+                            labelTopMargin: 2,
+                            labelBottomMargin: 0,
+                            theme,
+                            spec: {
+                                data: {
+                                    url: "https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv",
+                                    type: "csv",
+                                    chromosomeField: "Chromosome",
+                                    genomicFields: ["chromStart", "chromEnd"],
+                                    assembly: "hg38",
                                 },
-                                "overlay": [
+                                overlay: [
                                     {
                                         mark: "text",
-                                        dataTransform: {
-                                            filter: [{ field: "Stain", oneOf: ["acen"], not: true }]
-                                        },
+                                        dataTransform: [
+                                            {
+                                                type: "filter", field: "Stain", oneOf: ["acen"], not: true,
+                                            },
+                                        ],
                                         text: { field: "Name", type: "nominal" },
                                         color: {
                                             field: "Stain",
                                             type: "nominal",
                                             domain: ["gneg", "gpos25", "gpos50", "gpos75", "gpos100", "gvar"],
-                                            range: ["black", "black", "black", "black", "white", "black"]
+                                            range: ["black", "black", "black", "black", "white", "black"],
                                         },
+                                        size: { value: 12 },
                                         visibility: [{
                                             operation: "less-than",
                                             measure: "width",
-                                            threshold: "|xe-x|", 
+                                            threshold: "|xe-x|",
                                             transitionPadding: 10,
-                                            target: "mark"
+                                            target: "mark",
                                         }],
                                         style: {
-                                            textStrokeWidth: 0
-                                        }
+                                            textStrokeWidth: 0,
+                                        },
                                     },
                                     {
-                                        "mark": "rect",
-                                        "dataTransform": {
-                                            "filter": [
-                                                {"field": "Stain", "oneOf": ["acen"], "not": true}
-                                            ]
-                                        },
-                                        "color": {
-                                            "field": "Stain",
-                                            "type": "nominal",
-                                            "domain": [
+                                        mark: "rect",
+                                        dataTransform: [
+                                            {
+                                                type: "filter", field: "Stain", oneOf: ["acen"], not: true,
+                                            },
+                                        ],
+                                        color: {
+                                            field: "Stain",
+                                            type: "nominal",
+                                            domain: [
                                                 "gneg",
                                                 "gpos25",
                                                 "gpos50",
                                                 "gpos75",
                                                 "gpos100",
-                                                "gvar"
+                                                "gvar",
                                             ],
-                                            "range": [
+                                            range: [
                                                 "white",
                                                 "#D9D9D9",
                                                 "#979797",
                                                 "#636363",
                                                 "black",
-                                                "#82A3D0"
-                                            ]
-                                        }
+                                                "#82A3D0",
+                                            ],
+                                        },
                                     },
                                     {
-                                        "mark": "triangleRight",
-                                        "dataTransform": {
-                                            "filter": [{"field": "Name", "include": "q", "not": false}, {"field": "Stain", "oneOf": ["acen"], "not": false}]
-                                        },
-                                        "color": {"value": "#E9413B"}
+                                        mark: "triangleRight",
+                                        dataTransform: [
+                                            {
+                                                type: "filter", field: "Name", include: "q", not: false,
+                                            },
+                                            {
+                                                type: "filter", field: "Stain", oneOf: ["acen"], not: false,
+                                            },
+                                        ],
+                                        color: { value: "#E9413B" },
                                     },
                                     {
-                                        "mark": "triangleLeft",
-                                        "dataTransform": {
-                                            "filter": [
-                                                {"field": "Stain", "oneOf": ["acen"], "not": false},
-                                                {"field": "Name", "include": "p", "not": false}
-                                            ]
-                                        },
-                                        "color": {"value": "#E9413B"}
-                                    }
+                                        mark: "triangleLeft",
+                                        dataTransform: [
+                                            {
+                                                type: "filter", field: "Stain", oneOf: ["acen"], not: false,
+                                            },
+                                            {
+                                                type: "filter", field: "Name", include: "p", not: false,
+                                            },
+                                        ],
+                                        color: { value: "#E9413B" },
+                                    },
                                 ],
-                                "x": {
-                                    "field": "chromStart",
-                                    "type": "genomic",
+                                x: {
+                                    field: "chromStart",
+                                    type: "genomic",
                                 },
-                                "xe": {"field": "chromEnd", "type": "genomic"},
-                                "size": {"value": 17},
-                                "stroke": {"value": "gray"},
-                                "strokeWidth": {"value": 1},
-                                "style": {"outline": "#F6F6F6"},
-                                "assembly": "hg38",
-                                "layout": "linear",
-                                "orientation": "horizontal",
-                                "static": true,
-                                "overlayOnPreviousTrack": false,
-                                "width": 800,
-                                "height": 18
-                            }
+                                xe: { field: "chromEnd", type: "genomic" },
+                                size: { value: 17 },
+                                stroke: { value: "gray" },
+                                strokeWidth: { value: 1 },
+                                style: { outline: "#F6F6F6" },
+                                assembly: "hg38",
+                                layout: "linear",
+                                orientation: "horizontal",
+                                static: true,
+                                overlayOnPreviousTrack: false,
+                                width: 800,
+                                height: 18,
+                            },
                         },
-                        "data": {
-                            "url": "https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv",
-                            "type": "csv",
-                            "chromosomeField": "Chromosome",
-                            "genomicFields": ["chromStart", "chromEnd"],
-                            "assembly": "hg38"
-                        }
-                    },
-                    // {
+                        data: {
+                            url: "https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv",
+                            type: "csv",
+                            chromosomeField: "Chromosome",
+                            genomicFields: ["chromStart", "chromEnd"],
+                            assembly: "hg38",
+                        },
+                    },                   // {
                     //   "data": {
                     //     "type": "cistrome-bigwig",
                     //     "cid": "1",
