@@ -60,7 +60,7 @@ export const hgDemoViewConfigAtac ={
                         },
                         "height": 25
                     },
-                     {
+                    {
                         uid: "gwas",
                         height: 30,
                         width: 2048,
