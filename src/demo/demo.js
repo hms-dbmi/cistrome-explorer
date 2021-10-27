@@ -12,7 +12,7 @@ import hgDemoViewConfig11 from '../viewconfigs/horizontal-multivec-11.json';
 import hgDemoViewConfigApril2020 from '../viewconfigs/meeting-2020-04-29.json';
 
 export const demos = {
-    "H3K27ac Demo (1 View, Center Track)": {
+    "H3K27ac": {
         viewConfig: hgDemoViewConfig1,
         options: [{
             viewId: "cistrome-view-1",

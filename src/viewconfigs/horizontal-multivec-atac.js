@@ -1,3 +1,7 @@
+import * as gt from 'gosling-theme';
+
+export const theme = gt.getTheme();
+
 export const hgDemoViewConfigAtac ={
     "editable": false,
     "zoomFixed": false,

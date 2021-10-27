@@ -1,3 +1,7 @@
+import * as gt from 'gosling-theme';
+
+export const theme = gt.getTheme();
+
 export const hgDemoViewConfig1 ={
     "editable": false,
     "zoomFixed": false,
@@ -63,59 +67,14 @@ export const hgDemoViewConfig1 ={
               "contents": [
                 {
                   "type": "gosling-track",
-                  "server": "https://server.gosling-lang.org/api/v1/",
-                  "tilesetUid": "gwas-multivec",
-                  "options": {
-                    "showMousePosition": true,
-                    "mousePositionColor": "black",
-                    "labelPosition": "none",
-                    "fontSize": 12,
-                    "labelColor": "black",
-                    "labelShowResolution": false,
-                    "labelBackgroundColor": "white",
-                    "labelTextOpacity": 1,
-                    "labelLeftMargin": 1,
-                    "labelTopMargin": 1,
-                    "labelRightMargin": 0,
-                    "labelBottomMargin": 0,
-                    "backgroundColor": "transparent",
-                    "spec": {
-                      "width": 800,
-                      "height": 30,
-                      "assembly": "hg38",
-                      "orientation": "horizontal",
-                      "static": false,
-                      "centerRadius": 0.3,
-                      "spacing": 20,
-                      "data": {
-                        "url": "https://server.gosling-lang.org/api/v1/tileset_info/?d=gwas-multivec",
-                        "type": "multivec",
-                        "row": "base",
-                        "column": "position",
-                        "value": "count",
-                        "categories": ["A"],
-                        "start": "start",
-                        "end": "end",
-                        // "binSize": 2
-                      },
-                      "mark": "rect",
-                      "x": {
-                        "field": "start",
-                        "type": "genomic",
-                        "axis": "none"
-                      },
-                      "xe": {"field": "end", "type": "genomic"},
-                      "opacity": {"field": "count", "type": "quantitative"},
-                      "color": {"value": "gray"},
-                      "style": {"outline": "#F6F6F6"},
-                      "overlayOnPreviousTrack": false
-                    }
-                  }
-                },
-                {
-                  "type": "gosling-track",
-                  "server": "https://server.gosling-lang.org/api/v1/",
-                  "tilesetUid": "gwas-beddb",
+                  "data": {
+                    "chromosomeField": "CHR_ID",
+                    "genomicFields": ["CHR_POS"],
+                    "quantitativeFields": ["P-VALUE"],
+                    "sampleLength": 10000,
+                    "type": "csv",
+                    "url": "https://s3.amazonaws.com/gosling-lang.org/data/test/filtered_gwas_catalog_v1.0.2-associations_e104_r2021-10-06.tsv"
+                  },
                   "options": {
                     "showMousePosition": true,
                     "mousePositionColor": "black",
@@ -132,6 +91,7 @@ export const hgDemoViewConfig1 ={
                     "labelTopMargin": 2,
                     "labelBottomMargin": 0,
                     "backgroundColor": "transparent",
+                    theme,
                     "spec": {
                       "height": 30,
                       "width": 2048,
@@ -142,61 +102,48 @@ export const hgDemoViewConfig1 ={
                       "centerRadius": 0.3,
                       "spacing": 20,
                       "data": {
-                        "url": "https://server.gosling-lang.org/api/v1/tileset_info/?d=gwas-beddb",
-                        "type": "beddb",
-                        "genomicFields": [
-                          {"index": 1, "name": "start"},
-                          {"index": 2, "name": "end"}
-                        ],
-                        "valueFields": [
-                          {"index": 3, "name": "pubmedid", "type": "nominal"},
-                          {"index": 4, "name": "date", "type": "nominal"},
-                          {"index": 5, "name": "link", "type": "nominal"},
-                          {"index": 6, "name": "pvalue", "type": "quantitative"},
-                          {"index": 8, "name": "disease", "type": "nominal"},
-                          {
-                            "index": 9,
-                            "name": "pvalue_log",
-                            "type": "quantitative"
-                          },
-                          {"index": 10, "name": "pvalue_txt", "type": "nominal"}
-                        ]
+                        "chromosomeField": "CHR_ID",
+                        "genomicFields": ["CHR_POS"],
+                        "quantitativeFields": ["P-VALUE"],
+                        "sampleLength": 10000,
+                        "type": "csv",
+                        "url": "https://s3.amazonaws.com/gosling-lang.org/data/test/filtered_gwas_catalog_v1.0.2-associations_e104_r2021-10-06.tsv"
                       },
                       "mark": "point",
-                      "x": {
-                        "field": "start",
-                        "type": "genomic", "axis": "none"
-                      },
-                      "xe": {"field": "end", "type": "genomic"},
+                      "opacity": {"value": 0.5},
+                      "stroke": {"value": "white"},
+                      "strokeWidth": {"value": 0},
+                      "style": {"outline": "#F6F6F6", "enableSmoothPath": true, "outlineWidth": 1},
+                      "x": {"field": "CHR_POS", "type": "genomic"},
                       "y": {
-                        "field": "pvalue_log",
+                        "field": "PVALUE_MLOG",
                         "type": "quantitative",
-                        "range": [3, 25]
+                        "range": [3, 25],
+                        "axis": "right" 
                       },
-                      "size": {"field": "pvalue_log", "type": "quantitative"},
+                      "size": {"field": "PVALUE_MLOG", "type": "quantitative"},
                       "color": {
-                        "field": "pvalue_log",
+                        "field": "PVALUE_MLOG",
                         "type": "quantitative",
                         "range": "warm"
                       },
                       "tooltip": [
-                        {"field": "disease", "type": "nominal", "alt": "Disease"},
-                        {"field": "link", "type": "nominal", "alt": "Link"},
-                        { "field": "pvalue", "type": "quantitative", "alt": "p-value" },
+                        {"field": "MAPPED_TRAIT", "type": "nominal", "alt": "TRAIT"},
+                        {"field": "LINK", "type": "nominal", "alt": "Link"},
+                      //   { "field": "pvalue", "type": "quantitative", "alt": "p-value" },
                         {
-                          "field": "pvalue_log",
-                          "type": "quantitative",
-                          "alt": "-log(p-value)"
-                        },
-                        {
-                          "field": "pvalue_txt",
-                          "type": "nominal",
-                          "alt": "Context of p-value"
-                        },
-                        {"field": "pubmedid", "type": "nominal", "alt": "PubMed"}
+                           "field": "PVALUE_MLOG",
+                           "type": "quantitative",
+                           "alt": "-log(p-value)"
+                        }
+                      //   {
+                      //     "field": "pvalue_txt",
+                      //     "type": "nominal",
+                      //     "alt": "Context of p-value"
+                      //   },
+                      //   {"field": "pubmedid", "type": "nominal", "alt": "PubMed"}
                       ],
-                      "style": {"outline": "#F6F6F6"},
-                      "overlayOnPreviousTrack": true
+                      // "overlayOnPreviousTrack": true
                     }
                   }
                 }
@@ -219,6 +166,7 @@ export const hgDemoViewConfig1 ={
                 "labelRightMargin": 0,
                 "labelTopMargin": 2,
                 "labelBottomMargin": 0,
+                theme,
                 "spec": {
                   "data": {
                     "url": "https://raw.githubusercontent.com/sehilyi/gemini-datasets/master/data/UCSC.HG38.Human.CytoBandIdeogram.csv",
@@ -230,9 +178,9 @@ export const hgDemoViewConfig1 ={
                   "overlay": [
                     {
                       mark: 'text',
-                      dataTransform: {
-                          filter: [{ field: 'Stain', oneOf: ['acen'], not: true }]
-                      },
+                      dataTransform: [
+                          { type: 'filter', field: 'Stain', oneOf: ['acen'], not: true }
+                      ],
                       text: { field: 'Name', type: 'nominal' },
                       color: {
                           field: 'Stain',
@@ -240,6 +188,7 @@ export const hgDemoViewConfig1 ={
                           domain: ['gneg', 'gpos25', 'gpos50', 'gpos75', 'gpos100', 'gvar'],
                           range: ['black', 'black', 'black', 'black', 'white', 'black']
                       },
+                      size: { value: 12 },
                       visibility: [{
                           operation: 'less-than',
                           measure: 'width',
@@ -253,11 +202,9 @@ export const hgDemoViewConfig1 ={
                     },
                     {
                       "mark": "rect",
-                      "dataTransform": {
-                        "filter": [
-                          {"field": "Stain", "oneOf": ["acen"], "not": true}
-                        ]
-                      },
+                      "dataTransform": [
+                          {type: 'filter', "field": "Stain", "oneOf": ["acen"], "not": true}
+                      ],
                       "color": {
                         "field": "Stain",
                         "type": "nominal",
@@ -281,19 +228,18 @@ export const hgDemoViewConfig1 ={
                     },
                     {
                       "mark": "triangleRight",
-                      "dataTransform": {
-                        "filter": [{"field": "Name", "include": "q", "not": false}, {"field": "Stain", "oneOf": ["acen"], "not": false}]
-                      },
+                      "dataTransform": [ 
+                        {type: 'filter', "field": "Name", "include": "q", "not": false}, 
+                        {type: 'filter', "field": "Stain", "oneOf": ["acen"], "not": false}
+                      ],
                       "color": {"value": "#E9413B"}
                     },
                     {
                       "mark": "triangleLeft",
-                      "dataTransform": {
-                        "filter": [
-                          {"field": "Stain", "oneOf": ["acen"], "not": false},
-                          {"field": "Name", "include": "p", "not": false}
-                        ]
-                      },
+                      "dataTransform": [
+                        {type: 'filter', "field": "Stain", "oneOf": ["acen"], "not": false},
+                        {type: 'filter', "field": "Name", "include": "p", "not": false}
+                      ],
                       "color": {"value": "#E9413B"}
                     }
                   ],
