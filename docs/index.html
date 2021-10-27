@@ -288,6 +288,16 @@
               
                 
                 <li><a
+                  href='#suggestionwithhighlight'
+                  class="">
+                  SuggestionWithHighlight
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
                   href='#functions-internal'
                   class="h5 bold black caps">
                   Functions (internal)
@@ -1191,6 +1201,16 @@
                   href='#removetoptrackfromviewconfig'
                   class="">
                   removeTopTrackFromViewConfig
+                  
+                </a>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#setdatatransformoftoptrackfromviewconfig'
+                  class="">
+                  setDataTransformOfTopTrackFromViewConfig
                   
                 </a>
                 
@@ -4321,6 +4341,88 @@ i.e. is the designated key pressed down?
         <div class='space-bottom0'>
           <span class='code bold'>onRequestIntervalTFs</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function">function</a>)</code>
           : The function to call upon making a request for further interval transcription factor data.
+
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='suggestionwithhighlight'>
+      SuggestionWithHighlight
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>Returns <span> elements in which text is highlighted based on a keyword</p>
+
+    <div class='pre p1 fill-light mt0'>new SuggestionWithHighlight(props: any)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>props</span> <code class='quiet'>(any)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Properties</div>
+    <div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>text</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+          : The suggested search text.
+
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <span class='code bold'>target</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+          : The keyword to highlight, uppercase.
 
           
         </div>
@@ -12700,6 +12802,108 @@ For example, this function can return "filter" when a filter is newly applied.
 <code>viewport-horizontal</code>
  track that was the target of the action.
 
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></code>:
+        The updated HiGlass view config.
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='setdatatransformoftoptrackfromviewconfig'>
+      setDataTransformOfTopTrackFromViewConfig
+    </h3>
+    
+    
+  </div>
+  
+
+  <p>This function updates <code>DataTransform</code> of a gosling track from a view config.</p>
+
+    <div class='pre p1 fill-light mt0'>setDataTransformOfTopTrackFromViewConfig(viewConfig: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>, viewIds: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, trackId: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>, spec: any): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>viewConfig</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a>)</code>
+	    The current HiGlass view config.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>viewIds</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    The uids of view containing the 
+<code>viewport-horizontal</code>
+ track that was the target of the action.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>trackId</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">string</a>)</code>
+	    The uid of the 
+<code>viewport-horizontal</code>
+ track that was the target of the action.
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>spec</span> <code class='quiet'>(any)</code>
+	    
           </div>
           
         </div>
