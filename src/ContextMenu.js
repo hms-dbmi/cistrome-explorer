@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import PubSub from 'pubsub-js';
+import React, { useEffect, useState } from "react";
+import PubSub from "pubsub-js";
 
-import { EVENT, CONTEXT_MENU_TYPE } from './utils/constants.js';
+import { EVENT, CONTEXT_MENU_TYPE } from "./utils/constants.js";
 
-import './ContextMenu.scss';
+import "./ContextMenu.scss";
 
 export function destroyContextMenu() {
     PubSub.publish(EVENT.CONTEXT_MENU, {
@@ -31,18 +31,18 @@ export default function ContextMenu() {
             
             let menuData = [];
             switch(data.menuType) {
-                case CONTEXT_MENU_TYPE.NOMINAL_BAR:
-                    menuData.push({ title: data.title });
-                    menuData.push({ isSeparator: true });
-                    menuData.push(...data.items);
-                    break;
-                case CONTEXT_MENU_TYPE.TREE_ANCESTOR:
-                    menuData.push({ title: data.title });
-                    menuData.push({ isSeparator: true });
-                    menuData.push(...data.items);
-                    break;
-                default:
-                    break;
+            case CONTEXT_MENU_TYPE.NOMINAL_BAR:
+                menuData.push({ title: data.title });
+                menuData.push({ isSeparator: true });
+                menuData.push(...data.items);
+                break;
+            case CONTEXT_MENU_TYPE.TREE_ANCESTOR:
+                menuData.push({ title: data.title });
+                menuData.push({ isSeparator: true });
+                menuData.push(...data.items);
+                break;
+            default:
+                break;
             }
             setMenuItemData(menuData);
         });
@@ -92,8 +92,8 @@ export default function ContextMenu() {
                 left, top
             }}>
             {menuItemData.map((d, i) => {
-                return ContextMenuItem({...d, key: i})
+                return ContextMenuItem({...d, key: i});
             })}
         </div>
-    )
+    );
 }

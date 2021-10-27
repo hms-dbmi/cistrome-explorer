@@ -1,15 +1,15 @@
-import { hgDemoViewConfig1} from '../viewconfigs/horizontal-multivec-1';
-import { hgDemoViewConfigAtac } from '../viewconfigs/horizontal-multivec-atac';
-import hgDemoViewConfig1b from '../viewconfigs/horizontal-multivec-1b.json';
-import hgDemoViewConfig2 from '../viewconfigs/horizontal-multivec-2.json';
-import hgDemoViewConfig2b from '../viewconfigs/horizontal-multivec-2b.json';
-import hgDemoViewConfig6 from '../viewconfigs/horizontal-multivec-6.json';
-import hgDemoViewConfig7 from '../viewconfigs/horizontal-multivec-7.json';
-import hgDemoViewConfig8 from '../viewconfigs/horizontal-multivec-8.json';
-import hgDemoViewConfig9 from '../viewconfigs/horizontal-multivec-9.json';
-import hgDemoViewConfig10 from '../viewconfigs/horizontal-multivec-10.json';
-import hgDemoViewConfig11 from '../viewconfigs/horizontal-multivec-11.json';
-import hgDemoViewConfigApril2020 from '../viewconfigs/meeting-2020-04-29.json';
+import { hgDemoViewConfig1} from "../viewconfigs/horizontal-multivec-1";
+import { hgDemoViewConfigAtac } from "../viewconfigs/horizontal-multivec-atac";
+import hgDemoViewConfig1b from "../viewconfigs/horizontal-multivec-1b.json";
+import hgDemoViewConfig2 from "../viewconfigs/horizontal-multivec-2.json";
+import hgDemoViewConfig2b from "../viewconfigs/horizontal-multivec-2b.json";
+import hgDemoViewConfig6 from "../viewconfigs/horizontal-multivec-6.json";
+import hgDemoViewConfig7 from "../viewconfigs/horizontal-multivec-7.json";
+import hgDemoViewConfig8 from "../viewconfigs/horizontal-multivec-8.json";
+import hgDemoViewConfig9 from "../viewconfigs/horizontal-multivec-9.json";
+import hgDemoViewConfig10 from "../viewconfigs/horizontal-multivec-10.json";
+import hgDemoViewConfig11 from "../viewconfigs/horizontal-multivec-11.json";
+import hgDemoViewConfigApril2020 from "../viewconfigs/meeting-2020-04-29.json";
 
 export const demos = {
     "H3K27ac": {

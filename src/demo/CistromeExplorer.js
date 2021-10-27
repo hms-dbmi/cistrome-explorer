@@ -1,35 +1,35 @@
-import React, { useRef, useState, useEffect, useCallback } from 'react';
-import pkg from '../../package.json';
-import d3 from '../utils/d3.js';
+import React, { useRef, useState, useEffect, useCallback } from "react";
+import pkg from "../../package.json";
+import d3 from "../utils/d3.js";
 
-import { HiGlassMeta } from '../index.js';
-import CistromeToolkit from './CistromeToolkit.js';
+import { HiGlassMeta } from "../index.js";
+import CistromeToolkit from "./CistromeToolkit.js";
 
-import { UNDO, REDO, TABLE_2, DOCUMENT, GITHUB, TOGGLE_ON, TOGGLE_OFF, CLOSE, ELLIPSIS, TRASH, SEARCH, FOLDER, PENCIL } from '../utils/icons.js';
-import { DEFAULT_COLOR_RANGE } from '../utils/color.js';
-import { diffViewOptions } from '../utils/view-history';
-import { demos } from './demo';
-import { CISTROME_DBTOOLKIT_GENE_DISTANCE, CISTROME_DBTOOLKIT_SPECIES } from '../utils/cistrome';
+import { UNDO, REDO, TABLE_2, DOCUMENT, GITHUB, TOGGLE_ON, TOGGLE_OFF, CLOSE, ELLIPSIS, TRASH, SEARCH, FOLDER, PENCIL } from "../utils/icons.js";
+import { DEFAULT_COLOR_RANGE } from "../utils/color.js";
+import { diffViewOptions } from "../utils/view-history";
+import { demos } from "./demo";
+import { CISTROME_DBTOOLKIT_GENE_DISTANCE, CISTROME_DBTOOLKIT_SPECIES } from "../utils/cistrome";
 
 import { publishHelpTooltip, destroyTooltip } from "../Tooltip.js";
 
-import './CistromeExplorer.scss';
+import "./CistromeExplorer.scss";
 
-import StackedBarTrack from 'higlass-multivec/es/StackedBarTrack';
-import ScaleLegendTrack from '../scale-legend/ScaleLegendTrack';
-import { default as higlassRegister } from 'higlass-register';
-import gosling from 'gosling.js';
+import StackedBarTrack from "higlass-multivec/es/StackedBarTrack";
+import ScaleLegendTrack from "../scale-legend/ScaleLegendTrack";
+import { default as higlassRegister } from "higlass-register";
+import gosling from "gosling.js";
 
 gosling.init();
  
 higlassRegister({
-    name: 'StackedBarTrack',
+    name: "StackedBarTrack",
     track: StackedBarTrack,
     config: StackedBarTrack.config,
 });
 
 higlassRegister({
-    name: 'ScaleLegendTrack',
+    name: "ScaleLegendTrack",
     track: ScaleLegendTrack,
     config: ScaleLegendTrack.config,
 });
@@ -52,22 +52,22 @@ export default function CistromeExplorer() {
 
     useEffect(() => {
         fileReader.onload = (event) => {
-            if(fileFormat.current === 'json') {
+            if(fileFormat.current === "json") {
                 const json = JSON.parse(event.target.result);
                 setLocalMetadata(json);
             } 
-            else if(fileFormat.current === 'bed') {
+            else if(fileFormat.current === "bed") {
                 const data = [];
-                const rows = event.target.result.split('\n');
+                const rows = event.target.result.split("\n");
                 rows.forEach(row => {
                     const obj = {};
-                    row.split('\t').forEach((v, i) => {
-                        obj['column' + (i + 1)] = v;
+                    row.split("\t").forEach((v, i) => {
+                        obj["column" + (i + 1)] = v;
                     });
                     data.push(obj);
                 });
                 setLocalBed({ data, name: fileReader.fileName });
-                bedInputFile.current.value = '';
+                bedInputFile.current.value = "";
             }
         };
     }, [fileReader]);
@@ -78,7 +78,7 @@ export default function CistromeExplorer() {
 
     // search
     const searchBoxRef = useRef();
-    const [searchKeyword, setSearchKeyword] = useState('');
+    const [searchKeyword, setSearchKeyword] = useState("");
     const [geneSuggestions, setGeneSuggestions] = useState([]);
     const [suggestionPosition, setSuggestionPosition] = useState({left: 0, top: 0});
 
@@ -89,7 +89,7 @@ export default function CistromeExplorer() {
     // toggle
     const [helpActivated, setHelpActivated] = useState(false);
     const [aggActivated, setAggActivated] = useState(false);
-    const [aggregateRowBy, setSggregateRowBy] = useState('Cell Type');
+    const [aggregateRowBy, setSggregateRowBy] = useState("Cell Type");
 
     // History of view updates
     const MAX_HISTORY_LENGTH = 50;  // How many previous views should be recorded?
@@ -128,7 +128,7 @@ export default function CistromeExplorer() {
         const { species, factor } = cistromeDataConfig;
         const firstViewUid = demos[selectedDemo].viewConfig.views[0].uid;
         addNewTrack({
-            type: 'horizontal-multivec',
+            type: "horizontal-multivec",
             data: {
                 server: "http://ec2-3-93-68-250.compute-1.amazonaws.com/api/v1",
                 url: "s3://CistromeDB/" + `${species}__${factor}__all`.replace(" ", "_") + ".multires.mv5",
@@ -139,7 +139,7 @@ export default function CistromeExplorer() {
                 colorRange: DEFAULT_COLOR_RANGE,
             },
             height: 200,
-        }, firstViewUid, 'top');
+        }, firstViewUid, "top");
     }, [addNewTrack, selectedDemo]);
 
     // Drag event for resizing heatmaps
@@ -149,7 +149,7 @@ export default function CistromeExplorer() {
     const started = useCallback(() => {
         const event = d3.event;
         dragX.current = event.sourceEvent.clientX;
-    }, [dragX, heatmapWidth])
+    }, [dragX, heatmapWidth]);
 
     const ended = useCallback(() => {
         dragX.current = null;
@@ -196,7 +196,7 @@ export default function CistromeExplorer() {
     useEffect(() => {
         function closeSideViews(e) {
             if(
-                (e.key === 'Esc' || e.key === 'Escape') && 
+                (e.key === "Esc" || e.key === "Escape") && 
                 (isSettingVisible || isToolkitVisible)
             ) {
                 setIsSettingVisible(false);
@@ -271,7 +271,7 @@ export default function CistromeExplorer() {
                     >
                         <span 
                             className="ce-generic-button"
-                            style={{ cursor: 'auto' }}
+                            style={{ cursor: "auto" }}
                         >
                             <svg xmlns="http://www.w3.org/2000/svg"
                                 viewBox={SEARCH.viewBox}
@@ -280,13 +280,13 @@ export default function CistromeExplorer() {
                             </svg>
                             <input
                                 ref={searchBoxRef}
-                                className={"position-search-box " + (helpActivated ? 'help-highlight' : '')}
+                                className={"position-search-box " + (helpActivated ? "help-highlight" : "")}
                                 type="text"
                                 name="default name"
                                 placeholder="GAPDH or chr6:151690496-152103274"
                                 onChange={(e) => {
                                     const keyword = e.target.value;
-                                    if(keyword !== '' && !keyword.startsWith('c')) {
+                                    if(keyword !== "" && !keyword.startsWith("c")) {
                                         hmRef.current.api.suggestGene(keyword, (suggestions) => {
                                             setGeneSuggestions(suggestions);
                                         });
@@ -301,21 +301,21 @@ export default function CistromeExplorer() {
                                 }}
                                 onKeyDown={(e) => {
                                     switch(e.key){
-                                        case 'ArrowUp':
-                                            break;
-                                        case 'ArrowDown':
-                                            break;
-                                        case 'Enter':
-                                            setGeneSuggestions([]);
-                                            if(searchKeyword.includes('chr')) {
-                                                hmRef.current.api.zoomTo(searchKeyword);
-                                            } else {
-                                                hmRef.current.api.zoomToGene(searchKeyword);
-                                            }
-                                            break;
-                                        case 'Esc':
-                                        case 'Escape':
-                                            break;
+                                    case "ArrowUp":
+                                        break;
+                                    case "ArrowDown":
+                                        break;
+                                    case "Enter":
+                                        setGeneSuggestions([]);
+                                        if(searchKeyword.includes("chr")) {
+                                            hmRef.current.api.zoomTo(searchKeyword);
+                                        } else {
+                                            hmRef.current.api.zoomToGene(searchKeyword);
+                                        }
+                                        break;
+                                    case "Esc":
+                                    case "Escape":
+                                        break;
                                     }
                                 }}
                             />
@@ -323,9 +323,9 @@ export default function CistromeExplorer() {
                     </span>
                     <span className="header-control">
                         <span
-                            className={"ce-generic-button " + (undoable ? '' : 'ce-generic-button-deactivated')}
+                            className={"ce-generic-button " + (undoable ? "" : "ce-generic-button-deactivated")}
                             style={{ 
-                                cursor: undoable ? 'pointer' : 'not-allowed'
+                                cursor: undoable ? "pointer" : "not-allowed"
                             }} 
                             onClick={() => {
                                 if(undoable) {
@@ -343,9 +343,9 @@ export default function CistromeExplorer() {
                             {` Undo (${viewHistory.length - indexOfCurrentView - 1})`}
                         </span>
                         <span 
-                            className={"ce-generic-button " + (redoable ? '' : 'ce-generic-button-deactivated')}
+                            className={"ce-generic-button " + (redoable ? "" : "ce-generic-button-deactivated")}
                             style={{ 
-                                cursor: redoable ? 'pointer' : 'not-allowed'
+                                cursor: redoable ? "pointer" : "not-allowed"
                             }} 
                             onClick={() => {
                                 if(redoable) {
@@ -374,16 +374,16 @@ export default function CistromeExplorer() {
                         <input 
                             type="file" 
                             ref={bedInputFile} 
-                            style={{ display: 'none' }} 
+                            style={{ display: "none" }} 
                             onChange={(e) => {
                                 fileReader.readAsText(e.target.files[0]);
                                 fileReader.fileName = e.target.files[0].name;
                             }
-                        }/>
+                            }/>
                         <span 
-                            className={"ce-generic-button " + (helpActivated ? 'help-highlight' : '')}
+                            className={"ce-generic-button " + (helpActivated ? "help-highlight" : "")}
                             onClick={() => { 
-                                fileFormat.current = 'bed';
+                                fileFormat.current = "bed";
                                 bedInputFile.current.click(); 
                             }}>
                             <svg xmlns="http://www.w3.org/2000/svg"
@@ -391,7 +391,7 @@ export default function CistromeExplorer() {
                                 <title>Open BED file</title>
                                 <path fill="currentColor" d={FOLDER.path}/>
                             </svg>
-                            {' BED File'}
+                            {" BED File"}
                         </span>
                     </span>
                     <span className="header-control"
@@ -403,14 +403,14 @@ export default function CistromeExplorer() {
                         onMouseLeave={() => destroyTooltip()}
                     >
                         <span 
-                            className={"ce-generic-button " + (helpActivated ? 'help-highlight' : '')}
+                            className={"ce-generic-button " + (helpActivated ? "help-highlight" : "")}
                             onClick={() => setIsToolkitVisible(!isToolkitVisible)}>
                             <svg xmlns="http://www.w3.org/2000/svg"
                                 viewBox={TABLE_2.viewBox}>
                                 <title>Cistrome DB Toolkit</title>
                                 <path fill="currentColor" d={TABLE_2.path}/>
                             </svg>
-                            {' Cistrome Search '}
+                            {" Cistrome Search "}
                         </span>
                     </span>
                     <span className="header-control"
@@ -422,20 +422,20 @@ export default function CistromeExplorer() {
                         onMouseLeave={() => destroyTooltip()}
                     >
                         <span 
-                            className={"ce-generic-button-lg " + (aggActivated ? 'ce-generic-button-activated ' : '') + (helpActivated ? 'help-highlight' : '')}
-                            style={{ cursor: 'auto' }}
+                            className={"ce-generic-button-lg " + (aggActivated ? "ce-generic-button-activated " : "") + (helpActivated ? "help-highlight" : "")}
+                            style={{ cursor: "auto" }}
                         >
                             <svg xmlns="http://www.w3.org/2000/svg"
-                                style={{cursor: 'pointer'}}
+                                style={{cursor: "pointer"}}
                                 onClick={() => { setAggActivated(!aggActivated); }}
                                 viewBox={aggActivated ? TOGGLE_ON.viewBox : TOGGLE_OFF.viewBox}>
                                 <title>Aggregate Rows By Categorical Value</title>
                                 <path fill="currentColor" d={aggActivated ? TOGGLE_ON.path : TOGGLE_OFF.path}/>
                             </svg>
-                            {` Aggregate By `}
+                            {" Aggregate By "}
                             <span>
                                 <select 
-                                    onChange={e => { setSggregateRowBy(e.target.value) }}
+                                    onChange={e => { setSggregateRowBy(e.target.value); }}
                                     defaultValue={"Cell Type"}
                                 >
                                     {["Tissue Type", "Cell Type"].map(f => (
@@ -447,7 +447,7 @@ export default function CistromeExplorer() {
                     </span>
                     <span className="header-control">
                         <span 
-                            className={"ce-generic-button-lg " + (helpActivated ? 'ce-generic-button-activated' : '')}
+                            className={"ce-generic-button-lg " + (helpActivated ? "ce-generic-button-activated" : "")}
                             onClick={() => { setHelpActivated(!helpActivated); }}
                         >
                             <svg xmlns="http://www.w3.org/2000/svg"
@@ -455,7 +455,7 @@ export default function CistromeExplorer() {
                                 <title>Help</title>
                                 <path fill="currentColor" d={helpActivated ? TOGGLE_ON.path : TOGGLE_OFF.path}/>
                             </svg>
-                            {` Show Instructions`}
+                            {" Show Instructions"}
                         </span>
                     </span>
                     <span className="header-info">
@@ -491,7 +491,7 @@ export default function CistromeExplorer() {
                         }}>
                             <ul>
                                 {geneSuggestions.map((d, i) => (
-                                    <li style={{textAlign: 'right', color: 'gray'}}
+                                    <li style={{textAlign: "right", color: "gray"}}
                                         key={d.geneName + d.score}
                                         onClick={() => {
                                             searchBoxRef.current.value = d.geneName;
@@ -499,7 +499,7 @@ export default function CistromeExplorer() {
                                             hmRef.current.api.zoomToGene(d.geneName);
                                         }}
                                     >
-                                        <strong style={{float: 'left', color: 'black'}}>{d.geneName}</strong>
+                                        <strong style={{float: "left", color: "black"}}>{d.geneName}</strong>
                                         {`${d.chr}:${d.txStart}-${d.txEnd}`}
                                     </li>
                                 ))}
@@ -545,7 +545,7 @@ export default function CistromeExplorer() {
                     />
                 </div>
                 <div className="settings" style={{
-                    right: isSettingVisible ? 0 : '-400px'
+                    right: isSettingVisible ? 0 : "-400px"
                 }}>
                     <span style={{ 
                         verticalAlign: "middle", 
@@ -555,7 +555,7 @@ export default function CistromeExplorer() {
                         top: 5
                     }}>
                         <svg
-                            className={'hm-button'}
+                            className={"hm-button"}
                             style={{ color: "rgb(171, 171, 171)", background: "none" }}
                             onClick={() => setIsSettingVisible(false)}
                             viewBox={CLOSE.viewBox}
@@ -586,13 +586,13 @@ export default function CistromeExplorer() {
                         className="ce-generic-button"
                         style={{ 
                             fontSize: 12,
-                            display: 'inline-block',
-                            cursor: 'not-allowed',  // TODO: not supported yet
-                            color: 'gray', // TODO: not supported yet
-                            background: 'white', 
-                            border: '1px solid gray',
-                            padding: '4px',
-                            marginTop: '4px'
+                            display: "inline-block",
+                            cursor: "not-allowed",  // TODO: not supported yet
+                            color: "gray", // TODO: not supported yet
+                            background: "white", 
+                            border: "1px solid gray",
+                            padding: "4px",
+                            marginTop: "4px"
                         }}
                         onClick={() => { }}
                     >
@@ -603,19 +603,19 @@ export default function CistromeExplorer() {
                             <title>Open Metadata</title>
                             <path d={SEARCH.path} fill="currentColor"/>
                         </svg>
-                        {' View Loaded Metadata'}
+                        {" View Loaded Metadata"}
                     </span>
                     <span 
                         className="ce-generic-button"
                         style={{ 
                             fontSize: 12,
-                            cursor: 'pointer',
-                            display: 'inline-block',
-                            color: 'black',
-                            background: 'white', 
-                            border: '1px solid gray',
-                            padding: '4px',
-                            marginTop: '4px'
+                            cursor: "pointer",
+                            display: "inline-block",
+                            color: "black",
+                            background: "white", 
+                            border: "1px solid gray",
+                            padding: "4px",
+                            marginTop: "4px"
                         }}
                         onClick={() => { 
                             jsonInputFile.current.value = null;
@@ -629,30 +629,30 @@ export default function CistromeExplorer() {
                             <title>Open Metadata</title>
                             <path d={TRASH.path} fill="currentColor"/>
                         </svg>
-                        {' Remove Loaded Metadata'}
+                        {" Remove Loaded Metadata"}
                     </span>
                     <input 
                         type="file" 
                         ref={jsonInputFile} 
-                        style={{ display: 'none' }} 
+                        style={{ display: "none" }} 
                         onChange={(e) => {
                             fileReader.readAsText(e.target.files[0]);
                         }
-                    }/>
+                        }/>
                     <span 
                         className="ce-generic-button"
                         style={{ 
                             fontSize: 12,
-                            cursor: 'pointer',
-                            display: 'inline-block',
-                            color: 'black', 
-                            background: 'white', 
-                            border: '1px solid gray',
-                            padding: '4px',
-                            marginTop: '4px'
+                            cursor: "pointer",
+                            display: "inline-block",
+                            color: "black", 
+                            background: "white", 
+                            border: "1px solid gray",
+                            padding: "4px",
+                            marginTop: "4px"
                         }}
                         onClick={() => { 
-                            fileFormat.current = 'json';
+                            fileFormat.current = "json";
                             jsonInputFile.current.click();
                         }}
                     >
@@ -663,7 +663,7 @@ export default function CistromeExplorer() {
                             <title>Open Metadata</title>
                             <path d={FOLDER.path} fill="currentColor"/>
                         </svg>
-                        {' Open Local Metadata (JSON)'}
+                        {" Open Local Metadata (JSON)"}
                     </span>
                     <div className="setting-separater"></div>
                     <h2>View Options</h2>
@@ -671,13 +671,13 @@ export default function CistromeExplorer() {
                         className="ce-generic-button"
                         style={{ 
                             fontSize: 12,
-                            display: 'inline-block',
-                            cursor: 'not-allowed',  // TODO: not supported yet
-                            color: 'gray',  // TODO: not supported yet
-                            background: 'white', 
-                            border: '1px solid gray',
-                            padding: '4px',
-                            marginTop: '4px'
+                            display: "inline-block",
+                            cursor: "not-allowed",  // TODO: not supported yet
+                            color: "gray",  // TODO: not supported yet
+                            background: "white", 
+                            border: "1px solid gray",
+                            padding: "4px",
+                            marginTop: "4px"
                         }}
                         onClick={() => { }}
                     >
@@ -688,22 +688,22 @@ export default function CistromeExplorer() {
                             <title>Edit View Options</title>
                             <path d={PENCIL.path} fill="currentColor"/>
                         </svg>
-                        {' Edit View Options'}
+                        {" Edit View Options"}
                     </span>
                     <span 
                         className="ce-generic-button"
                         style={{ 
                             fontSize: 12,
-                            cursor: 'pointer',
-                            display: 'inline-block',
-                            color: 'black', 
-                            background: 'white', 
-                            border: '1px solid gray',
-                            padding: '4px',
-                            marginTop: '4px'
+                            cursor: "pointer",
+                            display: "inline-block",
+                            color: "black", 
+                            background: "white", 
+                            border: "1px solid gray",
+                            padding: "4px",
+                            marginTop: "4px"
                         }}
                         onClick={() => {
-                            hmRef.current.api.onRemoveAllFilters()
+                            hmRef.current.api.onRemoveAllFilters();
                         }}
                     >
                         <svg
@@ -713,22 +713,22 @@ export default function CistromeExplorer() {
                             <title>Remove All Filters</title>
                             <path d={TRASH.path} fill="currentColor"/>
                         </svg>
-                        {' Remove All Filters'}
+                        {" Remove All Filters"}
                     </span>
                     <span 
                         className="ce-generic-button"
                         style={{ 
                             fontSize: 12,
-                            cursor: 'pointer',
-                            display: 'inline-block',
-                            color: 'black', 
-                            background: 'white', 
-                            border: '1px solid gray',
-                            padding: '4px',
-                            marginTop: '4px'
+                            cursor: "pointer",
+                            display: "inline-block",
+                            color: "black", 
+                            background: "white", 
+                            border: "1px solid gray",
+                            padding: "4px",
+                            marginTop: "4px"
                         }}
                         onClick={() => {
-                            hmRef.current.api.onRemoveAllSort()}
+                            hmRef.current.api.onRemoveAllSort();}
                         }
                     >
                         <svg
@@ -738,7 +738,7 @@ export default function CistromeExplorer() {
                             <title>Remove All Sort</title>
                             <path d={TRASH.path} fill="currentColor"/>
                         </svg>
-                        {' Remove All Sort'}
+                        {" Remove All Sort"}
                     </span>
                     <div className="setting-separater"></div>
                     <h2>Resource</h2>
@@ -746,16 +746,16 @@ export default function CistromeExplorer() {
                         className="ce-generic-button"
                         style={{ 
                             fontSize: 12,
-                            cursor: 'pointer',
-                            display: 'inline-block',
-                            color: 'black', 
-                            background: 'white', 
-                            border: '1px solid gray',
-                            padding: '4px',
-                            marginTop: '4px'
+                            cursor: "pointer",
+                            display: "inline-block",
+                            color: "black", 
+                            background: "white", 
+                            border: "1px solid gray",
+                            padding: "4px",
+                            marginTop: "4px"
                         }}
                         onClick={() => {
-                            window.open(`${pkg.homepage}/docs/`)
+                            window.open(`${pkg.homepage}/docs/`);
                         }}
                     >
                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -763,22 +763,22 @@ export default function CistromeExplorer() {
                             <title>Documents</title>
                             <path fill="currentColor" d={DOCUMENT.path}/>
                         </svg>
-                        {' Documentation'}
+                        {" Documentation"}
                     </span>
                     <span 
                         className="ce-generic-button"
                         style={{ 
                             fontSize: 12,
-                            cursor: 'pointer',
-                            display: 'inline-block',
-                            color: 'black', 
-                            background: 'white', 
-                            border: '1px solid gray',
-                            padding: '4px',
-                            marginTop: '4px'
+                            cursor: "pointer",
+                            display: "inline-block",
+                            color: "black", 
+                            background: "white", 
+                            border: "1px solid gray",
+                            padding: "4px",
+                            marginTop: "4px"
                         }}
                         onClick={() => {
-                            window.open(pkg.repository.url)
+                            window.open(pkg.repository.url);
                         }}
                     >
                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -786,10 +786,10 @@ export default function CistromeExplorer() {
                             <title>GitHub</title>
                             <path fill="currentColor" d={GITHUB.path}/>
                         </svg>
-                        {' Open Source'}
+                        {" Open Source"}
                     </span>
                 </div>
             </div>
         </div>
     );
-};
+}

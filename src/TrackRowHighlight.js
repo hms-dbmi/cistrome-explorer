@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useCallback } from 'react';
-import range from 'lodash/range';
-import d3 from './utils/d3.js';
-import Two from './utils/two.js';
-import { drawRowHighlightRect } from './utils/linking.js';
+import React, { useEffect, useRef, useCallback } from "react";
+import range from "lodash/range";
+import d3 from "./utils/d3.js";
+import Two from "./utils/two.js";
+import { drawRowHighlightRect } from "./utils/linking.js";
 
 /**
  * Component for visualizing highlighted rows of a multivec track.
@@ -74,12 +74,12 @@ export default function TrackRowHighlight(props) {
         <canvas
             ref={canvasRef}
             style={{
-                position: 'absolute',
+                position: "absolute",
                 top: `${top}px`,
                 left: `${left}px`,
                 width: `${width}px`,
                 height: `${height}px`,
-                pointerEvents: 'none'
+                pointerEvents: "none"
             }}
         />
     );

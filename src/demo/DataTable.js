@@ -1,6 +1,6 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect } from "react";
 import "./DataTable.scss";
-import { PLUS, SORT_ASC, SORT_ASC_SIMPLE, SORT_DESC, SORT_DESC_SIMPLE, SQUARE_CHECK } from '../utils/icons';
+import { PLUS, SORT_ASC, SORT_ASC_SIMPLE, SORT_DESC, SORT_DESC_SIMPLE, SQUARE_CHECK } from "../utils/icons";
 
 const ROW_DISPLAY_LIMIT = 100;
 
@@ -20,10 +20,10 @@ export default function DataTable(props) {
     } = props;
 
     const [filterByField, setFilterByField] = useState({});
-    const [sortByField, setSortByField] = useState({field: 'Overlap Ratio', isAscending: false});
+    const [sortByField, setSortByField] = useState({field: "Overlap Ratio", isAscending: false});
     const [transformedRows, setTransformedRows] = useState(transform(rows));
-    const [uniqueFactors, setUniqueFactors] = useState(Array.from(new Set(transform(rows).map(d => d['Factor']))));
-    const [selectedFactor, setSelectedFactor] = useState(Array.from(new Set(transform(rows).map(d => d['Factor'])))[0]);
+    const [uniqueFactors, setUniqueFactors] = useState(Array.from(new Set(transform(rows).map(d => d["Factor"]))));
+    const [selectedFactor, setSelectedFactor] = useState(Array.from(new Set(transform(rows).map(d => d["Factor"])))[0]);
 
     useEffect(() => {
         setTransformedRows(transform(rows));
@@ -31,12 +31,12 @@ export default function DataTable(props) {
         
         if(columns?.indexOf(sortByField.field) === -1) {
             // If the sort field is not defined, we use other default field names
-            if(columns?.indexOf('Regulatory Potential') !== -1) {
+            if(columns?.indexOf("Regulatory Potential") !== -1) {
                 // Default sorting field used for the gene API
-                setSortByField({field: 'Regulatory Potential', isAscending: false});
-            } else if(columns?.indexOf('Overlap Ratio') !== -1) {
+                setSortByField({field: "Regulatory Potential", isAscending: false});
+            } else if(columns?.indexOf("Overlap Ratio") !== -1) {
                 // Default sorting field used for the interval API
-                setSortByField({field: 'Overlap Ratio', isAscending: false});
+                setSortByField({field: "Overlap Ratio", isAscending: false});
             }
         }
     }, [rows]);
@@ -53,7 +53,7 @@ export default function DataTable(props) {
             transformed = transformed.filter(d => {
                 // console.log(filterByKey[key]);
                 const condition = filterByField[key];
-                if(typeof condition === 'number') {
+                if(typeof condition === "number") {
                     return !isNaN(+d[key]) && condition <= (+d[key]);
                 }
                 else {
@@ -91,17 +91,17 @@ export default function DataTable(props) {
             <tr>
                 {columns.map((c, i) => (
                     <td key={c+i}>
-                        {['Regulatory Potential', 'Overlap Peak Number', 'Overlap Ratio'].indexOf(c) === -1 || true ? 
+                        {["Regulatory Potential", "Overlap Peak Number", "Overlap Ratio"].indexOf(c) === -1 || true ? 
                             <input
                                 className="hm-filter-box-input"
                                 type="text"
                                 name="default name"
-                                placeholder={`Search`}
+                                placeholder={"Search"}
                                 onChange={(e) => {
                                     setFilterByField({
                                         ...filterByField,
                                         [c]: e.target.value
-                                    })
+                                    });
                                 }}
                                 style={{
                                     width: 100,
@@ -111,32 +111,32 @@ export default function DataTable(props) {
                         }
                         <div>
                             <svg className={
-                                    sortByField.field === c && sortByField.isAscending 
-                                        ? "hm-button-sm-hl"
-                                        : "hm-button-sm"
-                                }
-                                onClick={() => {
-                                    setSortByField({
-                                        field: c,
-                                        isAscending: true
-                                    });
-                                }} 
-                                viewBox={SORT_ASC.viewBox}>
+                                sortByField.field === c && sortByField.isAscending 
+                                    ? "hm-button-sm-hl"
+                                    : "hm-button-sm"
+                            }
+                            onClick={() => {
+                                setSortByField({
+                                    field: c,
+                                    isAscending: true
+                                });
+                            }} 
+                            viewBox={SORT_ASC.viewBox}>
                                 <title>Remove all filters</title>
                                 <path d={SORT_ASC.path} fill="currentColor"/>
                             </svg>
                             <svg className={
-                                    sortByField.field === c && !sortByField.isAscending
-                                        ? "hm-button-sm-hl"
-                                        : "hm-button-sm"
-                                }
-                                onClick={() => {
-                                    setSortByField({
-                                        field: c,
-                                        isAscending: false
-                                    });
-                                }} 
-                                viewBox={SORT_DESC.viewBox}>
+                                sortByField.field === c && !sortByField.isAscending
+                                    ? "hm-button-sm-hl"
+                                    : "hm-button-sm"
+                            }
+                            onClick={() => {
+                                setSortByField({
+                                    field: c,
+                                    isAscending: false
+                                });
+                            }} 
+                            viewBox={SORT_DESC.viewBox}>
                                 <title>Remove all filters</title>
                                 <path d={SORT_DESC.path} fill="currentColor"/>
                             </svg>
@@ -169,7 +169,7 @@ export default function DataTable(props) {
             const buttonCell = (onButton ? (
                 <td>
                     <span 
-                        style={{ position: 'relative', top: 3 }}
+                        style={{ position: "relative", top: 3 }}
                         onClick={() => onButton(transformedRows[i])}
                     >
                         <svg className="hm-button"
@@ -190,7 +190,7 @@ export default function DataTable(props) {
                 );
             });
             return (
-                <tr key={i} className={'data-table-row'}>
+                <tr key={i} className={"data-table-row"}>
                     {/* {buttonCell} */}
                     {dataCells}
                 </tr>
@@ -209,7 +209,7 @@ export default function DataTable(props) {
                     overflowY: "auto",
                     border: "1px solid lightgray",
                     background: "white",
-                    padding: '1px'
+                    padding: "1px"
                 }}
             >
                 {bodyRows ? (
@@ -229,18 +229,18 @@ export default function DataTable(props) {
                 style={{
                     paddingTop: 16,
                     gridColumn: 3,
-                    width: '100%',
-                    display: 'grid',
-                    gridTemplateColumns: 'auto auto',
+                    width: "100%",
+                    display: "grid",
+                    gridTemplateColumns: "auto auto",
                     gridColumnGap: 6
                 }}
             >
                 <span 
                     style={{
-                        textAlign: 'left',
+                        textAlign: "left",
                         fontWeight: 600,
-                        color: 'gray',
-                        cursor: 'not-allowed'
+                        color: "gray",
+                        cursor: "not-allowed"
                     }}
                     // onClick={() => onButton({
                     //     Factor: selectedFactor,
@@ -248,7 +248,7 @@ export default function DataTable(props) {
                     // })}
                 >
                     <select 
-                        onChange={e => { setSelectedFactor(e.target.value) }} 
+                        onChange={e => { setSelectedFactor(e.target.value); }} 
                         defaultValue={uniqueFactors[0]}
                     >
                         {uniqueFactors.map(factor => (
@@ -261,11 +261,11 @@ export default function DataTable(props) {
                         ))}
                     </select>
                     &nbsp;&nbsp;
-                    {`  Add samples to visualization`}
+                    {"  Add samples to visualization"}
                 </span>
                 <div 
                     style={{
-                        textAlign: 'right',
+                        textAlign: "right",
                         fontWeight: 600
                     }}
                 >
@@ -273,7 +273,7 @@ export default function DataTable(props) {
                         transformedRows.length < ROW_DISPLAY_LIMIT
                             ? transformedRows.length
                             : ROW_DISPLAY_LIMIT
-                        } results of ${transformedRows.length.toLocaleString()} rows`}
+                    } results of ${transformedRows.length.toLocaleString()} rows`}
                 </div>
             </div>
         </>

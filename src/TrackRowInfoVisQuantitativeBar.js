@@ -8,9 +8,9 @@ import { EVENT } from "./utils/constants.js";
 import { TooltipContent, destroyTooltip } from "./Tooltip.js";
 import { drawVisTitle } from "./utils/vis.js";
 
-import TrackRowInfoControl from './TrackRowInfoControl.js';
+import TrackRowInfoControl from "./TrackRowInfoControl.js";
 import { rgbToHex, generateNextUniqueColor } from "./utils/color.js";
-import { getRetinaRatio } from './utils/canvas.js';
+import { getRetinaRatio } from "./utils/canvas.js";
 import { modifyItemInArray } from "./utils/array.js";
 import { getAggregatedValue } from "./utils/aggregate.js";
 import { drawRowHighlightRect } from "./utils/linking.js";
@@ -184,8 +184,8 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                 .domain(valueExtent)
                 .range([0, barAreaWidth]);
             const colorScale = d3.scaleLinear()
-                    .domain(valueExtent)
-                    .range([0, 1]);
+                .domain(valueExtent)
+                .range([0, 1]);
 
             // Render visual components for each row (i.e., bars and texts).
             const textAlign = isLeft ? "end" : "start";
@@ -240,12 +240,12 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             .attr("width", width)
             .attr("height", axisHeight + titleHeight)
             .append("g")
-                .attr("transform", `translate(${isLeft ? textAreaWidth - 1 : 1}, ${titleHeight})`)
-                .call(axis);
+            .attr("transform", `translate(${isLeft ? textAreaWidth - 1 : 1}, ${titleHeight})`)
+            .call(axis);
         
         d3.select(domElement)
             .selectAll("text")
-                .attr("transform", `translate(${isLeft ? -3 : 3}, 0)`);
+            .attr("transform", `translate(${isLeft ? -3 : 3}, 0)`);
 
         return () => { /* Teardown */ };
     });
@@ -265,7 +265,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
         d3.select(canvas).on("mousemove", () => {
             const [mouseX, mouseY] = d3.mouse(canvas);
             
-            const hiddenContext = hiddenCanvasRef.current.getContext('2d');
+            const hiddenContext = hiddenCanvasRef.current.getContext("2d");
             const ratio = getRetinaRatio(hiddenContext);
             const uniqueColor = rgbToHex(hiddenContext.getImageData(mouseX * ratio, mouseY * ratio, 1, 1).data);
             const hoveredInfo = colorToInfo.find(d => d.uniqueColor === uniqueColor);
@@ -311,7 +311,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             ref={divRef}
             style={{
                 top: `${top}px`,
-                position: 'relative',
+                position: "relative",
                 width: `${width}px`,
                 height: `${height}px`,
             }}
@@ -323,7 +323,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                     left: 0, 
                     width: `${width}px`,
                     height: `${height}px`,
-                    position: 'absolute'
+                    position: "absolute"
                 }}
             />
             <canvas
@@ -334,7 +334,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                     left: 0, 
                     width: `${width}px`,
                     height: `${height}px`,
-                    position: 'absolute'
+                    position: "absolute"
                 }}
             />
             <svg ref={axisRef} 

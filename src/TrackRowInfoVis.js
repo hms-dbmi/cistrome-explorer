@@ -1,13 +1,13 @@
-import React, { useRef, useState, useEffect, useCallback, useMemo } from 'react';
-import d3 from './utils/d3.js';
+import React, { useRef, useState, useEffect, useCallback, useMemo } from "react";
+import d3 from "./utils/d3.js";
 
-import TrackRowInfoVisNominalBar from './TrackRowInfoVisNominalBar.js';
-import TrackRowInfoVisQuantitativeBar from './TrackRowInfoVisQuantitativeBar.js';
-import TrackRowInfoVisLink from './TrackRowInfoVisLink.js';
-import TrackRowInfoVisDendrogram from './TrackRowInfoVisDendrogram.js';
-import TrackRowInfoVisNominalDynamic from './TrackRowInfoVisNominalDynamic.js';
-import TrackRowInfoVisBand from './TrackRowInfoVisBand.js';
-import { HIGLASSMETA_DEFAULT } from './utils/visualization-properties.js';
+import TrackRowInfoVisNominalBar from "./TrackRowInfoVisNominalBar.js";
+import TrackRowInfoVisQuantitativeBar from "./TrackRowInfoVisQuantitativeBar.js";
+import TrackRowInfoVisLink from "./TrackRowInfoVisLink.js";
+import TrackRowInfoVisDendrogram from "./TrackRowInfoVisDendrogram.js";
+import TrackRowInfoVisNominalDynamic from "./TrackRowInfoVisNominalDynamic.js";
+import TrackRowInfoVisBand from "./TrackRowInfoVisBand.js";
+import { HIGLASSMETA_DEFAULT } from "./utils/visualization-properties.js";
 
 const fieldTypeToVisComponent = {
     "nominal": TrackRowInfoVisNominalBar,
@@ -85,8 +85,8 @@ export default function TrackRowInfoVis(props) {
     }
 
     const minWidth = 40;
-    const resizerWidth = 4
-    const resizerHeight = 10
+    const resizerWidth = 4;
+    const resizerHeight = 10;
     const resizerMargin = 2;
 
     const divRef = useRef();
@@ -99,11 +99,11 @@ export default function TrackRowInfoVis(props) {
     const started = useCallback(() => {
         const event = d3.event;
         dragX.current = event.sourceEvent.clientX;
-    }, [dragX])
+    }, [dragX]);
 
     const ended = useCallback(() => {
         dragX.current = null;
-    }, [dragX])
+    }, [dragX]);
 
     const dragged = useCallback(() => {
         const event = d3.event;
@@ -173,7 +173,7 @@ export default function TrackRowInfoVis(props) {
         <div 
             ref={divRef}
             style={{
-                position: 'absolute',
+                position: "absolute",
                 top: `${top}px`,
                 left: `${left}px`, 
                 height: `${height}px`,

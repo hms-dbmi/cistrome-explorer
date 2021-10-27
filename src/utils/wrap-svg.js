@@ -1,4 +1,4 @@
-import d3 from './d3.js';
+import d3 from "./d3.js";
 
 /**
  * Wrap the SVG element exported by HiGlass, using the wrapper component draw functions.

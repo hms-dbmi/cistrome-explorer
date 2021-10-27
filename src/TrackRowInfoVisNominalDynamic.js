@@ -7,7 +7,7 @@ import Two from "./utils/two.js";
 import { EVENT } from "./utils/constants.js";
 import { drawVisTitle } from "./utils/vis.js";
 import { TooltipContent, destroyTooltip } from "./Tooltip.js";
-import TrackRowInfoControl from './TrackRowInfoControl.js';
+import TrackRowInfoControl from "./TrackRowInfoControl.js";
 import { getAggregatedValue } from "./utils/aggregate.js";
 
 const margin = 5;
@@ -134,7 +134,7 @@ export default function TrackRowInfoVisComparison(props) {
             }
         });
         // if(!isShowControlButtons) {
-            drawVisTitle(title, { two, isLeft, width, height, titleSuffix });
+        drawVisTitle(title, { two, isLeft, width, height, titleSuffix });
         // }
         
         two.update();
@@ -169,7 +169,7 @@ export default function TrackRowInfoVisComparison(props) {
                 y: mouseViewportY,
                 content: <TooltipContent 
                     title={createTooltipText(nominalDomain)}
-                    value={rowId + (idToDomainValueMap[rowId] !== undefined ? ` (${idToDomainValueMap[rowId]})` : '')}
+                    value={rowId + (idToDomainValueMap[rowId] !== undefined ? ` (${idToDomainValueMap[rowId]})` : "")}
                 />
             });
         });
@@ -180,8 +180,8 @@ export default function TrackRowInfoVisComparison(props) {
 
             const y = yScale.invert(mouseY);
             if(y !== undefined) {
-               const info = transformedRowInfo[y];
-               const rowId = aggValue(info, field);
+                const info = transformedRowInfo[y];
+                const rowId = aggValue(info, field);
                 setIdToDomainValueMap(prev => {
                     const next = Object.assign({}, prev);
                     if(next[rowId] === undefined) {
@@ -196,7 +196,7 @@ export default function TrackRowInfoVisComparison(props) {
                     }
                     return next;
                 });
-               destroyTooltip();
+                destroyTooltip();
             }
         });
 
@@ -215,7 +215,7 @@ export default function TrackRowInfoVisComparison(props) {
             ref={divRef}
             style={{
                 top: `${top}px`,
-                position: 'relative',
+                position: "relative",
                 width: `${width}px`,
                 height: `${height}px`
             }}
@@ -227,8 +227,8 @@ export default function TrackRowInfoVisComparison(props) {
                     left: 0, 
                     width: `${width}px`,
                     height: `${height}px`,
-                    position: 'relative',
-                    cursor: 'pointer'
+                    position: "relative",
+                    cursor: "pointer"
                 }}
             />
             <TrackRowInfoControl

@@ -1,7 +1,7 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import CistromeExplorer from './CistromeExplorer.js';
+import React from "react";
+import ReactDOM from "react-dom";
+import CistromeExplorer from "./CistromeExplorer.js";
 
-import './index.scss';
+import "./index.scss";
 
-ReactDOM.render(<CistromeExplorer />, document.getElementById('root'));
+ReactDOM.render(<CistromeExplorer />, document.getElementById("root"));

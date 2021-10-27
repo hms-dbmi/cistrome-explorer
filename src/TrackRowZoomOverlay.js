@@ -1,6 +1,6 @@
-import React, { useRef, useEffect } from 'react';
-import debounce from 'lodash/debounce';
-import './TrackRowZoomOverlay.scss';
+import React, { useRef, useEffect } from "react";
+import debounce from "lodash/debounce";
+import "./TrackRowZoomOverlay.scss";
 
 /**
  * An overlay element to intercept wheel events in horizontal multivec tracks.
@@ -37,21 +37,21 @@ export default function TrackRowZoomOverlay(props) {
         }
         return () => {
             overlayRef.current.removeEventListener("wheel", wheelHandler);
-        }
+        };
     }, [overlayRef, isWheelListening, onZoomRows, trackHeight]);
 
     // Use CSS to show or hide the overlay element
     const style = (isWheelListening ? {
-        position: 'absolute',
+        position: "absolute",
         top: `${top}px`,
         left: `${left}px`,
         width: `${width}px`,
         height: `${height}px`,
-        boxSizing: 'border-box',
-        display: 'block',
+        boxSizing: "border-box",
+        display: "block",
         lineHeight: 1
     } : {
-        display: 'none'
+        display: "none"
     });
 
     return (

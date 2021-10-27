@@ -1,5 +1,5 @@
 import React, { createContext, useReducer } from "react";
-import merge from 'lodash/merge';
+import merge from "lodash/merge";
 import isEqual from "lodash/isEqual";
 
 export const ACTION = Object.freeze({
@@ -20,11 +20,11 @@ export const ACTION = Object.freeze({
 function createReducer(handlers) {
     return function reducer(state, action) {
         if (handlers.hasOwnProperty(action.type)) {
-            return handlers[action.type](state, action)
+            return handlers[action.type](state, action);
         } else {
-            return state
+            return state;
         }
-    }
+    };
 }
 
 const reducer = createReducer({
@@ -102,4 +102,4 @@ export function InfoProvider({ children }) {
             {children}
         </InfoContext.Provider>
     );
-};
+}

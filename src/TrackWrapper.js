@@ -1,14 +1,14 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from "react";
 
 import { InfoContext, ACTION } from "./utils/contexts.js";
-import TrackRowInfo from './TrackRowInfo.js';
-import TrackRowHighlight from './TrackRowHighlight.js';
-import TrackRowZoomOverlay from './TrackRowZoomOverlay.js';
+import TrackRowInfo from "./TrackRowInfo.js";
+import TrackRowHighlight from "./TrackRowHighlight.js";
+import TrackRowZoomOverlay from "./TrackRowZoomOverlay.js";
 
 // TODO: remove the below fakedata import.
 //       see https://github.com/hms-dbmi/cistrome-explorer/issues/26
-import fakedata from './demo/fakedata/index.js';
-import { getAggregatedRowInfo } from './utils/select-rows.js';
+import fakedata from "./demo/fakedata/index.js";
+import { getAggregatedRowInfo } from "./utils/select-rows.js";
 
 /**
  * Wrapper component associated with a particular HiGlass track.

@@ -1,5 +1,5 @@
-import d3 from './d3.js';
-import { getRetinaRatio } from './canvas.js';
+import d3 from "./d3.js";
+import { getRetinaRatio } from "./canvas.js";
 
 /**
  * Represents a rectangle to be rendered.
@@ -164,20 +164,20 @@ export default class Two {
         }
 
         switch(domElement.nodeName.toLowerCase()) {
-            case 'canvas':
-                this.init = this.initCanvas.bind(this);
-                this.update = this.updateCanvas.bind(this);
-                this.teardown = this.teardownCanvas.bind(this);
-                this.measureText = this.measureTextCanvas.bind(this);
-                break;
-            case 'svg':
-                this.init = this.initSvg.bind(this);
-                this.update = this.updateSvg.bind(this);
-                this.teardown = this.teardownSvg.bind(this);
-                this.measureText = this.measureTextSvg.bind(this);
-                break;
-            default:
-                console.warn("Unknown DOM element type.");
+        case "canvas":
+            this.init = this.initCanvas.bind(this);
+            this.update = this.updateCanvas.bind(this);
+            this.teardown = this.teardownCanvas.bind(this);
+            this.measureText = this.measureTextCanvas.bind(this);
+            break;
+        case "svg":
+            this.init = this.initSvg.bind(this);
+            this.update = this.updateSvg.bind(this);
+            this.teardown = this.teardownSvg.bind(this);
+            this.measureText = this.measureTextSvg.bind(this);
+            break;
+        default:
+            console.warn("Unknown DOM element type.");
         }
 
         this.init();
@@ -192,12 +192,12 @@ export default class Two {
         
         this.g = this.svg
             .append("g")
-                .attr("width", this.width)
-                .attr("height", this.height);
+            .attr("width", this.width)
+            .attr("height", this.height);
     }
 
     initCanvas() {
-        const context = this.domElement.getContext('2d');
+        const context = this.domElement.getContext("2d");
         const ratio = getRetinaRatio(context);
         const scaledWidth = this.width * ratio;
         const scaledHeight = this.height * ratio;

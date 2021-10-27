@@ -1,4 +1,4 @@
-import HiGlassMeta from './HiGlassMeta.js';
+import HiGlassMeta from "./HiGlassMeta.js";
 
 export {
     HiGlassMeta

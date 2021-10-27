@@ -22,9 +22,9 @@ export function matrixToTree(inputMatrix) {
         const curr = group(matrix, level);
         return Object.entries(curr).map(([k, v]) => {
             if(v.length === 1) {
-                return { name: k, i: v[0].i }
+                return { name: k, i: v[0].i };
             } else {
-                return { name: k, children: convert(v, level+1) }
+                return { name: k, children: convert(v, level+1) };
             }
         });
     };
@@ -55,9 +55,9 @@ export function matrixToTreeWithDistance(inputMatrix) {
         return Object.entries(curr).map(([k, v]) => {
             const dist = v[0].levels.find(d => d.name == k).dist;
             if(v.length === 1) {
-                return { name: k, dist, i: v[0].i }
+                return { name: k, dist, i: v[0].i };
             } else {
-                return { name: k, dist, children: convert(v, level+1) }
+                return { name: k, dist, children: convert(v, level+1) };
             }
         });
     };

@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import d3 from './utils/d3.js';
+import React, { useState, useEffect, useCallback } from "react";
+import d3 from "./utils/d3.js";
 
 import TrackRowInfoVis from "./TrackRowInfoVis.js";
-import { selectRows } from './utils/select-rows.js';
-import { modifyItemInArray } from './utils/array.js';
-import { getNumOfTracks } from './utils/layout.js';
+import { selectRows } from "./utils/select-rows.js";
+import { modifyItemInArray } from "./utils/array.js";
+import { getNumOfTracks } from "./utils/layout.js";
 
 const DEFAULT_TRACK_WIDTH = 100;
 const DEFAULT_BAND_WIDTH = 100;
@@ -171,7 +171,7 @@ export default function TrackRowInfo(props) {
     return (
         <div
             style={{
-                position: 'absolute',
+                position: "absolute",
                 top: `${top}px`,
                 left: `${left}px`,
                 height: `${height}px`
@@ -202,7 +202,7 @@ export default function TrackRowInfo(props) {
                     helpActivated={helpActivated}
                     rowAggregated={rowAggregated}
                     drawRegister={(key, draw, options) => {
-                        drawRegister(`${key}-${i}`, draw, { top: top + d.top, left: left + d.left, width: d.width, height: d.height })
+                        drawRegister(`${key}-${i}`, draw, { top: top + d.top, left: left + d.left, width: d.width, height: d.height });
                     }}
                     onWidthChanged={(val) => setUnitWidthByIndex(i, val)}
                 />

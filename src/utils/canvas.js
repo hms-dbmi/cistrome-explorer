@@ -13,7 +13,7 @@ export function getRetinaRatio(context) {
         context.oBackingStorePixelRatio,
         context.backingStorePixelRatio,
         1
-    ].reduce(function(a, b) { return a || b });
+    ].reduce(function(a, b) { return a || b; });
 
     return devicePixelRatio / backingStoreRatio;
 }

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import PubSub from 'pubsub-js';
+import React, { useEffect, useState } from "react";
+import PubSub from "pubsub-js";
 
-import { EVENT } from './utils/constants.js';
+import { EVENT } from "./utils/constants.js";
 
-import './Tooltip.scss';
+import "./Tooltip.scss";
 
 export function destroyTooltip() {
     PubSub.publish(EVENT.TOOLTIP, {
@@ -26,7 +26,7 @@ export function publishHelpTooltip(e, title, subtitle, helpActivated) {
             x: e.clientX,
             y: e.clientY,
             content: <TooltipContent 
-                title={'💡 ' + title}
+                title={"💡 " + title}
                 value={subtitle}
             />,
             help: true
@@ -53,7 +53,7 @@ export function TooltipContent(props) {
                     : null
                 }
                 {value ? 
-                    <div className={warning ? 'hm-tooltip-warning' : ''}>{value}</div>
+                    <div className={warning ? "hm-tooltip-warning" : ""}>{value}</div>
                     : null
                 }
             </div>
@@ -88,9 +88,9 @@ export default function Tooltip() {
 
     return (
         <div
-            className={"hm-tooltip " + (help ? "hm-tooltip-help" : '')}
+            className={"hm-tooltip " + (help ? "hm-tooltip-help" : "")}
             style={{
-                display: ((left !== null && top !== null) ? 'inline-block' : 'none'),
+                display: ((left !== null && top !== null) ? "inline-block" : "none"),
                 top: `${Math.min(document.body.scrollHeight - 100, top)}px`,
                 left: `${Math.min(document.body.scrollWidth - 200, left)}px`,
             }}
@@ -98,4 +98,4 @@ export default function Tooltip() {
             {content}
         </div>
     );
-};
+}

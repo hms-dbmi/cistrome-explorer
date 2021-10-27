@@ -2,11 +2,11 @@
 
 import { 
     selectRows, getAggregatedRowInfo
-} from './select-rows.js';
-import { getAggregatedValue } from './aggregate.js';
+} from "./select-rows.js";
+import { getAggregatedValue } from "./aggregate.js";
 
-describe('Helper functions for producing arrays of row indices for track.options.selectRows', () => {
-    it('Should produce correct selectRows array after sorting on quantitative attribute', () => {
+describe("Helper functions for producing arrays of row indices for track.options.selectRows", () => {
+    it("Should produce correct selectRows array after sorting on quantitative attribute", () => {
         const rowInfo = [
             {"r1":4},
             {"r1":73},
@@ -35,7 +35,7 @@ describe('Helper functions for producing arrays of row indices for track.options
         expect(selectedRows).toEqual([13,6,11,8,1,2,14,7,9,12,5,3,10,4,0]);
     });
 
-    it('Using alternative sorting options should produce correct selectRows array after sorting on quantitative attribute', () => {
+    it("Using alternative sorting options should produce correct selectRows array after sorting on quantitative attribute", () => {
         const rowInfo = [
             {"r1":4},
             {"r1":73},
@@ -71,7 +71,7 @@ describe('Helper functions for producing arrays of row indices for track.options
         expect(selectedRows).toEqual([13,6,11,8,1,2,14,7,9,12,5,3,10,4,0].reverse());
     });
 
-    it('Should produce correct selectRows array after sorting on nominal attribute', () => {
+    it("Should produce correct selectRows array after sorting on nominal attribute", () => {
         const rowInfo = [
             {"t":"Blood"},
             {"t":"Tonsil"},
@@ -104,7 +104,7 @@ describe('Helper functions for producing arrays of row indices for track.options
         expect(selectedRows.slice(0, 5)).toContain(14);
     });
 
-    it('Should aggregate rows properly after using nominal attribute', () => {
+    it("Should aggregate rows properly after using nominal attribute", () => {
         const rowInfo = [
             {"c1":"Blood", "r1":1, "c2":"A"},
             {"c1":"Blood", "r1":2, "c2":"B"},
@@ -151,7 +151,7 @@ describe('Helper functions for producing arrays of row indices for track.options
         expect(aggregatedValue).toEqual(3);
     });
 
-    it('Should produce correct selectRows array after aggregating, filtering, and sorting', () => {
+    it("Should produce correct selectRows array after aggregating, filtering, and sorting", () => {
         const rowInfo = [
             {"c1":"Blood", "r1":1, "c2":"A"},
             {"c1":"Blood", "r1":2, "c2":"B"},
@@ -216,7 +216,7 @@ describe('Helper functions for producing arrays of row indices for track.options
         expect(aggregatedValue).toEqual(3);
     });
 
-    it('Should produce correct selectRows array after filtering on tree attribute using `substree`', () => {
+    it("Should produce correct selectRows array after filtering on tree attribute using `substree`", () => {
         const rowInfo = [
             {"id": "a","t":[{"name":"root","dist":1},{"name":"b1","dist":0.5},{"name":"b2","dist":0.1},{"name":"node-a","dist":0}]},
             {"id": "b","t":[{"name":"root","dist":1},{"name":"b1","dist":0.5},{"name":"b2","dist":0.1},{"name":"node-b","dist":0}]},
@@ -239,7 +239,7 @@ describe('Helper functions for producing arrays of row indices for track.options
         expect(selectedRows).not.toContain(4);
     });
 
-    it('Should produce correct selectRows array after filtering on tree attribute using `minSimilarity`', () => {
+    it("Should produce correct selectRows array after filtering on tree attribute using `minSimilarity`", () => {
         const rowInfo = [
             {"id": "a","t":[{"name":"root","dist":1},{"name":"b1","dist":0.5},{"name":"b2","dist":0.1},{"name":"node-a","dist":0}]},
             {"id": "b","t":[{"name":"root","dist":1},{"name":"b1","dist":0.5},{"name":"b2","dist":0.1},{"name":"node-b","dist":0}]},
@@ -262,7 +262,7 @@ describe('Helper functions for producing arrays of row indices for track.options
         expect(selectedRows).not.toContain(4);
     });
 
-    it('Should produce correct selectRows array after filtering on tree attribute using `ancestors` and `minSimilarity`', () => {
+    it("Should produce correct selectRows array after filtering on tree attribute using `ancestors` and `minSimilarity`", () => {
         const rowInfo = [
             {"id": "a","t":[{"name":"root","dist":1},{"name":"b1","dist":0.5},{"name":"b2","dist":0.1},{"name":"node-a","dist":0}]},
             {"id": "b","t":[{"name":"root","dist":1},{"name":"b1","dist":0.5},{"name":"b2","dist":0.1},{"name":"node-b","dist":0}]},
@@ -286,7 +286,7 @@ describe('Helper functions for producing arrays of row indices for track.options
         expect(selectedRows).not.toContain(4);
     });
 
-    it('Should produce correct selectRows array after filtering on tree and other attributes together', () => {
+    it("Should produce correct selectRows array after filtering on tree and other attributes together", () => {
         const rowInfo = [
             {"id": "a","t":[{"name":"root","dist":1},{"name":"b1","dist":0.5},{"name":"b2","dist":0.1},{"name":"node-a","dist":0}]},
             {"id": "b","t":[{"name":"root","dist":1},{"name":"b1","dist":0.5},{"name":"b2","dist":0.1},{"name":"node-b","dist":0}]},

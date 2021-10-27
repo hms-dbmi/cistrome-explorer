@@ -1,9 +1,9 @@
 import React, { useRef, useState, useEffect, useCallback, useMemo } from "react";
-import { CLOSE, FILTER, RESET, SEARCH, SQUARE_CHECK, SQUARE } from './utils/icons.js';
+import { CLOSE, FILTER, RESET, SEARCH, SQUARE_CHECK, SQUARE } from "./utils/icons.js";
 import d3 from "./utils/d3.js";
-import debounce from 'lodash/debounce';
+import debounce from "lodash/debounce";
 
-import './TrackRowFilter.scss';
+import "./TrackRowFilter.scss";
 import RangeSlider from "./RangeSlider.js";
 import { getAggregatedValue } from "./utils/aggregate.js";
 
@@ -68,7 +68,7 @@ export default function TrackRowFilter(props) {
 
     useEffect(() => {
         setNotOneOf(!filterInfo || type === "quantitative" ? [] : filterInfo.notOneOf);
-    }, [filterInfo])
+    }, [filterInfo]);
 
     const suggestions = useMemo(() => {
         let result = [];
@@ -229,19 +229,19 @@ export default function TrackRowFilter(props) {
 
     function onKeyDown(e) {
         switch(e.key){
-            case 'ArrowUp':
-                suggestionIndexDecrement();
-                break;
-            case 'ArrowDown':
-                suggestionIndexIncrement();
-                break;
-            case 'Enter':
-                onFilterByKeyword();
-                break;
-            case 'Esc':
-            case 'Escape':
-                onFilterClose(); 
-                break;
+        case "ArrowUp":
+            suggestionIndexDecrement();
+            break;
+        case "ArrowDown":
+            suggestionIndexIncrement();
+            break;
+        case "Enter":
+            onFilterByKeyword();
+            break;
+        case "Esc":
+        case "Escape":
+            onFilterClose(); 
+            break;
         }
     }
 
@@ -293,7 +293,7 @@ export default function TrackRowFilter(props) {
         <div
             className="hm-filter"
             style={{
-                display: ((left !== null && top !== null) ? 'flex' : 'none'),
+                display: ((left !== null && top !== null) ? "flex" : "none"),
                 left: left - (width + padding * 2) / 2 + offset.x,
                 top: top - (height + padding * 2) - 80 + offset.y,
             }}
@@ -301,7 +301,7 @@ export default function TrackRowFilter(props) {
             <div className="hm-filter-box"
                 style={{
                     padding: padding,
-                    paddingLeft: '0px'
+                    paddingLeft: "0px"
                 }}>
                 <div ref={moverRef} className="hm-button-drag">
                     <div/><div/><div/>

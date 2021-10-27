@@ -2,11 +2,11 @@
  * TODO: Remove this folder of fake track metadata.
  * See [#26](https://github.com/hms-dbmi/cistrome-explorer/issues/26) for more info.
  */
-import rowInfo1 from './cistrome-track-1/rowInfo.json';
-import rowInfo2 from './cistrome-track-2/rowInfo.json';
-import rowInfo3 from './cistrome-track-3/rowInfo.json';
-import rowInfo10 from './cistrome-track-10/rowInfo.json';
-import rowInfoAtac from './cistrome-track-atac/rowInfo.json';
+import rowInfo1 from "./cistrome-track-1/rowInfo.json";
+import rowInfo2 from "./cistrome-track-2/rowInfo.json";
+import rowInfo3 from "./cistrome-track-3/rowInfo.json";
+import rowInfo10 from "./cistrome-track-10/rowInfo.json";
+import rowInfoAtac from "./cistrome-track-atac/rowInfo.json";
 
 const _fakedata = {
     "default": {
@@ -75,10 +75,10 @@ const _fakedata = {
         }
     },
     "cistrome-track-10": {
-      tilesetInfo: {
-          rowInfo: rowInfo10
-      }
-  },
+        tilesetInfo: {
+            rowInfo: rowInfo10
+        }
+    },
 };
 
 export default new Proxy(_fakedata, {
