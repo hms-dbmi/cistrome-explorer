@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import PubSub from "pubsub-js";
 
-import { resolveIntervalCoordinates } from './utils/genome.js';
-import { validateIntervalParams } from './utils/cistrome.js';
+import { resolveIntervalCoordinates } from "./utils/genome.js";
+import { validateIntervalParams } from "./utils/cistrome.js";
 import { TooltipContent, destroyTooltip } from "./Tooltip.js";
-import { getRange } from './utils/viewport.js';
-import { CLOSE, SEARCH } from './utils/icons.js';
+import { getRange } from "./utils/viewport.js";
+import { CLOSE, SEARCH } from "./utils/icons.js";
 import { EVENT } from "./utils/constants.js";
-import './ViewColumnBrush.scss';
+import "./ViewColumnBrush.scss";
 
 /**
  * Component for rendering genome interval selection tools.
@@ -34,7 +34,7 @@ export default function ViewColumnBrush(props) {
         on: false, x: undefined, y: undefined
     });
 
-    const assembly = multivecTrack.tilesetInfo?.coordSystem || 'hg38';
+    const assembly = multivecTrack.tilesetInfo?.coordSystem || "hg38";
     const absDomain = viewportTrack.viewportXDomain;
     let startX = viewportTrack._xScale(absDomain[0]);
     let endX = viewportTrack._xScale(absDomain[1]);
@@ -73,7 +73,7 @@ export default function ViewColumnBrush(props) {
     useEffect(() => {
         if(onSearchButton.on && onSearchButton.x && onSearchButton.y) {
             const tooltipValue = (isLoading
-                ? 'Loading metadata...'
+                ? "Loading metadata..."
                 : (!intervalValid
                     ? intervalInvalidMsg 
                     : `${positionInfo?.chrStartName}:${positionInfo?.chrStartPos}-${positionInfo?.chrEndPos}`
@@ -152,7 +152,7 @@ export default function ViewColumnBrush(props) {
                         <path d={CLOSE.path} fill="currentColor"/>
                     </svg>
                 </div>
-            : null}
+                : null}
         </div>
     );
 }

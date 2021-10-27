@@ -44,4 +44,4 @@ export const VIEWPORT_OPTIONS = {
         projectionStrokeOpacity: 0.7,
         strokeWidth: 1
     }
-}
+};

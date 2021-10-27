@@ -1,10 +1,10 @@
-import React, { useRef, useState, useEffect } from 'react';
-import PubSub from 'pubsub-js';
+import React, { useRef, useState, useEffect } from "react";
+import PubSub from "pubsub-js";
 
-import { SORT_ASC, SORT_DESC, FILTER, RESET, TOGGLE_ON } from './utils/icons.js';
-import TrackRowFilter from './TrackRowFilter.js';
-import { getAggregatedValue } from './utils/aggregate.js';
-import { destroyTooltip, publishHelpTooltip } from './Tooltip.js';
+import { SORT_ASC, SORT_DESC, FILTER, RESET, TOGGLE_ON } from "./utils/icons.js";
+import TrackRowFilter from "./TrackRowFilter.js";
+import { getAggregatedValue } from "./utils/aggregate.js";
+import { destroyTooltip, publishHelpTooltip } from "./Tooltip.js";
 
 const LOCAL_EVENT_FILTER_OPEN = "filter-open";
 
@@ -60,7 +60,7 @@ export default function TrackRowInfoControl(props){
         });
 
         return () => PubSub.unsubscribe(filterOpenToken);
-    })
+    });
 
     function onSortAscClick() {
         onSortRows(controlField, controlType, "ascending", resolveYScale);
@@ -150,7 +150,7 @@ export default function TrackRowInfoControl(props){
     return (
         <div>
             <div ref={divRef}
-                className={"hm-button-sm-container-vertical " + (helpActivated ? "help-highlight" : '')}
+                className={"hm-button-sm-container-vertical " + (helpActivated ? "help-highlight" : "")}
                 style={{
                     top: `${top + 4}px`,
                     left: "4px",
@@ -160,9 +160,9 @@ export default function TrackRowInfoControl(props){
                     let positionClass = "hm-button-middle";
                     if(buttons.length > 1) {
                         if(i === 0) {
-                            positionClass = "hm-button-top"
+                            positionClass = "hm-button-top";
                         } else if(i === buttons.length - 1) {
-                            positionClass = "hm-button-bottom"
+                            positionClass = "hm-button-bottom";
                         }
                     }
                     return (
@@ -200,5 +200,5 @@ export default function TrackRowInfoControl(props){
                 />
             ) : null}
         </div>
-    )
+    );
 }

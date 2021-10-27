@@ -1,8 +1,8 @@
-import merge from 'lodash/merge';
-import cloneDeep from 'lodash/cloneDeep';
-import omit from 'lodash/omit';
-import Ajv from 'ajv';
-import { insertItemToArray } from './array.js'
+import merge from "lodash/merge";
+import cloneDeep from "lodash/cloneDeep";
+import omit from "lodash/omit";
+import Ajv from "ajv";
+import { insertItemToArray } from "./array.js";
 
 /* Defatul values */
 export const DEFAULT_OPTIONS_KEY = "default";
@@ -292,7 +292,7 @@ export function getConditionFromHighlightOption(highlitOption) {
  * @returns {string} The key of `rowHighlight` object that indicate a certain condition.
  */
 export function getHighlightKeyByFieldType(type, condition = undefined) {
-  switch(type) {
+    switch(type) {
     case "index":
         return "index";
     case "quantitative":
@@ -304,7 +304,7 @@ export function getHighlightKeyByFieldType(type, condition = undefined) {
             console.warn("`condition` is not properly provided, so we are just guessing a HighlightKey");
         }
         return Array.isArray(condition) ? "ancestors" : "minSimilarity";
-  }
+    }
 }
 
 /**
@@ -374,7 +374,7 @@ export function processWrapperOptions(options) {
         if(globalDefaults) {
             newOptions[DEFAULT_OPTIONS_KEY] = merge(
                 cloneDeep(newOptions[DEFAULT_OPTIONS_KEY]), 
-                omit(globalDefaults, ['viewId', 'trackId'])
+                omit(globalDefaults, ["viewId", "trackId"])
             );
         }
 
@@ -384,7 +384,7 @@ export function processWrapperOptions(options) {
                 newOptions[trackOptions.viewId] = {
                     [DEFAULT_OPTIONS_KEY]: merge(
                         cloneDeep(newOptions[DEFAULT_OPTIONS_KEY]), 
-                        omit(trackOptions, ['viewId', 'trackId'])
+                        omit(trackOptions, ["viewId", "trackId"])
                     )
                 };
             }
@@ -400,7 +400,7 @@ export function processWrapperOptions(options) {
                 }
                 newOptions[trackOptions.viewId][trackOptions.trackId] = merge(
                     cloneDeep(newOptions[trackOptions.viewId][DEFAULT_OPTIONS_KEY]), 
-                    omit(trackOptions, ['viewId', 'trackId'])
+                    omit(trackOptions, ["viewId", "trackId"])
                 );
             }
         });
@@ -443,7 +443,7 @@ export function addTrackWrapperOptions(options, optionsToAdd, viewId, trackId) {
             [viewId]: { 
                 [trackId]: optionsToAdd 
             }
-        }
+        };
     } else {
         return {
             ...options,
@@ -451,7 +451,7 @@ export function addTrackWrapperOptions(options, optionsToAdd, viewId, trackId) {
                 ...options[viewId], 
                 [trackId]: optionsToAdd
             }
-        }
+        };
     }
 }
 

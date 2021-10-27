@@ -1,9 +1,9 @@
-import { format } from 'd3-format';
+import { format } from "d3-format";
 
 function ScaleLegendTrack(HGC, ...args) {
     if (!new.target) {
         throw new Error(
-        'Uncaught TypeError: Class constructor cannot be invoked without "new"'
+            "Uncaught TypeError: Class constructor cannot be invoked without \"new\""
         );
     }
 
@@ -41,7 +41,6 @@ function ScaleLegendTrack(HGC, ...args) {
         }
 
         initTile(tile) {}
-        drawTile() {}
         updateTile() {}
         drawTile(tile) { }
         renderTile(tile) { }
@@ -87,11 +86,11 @@ function ScaleLegendTrack(HGC, ...args) {
                 0.5 // alignment of the line to draw, (0 = inner, 0.5 = middle, 1 = outter)
             );
 
-            if(this.lineStyle === 'solid') {
+            if(this.lineStyle === "solid") {
                 graphics.moveTo(0, trackHeight / 2.0);
                 graphics.lineTo(trackWidth, trackHeight / 2.0);
             } 
-            else if(this.lineStyle === 'dotted') {
+            else if(this.lineStyle === "dotted") {
                 const [dash, gap] = [3, 3];
                 let curX = 0;
                 do {
@@ -134,7 +133,7 @@ function ScaleLegendTrack(HGC, ...args) {
 
             /* Text */
             // text
-            const f = format('.2~s');
+            const f = format(".2~s");
             const scaleNumber = this._xScale.invert(this.dimensions[0]) - this._xScale.invert(0);
             const scaleText = `${f(scaleNumber)}b`;
             const text = new HGC.libraries.PIXI.Text(scaleText, this.textOptions);
@@ -174,10 +173,10 @@ function ScaleLegendTrack(HGC, ...args) {
         exportSVG() { }
     }
     return new ScaleLegendTrackClass(...args);
-};
+}
 
 const icon =
-    '<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path fill="#fff" d="M-1-1h22v22H-1z"/><g><path stroke="#007fff" stroke-width="1.5" fill="#007fff" d="M-.667-.091h5v20.167h-5z"/><path stroke-width="1.5" stroke="#e8e500" fill="#e8e500" d="M5.667.242h5v20.167h-5z"/><path stroke-width="1.5" stroke="#ff0038" fill="#ff0038" d="M15.833.076h5v20.167h-5z"/><path stroke="green" stroke-width="1.5" fill="green" d="M10.833-.258H14.5v20.167h-3.667z"/></g></svg>';
+    "<svg width=\"20\" height=\"20\" xmlns=\"http://www.w3.org/2000/svg\"><path fill=\"#fff\" d=\"M-1-1h22v22H-1z\"/><g><path stroke=\"#007fff\" stroke-width=\"1.5\" fill=\"#007fff\" d=\"M-.667-.091h5v20.167h-5z\"/><path stroke-width=\"1.5\" stroke=\"#e8e500\" fill=\"#e8e500\" d=\"M5.667.242h5v20.167h-5z\"/><path stroke-width=\"1.5\" stroke=\"#ff0038\" fill=\"#ff0038\" d=\"M15.833.076h5v20.167h-5z\"/><path stroke=\"green\" stroke-width=\"1.5\" fill=\"green\" d=\"M10.833-.258H14.5v20.167h-3.667z\"/></g></svg>";
 
 // default
 ScaleLegendTrack.config = {
@@ -219,7 +218,7 @@ class EmptyDataFetcher {
     
         // Dummy values - not actually used
         const TILE_SIZE = 1024;
-        const MAX_ZOOM = 22
+        const MAX_ZOOM = 22;
     
         const retVal = {
             tile_size: TILE_SIZE,

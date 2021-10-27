@@ -3,10 +3,10 @@
 import { 
     matrixToTree,
     matrixToTreeWithDistance
-} from './tree.js';
+} from "./tree.js";
 
-describe('Functions for manipulating hierarchy data structures', () => {
-    it('Should convert a matrix-like structure to a tree-like structure', () => {
+describe("Functions for manipulating hierarchy data structures", () => {
+    it("Should convert a matrix-like structure to a tree-like structure", () => {
         const matrix = [
             ["i-0", "i-0", "i-0", "i-0", "4-1"],
             ["i-0", "i-0", "i-0", "i-0", "4-2"],
@@ -26,7 +26,7 @@ describe('Functions for manipulating hierarchy data structures', () => {
         expect(tree).toEqual(expectedTree);
     });
 
-    it('Should convert a matrix-like structure with distance values to a tree-like structure', () => {
+    it("Should convert a matrix-like structure with distance values to a tree-like structure", () => {
         const matrix = [
             [{"name": "i-0", "dist" :2}, {"name": "i-10", "dist" :1.632}, {"name": "i-11", "dist" :1.000}, {"name": "3", "dist": 0}],
             [{"name": "i-0", "dist" :2}, {"name": "i-10", "dist" :1.632}, {"name": "i-16", "dist" :0.900}, {"name": "4", "dist": 0}],
@@ -49,7 +49,7 @@ describe('Functions for manipulating hierarchy data structures', () => {
         expect(tree).toEqual(expectedTree);
     });
 
-    it('Should convert a matrix-like structure to a tree-like structure, after filtering', () => {
+    it("Should convert a matrix-like structure to a tree-like structure, after filtering", () => {
         const matrix = [
             ["i-0", "i-0", "i-0", "i-0", "4-1"],
             ["i-0", "i-0", "i-0", "i-0", "4-2"],

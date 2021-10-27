@@ -7,9 +7,9 @@ import Two from "./utils/two.js";
 import { EVENT, CONTEXT_MENU_TYPE } from "./utils/constants.js";
 import { drawVisTitle } from "./utils/vis.js";
 
-import TrackRowInfoControl from './TrackRowInfoControl.js';
+import TrackRowInfoControl from "./TrackRowInfoControl.js";
 import { TooltipContent, destroyTooltip } from "./Tooltip.js";
-import { FILTER, HIGHLIGHTER, ARROW_UP, ARROW_DOWN } from './utils/icons.js';
+import { FILTER, HIGHLIGHTER, ARROW_UP, ARROW_DOWN } from "./utils/icons.js";
 import { getAggregatedValue } from "./utils/aggregate.js";
 import { drawRowHighlightRect } from "./utils/linking.js";
 import { HIGLASSMETA_DEFAULT } from "./utils/visualization-properties.js";
@@ -151,7 +151,7 @@ export default function TrackRowInfoVisNominalBar(props) {
         });
 
         // if(!isShowControlButtons) {
-            drawVisTitle(title, { two, isLeft, width, height, titleSuffix });
+        drawVisTitle(title, { two, isLeft, width, height, titleSuffix });
         // }
 
         two.update();
@@ -239,7 +239,7 @@ export default function TrackRowInfoVisNominalBar(props) {
             ref={divRef}
             style={{
                 top: `${top}px`,
-                position: 'relative',
+                position: "relative",
                 width: `${width}px`,
                 height: `${height}px`,
             }}
@@ -252,7 +252,7 @@ export default function TrackRowInfoVisNominalBar(props) {
                     left: 0,
                     width: `${width}px`,
                     height: `${(height)}px`,
-                    position: 'relative'
+                    position: "relative"
                 }}
             />
             <TrackRowInfoControl

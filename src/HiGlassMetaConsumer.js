@@ -1,16 +1,17 @@
-import React, { forwardRef, useRef, useEffect, useState, useMemo, useCallback, useContext } from 'react';
-import isEqual from 'lodash/isEqual';
-import clamp from 'lodash/clamp';
-import uuidv4 from 'uuid/v4';
+import React, { forwardRef, useRef, useEffect, useState, useMemo, useCallback, useContext } from "react";
+import isEqual from "lodash/isEqual";
+import clamp from "lodash/clamp";
+import uuidv4 from "uuid/v4";
 
-import { HiGlassComponent } from 'higlass';
+import { HiGlassComponent } from "higlass";
 
-import { InfoContext, ACTION } from './utils/contexts.js';
-import { selectRows, highlightRowsFromSearch } from './utils/select-rows.js';
-import TrackWrapper from './TrackWrapper.js';
-import ViewWrapper from './ViewWrapper.js';
-import Tooltip from './Tooltip.js';
-import ContextMenu, { destroyContextMenu } from './ContextMenu.js';
+import { InfoContext, ACTION } from "./utils/contexts.js";
+import { selectRows, highlightRowsFromSearch } from "./utils/select-rows.js";
+import TrackWrapper from "./TrackWrapper.js";
+import ViewWrapper from "./ViewWrapper.js";
+import Tooltip from "./Tooltip.js";
+import ContextMenu, { destroyContextMenu } from "./ContextMenu.js";
+import GwasFilter from "./GwasFilter.js";
 
 import { 
     DEFAULT_OPTIONS_KEY,
@@ -21,7 +22,7 @@ import {
     addTrackWrapperOptions,
     getHighlightKeyByFieldType,
     getConditionFromHighlightOption
-} from './utils/options.js';
+} from "./utils/options.js";
 import { 
     getHMTrackIdsFromViewConfig, 
     getSiblingVPHTrackIdsFromViewConfig,
@@ -34,18 +35,20 @@ import {
     getAllViewAndTrackPairs,
     removeViewportFromViewConfig,
     getTrackIdsFromViewConfig,
-    removeTopTrackFromViewConfig
-} from './utils/viewconf.js';
-import { wrapSvg } from './utils/wrap-svg.js';
+    removeTopTrackFromViewConfig,
+    setDataTransformOfTopTrackFromViewConfig
+} from "./utils/viewconf.js";
+import { wrapSvg } from "./utils/wrap-svg.js";
 
-import './HiGlassMetaConsumer.scss';
-import cloneDeep from 'lodash/cloneDeep';
-import { removeItemFromArray, modifyItemInArray, insertItemToArray } from './utils/array.js';
-import { CLOSE, THIN_CLOSE } from './utils/icons.js';
-import { HG38_START_POSITIONS } from './utils/chromsizes.js';
+import "./HiGlassMetaConsumer.scss";
+import cloneDeep from "lodash/cloneDeep";
+import { removeItemFromArray, modifyItemInArray, insertItemToArray } from "./utils/array.js";
+import { CLOSE, THIN_CLOSE, FILTER } from "./utils/icons.js";
+import { HG38_START_POSITIONS } from "./utils/chromsizes.js";
+import {TRAITS} from "./utils/gwas.js";
 
 const hgOptionsBase = {
-    sizeMode: 'bounded', // Stretch the height of HiGlass to its container <div/>
+    sizeMode: "bounded", // Stretch the height of HiGlass to its container <div/>
     pixelPreciseMarginPadding: false,
     bounded: true,
     containerPaddingX: 0,
@@ -61,7 +64,7 @@ const hgOptionsBase = {
 };
 
 // If this string tag is included in the track id, allow showing the 'x' button to remove the track.
-export const REMOVE_ALLOWED_TAG_TRACKID = '-allow-remove-';
+export const REMOVE_ALLOWED_TAG_TRACKID = "-allow-remove-";
 
 /**
  * HiGlassMeta passes its props through, and wraps this component with the context provider.
@@ -91,6 +94,9 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
     const [multivecTrackIds, setMultivecTrackIds] = useState([]);
     const [viewportTrackIds, setViewportTrackIds] = useState({});
     const [stackedBarTrackIds, setStackedBarTrackIds] = useState([]);
+    const [gwasTrackIds, setGwasTrackIds] = useState([]);
+    const [showGwasFilter, setShowGwasFilter] = useState(false);
+    const [gwasOneOf, setGwasOneOf] = useState(TRAITS);
     const [isWheelListening, setIsWheelListening] = useState(false);
     
     const context = useContext(InfoContext);
@@ -112,7 +118,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         if(localBEDFile !== null && localBEDFile.data !== null) {
             
             // DEBUG
-            console.log('updated:', localBEDFile);
+            console.log("updated:", localBEDFile);
 
             multivecTrackIds.forEach(({ viewId }) => {
                 const trackSpec = {
@@ -165,7 +171,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                     },
                     height: 30
                 };
-                addNewTrack(trackSpec, viewId, 'top');
+                addNewTrack(trackSpec, viewId, "top");
             });
         }
     }, [localBEDFile]);
@@ -237,6 +243,9 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         // Tracks that are interactively added.
         const newStackedBarTrackIds = getTrackIdsFromViewConfig(newViewConfig, REMOVE_ALLOWED_TAG_TRACKID);
 
+        // A GWAS track
+        const newGwasTrackIds = getTrackIdsFromViewConfig(newViewConfig, "gwas");
+
         // Get selected rows from the view config and update context.
         for(let trackIds of newTrackIds) {
             const newSelectedRows = getHMSelectedRowsFromViewConfig(newViewConfig, trackIds.viewId, trackIds.trackId);
@@ -258,6 +267,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         setMultivecTrackIds(newTrackIds);
         setViewportTrackIds(newViewportTrackIds);
         setStackedBarTrackIds(newStackedBarTrackIds);
+        setGwasTrackIds(newGwasTrackIds);
     }, []);
 
     // Function to get a track object from the higlass API.
@@ -306,6 +316,17 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         hgRef.current.api.setViewConfig(newViewConfig);
     }, [hgRef]);
 
+    useEffect(() => {
+        const currViewConfig = hgRef.current.api.getViewConfig();
+        const newViewConfig = setDataTransformOfTopTrackFromViewConfig(
+            currViewConfig, 
+            ["cistrome-view-1", "cistrome-view-atac"], 
+            "gwas", 
+            [{ type: "filter", field: "MAPPED_TRAIT", oneOf: gwasOneOf, not: false}]
+        );
+        hgRef.current.api.setViewConfig(newViewConfig);
+    }, [gwasOneOf]);
+
     // HiGlassMeta APIs that can be called outside the library.
     useEffect(() => {
         ref.current = {
@@ -315,16 +336,16 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                 onRemoveAllSort: () => removeAllSort(),
                 addNewTrack: (trackDef, viewId, position) => addNewTrack(trackDef, viewId, position),
                 zoomTo: (keyword) => {
-                    if(!keyword.includes('chr') || !keyword.includes('-')) {
-                        console.warn('Genomic interval you entered is not in a correct format.');
+                    if(!keyword.includes("chr") || !keyword.includes("-")) {
+                        console.warn("Genomic interval you entered is not in a correct format.");
                         return;
                     }
-                    const chrStart = HG38_START_POSITIONS.find(d => d.chr === keyword.split(':')[0])?.position;
+                    const chrStart = HG38_START_POSITIONS.find(d => d.chr === keyword.split(":")[0])?.position;
                     if(typeof chrStart === undefined) {
-                        console.warn('Chromosome name is not valid', keyword.split(':')[0]);
+                        console.warn("Chromosome name is not valid", keyword.split(":")[0]);
                         return;
                     }
-                    const [s, e] = keyword.split(':')[1].split('-');
+                    const [s, e] = keyword.split(":")[1].split("-");
                     const start = +s + chrStart;
                     const end = +e + chrStart;
                     Array.from(new Set(multivecTrackIds.map(d => d.viewId))).map((viewId) => {
@@ -347,7 +368,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                     }
                 }
             }
-        }
+        };
     }, [ref, addNewTrack, multivecTrackIds]);
 
     const setSelectedRowsToViewConfig = useCallback((viewId, trackId, selectedRows) => {
@@ -396,10 +417,10 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
 
     // Listen for the `createSVG` event.
     useEffect(() => {
-        hgRef.current.api.on('createSVG', (svg) => {
+        hgRef.current.api.on("createSVG", (svg) => {
             return wrapSvg(svg, drawRef.current);
         });
-        return () => hgRef.current.api.off('createSVG');
+        return () => hgRef.current.api.off("createSVG");
     }, [hgRef, drawRef]);
     
     const removeAllFilters = useCallback(() => {
@@ -426,7 +447,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
             const { rowInfoAttributes } = getTrackWrapperOptions(options, viewId, trackId);
             const newRowInfoAttributes = rowInfoAttributes.map(fieldInfo => {
                 if(fieldInfo.field === field && fieldInfo.type === type) {
-                    return { ...fieldInfo, sort: order }
+                    return { ...fieldInfo, sort: order };
                 } else {
                     return fieldInfo;
                 }
@@ -455,7 +476,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
             return;
         }
         const { viewId, trackId } = multivecTrackIds[0];
-        const newRowAggregate = aggregateRowBy ? [{ field: aggregateRowBy, type: 'nominal', notOneOf: [] }] : [];
+        const newRowAggregate = aggregateRowBy ? [{ field: aggregateRowBy, type: "nominal", notOneOf: [] }] : [];
         const newOptions = updateWrapperOptions(options, newRowAggregate, "rowAggregate", viewId, trackId, { isReplace: true });
         setOptions(newOptions);
     }, [aggregateRowBy]);
@@ -487,7 +508,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
             if(type === "nominal" || type === "link") {
                 // Add elements of `notOneOf` in not already presented.
                 if(!fieldOption) {
-                    fieldOption = { field, type, notOneOf: [] }
+                    fieldOption = { field, type, notOneOf: [] };
                 }
                 const fieldOptionIndex = newSubOptions.indexOf(fieldOption);
                 condition.forEach(one => {
@@ -559,7 +580,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
     }, [options]);
     
     // Callback function for adding a track.
-    const onAddTrack = useCallback((viewId, trackId, field, type, notOneOf, position, selected = '') => {
+    const onAddTrack = useCallback((viewId, trackId, field, type, notOneOf, position, selected = "") => {
         if(viewId === DEFAULT_OPTIONS_KEY || trackId === DEFAULT_OPTIONS_KEY) {
             console.log("A view or track ID is a default ID.");
             return;
@@ -589,7 +610,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
             ...newTrackDef,
             height: 30,
             uid: newTrackId,
-            type: 'horizontal-stacked-bar',
+            type: "horizontal-stacked-bar",
             options: {
                 ...newTrackDef.options,
                 name: selected,
@@ -601,14 +622,14 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                 backgroundColor: "#F6F6F6",
                 colorScale: ["#B1B1B1"],
             }
-        }
+        };
         addNewTrack(newTrackDef, viewId, position);
         setOptions(newOptions);
     }, [options]);
 
     // Destroy the context menu upon any click.
     useEffect(() => {
-        const clickHandler = () => { destroyContextMenu() };
+        const clickHandler = () => { destroyContextMenu(); };
         document.addEventListener("click", clickHandler);
         return () => document.removeEventListener("click", clickHandler);
     }, []);
@@ -635,20 +656,20 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
 
     // Listen for higlass view config changes.
     useEffect(() => {
-        hgRef.current.api.on('viewConfig', (newViewConfigString) => {
+        hgRef.current.api.on("viewConfig", (newViewConfigString) => {
             const newViewConfig = JSON.parse(newViewConfigString);
             onViewConfig(newViewConfig);
         });
 
-        return () => hgRef.current.api.off('viewConfig');
+        return () => hgRef.current.api.off("viewConfig");
     }, [hgRef]);
 
     useEffect(() => {
-        hgRef.current.api.on('geneSearch', (e) => {
+        hgRef.current.api.on("geneSearch", (e) => {
             onGeneSearchCallBack(e.geneSymbol);
         });
 
-        return () => hgRef.current.api.off('geneSearch');
+        return () => hgRef.current.api.off("geneSearch");
     }, [hgRef]);
 
     // We only want to render HiGlass once.
@@ -720,12 +741,12 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                 const [left, top] = track.position;
                 const [w, h] = track.dimensions;
                 return (
-                    <div style={{ left: left + w - 20, top: top + 3, position: 'absolute', height: h }}
+                    <div key={i} style={{ left: left + w - 20, top: top + 3, position: "absolute", height: h }}
                         onClick={() => removeTrack(viewId, trackId)}
                     >
                         <svg
-                            className={'hm-button'}
-                            style={{ color: "rgb(121, 121, 121)", background: "none", height: '30px' }}
+                            className={"hm-button"}
+                            style={{ color: "rgb(121, 121, 121)", background: "none", height: "30px" }}
                             viewBox={THIN_CLOSE.viewBox}
                         >
                             <title>Remove Track</title>
@@ -734,6 +755,39 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                     </div>
                 );
             })}
+            {gwasTrackIds.map(({ viewId, trackId }, i) => {
+                const track = getTrackObject(viewId, trackId);
+                if(!track) {
+                    // did not find any track with the given viewid and trackId
+                    return;  
+                }
+
+                const [left, top] = track.position;
+                const [w, h] = track.dimensions;
+                return (
+                    <div key={i} style={{ left: left + w - 20, top: top, position: "absolute", height: h }}
+                        onClick={() => setShowGwasFilter(!showGwasFilter)}
+                    >
+                        <svg
+                            className={"hm-button"}
+                            style={{ color: "rgb(121, 121, 121)", background: "none", height: "30px" }}
+                            viewBox={FILTER.viewBox}
+                        >
+                            <title>Filter Traits</title>
+                            <path d={FILTER.path} fill="currentColor"/>
+                        </svg>
+                    </div>
+                );
+            })}
+            {!showGwasFilter ? null : (
+                <GwasFilter 
+                    top={100} 
+                    left={100} 
+                    oneOf={gwasOneOf} 
+                    onFilter={(oneOf) => setGwasOneOf(oneOf)}
+                    onClose={() => { setShowGwasFilter(false); }}
+                />
+            )}
             {Array.from(new Set(multivecTrackIds.map(d => d.viewId))).map((viewId, i) => (
                 <ViewWrapper
                     key={i}

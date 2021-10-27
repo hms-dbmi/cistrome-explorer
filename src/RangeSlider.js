@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
-import d3 from './utils/d3.js';
+import d3 from "./utils/d3.js";
 
 import "./RangeSlider.scss";
 
@@ -144,13 +144,13 @@ export default function RangeSlider(props) {
         const leftMover = leftMoverRef.current;
         const rightMover = rightMoverRef.current;
 
-        d3.select(leftMover).on("mouseenter", () => { selectedMover.current = "left" });
-        d3.select(rightMover).on("mouseenter", () => { selectedMover.current = "right" });
+        d3.select(leftMover).on("mouseenter", () => { selectedMover.current = "left"; });
+        d3.select(rightMover).on("mouseenter", () => { selectedMover.current = "right"; });
 
         return () => {
             d3.select(leftMover).on("mouseenter", null);
             d3.select(rightMover).on("mouseenter", null);
-        }
+        };
     }, [leftMoverRef, rightMoverRef]);
 
     function onHighlight(range) {
@@ -167,15 +167,15 @@ export default function RangeSlider(props) {
 
     function onKeyDown(e) {
         switch(e.key){
-            case 'Enter':
-                displayLeftCutoff(leftCutoff);
-                displayRightCutoff(rightCutoff);
-                onFilter([leftCutoff, rightCutoff]);
-                break;
-            case 'Esc':
-            case 'Escape':
-                onClose(); 
-                break;
+        case "Enter":
+            displayLeftCutoff(leftCutoff);
+            displayRightCutoff(rightCutoff);
+            onFilter([leftCutoff, rightCutoff]);
+            break;
+        case "Esc":
+        case "Escape":
+            onClose(); 
+            break;
         }
     }
 

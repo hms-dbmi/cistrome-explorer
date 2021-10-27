@@ -1,4 +1,4 @@
-import d3 from './d3.js';
+import d3 from "./d3.js";
 
 /**
  * Get aggregated values using specified function, such as a mean of quantitative values.
@@ -28,25 +28,25 @@ export function getAggregatedValue(rowInfo, field, type, func) {
         nominal: {
             mostCommon: values => {
                 const counts = {};
-                values.forEach(d => { counts[d] = 1 + (counts[d] || 0) });
+                values.forEach(d => { counts[d] = 1 + (counts[d] || 0); });
                 return Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
             },
             leastCommon: values => {
                 const counts = {};
-                values.forEach(d => { counts[d] = 1 + (counts[d] || 0) });
+                values.forEach(d => { counts[d] = 1 + (counts[d] || 0); });
                 return Object.keys(counts).reduce((a, b) => counts[a] < counts[b] ? a : b);
             },
             count: values => values.length,
             uniqueCount: values => Array.from(new Set(values)).length,
-            concat: values => Array.from(new Set(values)).join(', '),
-            default: values => Array.from(new Set(values)).join(', ')
+            concat: values => Array.from(new Set(values)).join(", "),
+            default: values => Array.from(new Set(values)).join(", ")
         },
         tree: {
             // `aggFunction` does not mean anything for `tree`.
             // TODO: How to best aggregate?
             default: d => d
         }
-    }
+    };
 
     const aggregatedValue = aggFuncMapping?.[type]?.[funcName];
     if(!aggregatedValue) {

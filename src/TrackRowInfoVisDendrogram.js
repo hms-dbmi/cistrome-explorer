@@ -5,11 +5,11 @@ import d3 from "./utils/d3.js";
 import Two from "./utils/two.js";
 import { EVENT, CONTEXT_MENU_TYPE } from "./utils/constants.js";
 import { drawVisTitle } from "./utils/vis.js";
-import { matrixToTree } from './utils/tree.js';
-import { SORT_TREE, HIGHLIGHTER } from './utils/icons.js';
-import { TooltipContent, destroyTooltip } from './Tooltip.js';
+import { matrixToTree } from "./utils/tree.js";
+import { SORT_TREE, HIGHLIGHTER } from "./utils/icons.js";
+import { TooltipContent, destroyTooltip } from "./Tooltip.js";
 import TrackRowInfoControl from "./TrackRowInfoControl.js";
-import { FILTER } from './utils/icons.js';
+import { FILTER } from "./utils/icons.js";
 import { drawRowHighlightRect } from "./utils/linking.js";
 
 /**
@@ -79,7 +79,7 @@ export default function TrackRowInfoVisDendrogram(props) {
     const visWidth = width - titleAreaWidth;
 
     const initialMinSimBarLeft = useMemo(() => {
-        return isLeft ? 20 : width - 20
+        return isLeft ? 20 : width - 20;
     }, [isLeft, width]);
 
     useEffect(() => {
@@ -144,7 +144,7 @@ export default function TrackRowInfoVisDendrogram(props) {
     const started = useCallback(() => {
         const event = d3.event;
         dragX.current = event.sourceEvent.clientX;
-    }, [dragX])
+    }, [dragX]);
 
     const ended = useCallback(() => {
         dragX.current = null;
@@ -208,7 +208,7 @@ export default function TrackRowInfoVisDendrogram(props) {
                         titleAreaWidth + d.y, top + d.x,
                         titleAreaWidth + d.parent.y, top + d.x
                     );
-                }
+                };
             } else {
                 pathFunction = (d) => {
                     if(filterInfo?.minSimilarity && d.parent.data.dist > filterInfo.minSimilarity) return null;
@@ -220,7 +220,7 @@ export default function TrackRowInfoVisDendrogram(props) {
                         visWidth - d.y, top + d.x,
                         visWidth - d.parent.y, top + d.x
                     );
-                }
+                };
             }
         } else {
             // TODO: Remove this part when we always encode similarity distance in dendrogram.
@@ -232,7 +232,7 @@ export default function TrackRowInfoVisDendrogram(props) {
                         titleAreaWidth + d.y, top + d.x,
                         titleAreaWidth + d.parent.y, top + d.x
                     );
-                }
+                };
             } else {
                 pathFunction = (d) => {
                     return two.makePath(
@@ -241,7 +241,7 @@ export default function TrackRowInfoVisDendrogram(props) {
                         visWidth - d.y, top + d.x + titleHeight + 30,
                         visWidth - d.parent.y, top + d.x + titleHeight + 30
                     );
-                }
+                };
             }
         }
         descendants.forEach((d, i) => {
@@ -263,7 +263,7 @@ export default function TrackRowInfoVisDendrogram(props) {
         }
 
         // if(!isShowControlButtons) {
-            drawVisTitle(field, { two, isLeft, width, height });
+        drawVisTitle(field, { two, isLeft, width, height });
         // }
 
         const points = descendants.map(pointFromNode);
@@ -293,12 +293,12 @@ export default function TrackRowInfoVisDendrogram(props) {
             .attr("width", visWidth)
             .attr("height", axisHeight + titleHeight)
             .append("g")
-                .attr("transform", `translate(${-1}, ${titleHeight})`)
-                .call(axis);
+            .attr("transform", `translate(${-1}, ${titleHeight})`)
+            .call(axis);
         
         d3.select(domElement)
             .selectAll("text")
-                .attr("transform", `translate(${isLeft ? -3 : 3}, 0)`);
+            .attr("transform", `translate(${isLeft ? -3 : 3}, 0)`);
 
         return () => { /* Teardown */ };
     });
@@ -449,7 +449,7 @@ export default function TrackRowInfoVisDendrogram(props) {
             ref={divRef}
             style={{
                 top: `${top}px`,
-                position: 'relative',
+                position: "relative",
                 width: `${width}px`,
                 height: `${height}px`,
             }}
@@ -497,22 +497,22 @@ export default function TrackRowInfoVisDendrogram(props) {
                 <div style={{
                     position: "absolute",
                     top: `${30}px`,
-                    left: '0px',
+                    left: "0px",
                     width: "100%",
-                    border: '1px dotted gray',
+                    border: "1px dotted gray",
                     height: "calc(100% - 30px)",
                     padding: "10px",
                     color: "gray",
                     fontWeight: "bold",
-                    overflow: 'auto'
+                    overflow: "auto"
                 }}>
                     Dendrogram is hidden since the ordering of leaf nodes does not align with the current row ordering.
                     <br/>
                     <br/> 
                     💡
-                    <span style={{fontStyle: 'italic', fontWeight: 'normal'}}>
+                    <span style={{fontStyle: "italic", fontWeight: "normal"}}>
                         {rowAggregated ? 
-                            <>To see the dendrogram, you need to first deactivate <span style={{color: '#2299DB'}}>Aggregate By Tissue</span>.</> : 
+                            <>To see the dendrogram, you need to first deactivate <span style={{color: "#2299DB"}}>Aggregate By Tissue</span>.</> : 
                             <>Click on the Sort button below to see the dendrogram.</>
                         }
                     </span>

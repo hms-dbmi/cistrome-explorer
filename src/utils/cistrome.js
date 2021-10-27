@@ -4,34 +4,34 @@ const SEARCH_ITEM_LIMIT = 999999;
  * Types for Cistrome DB Toolkit API.
  */
 export const CISTROME_API_TYPES = Object.freeze({
-    INTERVAL: 'INTERVAL',
-    GENE: 'GENE',
-    PEAKSET: 'PEAKSET'
+    INTERVAL: "INTERVAL",
+    GENE: "GENE",
+    PEAKSET: "PEAKSET"
 });
 
 /*
  * Color mapping for different types of Cistrome DB Toolkit API.
  */
 export const CISTROME_API_COLORS = Object.freeze({
-    INTERVAL: '#2C77B1',
-    GENE: '#D6641E',
-    PEAKSET: '#2B9F78'
+    INTERVAL: "#2C77B1",
+    GENE: "#D6641E",
+    PEAKSET: "#2B9F78"
 });
 
 /*
  * Options for the parameters of Cistrome DB APIs.
  */
 export const CISTROME_DBTOOLKIT_CHROMOSOMES = [
-    'chr1', 'chr2', 'chr3', 'chr4', 'chr5', 'chr6', 'chr7', 'chr8', 'chr9', 'chr10',
-    'chr11', 'chr12', 'chr13', 'chr14', 'chr15', 'chr16', 'chr17', 'chr18', 'chr19', 'chr20', 
-    'chr21', 'chr22', 'chrX', 'chrY',
+    "chr1", "chr2", "chr3", "chr4", "chr5", "chr6", "chr7", "chr8", "chr9", "chr10",
+    "chr11", "chr12", "chr13", "chr14", "chr15", "chr16", "chr17", "chr18", "chr19", "chr20", 
+    "chr21", "chr22", "chrX", "chrY",
 ];
 export const CISTROME_DBTOOLKIT_SPECIES = ["hg38", "mm10"];
-export const CISTROME_DBTOOLKIT_GENE_DISTANCE = ['1kb', '10kb', '100kb'];
+export const CISTROME_DBTOOLKIT_GENE_DISTANCE = ["1kb", "10kb", "100kb"];
 export const CISTROME_DBTOOLKIT_PEAK_NUMBERS = [
-    'Top 1k peaks according to peak enrichment',
-    'Top 10k peaks according to peak enrichment',
-    'All peaks in each sample'
+    "Top 1k peaks according to peak enrichment",
+    "Top 10k peaks according to peak enrichment",
+    "All peaks in each sample"
 ];
 
 export const CISTROME_DBTOOLKIT_MAX_INTERVAL_SIZE = 2000000;
@@ -54,14 +54,14 @@ export function getReadableTable(apiType, originalRows) {
             OverlapPeakNumber: "Overlap Peak Number",
         },
         [CISTROME_API_TYPES.GENE]: {
-            cellLine: 'Cell Line',
-            RP: 'Regulatory Potential',
+            cellLine: "Cell Line",
+            RP: "Regulatory Potential",
             DCid: "CistromeDB ID",
-            Tissue: 'Tissue',
-            CellType: 'CellType',
-            factor: 'Factor',
-            GSM: 'GEO/ENCODE ID',
-            species: 'Species'
+            Tissue: "Tissue",
+            CellType: "CellType",
+            factor: "Factor",
+            GSM: "GEO/ENCODE ID",
+            species: "Species"
         },
         [CISTROME_API_TYPES.PEAKSET]: {
             // TODO: Support Peak Set API
@@ -132,7 +132,7 @@ export function validateGeneParams({ assembly, gene, distance }) {
         msg = "No assembly value found.";
     } else if (!CISTROME_DBTOOLKIT_SPECIES.includes(assembly)) {
         msg = "Unsupported assembly encountered.";
-    } else if(!gene || gene === '') {
+    } else if(!gene || gene === "") {
         msg = "No gene name suggested.";
     } else if(!distance) {
         msg = "No distance suggested.";
@@ -192,7 +192,7 @@ export function makeDBToolkitIntervalAPIURL(assembly, chrStartName, chrStartPos,
  */
 export function makeDBToolkitGeneAPIURL(assembly, gene, distance) {
     // In API, 'b' is not included in the unit for distance, so here we are removing 'b' (e.g., 10kb => 10k)
-    return `http://dbtoolkit.cistrome.org/api_gene?species=${assembly}&factor=tf&transcript=${gene}&distance=${distance.replace('b', '')}`;
+    return `http://dbtoolkit.cistrome.org/api_gene?species=${assembly}&factor=tf&transcript=${gene}&distance=${distance.replace("b", "")}`;
 }
 
 /**
@@ -226,7 +226,7 @@ export function requestByInterval({ assembly, chrStartName, chrStartPos, chrEndN
     if(!validationSuccess) {
         return new Promise((resolve, reject) => {
             reject(validationMsg);
-        })
+        });
     }
 
     const dbToolkitAPIURL = makeDBToolkitIntervalAPIURL(assembly, chrStartName, chrStartPos, chrEndName, chrEndPos);
@@ -314,15 +314,15 @@ export function requestByPeakset({ assembly, tpeak, bedFile }) {
     // console.log(csrftoken);
 
     const formData = new FormData();
-    formData.append('csrfmiddlewaretoken', 'Xy1sb4N0NM7XUvaMejxinyXOSasJX6mS');
-    formData.append('species', 'hg38');
-    formData.append('factor', 'tf');
-    formData.append('tpeak', '1k');
-    formData.append('peak', bedFile);
+    formData.append("csrfmiddlewaretoken", "Xy1sb4N0NM7XUvaMejxinyXOSasJX6mS");
+    formData.append("species", "hg38");
+    formData.append("factor", "tf");
+    formData.append("tpeak", "1k");
+    formData.append("peak", bedFile);
 
-    return fetch('http://dbtoolkit.cistrome.org/api_similar', {
-        credentials: 'omit', // https://stackoverflow.com/a/50388440
-        method: 'post',
+    return fetch("http://dbtoolkit.cistrome.org/api_similar", {
+        credentials: "omit", // https://stackoverflow.com/a/50388440
+        method: "post",
         body: formData,
     })
         .then((response) => {
@@ -340,7 +340,7 @@ export function requestByPeakset({ assembly, tpeak, bedFile }) {
 
             return new Promise((resolve, reject) => {
                 if(keys.length === 0) {
-                    reject('No data found for the given bed file');
+                    reject("No data found for the given bed file");
                 }
                 // Generate data for table.
                 const rows = keys.map(k => data[k]);

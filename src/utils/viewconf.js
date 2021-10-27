@@ -1,9 +1,9 @@
-import cloneDeep from 'lodash/cloneDeep';
-import uuidv4 from 'uuid/v4';
+import cloneDeep from "lodash/cloneDeep";
+import uuidv4 from "uuid/v4";
 
-import { TRACK_TYPE } from './constants.js';
-import { insertItemToArray, removeItemFromArray } from './array.js';
-import { VIEWPORT_OPTIONS } from './viewport.js';
+import { TRACK_TYPE } from "./constants.js";
+import { insertItemToArray, removeItemFromArray } from "./array.js";
+import { VIEWPORT_OPTIONS } from "./viewport.js";
 
 /**
  * Execute a callback function for every view, track, and innerTrack in a view config object.
@@ -173,7 +173,7 @@ export function getTrackIdsFromViewConfig(viewConf, tag) {
 export function getSiblingVPHTrackIdsFromViewConfig(viewConf, targetViewId) {
     const matches = [];
     traverseViewConfig(viewConf, ({ viewId, trackPos, trackType, trackId }) => {
-        if(viewId === targetViewId && trackPos === 'whole' && trackType === TRACK_TYPE.VIEWPORT_PROJECTION_HORIZONTAL) {
+        if(viewId === targetViewId && trackPos === "whole" && trackType === TRACK_TYPE.VIEWPORT_PROJECTION_HORIZONTAL) {
             matches.push({ viewId, trackId });
         }
     });
@@ -194,14 +194,14 @@ export function removeViewportFromViewConfig(viewConfig, viewId, trackId) {
     const foundViewIndex = newViewConfig.views.findIndex(v => v.uid === viewId);
     const foundView = newViewConfig.views[foundViewIndex];
 
-    if(!foundView.tracks['whole']) {
+    if(!foundView.tracks["whole"]) {
         // There is no viewport projection horizontal track in this view.
         console.log(`There is no ${TRACK_TYPE.VIEWPORT_PROJECTION_HORIZONTAL} in a HiGlass view.`);
         return newViewConfig;
     }
-    if(foundView.tracks['whole'].find(d => d.uid === trackId)) {
-        const viewportIndex = foundView.tracks['whole'].findIndex(d => d.uid === trackId);
-        foundView.tracks['whole'] = removeItemFromArray(foundView.tracks['whole'], viewportIndex);
+    if(foundView.tracks["whole"].find(d => d.uid === trackId)) {
+        const viewportIndex = foundView.tracks["whole"].findIndex(d => d.uid === trackId);
+        foundView.tracks["whole"] = removeItemFromArray(foundView.tracks["whole"], viewportIndex);
         newViewConfig.views[foundViewIndex] = foundView;
     }
     return newViewConfig;
@@ -221,9 +221,32 @@ export function removeTopTrackFromViewConfig(viewConfig, viewId, trackId) {
     const foundViewIndex = newViewConfig.views.findIndex(v => v.uid === viewId);
     const foundView = newViewConfig.views[foundViewIndex];
 
-    if(foundView.tracks['top'] || foundView.tracks['top'].find(d => d.uid === trackId)) {
-        const trackIndex = foundView.tracks['top'].findIndex(d => d.uid === trackId);
-        foundView.tracks['top'] = removeItemFromArray(foundView.tracks['top'], trackIndex);
+    if(foundView.tracks["top"] || foundView.tracks["top"].find(d => d.uid === trackId)) {
+        const trackIndex = foundView.tracks["top"].findIndex(d => d.uid === trackId);
+        foundView.tracks["top"] = removeItemFromArray(foundView.tracks["top"], trackIndex);
+        newViewConfig.views[foundViewIndex] = foundView;
+        return newViewConfig;
+    }
+    return newViewConfig;
+}
+
+/**
+ * This function updates `DataTransform` of a gosling track from a view config.
+ * @param {object} viewConfig The current HiGlass view config.
+ * @param {string} viewIds The uids of view containing the `viewport-horizontal` track that was the target of the action.
+ * @param {string} trackId The uid of the `viewport-horizontal` track that was the target of the action.
+ * @returns {object} The updated HiGlass view config.
+ */
+export function setDataTransformOfTopTrackFromViewConfig(viewConfig, viewIds, trackId, spec) {
+    const newViewConfig = cloneDeep(viewConfig);
+
+    // Find the view associated with this viewId.
+    const foundViewIndex = newViewConfig.views.findIndex(v => viewIds.indexOf(v.uid) !== -1);
+    const foundView = newViewConfig.views[foundViewIndex];
+
+    if(foundView.tracks["top"] && foundView.tracks["top"].find(d => d.uid === trackId)) {
+        const trackIndex = foundView.tracks["top"].findIndex(d => d.uid === trackId);
+        foundView.tracks["top"][trackIndex].options.spec["dataTransform"] = spec;
         newViewConfig.views[foundViewIndex] = foundView;
         return newViewConfig;
     }
@@ -254,13 +277,13 @@ export function updateViewConfigOnSelectGenomicInterval(viewConfig, viewId, star
 
     const newUid = `${foundView.uid}-${uid}`;
     
-    if(!foundView.tracks['whole']) {
-        foundView.tracks['whole'] = [];
+    if(!foundView.tracks["whole"]) {
+        foundView.tracks["whole"] = [];
     }
-    if(foundView.tracks['whole'].find(d => d.uid === newUid)) {
-        const projIndex = foundView.tracks['whole'].findIndex(d => d.uid === newUid);
-        foundView.tracks['whole'][projIndex] = {
-            ...foundView.tracks['whole'][projIndex],
+    if(foundView.tracks["whole"].find(d => d.uid === newUid)) {
+        const projIndex = foundView.tracks["whole"].findIndex(d => d.uid === newUid);
+        foundView.tracks["whole"][projIndex] = {
+            ...foundView.tracks["whole"][projIndex],
             projectionXDomain: xDomain
         };
     } else {
@@ -270,8 +293,8 @@ export function updateViewConfigOnSelectGenomicInterval(viewConfig, viewId, star
             fromViewUid: null,
             projectionXDomain: xDomain,
             options: VIEWPORT_OPTIONS["black"]
-        }
-        foundView.tracks['whole'].push(newProjectionTrackDef);
+        };
+        foundView.tracks["whole"].push(newProjectionTrackDef);
         newViewConfig.views[foundViewIndex] = foundView;
     }
 
@@ -361,7 +384,7 @@ export function getUniqueViewOrTrackId(viewConfig, { baseId, idKey, interfix }) 
                 if(d[idKey] === `${newId}-${suffixNum}`) {
                     isNotUnique = true;
                 }
-            })
+            });
             suffixNum++;
         }
         newId += `-${(suffixNum - 1)}`;

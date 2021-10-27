@@ -2,10 +2,10 @@
 
 import { 
     getNumOfTracks
-} from './layout.js';
+} from "./layout.js";
 
-describe('Functions for calculating the number of tracks that should be visualized', () => {
-    it('Should correctly calculate the number of tracks to visualize', () => {
+describe("Functions for calculating the number of tracks that should be visualized", () => {
+    it("Should correctly calculate the number of tracks to visualize", () => {
         let isLeft = false;
         let resolveYScales = [];
         let numTracks = getNumOfTracks(isLeft, resolveYScales);

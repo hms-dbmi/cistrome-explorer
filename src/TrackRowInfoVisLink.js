@@ -7,7 +7,7 @@ import Two from "./utils/two.js";
 import { EVENT } from "./utils/constants.js";
 import { drawVisTitle } from "./utils/vis.js";
 import { TooltipContent, destroyTooltip } from "./Tooltip.js";
-import TrackRowInfoControl from './TrackRowInfoControl.js';
+import TrackRowInfoControl from "./TrackRowInfoControl.js";
 import { getAggregatedValue } from "./utils/aggregate.js";
 import { drawRowHighlightRect } from "./utils/linking.js";
 
@@ -41,7 +41,7 @@ const margin = 5;
 export default function TrackRowInfoVisLink(props) {
     const {
         left, top, width, height, titleHeight,
-        field, type, alt, title, aggFunction, resolveYScale, shortName = 'Link', addTrackOnClick,
+        field, type, alt, title, aggFunction, resolveYScale, shortName = "Link", addTrackOnClick,
         isLeft,
         isShowControlButtons,
         rowInfo,
@@ -121,7 +121,7 @@ export default function TrackRowInfoVisLink(props) {
         );
 
         // if(!isShowControlButtons) {
-            drawVisTitle(title, { two, isLeft, width, height, titleSuffix });
+        drawVisTitle(title, { two, isLeft, width, height, titleSuffix });
         // }
         
         two.update();
@@ -175,8 +175,8 @@ export default function TrackRowInfoVisLink(props) {
                 if(addTrackOnClick) {
                     const notOneOf = transformedRowInfo.map(d => aggValue(d, field));
                     notOneOf.splice(notOneOf.indexOf(hoverValue), 1);
-                    onAddTrack(field, "nominal", notOneOf, "top", hoverValue)
-                    console.log()
+                    onAddTrack(field, "nominal", notOneOf, "top", hoverValue);
+                    console.log();
                 }
                 else {
                     window.open(hoverValue);
@@ -202,7 +202,7 @@ export default function TrackRowInfoVisLink(props) {
             ref={divRef}
             style={{
                 top: `${top}px`,
-                position: 'relative',
+                position: "relative",
                 width: `${width}px`,
                 height: `${height}px`
             }}
@@ -214,8 +214,8 @@ export default function TrackRowInfoVisLink(props) {
                     left: 0, 
                     width: `${width}px`,
                     height: `${height}px`,
-                    position: 'relative',
-                    cursor: 'pointer'
+                    position: "relative",
+                    cursor: "pointer"
                 }}
             />
             <TrackRowInfoControl

@@ -1,6 +1,6 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef } from "react";
 
-import { InfoProvider } from './utils/contexts.js';
+import { InfoProvider } from "./utils/contexts.js";
 import HiGlassMetaConsumer from "./HiGlassMetaConsumer.js";
 
 /**
@@ -23,6 +23,6 @@ const HiGlassMeta = forwardRef((props, ref) => {
             <HiGlassMetaConsumer ref={ref} {...props} />
         </InfoProvider>
     );
-})
+});
 
 export default HiGlassMeta;

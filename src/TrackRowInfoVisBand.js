@@ -5,10 +5,10 @@ import { HIGHLIGHTING_COLOR } from "./utils/linking.js";
 
 /* TODO: Add these to HiGlassMeta options. */
 const BAND_TYPE = [
-    'band',
-    'line',
-    'curved-band',
-    'curved-line'
+    "band",
+    "line",
+    "curved-band",
+    "curved-line"
 ][1];
 const POINT_RADIUS = 0;
 const TRACK_PADDING = 0;
@@ -60,7 +60,7 @@ export default function TrackRowInfoVisBand(props) {
         const bandColor = (i) => highlitRows?.indexOf(i) !== -1 ? HIGHLIGHTING_COLOR : "lightgray";
         const lineWidth = (i) => highlitRows?.indexOf(i) !== -1 ? 2 : 1;
         const renderBand = {
-            'band': (i) => {
+            "band": (i) => {
                 const band = two.makePath(
                     TRACK_PADDING, yScaleLeft(i),
                     TRACK_PADDING + BAND_PADDING, yScaleLeft(i),
@@ -70,13 +70,13 @@ export default function TrackRowInfoVisBand(props) {
                     width - BAND_PADDING - TRACK_PADDING, yScaleRight(i) + bandWidth,
                     TRACK_PADDING + BAND_PADDING, yScaleLeft(i) + bandWidth,
                     TRACK_PADDING, yScaleLeft(i) + bandWidth,
-                )
+                );
                 band.fill = bandColor(i);
                 band.stroke = "transparent";
                 band.linewidth = 1;
                 band.opacity = 0.4;
             },
-            'line': (i) => {
+            "line": (i) => {
                 if(BAND_PADDING !== 0) {
                     const lineStart = two.makeLine(
                         TRACK_PADDING, 
@@ -121,7 +121,7 @@ export default function TrackRowInfoVisBand(props) {
                     pointRight.opacity = 0.5;
                 }
             }
-        }
+        };
 
         // line connections
         if(leftSelectedRows && rightSelectedRows) {
@@ -160,7 +160,7 @@ export default function TrackRowInfoVisBand(props) {
             ref={divRef}
             style={{
                 top: `${top}px`,
-                position: 'relative',
+                position: "relative",
                 width: `${width}px`,
                 height: `${height}px`,
             }}
@@ -172,7 +172,7 @@ export default function TrackRowInfoVisBand(props) {
                     left: 0, 
                     width: `${width}px`,
                     height: `${height}px`,
-                    position: 'relative'
+                    position: "relative"
                 }}
             />
         </div>
