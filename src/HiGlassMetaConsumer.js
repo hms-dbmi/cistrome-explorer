@@ -89,13 +89,15 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
 
     const hgRef = useRef();
     const drawRef = useRef({});
-
+    const gwasFilterPosition = useRef({ left: 100, top: 100 });
+    
     const [options, setOptions] = useState(processWrapperOptions(baseOptions));
     const [multivecTrackIds, setMultivecTrackIds] = useState([]);
     const [viewportTrackIds, setViewportTrackIds] = useState({});
     const [stackedBarTrackIds, setStackedBarTrackIds] = useState([]);
     const [gwasTrackIds, setGwasTrackIds] = useState([]);
     const [showGwasFilter, setShowGwasFilter] = useState(false);
+    const [gwasFilterSearchKeyword, setGwasFilterSearchKeyword] = useState("");
     const [gwasOneOf, setGwasOneOf] = useState(TRAITS);
     const [isWheelListening, setIsWheelListening] = useState(false);
     
@@ -122,7 +124,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
 
             multivecTrackIds.forEach(({ viewId }) => {
                 const trackSpec = {
-                    type: "gemini-track",
+                    type: "gosling-track",
                     uid: uuidv4() + REMOVE_ALLOWED_TAG_TRACKID,
                     options: {
                         showMousePosition: true,
@@ -764,6 +766,9 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
 
                 const [left, top] = track.position;
                 const [w, h] = track.dimensions;
+
+                gwasFilterPosition.current = { left: left + w + 20, top };
+
                 return (
                     <div key={i} style={{ left: left + w - 20, top: top, position: "absolute", height: h }}
                         onClick={() => setShowGwasFilter(!showGwasFilter)}
@@ -781,8 +786,10 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
             })}
             {!showGwasFilter ? null : (
                 <GwasFilter 
-                    top={100} 
-                    left={100} 
+                    top={gwasFilterPosition.current.top} 
+                    left={gwasFilterPosition.current.left} 
+                    keyword={gwasFilterSearchKeyword}
+                    onKeywordChange={(keyword) => setGwasFilterSearchKeyword(keyword)}
                     oneOf={gwasOneOf} 
                     onFilter={(oneOf) => setGwasOneOf(oneOf)}
                     onClose={() => { setShowGwasFilter(false); }}

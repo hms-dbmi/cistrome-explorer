@@ -11,18 +11,18 @@ export default function GwasFilter(props) {
         top,
         left,
         oneOf,
+        keyword,
+        onKeywordChange: setKeyword,
         onFilter,
         onClose,
     } = props;
 
     const moverRef = useRef();
     const keywordInputRef = useRef();
-    const [keyword, setKeyword] = useState("");
     const [suggestionIndex, setSuggestionIndex] = useState(undefined);
     const [offset, setOffset] = useState({x: 0, y: 0});
     const dragStartPos = useRef(null);
     const keywordUpperCase = keyword.toUpperCase();
-    // const [notOneOf, setNotOneOf] = useState([]); 
     
     // Styles
     const width = 180;
@@ -122,7 +122,7 @@ export default function GwasFilter(props) {
     function onSuggestionEnter(oneOfNotOneOf) {
         const isRemove = oneOf.indexOf(oneOfNotOneOf) !== -1;
         onFilter(isRemove ? oneOf.filter(d => d !== oneOfNotOneOf) : [...oneOf, oneOfNotOneOf]);
-        setKeyword("");
+        // setKeyword("");
     }
 
     function suggestionIndexIncrement() {
@@ -220,8 +220,8 @@ export default function GwasFilter(props) {
             className="hm-filter"
             style={{
                 display: ((left !== null && top !== null) ? "flex" : "none"),
-                left: left - (width + padding * 2) / 2 + offset.x,
-                top: top - (height + padding * 2) - 80 + offset.y,
+                left: left + offset.x,
+                top: top + offset.y,
             }}
         >
             <div className="hm-filter-box"
