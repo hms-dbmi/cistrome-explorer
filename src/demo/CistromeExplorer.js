@@ -61,9 +61,19 @@ export default function CistromeExplorer() {
                 const rows = event.target.result.split("\n");
                 rows.forEach(row => {
                     const obj = {};
+                    if(row.indexOf("\t") === -1) {
+                        // This could be the last line with no information
+                        return;
+                    }
                     row.split("\t").forEach((v, i) => {
                         obj["column" + (i + 1)] = v;
                     });
+
+                    // check whether chr names are parsable
+                    const chr = obj.column1;
+                    if(!chr) return;
+                    const c = chr.replace('chr', '');
+                    if(!((1 <= +c && +c <= 22) || c === 'x' || c === 'X' || c === 'y' || c === 'Y')) return;
                     data.push(obj);
                 });
                 setLocalBed({ data, name: fileReader.fileName });
