@@ -46,6 +46,7 @@ import { removeItemFromArray, modifyItemInArray, insertItemToArray } from "./uti
 import { CLOSE, THIN_CLOSE, FILTER } from "./utils/icons.js";
 import { HG38_START_POSITIONS } from "./utils/chromsizes.js";
 import {TRAITS} from "./utils/gwas.js";
+import {theme} from "./viewconfigs/horizontal-multivec-1.js";
 
 const hgOptionsBase = {
     sizeMode: "bounded", // Stretch the height of HiGlass to its container <div/>
@@ -120,7 +121,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         if(localBEDFile !== null && localBEDFile.data !== null) {
             
             // DEBUG
-            console.log("updated:", localBEDFile);
+            // console.log("updated:", localBEDFile);
 
             multivecTrackIds.forEach(({ viewId }) => {
                 const trackSpec = {
@@ -140,8 +141,16 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                         labelRightMargin: 0,
                         labelTopMargin: 2,
                         labelBottomMargin: 0,
+                        theme: theme,
                         spec: {
-                            superpose: [
+                            data: {
+                                type: "json",
+                                values: localBEDFile.data,
+                                chromosomeField: "column1",
+                                genomicFields: ["column2", "column3"],
+                                quantitativeFields: ["column5"],
+                            },
+                            overlay: [
                                 {mark: "point", size: { value: 3 }},
                                 {mark: "bar", size: { value: 1 }},
                             ],
@@ -154,7 +163,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                                 field: "column3",
                                 type: "genomic"
                             },
-                            y: {field: "column5", type: "quantitative"},
+                            y: {field: "column5", type: "quantitative", axis: 'right'},
                             opacity: { value: 0.7 },
                             // strokeWidth: {value: 1},
                             // stroke: {value: "#F28E2C"},
@@ -169,7 +178,6 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                         chromosomeField: "column1",
                         genomicFields: ["column2", "column3"],
                         quantitativeFields: ["column5"],
-                        
                     },
                     height: 30
                 };
