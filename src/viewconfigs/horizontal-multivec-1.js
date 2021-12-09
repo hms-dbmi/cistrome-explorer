@@ -119,11 +119,12 @@ export const hgDemoViewConfig1 = {
                                     axis: "none",
                                 },
                                 size: { field: "PVALUE_MLOG", type: "quantitative" },
-                                color: {
-                                    field: "PVALUE_MLOG",
-                                    type: "quantitative",
-                                    range: "warm",
-                                },
+                                //color: {
+                                //    field: "PVALUE_MLOG",
+                                //    type: "quantitative",
+                                //    range: "warm",
+                                //},
+                                color: { value: 'gray' },
                                 tooltip: [
                                     { field: "MAPPED_TRAIT", type: "nominal", alt: "Trait" },
                                     { field: "LINK", type: "nominal", alt: "Link" },
@@ -315,8 +316,8 @@ export const hgDemoViewConfig1 = {
                         tilesetUid: "P0PLbQMwTYGy-5uPIQid7A",
                         uid: "gene-labels-track-1",
                         options: {
-                            plusStrandColor: "#004FA5",
-                            minusStrandColor: "#E10003",
+                            plusStrandColor: "gray", // "#004FA5",
+                            minusStrandColor: "gray", // "#E10003",
                             showMousePosition: true,
                             mousePositionColor: "#000000",
                             trackBorderWidth: 0,

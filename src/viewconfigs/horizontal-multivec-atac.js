@@ -120,9 +120,7 @@ export const hgDemoViewConfigAtac ={
                                 },
                                 size: { field: "PVALUE_MLOG", type: "quantitative" },
                                 color: {
-                                    field: "PVALUE_MLOG",
-                                    type: "quantitative",
-                                    range: "warm",
+                                    value: 'gray'
                                 },
                                 tooltip: [
                                     { field: "MAPPED_TRAIT", type: "nominal", alt: "Trait" },
@@ -314,8 +312,8 @@ export const hgDemoViewConfigAtac ={
                         "tilesetUid": "P0PLbQMwTYGy-5uPIQid7A",
                         "uid": "gene-labels-track-atac",
                         "options": {
-                            "plusStrandColor": "#004FA5",
-                            "minusStrandColor": "#E10003",
+                            "plusStrandColor": "gray",
+                            "minusStrandColor": "gray",
                             "showMousePosition": true,
                             "mousePositionColor": "#000000",
                             "trackBorderWidth": 0,
