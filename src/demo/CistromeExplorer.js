@@ -17,6 +17,7 @@ import "./CistromeExplorer.scss";
 
 import StackedBarTrack from "higlass-multivec/es/StackedBarTrack";
 import ScaleLegendTrack from "../scale-legend/ScaleLegendTrack";
+import CistromeBigWigDataFetcher from "../cistrome-data";
 import { default as higlassRegister } from "higlass-register";
 import gosling from "gosling.js";
 
@@ -32,6 +33,12 @@ higlassRegister({
     name: "ScaleLegendTrack",
     track: ScaleLegendTrack,
     config: ScaleLegendTrack.config,
+});
+
+higlassRegister({
+    name: "CistromeBigWigDataFetcher",
+    track: CistromeBigWigDataFetcher,
+    config: CistromeBigWigDataFetcher.config,
 });
 
 export default function CistromeExplorer() {
@@ -72,8 +79,8 @@ export default function CistromeExplorer() {
                     // check whether chr names are parsable
                     const chr = obj.column1;
                     if(!chr) return;
-                    const c = chr.replace('chr', '');
-                    if(!((1 <= +c && +c <= 22) || c === 'x' || c === 'X' || c === 'y' || c === 'Y')) return;
+                    const c = chr.replace("chr", "");
+                    if(!((1 <= +c && +c <= 22) || c === "x" || c === "X" || c === "y" || c === "Y")) return;
                     data.push(obj);
                 });
                 setLocalBed({ data, name: fileReader.fileName });

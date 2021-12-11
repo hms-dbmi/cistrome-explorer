@@ -42,6 +42,45 @@ export const hgDemoViewConfig1 = {
                         height: 25,
                     },
                     {
+                        "data": {
+                            "type": "cistrome-bigwig",
+                            "cid": "1",
+                            "url": "http://dbtoolkit.cistrome.org/api_bigwig?sid=1",
+                            "chromSizesUrl": "https://aveit.s3.amazonaws.com/higlass/data/sequence/hg38.chrom.sizes",
+                        },
+                        "type": "gosling-track",
+                        "options": {
+                            spec: {
+                                mark: 'bar',
+                                x: { field: 'position', type: 'genomic' },
+                                y: { field: 'value', type: 'quantitative' },
+                                width: 100,
+                                height: 30
+                            },
+                            "labelPosition": "topLeft",
+                            "labelColor": "black",
+                            "labelTextOpacity": 0.6,
+                            "barBorder": false,
+                            "valueScaling": "linear",
+                            "labelTopMargin": 2,
+                            "labelLeftMargin": 4,
+                            "labelBottomMargin": 0,
+                            "labelRightMargin": 0,
+                            "labelBackgroundColor": "#F6F6F6",
+                            "labelShowResolution": false,
+                            "backgroundColor": "#F6F6F6",
+                            "minHeight": 100,
+                            "colorbarPosition": "hidden",
+                            "colorScale": ["gray"],
+                            "zeroValueColor": "white",
+                            "showMousePosition": true,
+                            "mousePositionColor": "#000000",
+                            "name": "Cistrome Track Using API"
+                        },
+                        "width": 100,
+                        "height": 40  
+                    },
+                    {
                         type: "horizontal-chromosome-labels",
                         server: "https://higlass.io/api/v1",
                         tilesetUid: "NyITQvZsS_mOFNlz5C2LJg",
@@ -124,7 +163,7 @@ export const hgDemoViewConfig1 = {
                                 //    type: "quantitative",
                                 //    range: "warm",
                                 //},
-                                color: { value: 'gray' },
+                                color: { value: "gray" },
                                 tooltip: [
                                     { field: "MAPPED_TRAIT", type: "nominal", alt: "Trait" },
                                     { field: "LINK", type: "nominal", alt: "Link" },
