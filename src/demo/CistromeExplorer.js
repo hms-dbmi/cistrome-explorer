@@ -17,8 +17,12 @@ import "./CistromeExplorer.scss";
 
 import StackedBarTrack from "higlass-multivec/es/StackedBarTrack";
 import ScaleLegendTrack from "../scale-legend/ScaleLegendTrack";
+import CistromeBigWigDataFetcher from "../cistrome-api/bigwig";
 import { default as higlassRegister } from "higlass-register";
 import gosling from "gosling.js";
+
+import {theme} from "../viewconfigs/horizontal-multivec-1.js";
+import { REMOVE_ALLOWED_TAG_TRACKID } from "../HiGlassMetaConsumer";
 
 gosling.init();
  
@@ -33,6 +37,11 @@ higlassRegister({
     track: ScaleLegendTrack,
     config: ScaleLegendTrack.config,
 });
+
+higlassRegister(
+    { dataFetcher: CistromeBigWigDataFetcher, config: CistromeBigWigDataFetcher.config },
+    { pluginType: "dataFetcher" }
+);
 
 export default function CistromeExplorer() {
     
@@ -72,8 +81,8 @@ export default function CistromeExplorer() {
                     // check whether chr names are parsable
                     const chr = obj.column1;
                     if(!chr) return;
-                    const c = chr.replace('chr', '');
-                    if(!((1 <= +c && +c <= 22) || c === 'x' || c === 'X' || c === 'y' || c === 'Y')) return;
+                    const c = chr.replace("chr", "");
+                    if(!((1 <= +c && +c <= 22) || c === "x" || c === "X" || c === "y" || c === "Y")) return;
                     data.push(obj);
                 });
                 setLocalBed({ data, name: fileReader.fileName });
@@ -150,6 +159,60 @@ export default function CistromeExplorer() {
             },
             height: 200,
         }, firstViewUid, "top");
+    }, [addNewTrack, selectedDemo]);
+
+    // Callback function for adding a cistrome track from toolkit.
+    const onAddToolkitTrack = useCallback((cid, gsm) => {
+        const viewId = demos[selectedDemo].viewConfig.views[0].uid;
+        const newTrackDef = {
+            "data": {
+                "type": "cistrome-bigwig",
+                cid,
+                "chromSizesUrl": "https://aveit.s3.amazonaws.com/higlass/data/sequence/hg38.chrom.sizes",
+            },
+            uid: "cistrome-" + cid + REMOVE_ALLOWED_TAG_TRACKID,
+            "type": "gosling-track",
+            "options": {
+                showMousePosition: true,
+                mousePositionColor: "black",
+                name: `Cistrome ID ${cid} | ${gsm}`,
+                labelPosition: "topLeft",
+                fontSize: 12,
+                labelColor: "black",
+                labelShowResolution: false,
+                labelBackgroundColor: "#F6F6F6",
+                labelTextOpacity: 0.6,
+                labelLeftMargin: 4,
+                labelRightMargin: 0,
+                labelTopMargin: 2,
+                labelBottomMargin: 0,
+                backgroundColor: "transparent",
+                theme, 
+                spec: {
+                    "data": {
+                        "type": "cistrome-bigwig",
+                        "cid": "870",
+                        "chromSizesUrl": "https://aveit.s3.amazonaws.com/higlass/data/sequence/hg38.chrom.sizes",
+                    },
+                    mark: "bar",
+                    x: { field: "start", type: "genomic" },
+                    xe: { field: "end", type: "genomic" },
+                    y: { field: "value", type: "quantitative", axis: "none" },
+                    color: { value: "#22908D" },
+                    tooltip: [
+                        { field: "start", type: "genomic" },
+                        { field: "end", type: "genomic" },
+                        { field: "value", type: "quantitative" },
+                    ],
+                    style: { outlineWidth: 0 }, // background: "gray" },
+                    width: 100,
+                    height: 30
+                },
+            },
+            "width": 100,
+            "height": 40
+        };
+        addNewTrack(newTrackDef, viewId, "top");
     }, [addNewTrack, selectedDemo]);
 
     // Drag event for resizing heatmaps
@@ -551,7 +614,7 @@ export default function CistromeExplorer() {
                         isVisible={isToolkitVisible}
                         intervalAPIParams={toolkitParams}
                         geneAPIParams={geneToolkitParams}
-                        onAddTrack={onAddTrack}
+                        onAddTrack={onAddToolkitTrack}
                     />
                 </div>
                 <div className="settings" style={{

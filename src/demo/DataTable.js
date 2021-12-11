@@ -184,13 +184,19 @@ export default function DataTable(props) {
             ) : null);
             const dataCells = columns.map((c, j) => {
                 return (
-                    <td key={j}>
+                    <td key={j} >
                         {expoNotations.includes(c) && +d[c] ? Number.parseFloat(d[c]).toExponential(2) : d[c]}
                     </td>
                 );
             });
+            const cid = d["CistromeDB ID"];
+            const gsm = d["GEO/ENCODE ID"];
             return (
-                <tr key={i} className={"data-table-row"}>
+                <tr 
+                    key={i} 
+                    className={"data-table-row"}
+                    onClick={() => { if(cid) onButton(cid, gsm) }}
+                >
                     {/* {buttonCell} */}
                     {dataCells}
                 </tr>
@@ -235,34 +241,6 @@ export default function DataTable(props) {
                     gridColumnGap: 6
                 }}
             >
-                <span 
-                    style={{
-                        textAlign: "left",
-                        fontWeight: 600,
-                        color: "gray",
-                        cursor: "not-allowed"
-                    }}
-                    // onClick={() => onButton({
-                    //     Factor: selectedFactor,
-                    //     Species: 'Homo sapiens'
-                    // })}
-                >
-                    <select 
-                        onChange={e => { setSelectedFactor(e.target.value); }} 
-                        defaultValue={uniqueFactors[0]}
-                    >
-                        {uniqueFactors.map(factor => (
-                            <option 
-                                key={factor} 
-                                value={factor} 
-                            >
-                                {factor}
-                            </option>
-                        ))}
-                    </select>
-                    &nbsp;&nbsp;
-                    {"  Add samples to visualization"}
-                </span>
                 <div 
                     style={{
                         textAlign: "right",

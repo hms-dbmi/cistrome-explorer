@@ -10,6 +10,12 @@
     thead {
         border-bottom: 1px solid black;
     }
+    .data-table-row {
+        cursor: pointer;
+    }
+    .data-table-row:hover {
+        background: #e2f1ff;
+    }
     .data-table-row-selected {
         outline: 1px solid #00a3fe;
         background: #e2f1ff;

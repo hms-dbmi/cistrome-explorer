@@ -163,7 +163,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
                                 field: "column3",
                                 type: "genomic"
                             },
-                            y: {field: "column5", type: "quantitative", axis: 'right'},
+                            y: {field: "column5", type: "quantitative", axis: "right"},
                             opacity: { value: 0.7 },
                             // strokeWidth: {value: 1},
                             // stroke: {value: "#F28E2C"},
@@ -637,6 +637,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         setOptions(newOptions);
     }, [options]);
 
+    
     // Destroy the context menu upon any click.
     useEffect(() => {
         const clickHandler = () => { destroyContextMenu(); };

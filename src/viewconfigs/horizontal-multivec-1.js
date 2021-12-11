@@ -124,7 +124,7 @@ export const hgDemoViewConfig1 = {
                                 //    type: "quantitative",
                                 //    range: "warm",
                                 //},
-                                color: { value: 'gray' },
+                                color: { value: "gray" },
                                 tooltip: [
                                     { field: "MAPPED_TRAIT", type: "nominal", alt: "Trait" },
                                     { field: "LINK", type: "nominal", alt: "Link" },
@@ -339,6 +339,57 @@ export const hgDemoViewConfig1 = {
                         },
                         height: 78,
                     },
+                    // {
+                    //     "data": {
+                    //         "type": "cistrome-bigwig",
+                    //         "cid": "1",
+                    //         // "url": "http://dbtoolkit.cistrome.org/api_bigwig?sid=1",
+                    //         "chromSizesUrl": "https://aveit.s3.amazonaws.com/higlass/data/sequence/hg38.chrom.sizes",
+                    //     },
+                    //     "uid": "bw-allow-remove-",
+                    //     "type": "gosling-track",
+                    //     "options": {
+                    //         showMousePosition: true,
+                    //         mousePositionColor: "black",
+                    //         name: "hg38 | GWAS",
+                    //         labelPosition: "topLeft",
+                    //         fontSize: 12,
+                    //         labelColor: "black",
+                    //         labelShowResolution: false,
+                    //         labelBackgroundColor: "#F6F6F6",
+                    //         labelTextOpacity: 0.6,
+                    //         labelLeftMargin: 4,
+                    //         labelRightMargin: 0,
+                    //         labelTopMargin: 2,
+                    //         labelBottomMargin: 0,
+                    //         backgroundColor: "transparent",
+                    //         theme, 
+                    //         spec: {
+                    //             "data": {
+                    //                 "type": "cistrome-bigwig",
+                    //                 "cid": "870",
+                    //                 // "url": "http://dbtoolkit.cistrome.org/api_bigwig?sid=1",
+                    //                 "chromSizesUrl": "https://aveit.s3.amazonaws.com/higlass/data/sequence/hg38.chrom.sizes",
+                    //             },
+                    //             mark: "bar",
+                    //             x: { field: "start", type: "genomic" },
+                    //             xe: { field: "end", type: "genomic" },
+                    //             y: { field: "value", type: "quantitative", axis: "none" },
+                    //             color: { value: "#22908D" },
+                    //             tooltip: [
+                    //                 { field: "start", type: "genomic" },
+                    //                 { field: "end", type: "genomic" },
+                    //                 { field: "value", type: "quantitative" },
+                    //             ],
+                    //             style: { outlineWidth: 0 }, // background: "gray" },
+                    //             width: 100,
+                    //             height: 30
+                    //         },
+                    //     },
+                    //     "width": 100,
+                    //     "height": 40
+                    // },
+ 
                     {
                         type: "horizontal-stacked-bar",
                         uid: "cistrome-track-1-aggregated",
