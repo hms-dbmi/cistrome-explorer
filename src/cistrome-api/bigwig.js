@@ -274,7 +274,6 @@ const CistromeBigWigDataFetcher = function CistromeBigWigDataFetcher(HGC, ...arg
                     });
 
                     tile.tabularData = values;
-                    console.log(values);
                     return tile;
                 });
             });
