@@ -120,7 +120,7 @@ export const hgDemoViewConfigAtac ={
                                 },
                                 size: { field: "PVALUE_MLOG", type: "quantitative" },
                                 color: {
-                                    value: 'gray'
+                                    value: "gray"
                                 },
                                 tooltip: [
                                     { field: "MAPPED_TRAIT", type: "nominal", alt: "Trait" },
