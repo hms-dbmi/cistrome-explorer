@@ -1,6 +1,3 @@
-import slugid from "slugid";
-import { BigWig } from "@gmod/bbi";
-import { RemoteFile } from "generic-filehandle";
 import { tsvParseRows } from "d3-dsv";
 import { text } from "d3-request";
 
@@ -74,7 +71,6 @@ const CistromeBigWigDataFetcher = function CistromeBigWigDataFetcher(HGC, ...arg
     class CistromeBigWigDataFetcherClass {
         constructor(dataConfig) {
             this.dataConfig = dataConfig;
-            this.trackUid = slugid.nice();
             this.bwFileHeader = null;
             this.bwFile = null;
             this.TILE_SIZE = 1024;
@@ -99,21 +95,6 @@ const CistromeBigWigDataFetcher = function CistromeBigWigDataFetcher(HGC, ...arg
                 );
             }
             return null;
-        }
-
-        loadBBI(dataConfig) {
-            if (dataConfig.url) {
-                this.bwFile = new BigWig({
-                    filehandle: new RemoteFile(dataConfig.url),
-                });
-                return this.bwFile.getHeader().then((h) => {
-                    this.bwFileHeader = h;
-                    console.log(this.bwFileHeader);
-                });
-            } else {
-                console.error("Please enter a \"url\" field to the data config");
-                return null;
-            }
         }
 
         tilesetInfo(callback) {
