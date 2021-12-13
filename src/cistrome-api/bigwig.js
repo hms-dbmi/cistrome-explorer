@@ -1,6 +1,9 @@
 import { tsvParseRows } from "d3-dsv";
 import { text } from "d3-request";
 
+// Supported `bin_length` in the cistrome APIs
+const BIN_LENGTHS = [25,50,100,200,500,1000,2000,4000,8000,16000,32000,64000,128000];
+
 const chrToAbs = (chrom, chromPos, chromInfo) => {
     return chromInfo.chrPositions[chrom].pos + chromPos;
 };
@@ -188,7 +191,17 @@ const CistromeBigWigDataFetcher = function CistromeBigWigDataFetcher(HGC, ...arg
                 const maxX = tsInfo.min_pos[0] + (x + 1) * tileWidth;
 
                 // const basesPerPixel = this.determineScale(minX, maxX);
-                const basesPerBin = 1000; // (maxX - minX) / this.TILE_SIZE;
+                const getBinLength = (bpSize) => {
+                    const expected = bpSize / this.TILE_SIZE;
+                    let actual = BIN_LENGTHS[BIN_LENGTHS.length - 1]; // 1000;
+                    BIN_LENGTHS.forEach(l => {
+                        if(Math.abs(expected - l) < Math.abs(expected - actual) && bpSize / l < 500) {
+                            actual = l;
+                        }
+                    });
+                    return actual;
+                };
+                const basesPerBin = getBinLength(maxX - minX); 
 
                 const binStarts = [];
                 for (let i = 0; i < this.TILE_SIZE; i++) {
@@ -214,8 +227,6 @@ const CistromeBigWigDataFetcher = function CistromeBigWigDataFetcher(HGC, ...arg
                             endPos = chromEnd - chromStart;
                             recordPromises.push(
                                 fetch(`http://develop.cistrome.org/cistrome/samples/${this.dataConfig.cid}/track?chrom=${chromName}&start_pos=${startPos}&end_pos=${endPos}&bin_length=${basesPerBin}`)
-                                // fetch("http://develop.cistrome.org/cistrome/samples/1/track?chrom=chr8&start_pos=1000000&end_pos=1100000&bin_length=500")
-                                // fetch(`http://develop.cistrome.org/cistrome/samples/${this.dataConfig.cid}/track?chrom=${chromName}&start_pos=${startPos}&end_pos=${endPos}&bin_length=${basesPerBin}`)
                                     .then((response) => response.json())
                                     .then((data) => {
                                         const { values, multiplier, bin_size } = data;
