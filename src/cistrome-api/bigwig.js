@@ -210,6 +210,21 @@ const CistromeBigWigDataFetcher = function CistromeBigWigDataFetcher(HGC, ...arg
 
                 const { chromLengths, cumPositions } = this.chromSizes;
 
+                const query = (c, s, e, cs) => {
+                    return fetch(`http://develop.cistrome.org/cistrome/samples/${this.dataConfig.cid}/track?chrom=${c}&start_pos=${s}&end_pos=${e}&bin_length=${basesPerBin}`)
+                        .then((response) => response.json())
+                        .then((data) => {
+                            const { values, multiplier, bin_size } = data;
+                            return values.map((v, i) => {
+                                return {
+                                    value: v / multiplier,
+                                    start: cs + s + i * bin_size,
+                                    end: cs + s + (i + 1) * bin_size,
+                                };
+                            });
+                        });
+                };
+
                 for (let i = 0; i < cumPositions.length; i++) {
                     const chromName = cumPositions[i].chr;
                     const chromStart = cumPositions[i].pos;
@@ -223,41 +238,38 @@ const CistromeBigWigDataFetcher = function CistromeBigWigDataFetcher(HGC, ...arg
                         if (maxX > chromEnd) {
                             // the visible region extends beyond the end of this chromosome
                             // fetch from the start until the end of the chromosome
-                            startPos = minX - chromStart;
-                            endPos = chromEnd - chromStart;
-                            recordPromises.push(
-                                fetch(`http://develop.cistrome.org/cistrome/samples/${this.dataConfig.cid}/track?chrom=${chromName}&start_pos=${startPos}&end_pos=${endPos}&bin_length=${basesPerBin}`)
-                                    .then((response) => response.json())
-                                    .then((data) => {
-                                        const { values, multiplier, bin_size } = data;
-                                        return values.map((v, i) => {
-                                            return {
-                                                value: v / multiplier,
-                                                start: chromStart + startPos + i * bin_size,
-                                                end: chromStart + startPos + (i + 1) * bin_size,
-                                            };
-                                        });
-                                    })
-                            );
-
+                            if((chromEnd - minX) / basesPerBin > 500) {
+                                // This means the number of bins are more than 500, so not allowed in Cistrome APIs.
+                                // We need to separate bins.
+                                const cnt = Math.ceil((chromEnd - minX) / basesPerBin / 500);
+                                const subBinSize = Math.ceil((chromEnd - minX) / cnt);
+                                for(let i = 0; minX + subBinSize * i < chromEnd; i++) {
+                                    startPos = Math.floor(minX + subBinSize * i - chromStart);
+                                    endPos = Math.ceil(Math.min(chromEnd, minX + subBinSize * (i + 1)) - chromStart);
+                                    recordPromises.push(query(chromName, startPos, endPos, chromStart));
+                                }
+                            } else {
+                                startPos = minX - chromStart;
+                                endPos = chromEnd - chromStart;
+                                recordPromises.push(query(chromName, startPos, endPos, chromStart));
+                            }
                             minX = chromEnd;
                         } else {
-                            startPos = Math.floor(minX - chromStart);
-                            endPos = Math.ceil(maxX - chromStart);
-                            recordPromises.push(
-                                fetch(`http://develop.cistrome.org/cistrome/samples/${this.dataConfig.cid}/track?chrom=${chromName}&start_pos=${startPos}&end_pos=${endPos}&bin_length=${basesPerBin}`)
-                                    .then((response) => response.json())
-                                    .then((data) => {
-                                        const { values, multiplier, bin_size } = data;
-                                        return values.map((v, i) => {
-                                            return {
-                                                value: v / multiplier,
-                                                start: chromStart + startPos + i * bin_size,
-                                                end: chromStart + startPos + (i + 1) * bin_size,
-                                            };
-                                        });
-                                    })
-                            );
+                            if((maxX - minX) / basesPerBin > 500) {
+                                // This means the number of bins are more than 500, so not allowed in Cistrome APIs.
+                                // We need to separate bins.
+                                const cnt = Math.ceil((maxX - minX) / basesPerBin / 500);
+                                const subBinSize = Math.ceil((maxX - minX) / cnt);
+                                for(let i = 0; minX + subBinSize * i < maxX; i++) {
+                                    startPos = Math.floor(minX + subBinSize * i - chromStart);
+                                    endPos = Math.ceil(minX + Math.min(maxX, subBinSize * (i + 1)) - chromStart);
+                                    recordPromises.push(query(chromName, startPos, endPos, chromStart));
+                                }
+                            } else {
+                                startPos = Math.floor(minX - chromStart);
+                                endPos = Math.ceil(maxX - chromStart);
+                                recordPromises.push(query(chromName, startPos, endPos, chromStart));
+                            }
                             break;
                         }
                     }

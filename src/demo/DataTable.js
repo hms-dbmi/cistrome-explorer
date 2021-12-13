@@ -195,7 +195,7 @@ export default function DataTable(props) {
                 <tr 
                     key={i} 
                     className={"data-table-row"}
-                    onClick={() => { if(cid) onButton(cid, gsm) }}
+                    onClick={() => { if(cid) onButton(cid, gsm); }}
                 >
                     {/* {buttonCell} */}
                     {dataCells}
