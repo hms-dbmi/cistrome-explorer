@@ -1,6 +1,9 @@
 import { tsvParseRows } from "d3-dsv";
 import { text } from "d3-request";
 
+// Supported `bin_length` in the cistrome APIs
+const BIN_LENGTHS = [25,50,100,200,500,1000,2000,4000,8000,16000,32000,64000,128000];
+
 const chrToAbs = (chrom, chromPos, chromInfo) => {
     return chromInfo.chrPositions[chrom].pos + chromPos;
 };
@@ -188,7 +191,17 @@ const CistromeBigWigDataFetcher = function CistromeBigWigDataFetcher(HGC, ...arg
                 const maxX = tsInfo.min_pos[0] + (x + 1) * tileWidth;
 
                 // const basesPerPixel = this.determineScale(minX, maxX);
-                const basesPerBin = 1000; // (maxX - minX) / this.TILE_SIZE;
+                const getBinLength = (bpSize) => {
+                    const expected = bpSize / this.TILE_SIZE;
+                    let actual = BIN_LENGTHS[BIN_LENGTHS.length - 1]; // 1000;
+                    BIN_LENGTHS.forEach(l => {
+                        if(Math.abs(expected - l) < Math.abs(expected - actual) && bpSize / l < 500) {
+                            actual = l;
+                        }
+                    });
+                    return actual;
+                };
+                const basesPerBin = getBinLength(maxX - minX); 
 
                 const binStarts = [];
                 for (let i = 0; i < this.TILE_SIZE; i++) {
@@ -196,6 +209,21 @@ const CistromeBigWigDataFetcher = function CistromeBigWigDataFetcher(HGC, ...arg
                 }
 
                 const { chromLengths, cumPositions } = this.chromSizes;
+
+                const query = (c, s, e, cs) => {
+                    return fetch(`http://develop.cistrome.org/cistrome/samples/${this.dataConfig.cid}/track?chrom=${c}&start_pos=${s}&end_pos=${e}&bin_length=${basesPerBin}`)
+                        .then((response) => response.json())
+                        .then((data) => {
+                            const { values, multiplier, bin_size } = data;
+                            return values.map((v, i) => {
+                                return {
+                                    value: v / multiplier,
+                                    start: cs + s + i * bin_size,
+                                    end: cs + s + (i + 1) * bin_size,
+                                };
+                            });
+                        });
+                };
 
                 for (let i = 0; i < cumPositions.length; i++) {
                     const chromName = cumPositions[i].chr;
@@ -210,43 +238,38 @@ const CistromeBigWigDataFetcher = function CistromeBigWigDataFetcher(HGC, ...arg
                         if (maxX > chromEnd) {
                             // the visible region extends beyond the end of this chromosome
                             // fetch from the start until the end of the chromosome
-                            startPos = minX - chromStart;
-                            endPos = chromEnd - chromStart;
-                            recordPromises.push(
-                                fetch(`http://develop.cistrome.org/cistrome/samples/${this.dataConfig.cid}/track?chrom=${chromName}&start_pos=${startPos}&end_pos=${endPos}&bin_length=${basesPerBin}`)
-                                // fetch("http://develop.cistrome.org/cistrome/samples/1/track?chrom=chr8&start_pos=1000000&end_pos=1100000&bin_length=500")
-                                // fetch(`http://develop.cistrome.org/cistrome/samples/${this.dataConfig.cid}/track?chrom=${chromName}&start_pos=${startPos}&end_pos=${endPos}&bin_length=${basesPerBin}`)
-                                    .then((response) => response.json())
-                                    .then((data) => {
-                                        const { values, multiplier, bin_size } = data;
-                                        return values.map((v, i) => {
-                                            return {
-                                                value: v / multiplier,
-                                                start: chromStart + startPos + i * bin_size,
-                                                end: chromStart + startPos + (i + 1) * bin_size,
-                                            };
-                                        });
-                                    })
-                            );
-
+                            if((chromEnd - minX) / basesPerBin > 500) {
+                                // This means the number of bins are more than 500, so not allowed in Cistrome APIs.
+                                // We need to separate bins.
+                                const cnt = Math.ceil((chromEnd - minX) / basesPerBin / 500);
+                                const subBinSize = Math.ceil((chromEnd - minX) / cnt);
+                                for(let i = 0; minX + subBinSize * i < chromEnd; i++) {
+                                    startPos = Math.floor(minX + subBinSize * i - chromStart);
+                                    endPos = Math.ceil(Math.min(chromEnd, minX + subBinSize * (i + 1)) - chromStart);
+                                    recordPromises.push(query(chromName, startPos, endPos, chromStart));
+                                }
+                            } else {
+                                startPos = minX - chromStart;
+                                endPos = chromEnd - chromStart;
+                                recordPromises.push(query(chromName, startPos, endPos, chromStart));
+                            }
                             minX = chromEnd;
                         } else {
-                            startPos = Math.floor(minX - chromStart);
-                            endPos = Math.ceil(maxX - chromStart);
-                            recordPromises.push(
-                                fetch(`http://develop.cistrome.org/cistrome/samples/${this.dataConfig.cid}/track?chrom=${chromName}&start_pos=${startPos}&end_pos=${endPos}&bin_length=${basesPerBin}`)
-                                    .then((response) => response.json())
-                                    .then((data) => {
-                                        const { values, multiplier, bin_size } = data;
-                                        return values.map((v, i) => {
-                                            return {
-                                                value: v / multiplier,
-                                                start: chromStart + startPos + i * bin_size,
-                                                end: chromStart + startPos + (i + 1) * bin_size,
-                                            };
-                                        });
-                                    })
-                            );
+                            if((maxX - minX) / basesPerBin > 500) {
+                                // This means the number of bins are more than 500, so not allowed in Cistrome APIs.
+                                // We need to separate bins.
+                                const cnt = Math.ceil((maxX - minX) / basesPerBin / 500);
+                                const subBinSize = Math.ceil((maxX - minX) / cnt);
+                                for(let i = 0; minX + subBinSize * i < maxX; i++) {
+                                    startPos = Math.floor(minX + subBinSize * i - chromStart);
+                                    endPos = Math.ceil(minX + Math.min(maxX, subBinSize * (i + 1)) - chromStart);
+                                    recordPromises.push(query(chromName, startPos, endPos, chromStart));
+                                }
+                            } else {
+                                startPos = Math.floor(minX - chromStart);
+                                endPos = Math.ceil(maxX - chromStart);
+                                recordPromises.push(query(chromName, startPos, endPos, chromStart));
+                            }
                             break;
                         }
                     }
