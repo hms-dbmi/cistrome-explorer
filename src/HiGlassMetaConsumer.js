@@ -330,7 +330,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         const currViewConfig = hgRef.current.api.getViewConfig();
         const newViewConfig = setDataTransformOfTopTrackFromViewConfig(
             currViewConfig, 
-            ["cistrome-view-1", "cistrome-view-atac"], 
+            ["cistrome-view-1", "cistrome-view-atac", "cistrome-view-3k27"], 
             "gwas", 
             [{ type: "filter", field: "MAPPED_TRAIT", oneOf: gwasOneOf, not: false}]
         );

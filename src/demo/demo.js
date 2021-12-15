@@ -1,5 +1,6 @@
 import { hgDemoViewConfig1} from "../viewconfigs/horizontal-multivec-1";
 import { hgDemoViewConfigAtac } from "../viewconfigs/horizontal-multivec-atac";
+import { hgDemoViewConfig3k27 } from "../viewconfigs/horizontal-multivec-3k27";
 import hgDemoViewConfig1b from "../viewconfigs/horizontal-multivec-1b.json";
 import hgDemoViewConfig2 from "../viewconfigs/horizontal-multivec-2.json";
 import hgDemoViewConfig2b from "../viewconfigs/horizontal-multivec-2b.json";
@@ -65,6 +66,24 @@ export const demos = {
             ],
             rowFilter: [
                 // ...
+            ]
+        }]
+    },
+    "H3K27ac (2021 Ver.)": {
+        viewConfig: hgDemoViewConfig3k27,
+        options: [{
+            viewId: "cistrome-view-3k27",
+            trackId: "cistrome-track-3k27",
+            rowInfoAttributes: [
+                {field: "Cell Type", type: "nominal", position: "right", width: 200},
+                {field: "Clustering", type: "tree", position: "right", width: 200},
+            ],
+            rowAggregate: [
+            ],
+            rowSort: [
+                {field: "Clustering", type: "tree", order: "ascending"}
+            ],
+            rowFilter: [
             ]
         }]
     },
