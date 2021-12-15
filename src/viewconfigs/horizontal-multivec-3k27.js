@@ -615,7 +615,7 @@ export const hgDemoViewConfig3k27 ={
                             "trackBorderWidth": 2,
                             "trackBorderColor": "gray",
                             "heatmapValueScaling": "log",
-                            "name": "H3K27ac-seq from Cistrome DB",
+                            "name": "H3K27ac from Cistrome DB",
                             "labelTopMargin": 2,
                             "labelLeftMargin": 4,
                             "labelBottomMargin": 0,
