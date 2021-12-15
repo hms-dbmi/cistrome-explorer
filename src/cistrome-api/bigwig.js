@@ -43,7 +43,7 @@ function parseChromsizesRows(data) {
 function ChromosomeInfo(filepath, success) {
     const ret = {};
 
-    ret.absToChr = (absPos) => (ret.chrPositions ? absToChr(absPos, ret) : null);
+    // ret.absToChr = (absPos) => (ret.chrPositions ? absToChr(absPos, ret) : null);
 
     ret.chrToAbs = ([chrName, chrPos] = []) =>
         ret.chrPositions ? chrToAbs(chrName, chrPos, ret) : null;

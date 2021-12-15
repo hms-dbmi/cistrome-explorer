@@ -168,7 +168,8 @@ export default function CistromeExplorer() {
             "data": {
                 "type": "cistrome-bigwig",
                 cid,
-                "chromSizesUrl": "https://aveit.s3.amazonaws.com/higlass/data/sequence/hg38.chrom.sizes",
+                "chromSizesUrl": "https://s3.amazonaws.com/gosling-lang.org/data/hg38_1k_rounded.chrom.sizes"
+                // "chromSizesUrl": "https://aveit.s3.amazonaws.com/higlass/data/sequence/hg38.chrom.sizes",
             },
             uid: "cistrome-" + cid + REMOVE_ALLOWED_TAG_TRACKID,
             "type": "gosling-track",
@@ -191,8 +192,9 @@ export default function CistromeExplorer() {
                 spec: {
                     "data": {
                         "type": "cistrome-bigwig",
-                        "cid": "870",
-                        "chromSizesUrl": "https://aveit.s3.amazonaws.com/higlass/data/sequence/hg38.chrom.sizes",
+                        cid,
+                        "chromSizesUrl": "https://s3.amazonaws.com/gosling-lang.org/data/hg38_1k_rounded.chrom.sizes"
+                        // "chromSizesUrl": "https://aveit.s3.amazonaws.com/higlass/data/sequence/hg38.chrom.sizes",
                     },
                     mark: "bar",
                     x: { field: "start", type: "genomic" },
