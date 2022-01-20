@@ -6,8 +6,8 @@ import rowInfo1 from "./cistrome-track-1/rowInfo.json";
 import rowInfo2 from "./cistrome-track-2/rowInfo.json";
 import rowInfo3 from "./cistrome-track-3/rowInfo.json";
 import rowInfo10 from "./cistrome-track-10/rowInfo.json";
-import rowInfoAtac from "./cistrome-track-atac/rowInfo.json";
-import rowInfo3k27 from "./cistrome-track-3k27/rowInfo.json";
+import rowInfoAtac from "./cistrome-track-atac/rowInfoWithQc.json";
+import rowInfo3k27 from "./cistrome-track-3k27/rowInfoWithQc.json";
 
 const _fakedata = {
     "default": {

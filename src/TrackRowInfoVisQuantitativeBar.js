@@ -234,7 +234,8 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
 
         const axisScale = isLeft ? xScale.domain(xScale.domain().reverse()) : xScale;
         const axis = d3.axisBottom(axisScale)
-            .ticks(Math.ceil(barAreaWidth / 40));
+            .ticks(Math.ceil(barAreaWidth / 40))
+            .tickFormat(d3.format('.2s'));
         
         d3.select(domElement)
             .attr("width", width)
