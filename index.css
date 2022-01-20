@@ -735,7 +735,7 @@ input[type="checkbox"] {
     position: absolute;
     cursor: ew-resize; }
   .hm-range-slider-container .hm-range-input {
-    width: 30px;
+    width: 60px;
     margin-right: 6px;
     border: none;
     border-bottom: solid 1px lightgray; }
