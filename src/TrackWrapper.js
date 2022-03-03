@@ -91,14 +91,67 @@ export default function TrackWrapper(props) {
             rowInfo = multivecTrack.tilesetInfo.row_infos;
         }
         
-        if(!context.state[multivecTrackViewId] || !context.state[multivecTrackViewId][multivecTrackTrackId]) {
-            context.dispatch({
-                type: ACTION.SET_ROW_INFO,
-                viewId: multivecTrackViewId,
-                trackId: multivecTrackTrackId,
-                rowInfo: rowInfo
-            });
-            setShouldCallOnMetadataLoad(true);
+        const updateRowInfo = () => {
+            if(!context.state[multivecTrackViewId] || !context.state[multivecTrackViewId][multivecTrackTrackId]) {
+                context.dispatch({
+                    type: ACTION.SET_ROW_INFO,
+                    viewId: multivecTrackViewId,
+                    trackId: multivecTrackTrackId,
+                    rowInfo: rowInfo
+                });
+                setShouldCallOnMetadataLoad(true);
+            }
+        }
+
+        // Using the GSM ids, extract quality scores using Cistrome APIs
+        if(rowInfo && rowInfo[0] && Object.keys(rowInfo[0]).includes("GSM")) {
+            const metaApiUrl = `http://develop.cistrome.org/cistrome/samples?external_ids=${rowInfo.map(d => d.GSM).join(',')}&fields=qcs&limit=${300}&format=json`;
+            fetch(metaApiUrl)
+                .then((response) => {
+                    if (!response.ok) {
+                        return new Promise((resolve, reject) => {
+                            reject(`Error: ${response.statusText}`);
+                        });
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    const { samples } = data;
+
+                    // Get Unique Metadata
+                    const uniqueQcNames = [];
+                    samples.forEach(sample => {
+                        sample.qcs.map(qc => qc.metric_name).forEach(qcName => {                                
+                            if(uniqueQcNames.indexOf(qcName) === -1) {
+                                uniqueQcNames.push(qcName);
+                            }
+                        });
+                    });
+                    
+                    // Add QCs
+                    rowInfo.forEach(r => {
+                        const sampleIdx = samples.findIndex(d => d.external_id === r.GSM);
+                        if(sampleIdx !== -1) {
+                            uniqueQcNames.forEach(qcName => {
+                                const qcIdx = samples[sampleIdx].qcs.findIndex(d => d.metric_name === qcName);
+                                if(qcIdx !== -1) {
+                                    r[qcName] = samples[sampleIdx].qcs[qcIdx].value;
+                                } else {
+                                    r[qcName] = null;
+                                }
+                            });                    
+                        }   
+                    });
+                    
+                    updateRowInfo();
+                })
+                .catch(error => {
+                    console.warn(error);
+
+                    updateRowInfo();
+                });
+        } else {
+            updateRowInfo();
         }
     } catch(e) {
         console.log(e);
