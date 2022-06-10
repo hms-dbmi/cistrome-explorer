@@ -5,7 +5,7 @@ import d3 from "../utils/d3.js";
 import { HiGlassMeta } from "../index.js";
 import CistromeToolkit from "./CistromeToolkit.js";
 
-import { UNDO, REDO, TABLE_2, DOCUMENT, GITHUB, TOGGLE_ON, TOGGLE_OFF, CLOSE, ELLIPSIS, TRASH, SEARCH, FOLDER, PENCIL } from "../utils/icons.js";
+import { UNDO, REDO, TABLE_2, DOCUMENT, GITHUB, TOGGLE_ON, TOGGLE_OFF, CLOSE, ELLIPSIS, TRASH, SEARCH, FOLDER, PENCIL, MENU } from "../utils/icons.js";
 import { DEFAULT_COLOR_RANGE } from "../utils/color.js";
 import { diffViewOptions } from "../utils/view-history";
 import { demos } from "./demo";
@@ -47,7 +47,7 @@ export default function CistromeExplorer() {
     
     const hmRef = useRef();
 
-    const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[1]);
+    const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[0]);
     const [isSettingVisible, setIsSettingVisible] = useState(false);
 
     // local files
@@ -332,8 +332,43 @@ export default function CistromeExplorer() {
         <div className="cistrome-explorer">
             <div className="header-container">
                 <div className="header">
+                    <span 
+                        className="ce-generic-button"
+                        onClick={() => setIsSettingVisible(!isSettingVisible)}>
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            viewBox={MENU.viewBox}>
+                            <title>Menu</title>
+                            <path fill="currentColor" d={MENU.path}/>
+                        </svg>
+                    </span>
                     <span className="cisvis-title">
                         <hl>Cistrome</hl> Explorer
+                    </span>
+                    <span className="header-control">
+                        {/* <span 
+                            className="ce-generic-button"
+                            style={{ cursor: "auto" }}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                viewBox={SEARCH.viewBox}
+                            >
+                                <path d={SEARCH.path} fill="currentColor"/>
+                            </svg>
+                        </span> */}
+                            {'Data '}
+                        <select 
+                            onChange={e => setSelectedDemo(e.target.value)} 
+                            defaultValue={selectedDemo}
+                        >
+                            {Object.keys(demos).map(vcKey => (
+                                <option 
+                                    key={vcKey} 
+                                    value={vcKey} 
+                                >
+                                    {vcKey}
+                                </option>
+                            ))}
+                        </select>
                     </span>
                     <span 
                         className="header-control"
@@ -394,48 +429,6 @@ export default function CistromeExplorer() {
                                     }
                                 }}
                             />
-                        </span>
-                    </span>
-                    <span className="header-control">
-                        <span
-                            className={"ce-generic-button " + (undoable ? "" : "ce-generic-button-deactivated")}
-                            style={{ 
-                                cursor: undoable ? "pointer" : "not-allowed"
-                            }} 
-                            onClick={() => {
-                                if(undoable) {
-                                    const newViewIndex = indexOfCurrentView + 1;
-                                    setIndexOfCurrentView(newViewIndex);
-                                    hmRef.current.api.onOptions(viewHistory[newViewIndex].options);
-                                }
-                            }}
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                viewBox={UNDO.viewBox}>
-                                <title>Undo</title>
-                                <path fill="currentColor" d={UNDO.path}/>
-                            </svg>
-                            {` Undo (${viewHistory.length - indexOfCurrentView - 1})`}
-                        </span>
-                        <span 
-                            className={"ce-generic-button " + (redoable ? "" : "ce-generic-button-deactivated")}
-                            style={{ 
-                                cursor: redoable ? "pointer" : "not-allowed"
-                            }} 
-                            onClick={() => {
-                                if(redoable) {
-                                    const newViewIndex = indexOfCurrentView - 1;
-                                    setIndexOfCurrentView(newViewIndex);
-                                    hmRef.current.api.onOptions(viewHistory[newViewIndex].options);
-                                }
-                            }}
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                viewBox={REDO.viewBox}>
-                                <title>Redo</title>
-                                <path fill="currentColor" d={REDO.path}/>
-                            </svg>
-                            {` Redo (${indexOfCurrentView})`}
                         </span>
                     </span>
                     <span className="header-control"
@@ -520,19 +513,6 @@ export default function CistromeExplorer() {
                             </span>
                         </span>
                     </span>
-                    <span className="header-control">
-                        <span 
-                            className={"ce-generic-button-lg " + (helpActivated ? "ce-generic-button-activated" : "")}
-                            onClick={() => { setHelpActivated(!helpActivated); }}
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                viewBox={helpActivated ? TOGGLE_ON.viewBox : TOGGLE_OFF.viewBox}>
-                                <title>Help</title>
-                                <path fill="currentColor" d={helpActivated ? TOGGLE_ON.path : TOGGLE_OFF.path}/>
-                            </svg>
-                            {" Show Instructions"}
-                        </span>
-                    </span>
                     <span className="header-info">
                         {geneSearched ? 
                             <span 
@@ -549,7 +529,7 @@ export default function CistromeExplorer() {
                                 {`💡 Search ${geneSearched} in Cistrome Toolkit? `}
                             </span>
                             : null}
-                        <span 
+                        {/* <span 
                             className="ce-generic-button"
                             onClick={() => setIsSettingVisible(!isSettingVisible)}>
                             <svg xmlns="http://www.w3.org/2000/svg"
@@ -557,7 +537,7 @@ export default function CistromeExplorer() {
                                 <title>Menu</title>
                                 <path fill="currentColor" d={ELLIPSIS.path}/>
                             </svg>
-                        </span>
+                        </span> */}
                     </span>
                     {geneSuggestions.length !== 0 ? 
                         <div className="gene-suggestion" style={{
@@ -620,7 +600,7 @@ export default function CistromeExplorer() {
                     />
                 </div>
                 <div className="settings" style={{
-                    right: isSettingVisible ? 0 : "-400px"
+                    left: isSettingVisible ? 0 : "-400px"
                 }}>
                     <span style={{ 
                         verticalAlign: "middle", 
@@ -639,21 +619,85 @@ export default function CistromeExplorer() {
                             <path d={CLOSE.path} fill="currentColor"/>
                         </svg>
                     </span>
-                    <h2>Example Datasets</h2>
-                    <span className="viewconf-options">
-                        <select 
-                            onChange={e => setSelectedDemo(e.target.value)} 
-                            defaultValue={selectedDemo}
+                    <h2>Interactions</h2>
+                    <span 
+                        className={"ce-generic-button " + (undoable ? "" : "ce-generic-button-deactivated")}
+                        style={{ 
+                            fontSize: 12,
+                            cursor: undoable ? "pointer" : "not-allowed",
+                            display: "inline-block",
+                            color: "black", 
+                            background: "white", 
+                            border: "1px solid gray",
+                            padding: "4px",
+                            marginTop: "4px"
+                        }}
+                        onClick={() => {
+                            if(undoable) {
+                                const newViewIndex = indexOfCurrentView + 1;
+                                setIndexOfCurrentView(newViewIndex);
+                                hmRef.current.api.onOptions(viewHistory[newViewIndex].options);
+                            }
+                        }}
+                    >
+                        <svg
+                            style={{ color: "rgb(171, 171, 171)", width: 14, height: 14 }}
+                            viewBox={UNDO.viewBox}
                         >
-                            {Object.keys(demos).map(vcKey => (
-                                <option 
-                                    key={vcKey} 
-                                    value={vcKey} 
-                                >
-                                    {vcKey}
-                                </option>
-                            ))}
-                        </select>
+                            <title>Undo</title>
+                            <path d={UNDO.path} fill="currentColor"/>
+                        </svg>
+                        {` Undo (${viewHistory.length - indexOfCurrentView - 1})`}
+                    </span>
+                    <span 
+                        className={"ce-generic-button " + (redoable ? "" : "ce-generic-button-deactivated")}
+                        style={{ 
+                            fontSize: 12,
+                            cursor: redoable ? "pointer" : "not-allowed",
+                            display: "inline-block",
+                            color: "black", 
+                            background: "white", 
+                            border: "1px solid gray",
+                            padding: "4px",
+                            marginTop: "4px"
+                        }}
+                        onClick={() => {
+                            if(redoable) {
+                                const newViewIndex = indexOfCurrentView - 1;
+                                setIndexOfCurrentView(newViewIndex);
+                                hmRef.current.api.onOptions(viewHistory[newViewIndex].options);
+                            }
+                        }}
+                    >
+                        <svg
+                            style={{ color: "rgb(171, 171, 171)", width: 14, height: 14 }}
+                            viewBox={REDO.viewBox}
+                        >
+                            <title>Redo</title>
+                            <path d={REDO.path} fill="currentColor"/>
+                        </svg>
+                        {` Redo (${indexOfCurrentView})`}
+                    </span>
+                    <span 
+                        className={"ce-generic-button " + (helpActivated ? "ce-generic-button-activated" : "")}
+                        style={{
+                            fontSize: 12,
+                            cursor: "pointer",
+                            display: "inline-block",
+                            color: "black", 
+                            background: "white", 
+                            border: "1px solid gray",
+                            padding: "4px",
+                            marginTop: "4px"   
+                        }}
+                        onClick={() => { setHelpActivated(!helpActivated); }}
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            viewBox={helpActivated ? TOGGLE_ON.viewBox : TOGGLE_OFF.viewBox}>
+                            <title>Help</title>
+                            <path fill="currentColor" d={helpActivated ? TOGGLE_ON.path : TOGGLE_OFF.path}/>
+                        </svg>
+                        {" Show Instructions"}
                     </span>
                     <div className="setting-separater"></div>
                     <h2>Metadata</h2>
