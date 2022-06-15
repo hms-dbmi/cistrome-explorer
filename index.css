@@ -120,8 +120,8 @@ code {
       width: 400px;
       padding: 15px;
       z-index: 3;
-      transition: right 0.2s ease-out;
-      box-shadow: 10px 0px 10px 0 #888;
+      transition: left 0.2s ease-out;
+      box-shadow: -10px 0px 10px 0 #888;
       border: 1px solid gray; }
       .cistrome-explorer .visualization-container .settings h2 {
         font-size: 14px;
