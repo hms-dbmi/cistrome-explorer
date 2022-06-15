@@ -13,34 +13,6 @@ import hgDemoViewConfig11 from "../viewconfigs/horizontal-multivec-11.json";
 import hgDemoViewConfigApril2020 from "../viewconfigs/meeting-2020-04-29.json";
 
 export const demos = {
-    "H3K27ac": {
-        viewConfig: hgDemoViewConfig1,
-        options: [{
-            viewId: "cistrome-view-1",
-            trackId: "cistrome-track-1",
-            rowInfoAttributes: [
-                {field: "Cell Type", type: "nominal", position: "right", width: 150},
-                {field: "Tissue Type", type: "nominal", position: "right", width: 120},
-                {field: "qc_frip", type: "quantitative", position: "right", title: "QC: FRIP", width: 80},
-                {field: "qc_fastqc", type: "quantitative", position: "right", title:  "QC: FastQC", width: 80},
-                {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right", width: 100},
-                // {field: "Species", type: "nominal", position: "left", width: 120},
-                // {field: "cid", type: "nominal-dynamic",  position: "left", title: "Compare Positive and Negative", domain: ["positive", "negative"], range: ["blue", "red"], width: 30},
-                {field: "ID", type: "url", shortName: "📊", position: "right", title: "➕ Add Detail Track", width: 35, addTrackOnClick: true},
-                // {field: "Metadata URL", alt: "cid", type: "url", position: "right", width: 70},
-            ],
-            rowAggregate: [
-                // {field: "Cell Type", type: "nominal", notOneOf: []},
-                // {field: "Tissue Type", type: "nominal", notOneOf: []}
-            ],
-            rowSort: [
-                {field: "Hierarchical Clustering (Ward)", type: "tree", order: "ascending"}
-            ],
-            rowFilter: [
-                // ...
-            ]
-        }]
-    },
     "ATAC": {
         viewConfig: hgDemoViewConfigAtac,
         options: [{
@@ -83,7 +55,7 @@ export const demos = {
             ]
         }]
     },
-    "H3K27ac (2021 Ver.)": {
+    "H3K27ac": {
         viewConfig: hgDemoViewConfig3k27,
         options: [{
             viewId: "cistrome-view-3k27",
@@ -114,6 +86,35 @@ export const demos = {
                 {field: "Clustering", type: "tree", order: "ascending"}
             ],
             rowFilter: [
+            ]
+        }]
+    },
+    /*
+    "H3K27ac (old)": {
+        viewConfig: hgDemoViewConfig1,
+        options: [{
+            viewId: "cistrome-view-1",
+            trackId: "cistrome-track-1",
+            rowInfoAttributes: [
+                {field: "Cell Type", type: "nominal", position: "right", width: 150},
+                {field: "Tissue Type", type: "nominal", position: "right", width: 120},
+                {field: "qc_frip", type: "quantitative", position: "right", title: "QC: FRIP", width: 80},
+                {field: "qc_fastqc", type: "quantitative", position: "right", title:  "QC: FastQC", width: 80},
+                {field: "Hierarchical Clustering (Ward)", type: "tree", position: "right", width: 100},
+                // {field: "Species", type: "nominal", position: "left", width: 120},
+                // {field: "cid", type: "nominal-dynamic",  position: "left", title: "Compare Positive and Negative", domain: ["positive", "negative"], range: ["blue", "red"], width: 30},
+                {field: "ID", type: "url", shortName: "📊", position: "right", title: "➕ Add Detail Track", width: 35, addTrackOnClick: true},
+                // {field: "Metadata URL", alt: "cid", type: "url", position: "right", width: 70},
+            ],
+            rowAggregate: [
+                // {field: "Cell Type", type: "nominal", notOneOf: []},
+                // {field: "Tissue Type", type: "nominal", notOneOf: []}
+            ],
+            rowSort: [
+                {field: "Hierarchical Clustering (Ward)", type: "tree", order: "ascending"}
+            ],
+            rowFilter: [
+                // ...
             ]
         }]
     },
@@ -344,5 +345,5 @@ export const demos = {
 
             ]
         }
-    },
+    },*/
 };
