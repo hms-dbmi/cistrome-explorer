@@ -191,11 +191,14 @@ export default function DataTable(props) {
             });
             const cid = d["CistromeDB ID"];
             const gsm = d["GEO/ENCODE ID"];
+            const ct = d['CellType'];
+            const f = d['Factor'];
+            console.log(d);
             return (
                 <tr 
                     key={i} 
                     className={"data-table-row"}
-                    onClick={() => { if(cid) onButton(cid, gsm); }}
+                    onClick={() => { if(cid) onButton(cid, gsm, ct, f); }}
                 >
                     {/* {buttonCell} */}
                     {dataCells}

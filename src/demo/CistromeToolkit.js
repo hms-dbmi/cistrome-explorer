@@ -508,8 +508,8 @@ export default function CistromeToolkit(props) {
                         rows={selectedRequestIndex !== undefined ? requestHistory[selectedRequestIndex].rows : []}
                         selectedRows={selectedRowIndexes}
                         expoNotations={["Overlap Ratio", "Regulatory Potential"]}
-                        onButton={(cid, gsm) => {
-                            onAddTrack(cid, gsm);
+                        onButton={(cid, gsm, ct, f) => {
+                            onAddTrack(cid, gsm, ct, f);
                             setIsVisible(false);
                         }}
                     />

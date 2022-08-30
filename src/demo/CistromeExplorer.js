@@ -21,8 +21,7 @@ import CistromeBigWigDataFetcher from "../cistrome-api/bigwig";
 import { default as higlassRegister } from "higlass-register";
 import gosling from "gosling.js";
 
-import {theme} from "../viewconfigs/horizontal-multivec-1.js";
-import { REMOVE_ALLOWED_TAG_TRACKID } from "../HiGlassMetaConsumer";
+import { getCistromeTrack } from "../cistrome-api/cistrome-track";
 
 gosling.init();
  
@@ -99,6 +98,7 @@ export default function CistromeExplorer() {
     const searchBoxRef = useRef();
     const [searchKeyword, setSearchKeyword] = useState("");
     const [geneSuggestions, setGeneSuggestions] = useState([]);
+    const [geneIndex, setGeneIndex] = useState(-1);
     const [suggestionPosition, setSuggestionPosition] = useState({left: 0, top: 0});
 
     // Undo and redo
@@ -162,58 +162,9 @@ export default function CistromeExplorer() {
     }, [addNewTrack, selectedDemo]);
 
     // Callback function for adding a cistrome track from toolkit.
-    const onAddToolkitTrack = useCallback((cid, gsm) => {
+    const onAddToolkitTrack = useCallback((cid, gsm, ct, f) => {
         const viewId = demos[selectedDemo].viewConfig.views[0].uid;
-        const newTrackDef = {
-            "data": {
-                "type": "cistrome-bigwig",
-                cid,
-                // "chromSizesUrl": "https://s3.amazonaws.com/gosling-lang.org/data/hg38_1k_rounded.chrom.sizes"
-                "chromSizesUrl": "https://aveit.s3.amazonaws.com/higlass/data/sequence/hg38.chrom.sizes",
-            },
-            uid: "cistrome-" + cid + REMOVE_ALLOWED_TAG_TRACKID,
-            "type": "gosling-track",
-            "options": {
-                showMousePosition: true,
-                mousePositionColor: "black",
-                name: `Cistrome ID ${cid} | ${gsm}`,
-                labelPosition: "topLeft",
-                fontSize: 12,
-                labelColor: "black",
-                labelShowResolution: false,
-                labelBackgroundColor: "#F6F6F6",
-                labelTextOpacity: 0.6,
-                labelLeftMargin: 4,
-                labelRightMargin: 0,
-                labelTopMargin: 2,
-                labelBottomMargin: 0,
-                backgroundColor: "transparent",
-                theme, 
-                spec: {
-                    "data": {
-                        "type": "cistrome-bigwig",
-                        cid,
-                        // "chromSizesUrl": "https://s3.amazonaws.com/gosling-lang.org/data/hg38_1k_rounded.chrom.sizes"
-                        "chromSizesUrl": "https://aveit.s3.amazonaws.com/higlass/data/sequence/hg38.chrom.sizes",
-                    },
-                    mark: "bar",
-                    x: { field: "start", type: "genomic" },
-                    xe: { field: "end", type: "genomic" },
-                    y: { field: "value", type: "quantitative", axis: "none" },
-                    color: { value: "#22908D" },
-                    tooltip: [
-                        { field: "start", type: "genomic" },
-                        { field: "end", type: "genomic" },
-                        { field: "value", type: "quantitative" },
-                    ],
-                    style: { outlineWidth: 0 }, // background: "gray" },
-                    width: 100,
-                    height: 30
-                },
-            },
-            "width": 100,
-            "height": 40
-        };
+        const newTrackDef = getCistromeTrack({ cid, gsm, ct, f });
         addNewTrack(newTrackDef, viewId, "top");
     }, [addNewTrack, selectedDemo]);
 
@@ -394,6 +345,7 @@ export default function CistromeExplorer() {
                                 type="text"
                                 name="default name"
                                 placeholder="GAPDH or chr6:151690496-152103274"
+                                value={searchKeyword}
                                 onChange={(e) => {
                                     const keyword = e.target.value;
                                     if(keyword !== "" && !keyword.startsWith("c")) {
@@ -412,8 +364,22 @@ export default function CistromeExplorer() {
                                 onKeyDown={(e) => {
                                     switch(e.key){
                                     case "ArrowUp":
+                                        {
+                                            const newIndex = Math.max(geneIndex - 1, -1);
+                                            setGeneIndex(newIndex);
+                                            if(geneSuggestions[newIndex]) {
+                                                setSearchKeyword(geneSuggestions[newIndex].geneName);
+                                            }
+                                        }
                                         break;
                                     case "ArrowDown":
+                                        {
+                                            const newIndex = Math.min(geneIndex + 1, geneSuggestions.length - 1);
+                                            setGeneIndex(newIndex);
+                                            if(geneSuggestions[newIndex]) {
+                                                setSearchKeyword(geneSuggestions[newIndex].geneName);
+                                            }
+                                        }
                                         break;
                                     case "Enter":
                                         setGeneSuggestions([]);
@@ -546,7 +512,7 @@ export default function CistromeExplorer() {
                         }}>
                             <ul>
                                 {geneSuggestions.map((d, i) => (
-                                    <li style={{textAlign: "right", color: "gray"}}
+                                    <li style={{textAlign: "right", color: "gray", background: i === geneIndex ? '#E2F1FF' : 'none'}}
                                         key={d.geneName + d.score}
                                         onClick={() => {
                                             searchBoxRef.current.value = d.geneName;
@@ -602,7 +568,7 @@ export default function CistromeExplorer() {
                 <div className="settings" style={{
                     left: isSettingVisible ? 0 : "-400px"
                 }}>
-                    <span style={{ 
+                    <span style={{
                         verticalAlign: "middle", 
                         display: "inline-block",
                         position: "absolute", 
