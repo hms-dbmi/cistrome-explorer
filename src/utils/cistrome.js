@@ -6,6 +6,7 @@ const SEARCH_ITEM_LIMIT = 999999;
 export const CISTROME_API_TYPES = Object.freeze({
     INTERVAL: "INTERVAL",
     GENE: "GENE",
+    FACTOR: "FACTOR",
     PEAKSET: "PEAKSET"
 });
 
@@ -15,6 +16,7 @@ export const CISTROME_API_TYPES = Object.freeze({
 export const CISTROME_API_COLORS = Object.freeze({
     INTERVAL: "#2C77B1",
     GENE: "#D6641E",
+    FACTOR: "#2B9F78",
     PEAKSET: "#2B9F78"
 });
 
@@ -62,6 +64,15 @@ export function getReadableTable(apiType, originalRows) {
             factor: "Factor",
             GSM: "GEO/ENCODE ID",
             species: "Species"
+        },
+        [CISTROME_API_TYPES.FACTOR]: {
+            title: "Title",
+            external_id: "GEO/ENCODE ID",
+            id: "CistromeDB ID",
+            factor: "Factor",
+            species: "Species",
+            experiment_type: "Experiment Type",
+            sample_type: "Sample Type"
         },
         [CISTROME_API_TYPES.PEAKSET]: {
             // TODO: Support Peak Set API
@@ -145,6 +156,18 @@ export function validateGeneParams({ assembly, gene, distance }) {
     return { msg, success };
 }
 
+export function validateFactorParams({ factor }) {
+    let msg;
+    let success = false;
+    if(!factor) {
+        msg = "Factor is not suggested";
+    } else {
+        msg = "Success";
+        success = true;
+    }
+    return { msg, success };
+}
+
 /**
  * Check if peak set request parameters are valid, and will be able to generate a good API url.
  * @param {string} assembly
@@ -204,6 +227,7 @@ export function requestDBToolkitAPI(apiType, parameter) {
     return {
         [CISTROME_API_TYPES.INTERVAL]: requestByInterval,
         [CISTROME_API_TYPES.GENE]: requestByGene,
+        [CISTROME_API_TYPES.FACTOR]: requestByFactor,
         [CISTROME_API_TYPES.PEAKSET]: requestByPeakset
     }[apiType](parameter);
 }
@@ -301,6 +325,67 @@ export function requestByGene({ assembly, gene, distance }) {
 }
 
 /**
+ * Make an API request for Cistrome DB factor information.
+ * @param {string} factor
+ * @returns {Promise} On success, promise resolves with the following array: `[rows, columns]`.
+ */
+export async function requestByFactor({ factor }) {
+    const factorIds = await getFactorList();
+    const url = `http://develop.cistrome.org/cistrome/factors/${factorIds[factor]}?fields=samples&format=json`;
+    return fetch(url)
+        .then((response) => {
+            if (!response.ok) {
+                return new Promise((resolve, reject) => {
+                    reject(`Error: ${response.statusText}`);
+                });
+            }
+            return response.json();
+        })
+        .then((data) => {
+            return new Promise((resolve, reject) => {
+                const rows = data.factors[0]?.samples;
+                if(rows.length === 0) {
+                    reject(`No data found for factor ${factor}`);
+                }
+                // Generate data for table.
+                const filteredRows = rows.filter(d => d.species !== 'mus_musculus').slice(0, rows.length < SEARCH_ITEM_LIMIT ? rows.length : SEARCH_ITEM_LIMIT);
+                filteredRows.forEach(d => d['factor'] = factor);
+                const columns = Object.keys(rows[0]);
+                resolve([filteredRows, columns]);
+            });
+        })
+        .catch(error => {
+            return new Promise((resolve, reject) => {
+                reject(`Error: ${error.message}`);
+            });
+        });
+}
+
+function getFactorList() {
+    const factorListUrl = 'http://develop.cistrome.org/cistrome/factors?limit=10000&format=json';
+    return fetch(factorListUrl)
+        .then((response) => {
+            if (!response.ok) {
+                return new Promise((resolve, reject) => {
+                    reject(`Error: ${response.statusText}`);
+                });
+            }
+            return response.json();
+        })
+        .then((data) => {
+            return new Promise((resolve, reject) => {
+                const factors = {};
+                data.factors.forEach(d => { factors[d.name] = d.id });
+                resolve(factors);
+            });
+        }).catch(error => {
+            return new Promise((resolve, reject) => {
+                reject(`Error: ${error.message}`);
+            });
+        });
+}
+
+/**
  * Make an API request for Cistrome DB Toolkit peak set information.
  * @param {string} assembly
  * @param {string} tpeak
@@ -351,6 +436,54 @@ export function requestByPeakset({ assembly, tpeak, bedFile }) {
         })
         .catch(error => {
             // console.log('error', error);
+            return new Promise((resolve, reject) => {
+                reject(`Error: ${error.message}`);
+            });
+        });
+}
+
+export function getFactor(id) {
+    return fetch(`http://develop.cistrome.org/cistrome/samples/${id}?fields=factors&format=json`)
+        .then(response => {
+            if (!response.ok) {
+                return new Promise((resolve, reject) => {
+                    reject(`Error: ${response.statusText}`);
+                });
+            }
+            return response.json();
+        }).then(data => {
+            return new Promise((resolve, reject) => {
+                const factors = data.samples[0]?.factors;
+                // if(factors.length === 0) {
+                    // reject("No factor data found for given sample");
+                // }
+                resolve(factors.sort((a, b) => a.value - b.value)[0]?.name ?? 'Unknown')
+            });
+        }).catch(error => {
+            return new Promise((resolve, reject) => {
+                reject(`Error: ${error.message}`);
+            });
+        });
+}
+
+export function getOntology(id) {
+    return fetch(`http://develop.cistrome.org/cistrome/samples/${id}?fields=ontologies&format=json`)
+        .then(response => {
+            if (!response.ok) {
+                return new Promise((resolve, reject) => {
+                    reject(`Error: ${response.statusText}`);
+                });
+            }
+            return response.json();
+        }).then(data => {
+            return new Promise((resolve, reject) => {
+                const ontologies = data.samples[0]?.ontologies;
+                // if(ontologies.length === 0) {
+                    // reject("No ontology data found for given sample");
+                // }
+                resolve(ontologies.sort((a, b) => a.value - b.value)[0]?.term ?? 'Unknown')
+            });
+        }).catch(error => {
             return new Promise((resolve, reject) => {
                 reject(`Error: ${error.message}`);
             });

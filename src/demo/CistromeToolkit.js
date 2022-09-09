@@ -14,7 +14,8 @@ import {
     CISTROME_API_TYPES,
     CISTROME_API_COLORS,
     getReadableTable,
-    validateGeneParams, 
+    validateGeneParams,
+    validateFactorParams,
     validateIntervalParams,
     validatePeaksetParams,
     requestDBToolkitAPI
@@ -70,6 +71,7 @@ export default function CistromeToolkit(props) {
         distance: CISTROME_DBTOOLKIT_GENE_DISTANCE[0],
         gene: ""
     });
+    const [latestFactorParams, setLatestFactorParams] = useState({factor: ""});
     const [latestPeaksetParams, setLatestPeaksetParams] = useState({
         assembly: CISTROME_DBTOOLKIT_SPECIES[0],
         tpeak: CISTROME_DBTOOLKIT_PEAK_NUMBERS[0],
@@ -79,6 +81,7 @@ export default function CistromeToolkit(props) {
     // Ready to call API?
     const [isLatestIntervalParamsReady, setIsLatestIntervalParamsReady] = useState(false);
     const [isLatestGeneParamsReady, setIsLatestGeneParamsReady] = useState(false);
+    const [isLatestFactorParamsReady, setIsLatestFactorParamsReady] = useState(false);
     const [isLatestPeaksetParamsReady, setIsLatestPeaksetParamsReady] = useState(false);
 
     // An Interval API can be called outside of `CistromeToolkit`
@@ -113,6 +116,10 @@ export default function CistromeToolkit(props) {
     }, [latestGeneParams]);
 
     useEffect(() => {
+        setIsLatestFactorParamsReady(validateFactorParams(latestFactorParams).success);
+    }, [latestFactorParams]);
+
+    useEffect(() => {
         setIsLatestPeaksetParamsReady(validatePeaksetParams(latestPeaksetParams).success);
     }, [latestPeaksetParams]);
 
@@ -131,6 +138,7 @@ export default function CistromeToolkit(props) {
             parameter = {
                 [CISTROME_API_TYPES.INTERVAL]: latestIntervalParams,
                 [CISTROME_API_TYPES.GENE]: latestGeneParams,
+                [CISTROME_API_TYPES.FACTOR]: latestFactorParams,
                 [CISTROME_API_TYPES.PEAKSET]: latestPeaksetParams
             }[apiType];
         }
@@ -314,6 +322,22 @@ export default function CistromeToolkit(props) {
                     />
                     {searchButton(isLatestGeneParamsReady, () => runCistromeToolkitAPI(CISTROME_API_TYPES.GENE))}
                 </div>
+                {/* Search By Factor */}
+                <div 
+                    className={"api-config-view"}
+                    style={{ borderLeft: `4px solid ${CISTROME_API_COLORS.FACTOR}` }}
+                >
+                    <div className='api-title'>Search by Factor Name</div>
+                    <div className='api-subtitle'>Find samples by a factor</div>
+                    <div>Factor</div>
+                    <input
+                        className="cistrome-api-text-input"
+                        type="text"
+                        placeholder="AATF"
+                        onChange={e => setLatestFactorParams({ ...latestFactorParams, factor: e.target.value })}
+                    />
+                    {searchButton(isLatestFactorParamsReady, () => runCistromeToolkitAPI(CISTROME_API_TYPES.FACTOR))}
+                </div>
                 {/* Search by Peak Set */}
                 <div
                     className={"api-config-view"}
@@ -410,6 +434,22 @@ export default function CistromeToolkit(props) {
                         <div className='cisvis-api-parameter'>
                             <span>{"DISTANCE"}</span>
                             <b>{distance}</b>
+                        </div>
+                    </div>
+                );
+            }
+            else if(api === CISTROME_API_TYPES.FACTOR) {
+                const { factor } = d.parameter;
+                return (
+                    <div 
+                        key={JSON.stringify(d.parameter) + i}
+                        className={i === selectedRequestIndex ? "cisvis-api-result-selected" : "cisvis-api-result"}
+                        style={{ borderLeft: `4px solid ${CISTROME_API_COLORS[api]}` }}
+                        onClick={() => setSelectedRequestIndex(i)}
+                    >
+                        <div className='cisvis-api-parameter'>
+                            <span>{"FACTOR"}</span>
+                            <b>{factor}</b>
                         </div>
                     </div>
                 );

@@ -42,6 +42,8 @@ higlassRegister(
     { pluginType: "dataFetcher" }
 );
 
+const initHeatmapWidth = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) / 2.0;
+
 export default function CistromeExplorer() {
     
     const hmRef = useRef();
@@ -122,7 +124,7 @@ export default function CistromeExplorer() {
 
     // v-separator position
     const resizerRef = useRef();
-    const [heatmapWidth, setHeatmapWidth] = useState(800);
+    const [heatmapWidth, setHeatmapWidth] = useState(initHeatmapWidth);
 
     // Toolkit-related
     const [isToolkitVisible, setIsToolkitVisible] = useState(false);

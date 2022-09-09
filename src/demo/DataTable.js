@@ -1,6 +1,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import "./DataTable.scss";
 import { PLUS, SORT_ASC, SORT_ASC_SIMPLE, SORT_DESC, SORT_DESC_SIMPLE, SQUARE_CHECK } from "../utils/icons";
+import { getFactor, getOntology } from "../utils/cistrome";
 
 const ROW_DISPLAY_LIMIT = 100;
 
@@ -191,14 +192,20 @@ export default function DataTable(props) {
             });
             const cid = d["CistromeDB ID"];
             const gsm = d["GEO/ENCODE ID"];
-            const ct = d['CellType'];
-            const f = d['Factor'];
-            console.log(d);
+            // const ct = d['CellType'];
+            // const f = d['Factor'];
+            // console.log(d);
             return (
                 <tr 
                     key={i} 
                     className={"data-table-row"}
-                    onClick={() => { if(cid) onButton(cid, gsm, ct, f); }}
+                    onClick={async () => { 
+                        if(cid) {
+                            const ct = await getOntology(cid);
+                            const f = await getFactor(cid);
+                            onButton(cid, gsm, ct, f); 
+                        }
+                    }}
                 >
                     {/* {buttonCell} */}
                     {dataCells}
