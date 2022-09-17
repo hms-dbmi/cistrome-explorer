@@ -98,6 +98,9 @@ export const demos = {
             rowInfoAttributes: [
                 {field: "Cell Type", type: "nominal", position: "right", width: 200},
                 {field: "Clustering", type: "tree", position: "right", width: 200},
+                { field: "PEAKS_TOTAL", type: "quantitative", title: 'Total peaks', position: "right", width: 100 },
+                { field: "SEQUENCE_LENGTH", type: "quantitative", title: 'Sequence length', position: "right", width: 100 },
+                { field: "READS_MAPPED", type: "quantitative", title: 'Reads mapped', position: "right", width: 100 },
             ],
             rowAggregate: [],
             rowSort: [
