@@ -8,6 +8,7 @@ import rowInfo3 from "./cistrome-track-3/rowInfo.json";
 import rowInfo10 from "./cistrome-track-10/rowInfo.json";
 import rowInfoAtac from "./cistrome-track-atac/rowInfoWithQc.json";
 import rowInfo3k27 from "./cistrome-track-3k27/rowInfoWithQc.json";
+import rowInfo3k4 from './cistrome-track-3k4/rowInfo.json';
 
 const _fakedata = {
     "default": {
@@ -28,6 +29,11 @@ const _fakedata = {
     "cistrome-track-3k27": {
         tilesetInfo: {
             rowInfo: rowInfo3k27
+        }
+    },
+    "cistrome-track-3k4": {
+        tilesetInfo: {
+            rowInfo: rowInfo3k4
         }
     },
     "cistrome-track-1b": {
