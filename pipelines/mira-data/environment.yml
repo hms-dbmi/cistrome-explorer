@@ -1,0 +1,15 @@
+name: mira-data
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - pip=21.2.4
+  - python=3.9
+  - snakemake-minimal=7.5.0
+  - pip
+  - pip:
+    - clodius==0.18.1
+    - h5py==3.6.0
+    - rich==12.3.0
+    - scanpy
