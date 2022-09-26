@@ -191,7 +191,7 @@
 
 .gene-suggestion {
     position: absolute;
-    z-index: 1;
+    z-index: 2;
     background: white;
     line-height: 14px;
     border-left: 1px solid silver;
@@ -208,7 +208,7 @@
             padding: 10px 6px 10px 6px;
         }
         li:hover {
-            background: #eeeeee;
+            background: #eeeeee !important;
         }
     }
 }

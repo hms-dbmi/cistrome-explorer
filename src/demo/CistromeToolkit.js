@@ -38,8 +38,13 @@ export default function CistromeToolkit(props) {
         isVisible: initIsVisible,
         onAddTrack,
         intervalAPIParams,
-        geneAPIParams
+        geneAPIParams,
+        hmRef
     } = props;
+
+    const [geneSuggestions, setGeneSuggestions] = useState([]);
+    const [geneIndex, setGeneIndex] = useState(-1);
+    const geneSearchRef = useRef();
 
     const toolkitRef = useRef(null);
     const resizerRef = useRef(null);
@@ -315,11 +320,69 @@ export default function CistromeToolkit(props) {
                     </select>
                     <div>Gene</div>
                     <input
+                        ref={geneSearchRef}
                         className="cistrome-api-text-input"
                         type="text"
                         placeholder="GAPDH or NM_001289746"
-                        onChange={e => setLatestGeneParams({ ...latestGeneParams, gene: e.target.value })}
+                        value={latestGeneParams.gene ?? ''}
+                        onChange={(e) => {
+                            const keyword = e.target.value;
+                            if(keyword !== "" && !keyword.startsWith("c")) {
+                                hmRef.current.api.suggestGene(keyword, (suggestions) => {
+                                    setGeneSuggestions(suggestions);
+                                });
+                            } else {
+                                setGeneSuggestions([]);
+                            }
+                            setLatestGeneParams({ ...latestGeneParams, gene: e.target.value })
+                        }}
+                        onKeyDown={(e) => {
+                            switch(e.key){
+                            case "ArrowUp":
+                                {
+                                    const newIndex = Math.max(geneIndex - 1, -1);
+                                    setGeneIndex(newIndex);
+                                }
+                                break;
+                            case "ArrowDown":
+                                {
+                                    const newIndex = Math.min(geneIndex + 1, geneSuggestions.length - 1);
+                                    setGeneIndex(newIndex);
+                                }
+                                break;
+                            case "Enter":
+                                setGeneSuggestions([]);
+                                setLatestGeneParams({ ...latestGeneParams, gene: geneSuggestions[geneIndex].geneName });
+                                break;
+                            case "Esc":
+                            case "Escape":
+                                break;
+                            }
+                        }}
                     />
+                    {geneSuggestions.length !== 0 ? 
+                        <div className="gene-suggestion" style={{
+                            position: 'fixed',
+                            left: geneSearchRef.current?.getBoundingClientRect().left,
+                            top: geneSearchRef.current?.getBoundingClientRect().top + geneSearchRef.current?.getBoundingClientRect().height,
+                        }}>
+                            <ul>
+                                {geneSuggestions.map((d, i) => (
+                                    <li style={{textAlign: "right", color: "gray", background: i === geneIndex ? '#E2F1FF' : 'none'}}
+                                        key={d.geneName + d.score}
+                                        onClick={() => {
+                                            setLatestGeneParams({ ...latestGeneParams, gene: d.geneName });
+                                            setGeneSuggestions([]);
+                                        }}
+                                    >
+                                        <strong style={{float: "left", color: "black"}}>{d.geneName}</strong>
+                                        {`${d.chr}:${d.txStart}-${d.txEnd}`}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                        : null
+                    }
                     {searchButton(isLatestGeneParamsReady, () => runCistromeToolkitAPI(CISTROME_API_TYPES.GENE))}
                 </div>
                 {/* Search By Factor */}
