@@ -565,6 +565,7 @@ export default function CistromeExplorer() {
                         intervalAPIParams={toolkitParams}
                         geneAPIParams={geneToolkitParams}
                         onAddTrack={onAddToolkitTrack}
+                        hmRef={hmRef}
                     />
                 </div>
                 <div className="settings" style={{
