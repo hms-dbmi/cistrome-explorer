@@ -157,7 +157,7 @@ code {
 
 .gene-suggestion {
   position: absolute;
-  z-index: 1;
+  z-index: 2;
   background: white;
   line-height: 14px;
   border-left: 1px solid silver;
@@ -173,7 +173,7 @@ code {
     .gene-suggestion ul li {
       padding: 10px 6px 10px 6px; }
     .gene-suggestion ul li:hover {
-      background: #eeeeee; }
+      background: #eeeeee !important; }
 
 .help-highlight {
   box-shadow: 0 0 0 2px #2299DB, 0 0 12px 0 #2299DB !important; }
