@@ -304,7 +304,7 @@ export const hgDemoViewConfig3K4 ={
                     {
                         "type": "horizontal-multivec",
                         "uid": "cistrome-track-3k4",
-                        "tilesetUid": "cistrome-multivec-k4me3",
+                        "tilesetUid": "cistrome-2-multivec",
                         "server": "https://server.gosling-lang.org/api/v1",
                         "options": {
                             "labelPosition": "topLeft",
