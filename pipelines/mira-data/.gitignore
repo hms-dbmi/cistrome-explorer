@@ -1,2 +1,4 @@
 /data/*
 /mira-datasets/*
+.ipynb_checkpoints
+/output/*

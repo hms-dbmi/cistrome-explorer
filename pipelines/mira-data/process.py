@@ -3,7 +3,7 @@ import math
 import h5py
 import scanpy as sc
 
-NUM_ROWS = 1000
+NUM_ROWS = 500
 RESOLUTION = 1000
 
 def basic_preprocess():
