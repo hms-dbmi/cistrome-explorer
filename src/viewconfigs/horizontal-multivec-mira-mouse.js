@@ -12,12 +12,12 @@ export const hgDemoViewConfigMiraMouse = {
     "views": [
         {
             "initialXDomain": [
-                301046734.8420018 - 1000000,
-                301255001.78506374 + 1000000
+                301066734.8420018,
+                301255001.78506374
             ],
             "initialYDomain": [
-                301046734.8420018 - 1000000,
-                301255001.78506374 + 1000000
+                301066734.8420018,
+                301255001.78506374
             ],
             "genomePositionSearchBoxVisible": true,
             "chromInfoPath": "//s3.amazonaws.com/gosling-lang.org/data/mm10.chrom.sizes",
@@ -227,7 +227,7 @@ export const hgDemoViewConfigMiraMouse = {
                     {
                         "type": "horizontal-multivec",
                         "uid": "mira-track-mouse",
-                        "tilesetUid": "e18_mouse_brain_10x_dataset_100_rows",
+                        "tilesetUid": "e18_mouse_brain_10x_dataset_500_rows",
                         "server": "https://server.gosling-lang.org/api/v1",
                         "options": {
                             "labelPosition": "topLeft",
@@ -237,7 +237,7 @@ export const hgDemoViewConfigMiraMouse = {
                             "trackBorderWidth": 2,
                             "trackBorderColor": "gray",
                             "heatmapValueScaling": "log",
-                            "name": "e18_mouse_brain_10x_dataset_100_rows",
+                            "name": "e18_mouse_brain_10x_dataset_500_rows",
                             "labelTopMargin": 2,
                             "labelLeftMargin": 4,
                             "labelBottomMargin": 0,
@@ -257,7 +257,7 @@ export const hgDemoViewConfigMiraMouse = {
                                 "rgba(255,255,255,1)",
                                 "rgba(0,0,0,1)"
                             ],
-                            "scaleStartPercent": "0.1", 
+                            "scaleStartPercent": "0", 
                             "scaleEndPercent": "1"
                         },
                         "width": 1607,

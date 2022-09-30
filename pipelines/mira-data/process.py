@@ -1,6 +1,7 @@
 import numpy as np
 import math
 import h5py
+from torch import chunk
 import scanpy as sc
 
 NUM_ROWS = 500
@@ -41,6 +42,10 @@ def basic_preprocess():
 
     overlapping_barcodes = np.intersect1d(rna_data.obs_names, atac_data.obs_names) # make sure barcodes are matched between modes
     atac_data = atac_data[[i for i in overlapping_barcodes],:]
+
+    rna_data = None
+    data = None
+
     return atac_data.to_df()
 
 def anndata_to_multivec():
@@ -75,40 +80,39 @@ def anndata_to_multivec():
     # filter data for initial example
     dff = df.filter(regex='chr').head(NUM_ROWS)
     # num_rows = len(dff.index)
-
-    density_dict = { c: np.zeros((math.ceil(s / 1000) * RESOLUTION, NUM_ROWS)) for (c, s) in chromSizes }
-
-    # "chr1:3060610-3061485"
-    prev_chr_str = None
-    for column in dff.columns:
-        [c, interval] = column.split(':')
-        [start, end] = interval.split('-')
-        start = int(start)
-        end = int(end)
-
-        density_dict[c][start:end] = dff[column]
-        
-        if c != prev_chr_str:
-            prev_chr_str = c
-            print(prev_chr_str)
-
-    # density_dict['chr1'][3113326]
+    
+    chromScaled =  { c: math.ceil(s / RESOLUTION) for (c, s) in chromSizes }
 
     with h5py.File(f'./e18_mouse_brain_10x_dataset_{NUM_ROWS}_rows.hdf5', "w") as f:
-        for (c, s) in chromSizes:
-            print(c, s, density_dict[c].shape)
-            
-            density = density_dict[c]
-            density = density.reshape(-1, math.ceil(s / 1000), NUM_ROWS).sum(axis=0)
+        prev_c = None
+        for column in dff.columns:
+            # e.g., "chr1:3060610-3061485"
+            [c, interval] = column.split(':')
+            [start, end] = interval.split('-')
+            start = int(start)
+            end = int(end)
 
-            f.create_dataset(name=c, data=density, compression='gzip')
-
-            density_dict[c] = None
+            if prev_c == None:
+                ss = chromScaled[c]
+                density = np.zeros((ss, NUM_ROWS))
+                prev_c = c
             
-            f.flush()
+            if c != prev_c:
+                print(f'Storing {prev_c}')
+                # density = density.reshape(-1, math.ceil(chromScaled[prev_c] / RESOLUTION), NUM_ROWS).sum(axis=0)
+                f.create_dataset(name=prev_c, data=density, dtype='f', compression='gzip', chunks=True)
+                
+                # memory
+                density = None
+                f.flush()
+
+                # start new
+                ss = chromScaled[c]
+                density = np.zeros((ss, NUM_ROWS))
+
+                prev_c = c
+            
+            density[math.floor(start / RESOLUTION) : math.ceil(end / RESOLUTION)] = dff[column]
 
 if __name__ == "__main__":
     anndata_to_multivec()
-    # f = h5py.File(f'./e18_mouse_brain_10x_dataset_{NUM_ROWS}_rows.hdf5', "r")
-    # print(f['chr1'].size)
-    # f.close()
