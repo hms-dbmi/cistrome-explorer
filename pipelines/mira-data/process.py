@@ -1,44 +1,80 @@
 import numpy as np
+import math
 import h5py
 import scanpy as sc
 
-def main():
+NUM_ROWS = 100
+RESOLUTION = 1000
+
+def anndata_to_multivec():
+    # Download this data by running `mira.datasets.MouseBrainDataset()`
     data = sc.read_h5ad('mira-datasets/e18_10X_brain_dataset/e18_mouse_brain_10x_dataset.ad')
     atac_data = data[:, data.var.feature_types == 'Peaks']
     df = atac_data.to_df()
 
-    dff = df.filter(regex='chr1:').head(1)
-    columns = list(dff.columns)
-    num_rows = len(dff.index)
-
-    # CHR_FILTER = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', 'X', 'Y']
     # https://github.com/igvteam/igv/blob/master/genomes/sizes/mm10.chrom.sizes
-    density_dict = { c : np.zeros((195471971, num_rows)) for c in ['chr1']}
+    chromSizes = [
+        ('chr1', 195471971),
+        ('chr2', 182113224),
+        ('chr3', 160039680),
+        ('chr4', 156508116),
+        ('chr5', 151834684),
+        ('chr6', 149736546),
+        ('chr7', 145441459),
+        ('chr8', 129401213),
+        ('chr9', 124595110),
+        ('chr10', 130694993),
+        ('chr11', 122082543),
+        ('chr12', 120129022),
+        ('chr13', 120421639),
+        ('chr14', 124902244),
+        ('chr15', 104043685),
+        ('chr16', 98207768),
+        ('chr17', 94987271),
+        ('chr18', 90702639),
+        ('chr19', 61431566),
+        ('chrX', 171031299),
+        ('chrY', 91744698),
+        ('chrM', 16299)
+    ]
 
-    density_dict['chr1']
+    # filter data for initial example
+    dff = df.filter(regex='chr').head(NUM_ROWS)
+    # num_rows = len(dff.index)
 
-    for column in ['chr1:3060610-3061485']:
+    density_dict = { c: np.zeros((math.ceil(s / 1000) * RESOLUTION, NUM_ROWS)) for (c, s) in chromSizes }
+
+    # "chr1:3060610-3061485"
+    prev_chr_str = None
+    for column in dff.columns:
+        [c, interval] = column.split(':')
+        [start, end] = interval.split('-')
+        start = int(start)
+        end = int(end)
+
+        density_dict[c][start:end+1] = dff[column]
         
-        chr = column.split(':')[0]
-        range = column.split(':')[1].split('-')
-        start = int(range[0])
-        end = int(range[1])
-        value = 0
+        if c != prev_chr_str:
+            prev_chr_str = c
+            print(prev_chr_str)
 
-        print(chr, start, end)
-        print(dff[column])
-    #     density_dict[chr][start:end] = dff[column]#.transpose()
+    # density_dict['chr1'][3113326]
 
-    print("Writing to hdf5 file")
-    mv5_data = h5py.File('./chr1.hdf5', "w")
+    with h5py.File(f'./e18_mouse_brain_10x_dataset_{NUM_ROWS}_rows.hdf5', "w") as f:
+        for (c, s) in chromSizes:
+            print(c, s, density_dict[c].shape)
+            
+            density = density_dict[c]
+            density = density.reshape(-1, math.ceil(s / 1000), NUM_ROWS).sum(axis=0)
 
-    for c in ['chr1']:
-        print(c)
-        mv5_data.create_dataset((c), (195471971, num_rows), "i", data=density_dict[c], compression='gzip')
+            f.create_dataset(name=c, data=density, compression='gzip')
 
-    mv5_data.close()
-
-    print('closed')
+            density_dict[c] = None
+            
+            f.flush()
 
 if __name__ == "__main__":
-    main()
+    anndata_to_multivec()
+    # f = h5py.File(f'./e18_mouse_brain_10x_dataset_{NUM_ROWS}_rows.hdf5', "r")
+    # print(f['chr1'].size)
+    # f.close()
