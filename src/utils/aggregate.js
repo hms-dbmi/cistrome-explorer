@@ -11,7 +11,7 @@ export function getAggregatedValue(rowInfo, field, type, func) {
     const isAggregated = Array.isArray(rowInfo);
     if(!isAggregated) {
         // For counting values, we return a value `1`.
-        return func === "count" || func === "uniqueCount" ? 1 : (rowInfo[field] ?? "null");
+        return func === "count" || func === "uniqueCount" ? 1 : (rowInfo[field] ?? 0);
     }
     const funcName = func ? func : "default";
 

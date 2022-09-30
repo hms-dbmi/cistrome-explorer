@@ -3,15 +3,47 @@ import math
 import h5py
 import scanpy as sc
 
-NUM_ROWS = 100
+NUM_ROWS = 1000
 RESOLUTION = 1000
 
-def anndata_to_multivec():
+def basic_preprocess():
     # Download this data by running `mira.datasets.MouseBrainDataset()`
     data = sc.read_h5ad('mira-datasets/e18_10X_brain_dataset/e18_mouse_brain_10x_dataset.ad')
+    rna_data = data[:, data.var.feature_types == 'Gene Expression']
     atac_data = data[:, data.var.feature_types == 'Peaks']
-    df = atac_data.to_df()
 
+    # Basic preprocessing steps
+    rna_data.var.index = rna_data.var.index.str.upper()
+    rna_data.var_names_make_unique()
+    rna_data = rna_data[:, ~rna_data.var.index.str.startswith('GM')]
+
+    sc.pp.filter_cells(rna_data, min_counts = 400)
+    sc.pp.filter_genes(rna_data, min_cells=15)
+
+    rna_data.var['mt'] = rna_data.var_names.str.startswith('MT-')
+    sc.pp.calculate_qc_metrics(rna_data, qc_vars=['mt'], percent_top=None,
+                            log1p=False, inplace=True)
+
+    rna_data = rna_data[rna_data.obs.pct_counts_mt < 15, :]
+    rna_data = rna_data[rna_data.obs.n_genes_by_counts < 8000, :]
+    sc.pp.filter_genes(rna_data, min_cells=15)
+
+    rna_data.raw = rna_data # save raw counts
+    sc.pp.normalize_total(rna_data, target_sum=1e4)
+    sc.pp.log1p(rna_data)
+
+    sc.pp.highly_variable_genes(rna_data, min_disp = -0.1)
+    rna_data.layers['norm'] = rna_data.X # save normalized count data
+    rna_data.X = rna_data.raw.X # and reload raw counts
+    rna_data = rna_data[:, rna_data.var.highly_variable] 
+    rna_data.var['exog_feature'] = rna_data.var.highly_variable # set column "exog_features" to all genes that met dispersion threshold
+    rna_data.var.highly_variable = (rna_data.var.dispersions_norm > 0.8) & rna_data.var.exog_feature # set column "highly_variable" to genes that met first criteria and dispersion > 0.8
+
+    overlapping_barcodes = np.intersect1d(rna_data.obs_names, atac_data.obs_names) # make sure barcodes are matched between modes
+    atac_data = atac_data[[i for i in overlapping_barcodes],:]
+    return atac_data.to_df()
+
+def anndata_to_multivec():
     # https://github.com/igvteam/igv/blob/master/genomes/sizes/mm10.chrom.sizes
     chromSizes = [
         ('chr1', 195471971),
@@ -38,6 +70,8 @@ def anndata_to_multivec():
         ('chrM', 16299)
     ]
 
+    df = basic_preprocess()
+
     # filter data for initial example
     dff = df.filter(regex='chr').head(NUM_ROWS)
     # num_rows = len(dff.index)
@@ -52,7 +86,7 @@ def anndata_to_multivec():
         start = int(start)
         end = int(end)
 
-        density_dict[c][start:end+1] = dff[column]
+        density_dict[c][start:end] = dff[column]
         
         if c != prev_chr_str:
             prev_chr_str = c

@@ -9,6 +9,7 @@ import rowInfo10 from "./cistrome-track-10/rowInfo.json";
 import rowInfoAtac from "./cistrome-track-atac/rowInfoWithQc.json";
 import rowInfo3k27 from "./cistrome-track-3k27/rowInfoWithQc.json";
 import rowInfo3k4 from './cistrome-track-3k4/rowInfo.json';
+import rowInfoMiraMouse from './mira-track-mouse/rowInfo.json';
 
 const _fakedata = {
     "default": {
@@ -34,6 +35,12 @@ const _fakedata = {
     "cistrome-track-3k4": {
         tilesetInfo: {
             rowInfo: rowInfo3k4
+        }
+    },
+    "mira-track-mouse": {
+        tilesetInfo: {
+            // TODO:
+            rowInfo: rowInfoMiraMouse
         }
     },
     "cistrome-track-1b": {

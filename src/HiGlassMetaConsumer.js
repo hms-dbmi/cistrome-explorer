@@ -328,6 +328,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
 
     useEffect(() => {
         const currViewConfig = hgRef.current.api.getViewConfig();
+        if(currViewConfig.views[0]?.genomePositionSearchBox?.chromInfoId === 'mm10') return; 
         const newViewConfig = setDataTransformOfTopTrackFromViewConfig(
             currViewConfig, 
             ["cistrome-view-1", "cistrome-view-atac", "cistrome-view-3k27"], 

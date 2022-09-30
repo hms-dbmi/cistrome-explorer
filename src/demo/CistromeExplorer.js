@@ -8,7 +8,7 @@ import CistromeToolkit from "./CistromeToolkit.js";
 import { UNDO, REDO, TABLE_2, DOCUMENT, GITHUB, TOGGLE_ON, TOGGLE_OFF, CLOSE, ELLIPSIS, TRASH, SEARCH, FOLDER, PENCIL, MENU } from "../utils/icons.js";
 import { DEFAULT_COLOR_RANGE } from "../utils/color.js";
 import { diffViewOptions } from "../utils/view-history";
-import { demos } from "./demo";
+import { demos as mainDemos, miraDemos } from "./demo";
 import { CISTROME_DBTOOLKIT_GENE_DISTANCE, CISTROME_DBTOOLKIT_SPECIES } from "../utils/cistrome";
 
 import { publishHelpTooltip, destroyTooltip } from "../Tooltip.js";
@@ -45,7 +45,11 @@ higlassRegister(
 const initHeatmapWidth = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) / 2.0;
 
 export default function CistromeExplorer() {
+    const urlParams = new URLSearchParams(window.location.search);
     
+    const isMiraData = urlParams.get('version') === '2';
+    const demos = isMiraData ? miraDemos : mainDemos;
+
     const hmRef = useRef();
 
     const [selectedDemo, setSelectedDemo] = useState(Object.keys(demos)[0]);
