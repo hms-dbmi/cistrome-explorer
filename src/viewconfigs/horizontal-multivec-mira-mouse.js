@@ -66,7 +66,7 @@ export const hgDemoViewConfigMiraMouse = {
                             showMousePosition: true,
                             mousePositionColor: "#000000",
                             backgroundColor: "transparent",
-                            name: "hg38 | Cytoband",
+                            name: "mm10 | Cytoband",
                             fontSize: 12,
                             labelColor: "black",
                             labelPosition: "topLeft",
