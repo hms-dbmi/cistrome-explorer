@@ -83,7 +83,7 @@ def anndata_to_multivec():
     
     chromScaled =  { c: math.ceil(s / RESOLUTION) for (c, s) in chromSizes }
 
-    with h5py.File(f'./e18_mouse_brain_10x_dataset_{NUM_ROWS}_rows.hdf5', "w") as f:
+    with h5py.File(f'./output/e18_mouse_brain_10x_dataset_{NUM_ROWS}_rows.hdf5', "w") as f:
         prev_c = None
         for column in dff.columns:
             # e.g., "chr1:3060610-3061485"
