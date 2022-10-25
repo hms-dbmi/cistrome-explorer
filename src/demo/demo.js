@@ -4,6 +4,7 @@ import { hgDemoViewConfig3k27 } from "../viewconfigs/horizontal-multivec-3k27";
 import { hgDemoViewConfig3k27Revision } from "../viewconfigs/horizontal-multivec-3k27-revision";
 import { hgDemoViewConfig3K4 } from "../viewconfigs/horizontal-multivec-3k4";
 import { hgDemoViewConfigMiraMouse } from '../viewconfigs/horizontal-multivec-mira-mouse';
+import { hgDemoViewConfig3K4Revision } from "../viewconfigs/horizontal-multivec-3k4-revision";
 
 export const demos = {
     "ATAC": {
@@ -172,8 +173,28 @@ export const demos = {
             ],
             rowAggregate: [],
             rowSort: [
-                // {field: "Clustering", type: "tree", order: "ascending"}
-                {field: "Cell Type", type: "nominal", order: "ascending"}
+                {field: "Clustering", type: "tree", order: "ascending"}
+                // {field: "Cell Type", type: "nominal", order: "ascending"}
+            ],
+            rowFilter: []
+        }]
+    },
+    "H3K4me3 (v2.0)": {
+        viewConfig: hgDemoViewConfig3K4Revision,
+        options: [{
+            viewId: "cistrome-view-3k4-revision",
+            trackId: "cistrome-track-3k4-revision",
+            rowInfoAttributes: [
+                {field: "Cell Type", type: "nominal", position: "right", width: 200},
+                {field: "Clustering", type: "tree", position: "right", width: 200},
+                { field: "PEAKS_TOTAL", type: "quantitative", title: 'Total peaks', position: "right", width: 100 },
+                { field: "SEQUENCE_LENGTH", type: "quantitative", title: 'Sequence length', position: "right", width: 100 },
+                { field: "READS_MAPPED", type: "quantitative", title: 'Reads mapped', position: "right", width: 100 },
+            ],
+            rowAggregate: [],
+            rowSort: [
+                {field: "Clustering", type: "tree", order: "ascending"}
+                // {field: "Cell Type", type: "nominal", order: "ascending"}
             ],
             rowFilter: []
         }]

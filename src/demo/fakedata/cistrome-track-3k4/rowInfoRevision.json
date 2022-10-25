@@ -1,0 +1,1929 @@
+[
+    {
+        "id": "GSM534479",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-2",
+            "i-3",
+            "GSM534479_stromal_cell"
+        ],
+        "Cell Type": "stromal_cell"
+    },
+    {
+        "id": "GSM534486",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-2",
+            "i-3",
+            "GSM534486_stromal_cell"
+        ],
+        "Cell Type": "stromal_cell"
+    },
+    {
+        "id": "GSM534472",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-2",
+            "i-4",
+            "GSM534472_stromal_cell"
+        ],
+        "Cell Type": "stromal_cell"
+    },
+    {
+        "id": "GSM534465",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-2",
+            "i-4",
+            "GSM534465_stromal_cell"
+        ],
+        "Cell Type": "stromal_cell"
+    },
+    {
+        "id": "GSM867109",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-6",
+            "i-7",
+            "i-8",
+            "GSM867109_common-lymphoid_progenitors"
+        ],
+        "Cell Type": "common-lymphoid_progenitors"
+    },
+    {
+        "id": "GSM867110",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-6",
+            "i-7",
+            "i-8",
+            "GSM867110_common-lymphoid_progenitors"
+        ],
+        "Cell Type": "common-lymphoid_progenitors"
+    },
+    {
+        "id": "GSM894069",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-6",
+            "i-7",
+            "i-9",
+            "i-10",
+            "GSM894069_B_cell"
+        ],
+        "Cell Type": "B_cell"
+    },
+    {
+        "id": "GSM847242",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-6",
+            "i-7",
+            "i-9",
+            "i-10",
+            "i-11",
+            "GSM847242_B_cell"
+        ],
+        "Cell Type": "B_cell"
+    },
+    {
+        "id": "GSM847243",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-6",
+            "i-7",
+            "i-9",
+            "i-10",
+            "i-11",
+            "GSM847243_B_cell"
+        ],
+        "Cell Type": "B_cell"
+    },
+    {
+        "id": "GSM894068",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-6",
+            "i-7",
+            "i-9",
+            "i-12",
+            "GSM894068_B_cell"
+        ],
+        "Cell Type": "B_cell"
+    },
+    {
+        "id": "GSM894070",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-6",
+            "i-7",
+            "i-9",
+            "i-12",
+            "GSM894070_B_cell"
+        ],
+        "Cell Type": "B_cell"
+    },
+    {
+        "id": "GSM537702",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-6",
+            "i-13",
+            "i-14",
+            "GSM537702_granulocytes"
+        ],
+        "Cell Type": "granulocytes"
+    },
+    {
+        "id": "GSM772782",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-6",
+            "i-13",
+            "i-14",
+            "GSM772782_granulocytes"
+        ],
+        "Cell Type": "granulocytes"
+    },
+    {
+        "id": "GSM315956",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-6",
+            "i-13",
+            "i-15",
+            "i-16",
+            "GSM315956_CD8_T_cell"
+        ],
+        "Cell Type": "CD8_T_cell"
+    },
+    {
+        "id": "GSM772896",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-6",
+            "i-13",
+            "i-15",
+            "i-16",
+            "GSM772896_CD8_T_cell"
+        ],
+        "Cell Type": "CD8_T_cell"
+    },
+    {
+        "id": "GSM997256",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-6",
+            "i-13",
+            "i-15",
+            "i-17",
+            "i-18",
+            "GSM997256_CD4_T_cell"
+        ],
+        "Cell Type": "CD4_T_cell"
+    },
+    {
+        "id": "GSM772944",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-6",
+            "i-13",
+            "i-15",
+            "i-17",
+            "i-18",
+            "GSM772944_CD4_T_cell"
+        ],
+        "Cell Type": "CD4_T_cell"
+    },
+    {
+        "id": "GSM772852",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-6",
+            "i-13",
+            "i-15",
+            "i-17",
+            "i-19",
+            "GSM772852_CD4_T_cell"
+        ],
+        "Cell Type": "CD4_T_cell"
+    },
+    {
+        "id": "GSM916071",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-6",
+            "i-13",
+            "i-15",
+            "i-17",
+            "i-19",
+            "i-20",
+            "i-21",
+            "GSM916071_CD4_T_cell"
+        ],
+        "Cell Type": "CD4_T_cell"
+    },
+    {
+        "id": "GSM997232",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-6",
+            "i-13",
+            "i-15",
+            "i-17",
+            "i-19",
+            "i-20",
+            "i-21",
+            "i-22",
+            "GSM997232_CD4_T_cell"
+        ],
+        "Cell Type": "CD4_T_cell"
+    },
+    {
+        "id": "GSM772986",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-6",
+            "i-13",
+            "i-15",
+            "i-17",
+            "i-19",
+            "i-20",
+            "i-21",
+            "i-22",
+            "GSM772986_CD4_T_cell"
+        ],
+        "Cell Type": "CD4_T_cell"
+    },
+    {
+        "id": "GSM648495",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-6",
+            "i-13",
+            "i-15",
+            "i-17",
+            "i-19",
+            "i-20",
+            "i-23",
+            "GSM648495_CD4_T_cell"
+        ],
+        "Cell Type": "CD4_T_cell"
+    },
+    {
+        "id": "GSM648493",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-6",
+            "i-13",
+            "i-15",
+            "i-17",
+            "i-19",
+            "i-20",
+            "i-23",
+            "i-24",
+            "GSM648493_CD4_T_cell"
+        ],
+        "Cell Type": "CD4_T_cell"
+    },
+    {
+        "id": "GSM772925",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-6",
+            "i-13",
+            "i-15",
+            "i-17",
+            "i-19",
+            "i-20",
+            "i-23",
+            "i-24",
+            "GSM772925_CD4_T_cell"
+        ],
+        "Cell Type": "CD4_T_cell"
+    },
+    {
+        "id": "GSM669889",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-26",
+            "GSM669889_embryonic_stem_cell"
+        ],
+        "Cell Type": "embryonic_stem_cell"
+    },
+    {
+        "id": "GSM537687",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-26",
+            "i-27",
+            "i-28",
+            "i-29",
+            "i-30",
+            "GSM537687_pluripotent_stem_cell"
+        ],
+        "Cell Type": "pluripotent_stem_cell"
+    },
+    {
+        "id": "GSM706074",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-26",
+            "i-27",
+            "i-28",
+            "i-29",
+            "i-30",
+            "i-31",
+            "GSM706074_pluripotent_stem_cell"
+        ],
+        "Cell Type": "pluripotent_stem_cell"
+    },
+    {
+        "id": "GSM767348",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-26",
+            "i-27",
+            "i-28",
+            "i-29",
+            "i-30",
+            "i-31",
+            "GSM767348_embryonic_stem_cell"
+        ],
+        "Cell Type": "embryonic_stem_cell"
+    },
+    {
+        "id": "GSM841172",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-26",
+            "i-27",
+            "i-28",
+            "i-29",
+            "i-32",
+            "GSM841172_pluripotent_stem_cell"
+        ],
+        "Cell Type": "pluripotent_stem_cell"
+    },
+    {
+        "id": "GSM575292",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-26",
+            "i-27",
+            "i-28",
+            "i-29",
+            "i-32",
+            "i-33",
+            "GSM575292_pluripotent_stem_cell"
+        ],
+        "Cell Type": "pluripotent_stem_cell"
+    },
+    {
+        "id": "GSM772736",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-26",
+            "i-27",
+            "i-28",
+            "i-29",
+            "i-32",
+            "i-33",
+            "i-34",
+            "i-35",
+            "GSM772736_embryonic_stem_cell"
+        ],
+        "Cell Type": "embryonic_stem_cell"
+    },
+    {
+        "id": "GSM432392",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-26",
+            "i-27",
+            "i-28",
+            "i-29",
+            "i-32",
+            "i-33",
+            "i-34",
+            "i-35",
+            "GSM432392_embryonic_stem_cell"
+        ],
+        "Cell Type": "embryonic_stem_cell"
+    },
+    {
+        "id": "GSM575287",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-26",
+            "i-27",
+            "i-28",
+            "i-29",
+            "i-32",
+            "i-33",
+            "i-34",
+            "i-36",
+            "GSM575287_pluripotent_stem_cell"
+        ],
+        "Cell Type": "pluripotent_stem_cell"
+    },
+    {
+        "id": "GSM529408",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-26",
+            "i-27",
+            "i-28",
+            "i-29",
+            "i-32",
+            "i-33",
+            "i-34",
+            "i-36",
+            "GSM529408_embryonic_stem_cell"
+        ],
+        "Cell Type": "embryonic_stem_cell"
+    },
+    {
+        "id": "GSM327662",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-26",
+            "i-27",
+            "i-28",
+            "i-37",
+            "GSM327662_embryonic_stem_cell"
+        ],
+        "Cell Type": "embryonic_stem_cell"
+    },
+    {
+        "id": "GSM575290",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-26",
+            "i-27",
+            "i-28",
+            "i-37",
+            "i-38",
+            "GSM575290_pluripotent_stem_cell"
+        ],
+        "Cell Type": "pluripotent_stem_cell"
+    },
+    {
+        "id": "GSM575288",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-26",
+            "i-27",
+            "i-28",
+            "i-37",
+            "i-38",
+            "i-39",
+            "GSM575288_pluripotent_stem_cell"
+        ],
+        "Cell Type": "pluripotent_stem_cell"
+    },
+    {
+        "id": "GSM537694",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-26",
+            "i-27",
+            "i-28",
+            "i-37",
+            "i-38",
+            "i-39",
+            "i-40",
+            "GSM537694_pluripotent_stem_cell"
+        ],
+        "Cell Type": "pluripotent_stem_cell"
+    },
+    {
+        "id": "GSM575286",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-26",
+            "i-27",
+            "i-28",
+            "i-37",
+            "i-38",
+            "i-39",
+            "i-40",
+            "i-41",
+            "GSM575286_pluripotent_stem_cell"
+        ],
+        "Cell Type": "pluripotent_stem_cell"
+    },
+    {
+        "id": "GSM529412",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-26",
+            "i-27",
+            "i-28",
+            "i-37",
+            "i-38",
+            "i-39",
+            "i-40",
+            "i-41",
+            "GSM529412_embryonic_stem_cell"
+        ],
+        "Cell Type": "embryonic_stem_cell"
+    },
+    {
+        "id": "GSM529413",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-26",
+            "i-27",
+            "i-42",
+            "GSM529413_embryonic_stem_cell"
+        ],
+        "Cell Type": "embryonic_stem_cell"
+    },
+    {
+        "id": "GSM669936",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-26",
+            "i-27",
+            "i-42",
+            "GSM669936_embryonic_stem_cell"
+        ],
+        "Cell Type": "embryonic_stem_cell"
+    },
+    {
+        "id": "GSM721134",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-44",
+            "i-45",
+            "i-46",
+            "GSM721134_breast_epithelium"
+        ],
+        "Cell Type": "breast_epithelium"
+    },
+    {
+        "id": "GSM353653",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-44",
+            "i-45",
+            "i-46",
+            "GSM353653_prostate_epithelium"
+        ],
+        "Cell Type": "prostate_epithelium"
+    },
+    {
+        "id": "GSM811204",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-44",
+            "i-45",
+            "i-47",
+            "GSM811204_breast_epithelium"
+        ],
+        "Cell Type": "breast_epithelium"
+    },
+    {
+        "id": "GSM811205",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-44",
+            "i-45",
+            "i-47",
+            "i-48",
+            "GSM811205_breast_epithelium"
+        ],
+        "Cell Type": "breast_epithelium"
+    },
+    {
+        "id": "GSM613874",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-44",
+            "i-45",
+            "i-47",
+            "i-48",
+            "GSM613874_breast_epithelium"
+        ],
+        "Cell Type": "breast_epithelium"
+    },
+    {
+        "id": "GSM537709",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-44",
+            "i-49",
+            "i-50",
+            "i-51",
+            "GSM537709_liver_epithelium"
+        ],
+        "Cell Type": "liver_epithelium"
+    },
+    {
+        "id": "GSM503907",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-44",
+            "i-49",
+            "i-50",
+            "i-51",
+            "GSM503907_prostate_epithelium"
+        ],
+        "Cell Type": "prostate_epithelium"
+    },
+    {
+        "id": "GSM947524",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-44",
+            "i-49",
+            "i-50",
+            "i-52",
+            "i-53",
+            "i-54",
+            "GSM947524_prostate_epithelium"
+        ],
+        "Cell Type": "prostate_epithelium"
+    },
+    {
+        "id": "GSM969569",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-44",
+            "i-49",
+            "i-50",
+            "i-52",
+            "i-53",
+            "i-54",
+            "i-55",
+            "GSM969569_prostate_epithelium"
+        ],
+        "Cell Type": "prostate_epithelium"
+    },
+    {
+        "id": "GSM503906",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-44",
+            "i-49",
+            "i-50",
+            "i-52",
+            "i-53",
+            "i-54",
+            "i-55",
+            "GSM503906_prostate_epithelium"
+        ],
+        "Cell Type": "prostate_epithelium"
+    },
+    {
+        "id": "GSM779435",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-44",
+            "i-49",
+            "i-50",
+            "i-52",
+            "i-53",
+            "i-56",
+            "GSM779435_cervix_epithelium"
+        ],
+        "Cell Type": "cervix_epithelium"
+    },
+    {
+        "id": "GSM922787",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-44",
+            "i-49",
+            "i-50",
+            "i-52",
+            "i-53",
+            "i-56",
+            "i-57",
+            "i-58",
+            "GSM922787_cervix_epithelium"
+        ],
+        "Cell Type": "cervix_epithelium"
+    },
+    {
+        "id": "GSM984397",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-44",
+            "i-49",
+            "i-50",
+            "i-52",
+            "i-53",
+            "i-56",
+            "i-57",
+            "i-58",
+            "GSM984397_prostate_epithelium"
+        ],
+        "Cell Type": "prostate_epithelium"
+    },
+    {
+        "id": "GSM984398",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-44",
+            "i-49",
+            "i-50",
+            "i-52",
+            "i-53",
+            "i-56",
+            "i-57",
+            "i-59",
+            "GSM984398_prostate_epithelium"
+        ],
+        "Cell Type": "prostate_epithelium"
+    },
+    {
+        "id": "GSM984400",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-44",
+            "i-49",
+            "i-50",
+            "i-52",
+            "i-53",
+            "i-56",
+            "i-57",
+            "i-59",
+            "GSM984400_prostate_epithelium"
+        ],
+        "Cell Type": "prostate_epithelium"
+    },
+    {
+        "id": "GSM418300",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-44",
+            "i-49",
+            "i-50",
+            "i-52",
+            "i-60",
+            "GSM418300_cervix_epithelium"
+        ],
+        "Cell Type": "cervix_epithelium"
+    },
+    {
+        "id": "GSM501713",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-44",
+            "i-49",
+            "i-50",
+            "i-52",
+            "i-60",
+            "GSM501713_cervix_epithelium"
+        ],
+        "Cell Type": "cervix_epithelium"
+    },
+    {
+        "id": "GSM831875",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-44",
+            "i-49",
+            "i-61",
+            "i-62",
+            "GSM831875_skin_fibroblast"
+        ],
+        "Cell Type": "skin_fibroblast"
+    },
+    {
+        "id": "GSM686935",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-44",
+            "i-49",
+            "i-61",
+            "i-62",
+            "i-63",
+            "i-64",
+            "GSM686935_prostate_epithelium"
+        ],
+        "Cell Type": "prostate_epithelium"
+    },
+    {
+        "id": "GSM831874",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-44",
+            "i-49",
+            "i-61",
+            "i-62",
+            "i-63",
+            "i-64",
+            "GSM831874_skin_fibroblast"
+        ],
+        "Cell Type": "skin_fibroblast"
+    },
+    {
+        "id": "GSM831876",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-44",
+            "i-49",
+            "i-61",
+            "i-62",
+            "i-63",
+            "i-65",
+            "GSM831876_skin_fibroblast"
+        ],
+        "Cell Type": "skin_fibroblast"
+    },
+    {
+        "id": "GSM868997",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-44",
+            "i-49",
+            "i-61",
+            "i-62",
+            "i-63",
+            "i-65",
+            "GSM868997_liver_epithelium"
+        ],
+        "Cell Type": "liver_epithelium"
+    },
+    {
+        "id": "GSM613869",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-44",
+            "i-49",
+            "i-61",
+            "i-66",
+            "GSM613869_breast_epithelium"
+        ],
+        "Cell Type": "breast_epithelium"
+    },
+    {
+        "id": "GSM669943",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-44",
+            "i-49",
+            "i-61",
+            "i-66",
+            "i-67",
+            "i-68",
+            "GSM669943_hematopoietic_stem_cell"
+        ],
+        "Cell Type": "hematopoietic_stem_cell"
+    },
+    {
+        "id": "GSM537629",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-44",
+            "i-49",
+            "i-61",
+            "i-66",
+            "i-67",
+            "i-68",
+            "GSM537629_hematopoietic_stem_cell"
+        ],
+        "Cell Type": "hematopoietic_stem_cell"
+    },
+    {
+        "id": "GSM868999",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-44",
+            "i-49",
+            "i-61",
+            "i-66",
+            "i-67",
+            "i-69",
+            "GSM868999_liver_epithelium"
+        ],
+        "Cell Type": "liver_epithelium"
+    },
+    {
+        "id": "GSM955984",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-44",
+            "i-49",
+            "i-61",
+            "i-66",
+            "i-67",
+            "i-69",
+            "i-70",
+            "GSM955984_vein_endothelial_cell"
+        ],
+        "Cell Type": "vein_endothelial_cell"
+    },
+    {
+        "id": "GSM621675",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-44",
+            "i-49",
+            "i-61",
+            "i-66",
+            "i-67",
+            "i-69",
+            "i-70",
+            "i-71",
+            "GSM621675_liver_epithelium"
+        ],
+        "Cell Type": "liver_epithelium"
+    },
+    {
+        "id": "GSM646425",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-44",
+            "i-49",
+            "i-61",
+            "i-66",
+            "i-67",
+            "i-69",
+            "i-70",
+            "i-71",
+            "i-72",
+            "GSM646425_vein_endothelial_cell"
+        ],
+        "Cell Type": "vein_endothelial_cell"
+    },
+    {
+        "id": "GSM646424",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-44",
+            "i-49",
+            "i-61",
+            "i-66",
+            "i-67",
+            "i-69",
+            "i-70",
+            "i-71",
+            "i-72",
+            "GSM646424_vein_endothelial_cell"
+        ],
+        "Cell Type": "vein_endothelial_cell"
+    },
+    {
+        "id": "GSM669990",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-74",
+            "i-75",
+            "GSM669990_chondrocyte"
+        ],
+        "Cell Type": "chondrocyte"
+    },
+    {
+        "id": "GSM670034",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-74",
+            "i-75",
+            "i-76",
+            "GSM670034_chondrocyte"
+        ],
+        "Cell Type": "chondrocyte"
+    },
+    {
+        "id": "GSM670004",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-74",
+            "i-75",
+            "i-76",
+            "GSM670004_chondrocyte"
+        ],
+        "Cell Type": "chondrocyte"
+    },
+    {
+        "id": "GSM772746",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-74",
+            "i-77",
+            "i-78",
+            "GSM772746_adipocyte"
+        ],
+        "Cell Type": "adipocyte"
+    },
+    {
+        "id": "GSM772817",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-74",
+            "i-77",
+            "i-78",
+            "GSM772817_adipocyte"
+        ],
+        "Cell Type": "adipocyte"
+    },
+    {
+        "id": "GSM772792",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-74",
+            "i-77",
+            "i-79",
+            "i-80",
+            "GSM772792_chondrocyte"
+        ],
+        "Cell Type": "chondrocyte"
+    },
+    {
+        "id": "GSM621662",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-74",
+            "i-77",
+            "i-79",
+            "i-80",
+            "GSM621662_smooth_muscle_cell"
+        ],
+        "Cell Type": "smooth_muscle_cell"
+    },
+    {
+        "id": "GSM772839",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-74",
+            "i-77",
+            "i-79",
+            "i-81",
+            "i-82",
+            "GSM772839_smooth_muscle_cell"
+        ],
+        "Cell Type": "smooth_muscle_cell"
+    },
+    {
+        "id": "GSM772861",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-74",
+            "i-77",
+            "i-79",
+            "i-81",
+            "i-82",
+            "i-83",
+            "GSM772861_smooth_muscle_cell"
+        ],
+        "Cell Type": "smooth_muscle_cell"
+    },
+    {
+        "id": "GSM621760",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-74",
+            "i-77",
+            "i-79",
+            "i-81",
+            "i-82",
+            "i-83",
+            "i-84",
+            "GSM621760_smooth_muscle_cell"
+        ],
+        "Cell Type": "smooth_muscle_cell"
+    },
+    {
+        "id": "GSM621737",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-74",
+            "i-77",
+            "i-79",
+            "i-81",
+            "i-82",
+            "i-83",
+            "i-84",
+            "GSM621737_smooth_muscle_cell"
+        ],
+        "Cell Type": "smooth_muscle_cell"
+    },
+    {
+        "id": "GSM621645",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-74",
+            "i-77",
+            "i-79",
+            "i-81",
+            "i-85",
+            "i-86",
+            "GSM621645_smooth_muscle_cell"
+        ],
+        "Cell Type": "smooth_muscle_cell"
+    },
+    {
+        "id": "GSM621685",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-74",
+            "i-77",
+            "i-79",
+            "i-81",
+            "i-85",
+            "i-86",
+            "GSM621685_smooth_muscle_cell"
+        ],
+        "Cell Type": "smooth_muscle_cell"
+    },
+    {
+        "id": "GSM621694",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-74",
+            "i-77",
+            "i-79",
+            "i-81",
+            "i-85",
+            "i-87",
+            "GSM621694_smooth_muscle_cell"
+        ],
+        "Cell Type": "smooth_muscle_cell"
+    },
+    {
+        "id": "GSM621745",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-74",
+            "i-77",
+            "i-79",
+            "i-81",
+            "i-85",
+            "i-87",
+            "GSM621745_smooth_muscle_cell"
+        ],
+        "Cell Type": "smooth_muscle_cell"
+    },
+    {
+        "id": "GSM693277",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-88",
+            "i-89",
+            "GSM693277_breast_epithelium"
+        ],
+        "Cell Type": "breast_epithelium"
+    },
+    {
+        "id": "GSM529971",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-88",
+            "i-89",
+            "i-90",
+            "i-91",
+            "GSM529971_central_nervous_system_neuron"
+        ],
+        "Cell Type": "central_nervous_system_neuron"
+    },
+    {
+        "id": "GSM841174",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-88",
+            "i-89",
+            "i-90",
+            "i-91",
+            "i-92",
+            "GSM841174_neural_precursor"
+        ],
+        "Cell Type": "neural_precursor"
+    },
+    {
+        "id": "GSM841173",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-88",
+            "i-89",
+            "i-90",
+            "i-91",
+            "i-92",
+            "GSM841173_neural_precursor"
+        ],
+        "Cell Type": "neural_precursor"
+    },
+    {
+        "id": "GSM588571",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-88",
+            "i-89",
+            "i-90",
+            "i-93",
+            "GSM588571_breast_epithelium"
+        ],
+        "Cell Type": "breast_epithelium"
+    },
+    {
+        "id": "GSM588570",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-88",
+            "i-89",
+            "i-90",
+            "i-93",
+            "i-94",
+            "GSM588570_breast_epithelium"
+        ],
+        "Cell Type": "breast_epithelium"
+    },
+    {
+        "id": "GSM894073",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-88",
+            "i-89",
+            "i-90",
+            "i-93",
+            "i-94",
+            "i-95",
+            "GSM894073_lung_epithelium"
+        ],
+        "Cell Type": "lung_epithelium"
+    },
+    {
+        "id": "GSM894072",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-88",
+            "i-89",
+            "i-90",
+            "i-93",
+            "i-94",
+            "i-95",
+            "GSM894072_lung_epithelium"
+        ],
+        "Cell Type": "lung_epithelium"
+    },
+    {
+        "id": "GSM958155",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-88",
+            "i-96",
+            "i-97",
+            "i-98",
+            "GSM958155_keratinocyte"
+        ],
+        "Cell Type": "keratinocyte"
+    },
+    {
+        "id": "GSM941735",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-88",
+            "i-96",
+            "i-97",
+            "i-98",
+            "GSM941735_keratinocyte"
+        ],
+        "Cell Type": "keratinocyte"
+    },
+    {
+        "id": "GSM941718",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-88",
+            "i-96",
+            "i-97",
+            "i-99",
+            "GSM941718_skin_fibroblast"
+        ],
+        "Cell Type": "skin_fibroblast"
+    },
+    {
+        "id": "GSM817235",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-88",
+            "i-96",
+            "i-97",
+            "i-99",
+            "i-100",
+            "GSM817235_skin_fibroblast"
+        ],
+        "Cell Type": "skin_fibroblast"
+    },
+    {
+        "id": "GSM955983",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-88",
+            "i-96",
+            "i-97",
+            "i-99",
+            "i-100",
+            "GSM955983_vein_endothelial_cell"
+        ],
+        "Cell Type": "vein_endothelial_cell"
+    },
+    {
+        "id": "GSM997221",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-88",
+            "i-96",
+            "i-101",
+            "i-102",
+            "GSM997221_natural_killer_cell"
+        ],
+        "Cell Type": "natural_killer_cell"
+    },
+    {
+        "id": "GSM529968",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-88",
+            "i-96",
+            "i-101",
+            "i-102",
+            "i-103",
+            "GSM529968_central_nervous_system_neuron"
+        ],
+        "Cell Type": "central_nervous_system_neuron"
+    },
+    {
+        "id": "GSM529970",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-88",
+            "i-96",
+            "i-101",
+            "i-102",
+            "i-103",
+            "i-104",
+            "GSM529970_central_nervous_system_neuron"
+        ],
+        "Cell Type": "central_nervous_system_neuron"
+    },
+    {
+        "id": "GSM529959",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-88",
+            "i-96",
+            "i-101",
+            "i-102",
+            "i-103",
+            "i-104",
+            "GSM529959_central_nervous_system_neuron"
+        ],
+        "Cell Type": "central_nervous_system_neuron"
+    },
+    {
+        "id": "GSM529965",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-88",
+            "i-96",
+            "i-101",
+            "i-105",
+            "i-106",
+            "GSM529965_central_nervous_system_neuron"
+        ],
+        "Cell Type": "central_nervous_system_neuron"
+    },
+    {
+        "id": "GSM529960",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-88",
+            "i-96",
+            "i-101",
+            "i-105",
+            "i-106",
+            "i-107",
+            "GSM529960_central_nervous_system_neuron"
+        ],
+        "Cell Type": "central_nervous_system_neuron"
+    },
+    {
+        "id": "GSM529972",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-88",
+            "i-96",
+            "i-101",
+            "i-105",
+            "i-106",
+            "i-107",
+            "GSM529972_central_nervous_system_neuron"
+        ],
+        "Cell Type": "central_nervous_system_neuron"
+    },
+    {
+        "id": "GSM529964",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-88",
+            "i-96",
+            "i-101",
+            "i-105",
+            "i-108",
+            "i-109",
+            "i-110",
+            "GSM529964_central_nervous_system_neuron"
+        ],
+        "Cell Type": "central_nervous_system_neuron"
+    },
+    {
+        "id": "GSM529961",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-88",
+            "i-96",
+            "i-101",
+            "i-105",
+            "i-108",
+            "i-109",
+            "i-110",
+            "GSM529961_central_nervous_system_neuron"
+        ],
+        "Cell Type": "central_nervous_system_neuron"
+    },
+    {
+        "id": "GSM841176",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-88",
+            "i-96",
+            "i-101",
+            "i-105",
+            "i-108",
+            "i-109",
+            "i-111",
+            "GSM841176_neural_precursor"
+        ],
+        "Cell Type": "neural_precursor"
+    },
+    {
+        "id": "GSM841175",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-88",
+            "i-96",
+            "i-101",
+            "i-105",
+            "i-108",
+            "i-109",
+            "i-111",
+            "GSM841175_neural_precursor"
+        ],
+        "Cell Type": "neural_precursor"
+    },
+    {
+        "id": "GSM916069",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-88",
+            "i-96",
+            "i-101",
+            "i-105",
+            "i-108",
+            "i-112",
+            "GSM916069_natural_killer_cell"
+        ],
+        "Cell Type": "natural_killer_cell"
+    },
+    {
+        "id": "GSM916063",
+        "Clustering": [
+            "i-0",
+            "i-1",
+            "i-5",
+            "i-25",
+            "i-43",
+            "i-73",
+            "i-88",
+            "i-96",
+            "i-101",
+            "i-105",
+            "i-108",
+            "i-112",
+            "GSM916063_natural_killer_cell"
+        ],
+        "Cell Type": "natural_killer_cell"
+    }
+]
