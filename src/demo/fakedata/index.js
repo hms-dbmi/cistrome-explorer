@@ -7,7 +7,9 @@ import rowInfo2 from "./cistrome-track-2/rowInfo.json";
 import rowInfo3 from "./cistrome-track-3/rowInfo.json";
 import rowInfo10 from "./cistrome-track-10/rowInfo.json";
 import rowInfoAtac from "./cistrome-track-atac/rowInfoWithQc.json";
+import rowInfoAtacRevision from "./cistrome-track-atac/rowInfoRevision.json";
 import rowInfo3k27 from "./cistrome-track-3k27/rowInfoWithQc.json";
+import rowInfo3k27Revision from "./cistrome-track-3k27/rowInfoRevision.json";
 import rowInfo3k4 from './cistrome-track-3k4/rowInfo.json';
 import rowInfoMiraMouse from './mira-track-mouse/rowInfo.json';
 
@@ -27,9 +29,19 @@ const _fakedata = {
             rowInfo: rowInfoAtac
         }
     },
+    "cistrome-track-atac-revision": {
+        tilesetInfo: {
+            rowInfo: rowInfoAtacRevision
+        }
+    },
     "cistrome-track-3k27": {
         tilesetInfo: {
             rowInfo: rowInfo3k27
+        }
+    },
+    "cistrome-track-3k27-revision": {
+        tilesetInfo: {
+            rowInfo: rowInfo3k27Revision
         }
     },
     "cistrome-track-3k4": {
