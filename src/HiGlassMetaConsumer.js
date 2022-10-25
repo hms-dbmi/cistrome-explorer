@@ -331,7 +331,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
         if(currViewConfig.views[0]?.genomePositionSearchBox?.chromInfoId === 'mm10') return; 
         const newViewConfig = setDataTransformOfTopTrackFromViewConfig(
             currViewConfig, 
-            ["cistrome-view-1", "cistrome-view-atac", "cistrome-view-3k27"], 
+            ["cistrome-view-1", "cistrome-view-atac", "cistrome-view-atac-revision", "cistrome-view-3k27", "cistrome-view-3k27-revision"], 
             "gwas", 
             [{ type: "filter", field: "MAPPED_TRAIT", oneOf: gwasOneOf, not: false}]
         );
