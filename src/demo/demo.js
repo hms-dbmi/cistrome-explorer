@@ -7,7 +7,7 @@ import { hgDemoViewConfigMiraMouse } from '../viewconfigs/horizontal-multivec-mi
 import { hgDemoViewConfig3K4Revision } from "../viewconfigs/horizontal-multivec-3k4-revision";
 
 export const demos = {
-    "ATAC": {
+    "ATAC (v0)": {
         viewConfig: hgDemoViewConfigAtac,
         options: [{
             viewId: "cistrome-view-atac",
@@ -49,7 +49,7 @@ export const demos = {
             ]
         }]
     },
-    "ATAC (v2.0)": {
+    "ATAC (v1)": {
         viewConfig: hgDemoViewConfigAtacRevision,
         options: [{
             viewId: "cistrome-view-atac-revision",
@@ -91,7 +91,7 @@ export const demos = {
             ]
         }]
     },
-    "H3K27ac": {
+    "H3K27ac (v0)": {
         viewConfig: hgDemoViewConfig3k27,
         options: [{
             viewId: "cistrome-view-3k27",
@@ -125,7 +125,7 @@ export const demos = {
             ]
         }]
     },
-    "H3K27ac (v2.0)": {
+    "H3K27ac (v1)": {
         viewConfig: hgDemoViewConfig3k27Revision,
         options: [{
             viewId: "cistrome-view-3k27-revision",
@@ -159,7 +159,7 @@ export const demos = {
             ]
         }]
     },
-    "H3K4me3": {
+    "H3K4me3 (v0)": {
         viewConfig: hgDemoViewConfig3K4,
         options: [{
             viewId: "cistrome-view-3k4",
@@ -179,7 +179,7 @@ export const demos = {
             rowFilter: []
         }]
     },
-    "H3K4me3 (v2.0)": {
+    "H3K4me3 (v1)": {
         viewConfig: hgDemoViewConfig3K4Revision,
         options: [{
             viewId: "cistrome-view-3k4-revision",

@@ -1,0 +1,114 @@
+ID,Species,Factor,Cell Type,Tissue Type,Paper Reference,Paper PMID
+GSM315956,Homo sapiens,H3K4me3,T Lymphocyte,Blood,"Araki Y, et al. Genome-wide analysis of histone methylation reveals chromatin state-based regulation of gene transcription and function of memory CD8+ T cells. Immunity 2009",19523850.0
+GSM327662,Homo sapiens,H3K4me3,Embryonic Stem Cell,Embryo,"Ku M, et al. Genomewide analysis of PRC1 and PRC2 occupancy identifies two classes of bivalent domains. PLoS Genet. 2008",18974828.0
+GSM353653,Homo sapiens,H3K4me3,Epithelium,Prostate,"Yu J, et al. An integrated network of androgen receptor, polycomb, and TMPRSS2-ERG gene fusions in prostate cancer progression. Cancer Cell 2010",20478527.0
+GSM418300,Homo sapiens,H3K4me3,Epithelium,Cervix,"Wang Z, et al. Genome-wide mapping of HATs and HDACs reveals distinct functions in active and inactive genes. Cell 2009",19698979.0
+GSM432392,Homo sapiens,H3K4me3,Embryonic Stem Cell,Embryo,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM501713,Homo sapiens,H3K4me3,Epithelium,Cervix,"Barski A, et al. Pol II and its associated epigenetic marks are present at Pol III-transcribed noncoding RNA genes. Nat. Struct. Mol. Biol. 2010",20418881.0
+GSM503906,Homo sapiens,H3K4me3,Epithelium,Prostate,"He HH, et al. Nucleosome dynamics define transcriptional enhancers. Nat. Genet. 2010",20208536.0
+GSM503907,Homo sapiens,H3K4me3,Epithelium,Prostate,"He HH, et al. Nucleosome dynamics define transcriptional enhancers. Nat. Genet. 2010",20208536.0
+GSM529408,Homo sapiens,H3K4me3,Embryonic Stem Cell,Embryo,"Lengner CJ, et al. Derivation of pre-X inactivation human embryonic stem cells under physiological oxygen concentrations. Cell 2010",20471072.0
+GSM529412,Homo sapiens,H3K4me3,Embryonic Stem Cell,Embryo,"Lengner CJ, et al. Derivation of pre-X inactivation human embryonic stem cells under physiological oxygen concentrations. Cell 2010",20471072.0
+GSM529413,Homo sapiens,H3K4me3,Embryonic Stem Cell,Embryo,"Lengner CJ, et al. Derivation of pre-X inactivation human embryonic stem cells under physiological oxygen concentrations. Cell 2010",20471072.0
+GSM529959,Homo sapiens,H3K4me3,Cortex,Prefrontal,"Cheung I, et al. Developmental regulation and individual differences of neuronal H3K4me3 epigenomes in the prefrontal cortex. Proc. Natl. Acad. Sci. U.S.A. 2010",20421462.0
+GSM529960,Homo sapiens,H3K4me3,Cortex,Prefrontal,"Cheung I, et al. Developmental regulation and individual differences of neuronal H3K4me3 epigenomes in the prefrontal cortex. Proc. Natl. Acad. Sci. U.S.A. 2010",20421462.0
+GSM529961,Homo sapiens,H3K4me3,Cortex,Prefrontal,"Cheung I, et al. Developmental regulation and individual differences of neuronal H3K4me3 epigenomes in the prefrontal cortex. Proc. Natl. Acad. Sci. U.S.A. 2010",20421462.0
+GSM529964,Homo sapiens,H3K4me3,Cortex,Prefrontal,"Cheung I, et al. Developmental regulation and individual differences of neuronal H3K4me3 epigenomes in the prefrontal cortex. Proc. Natl. Acad. Sci. U.S.A. 2010",20421462.0
+GSM529965,Homo sapiens,H3K4me3,Cortex,Prefrontal,"Cheung I, et al. Developmental regulation and individual differences of neuronal H3K4me3 epigenomes in the prefrontal cortex. Proc. Natl. Acad. Sci. U.S.A. 2010",20421462.0
+GSM529968,Homo sapiens,H3K4me3,Cortex,Prefrontal,"Cheung I, et al. Developmental regulation and individual differences of neuronal H3K4me3 epigenomes in the prefrontal cortex. Proc. Natl. Acad. Sci. U.S.A. 2010",20421462.0
+GSM529970,Homo sapiens,H3K4me3,Cortex,Prefrontal,"Cheung I, et al. Developmental regulation and individual differences of neuronal H3K4me3 epigenomes in the prefrontal cortex. Proc. Natl. Acad. Sci. U.S.A. 2010",20421462.0
+GSM529971,Homo sapiens,H3K4me3,Cortex,Prefrontal,"Cheung I, et al. Developmental regulation and individual differences of neuronal H3K4me3 epigenomes in the prefrontal cortex. Proc. Natl. Acad. Sci. U.S.A. 2010",20421462.0
+GSM529972,Homo sapiens,H3K4me3,Cortex,Prefrontal,"Cheung I, et al. Developmental regulation and individual differences of neuronal H3K4me3 epigenomes in the prefrontal cortex. Proc. Natl. Acad. Sci. U.S.A. 2010",20421462.0
+GSM534465,Homo sapiens,H3K4me3,Stromal Cell,Adipose,"Mikkelsen TS, et al. Comparative epigenomic analysis of murine and human adipogenesis. Cell 2010",20887899.0
+GSM534472,Homo sapiens,H3K4me3,Stromal Cell,Adipose,"Mikkelsen TS, et al. Comparative epigenomic analysis of murine and human adipogenesis. Cell 2010",20887899.0
+GSM534479,Homo sapiens,H3K4me3,Stromal Cell,Adipose,"Mikkelsen TS, et al. Comparative epigenomic analysis of murine and human adipogenesis. Cell 2010",20887899.0
+GSM534486,Homo sapiens,H3K4me3,Stromal Cell,Adipose,"Mikkelsen TS, et al. Comparative epigenomic analysis of murine and human adipogenesis. Cell 2010",20887899.0
+GSM537629,Homo sapiens,H3K4me3,Haematopoietic Progenitor Cell,Cord blood,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM537687,Homo sapiens,H3K4me3,iPSC,,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM537694,Homo sapiens,H3K4me3,iPSC,,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM537702,Homo sapiens,H3K4me3,,Cord blood,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM537709,Homo sapiens,H3K4me3,Hepatocyte,Liver,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM575286,Homo sapiens,H3K4me3,iPSC,,"Guenther MG, et al. Chromatin structure and gene expression programs of human embryonic and induced pluripotent stem cells. Cell Stem Cell 2010",20682450.0
+GSM575287,Homo sapiens,H3K4me3,iPSC,,"Guenther MG, et al. Chromatin structure and gene expression programs of human embryonic and induced pluripotent stem cells. Cell Stem Cell 2010",20682450.0
+GSM575288,Homo sapiens,H3K4me3,iPSC,,"Guenther MG, et al. Chromatin structure and gene expression programs of human embryonic and induced pluripotent stem cells. Cell Stem Cell 2010",20682450.0
+GSM575290,Homo sapiens,H3K4me3,iPSC,,"Guenther MG, et al. Chromatin structure and gene expression programs of human embryonic and induced pluripotent stem cells. Cell Stem Cell 2010",20682450.0
+GSM575292,Homo sapiens,H3K4me3,iPSC,,"Guenther MG, et al. Chromatin structure and gene expression programs of human embryonic and induced pluripotent stem cells. Cell Stem Cell 2010",20682450.0
+GSM588570,Homo sapiens,H3K4me3,Epithelium,Breast,"Joseph R, et al. Integrative model of genomic factors for determining binding site selection by estrogen receptor-α. Mol. Syst. Biol. 2010",21179027.0
+GSM588571,Homo sapiens,H3K4me3,Epithelium,Breast,"Joseph R, et al. Integrative model of genomic factors for determining binding site selection by estrogen receptor-α. Mol. Syst. Biol. 2010",21179027.0
+GSM613869,Homo sapiens,H3K4me3,Epithelium,Mammary Gland,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM613874,Homo sapiens,H3K4me3,Epithelium,Mammary Gland,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM621645,Homo sapiens,H3K4me3,,Fetal Stomach,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM621662,Homo sapiens,H3K4me3,,Muscle,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM621675,Homo sapiens,H3K4me3,Hepatocyte,Liver,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM621685,Homo sapiens,H3K4me3,,Skeletal Muscle,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM621694,Homo sapiens,H3K4me3,,Skeletal Muscle,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM621737,Homo sapiens,H3K4me3,Satellite Cells,Muscle,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM621745,Homo sapiens,H3K4me3,Satellite Cells,Muscle,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM621760,Homo sapiens,H3K4me3,Satellite Cells,Muscle,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM646424,Homo sapiens,H3K4me3,Endothelial Cell,Umbilical Vein,"Ernst J, et al. Mapping and analysis of chromatin state dynamics in nine human cell types. Nature 2011",21441907.0
+GSM646425,Homo sapiens,H3K4me3,Endothelial Cell,Umbilical Vein,"Ernst J, et al. Mapping and analysis of chromatin state dynamics in nine human cell types. Nature 2011",21441907.0
+GSM648493,Homo sapiens,H3K4me3,T Lymphocyte,Blood,"Tian Y, et al. Global mapping of H3K4me1 and H3K4me3 reveals the chromatin state-based cell type-specific gene regulation in human Treg cells. PLoS ONE 2011",22132139.0
+GSM648495,Homo sapiens,H3K4me3,T Lymphocyte,Blood,"Tian Y, et al. Global mapping of H3K4me1 and H3K4me3 reveals the chromatin state-based cell type-specific gene regulation in human Treg cells. PLoS ONE 2011",22132139.0
+GSM669889,Homo sapiens,H3K4me3,Embryonic Stem Cell,Embryo,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM669936,Homo sapiens,H3K4me3,Embryonic Stem Cell,Embryo,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM669943,Homo sapiens,H3K4me3,Haematopoietic Progenitor Cell,Cord blood,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM669990,Homo sapiens,H3K4me3,Chondrocyte,Cartilage,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM670004,Homo sapiens,H3K4me3,Chondrocyte,Cartilage,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM670034,Homo sapiens,H3K4me3,Chondrocyte,Cartilage,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM686935,Homo sapiens,H3K4me3,Epithelium,Prostate,"Wang D, et al. Reprogramming transcription by distinct classes of enhancers functionally defined by eRNA. Nature 2011",21572438.0
+GSM693277,Homo sapiens,H3K4me3,Epithelium,Mammary Gland,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM706074,Homo sapiens,H3K4me3,iPSC,Foreskin,"Lister R, et al. Human DNA methylomes at base resolution show widespread epigenomic differences. Nature 2009",19829295.0
+GSM721134,Homo sapiens,H3K4me3,Epithelium,Mammary Gland,"Hon GC, et al. Global DNA hypomethylation coupled to repressive chromatin domain formation and gene silencing in breast cancer. Genome Res. 2010",22156296.0
+GSM767348,Homo sapiens,H3K4me3,Embryonic Stem Cell,Embryo,"Lister R, et al. Human DNA methylomes at base resolution show widespread epigenomic differences. Nature 2009",19829295.0
+GSM772736,Homo sapiens,H3K4me3,Neural Progenitor Cell,Brain,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM772746,Homo sapiens,H3K4me3,Mesenchymal Stem Cell,Adipose,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM772782,Homo sapiens,H3K4me3,,Cord blood,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM772792,Homo sapiens,H3K4me3,Mesenchymal Stem Cell,Bone Marrow,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM772817,Homo sapiens,H3K4me3,Mesenchymal Stem Cell,Adipose,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM772839,Homo sapiens,H3K4me3,Smooth Muscle Cell,Duodenum,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM772852,Homo sapiens,H3K4me3,T Lymphocyte,Blood,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM772861,Homo sapiens,H3K4me3,Smooth Muscle Cell,Colon,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM772896,Homo sapiens,H3K4me1,T Lymphocyte,Blood,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM772925,Homo sapiens,H3K4me3,T Lymphocyte,Blood,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM772944,Homo sapiens,H3K4me3,T Lymphocyte,Blood,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM772986,Homo sapiens,H3K4me3,T Lymphocyte,Blood,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM779435,Homo sapiens,H3K4me3,Epithelium,Cervix,"Michaud J, et al. HCFC1 is a common component of active human CpG-island promoters and coincides with ZNF143, THAP11, YY1, and GABP transcription factor occupancy. Genome Res. 2013",23539139.0
+GSM811204,Homo sapiens,H3K4me3,Epithelium,Mammary Gland,"Shankaranarayanan P, et al. Single-tube linear DNA amplification (LinDA) for robust ChIP-seq. Nat. Methods 2011",21642965.0
+GSM811205,Homo sapiens,H3K4me3,Epithelium,Mammary Gland,"Shankaranarayanan P, et al. Single-tube linear DNA amplification (LinDA) for robust ChIP-seq. Nat. Methods 2011",21642965.0
+GSM817235,Homo sapiens,H3K4me3,Fibroblast,Foreskin,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM831874,Homo sapiens,H3K4me3,Melanoma Cell,Skin,"Pang B, et al. Drug-induced histone eviction from open chromatin contributes to the chemotherapeutic effects of doxorubicin. Nat Commun 2013",23715267.0
+GSM831875,Homo sapiens,H3K4me3,Melanoma Cell,Skin,"Pang B, et al. Drug-induced histone eviction from open chromatin contributes to the chemotherapeutic effects of doxorubicin. Nat Commun 2013",23715267.0
+GSM831876,Homo sapiens,H3K4me3,Melanoma Cell,Skin,"Pang B, et al. Drug-induced histone eviction from open chromatin contributes to the chemotherapeutic effects of doxorubicin. Nat Commun 2013",23715267.0
+GSM841172,Homo sapiens,H3K4me3,iPSC,,"Liu GH, et al. Progressive degeneration of human neural stem cells caused by pathogenic LRRK2. Nature 2012",23075850.0
+GSM841173,Homo sapiens,H3K4me3,iPSC,,"Liu GH, et al. Progressive degeneration of human neural stem cells caused by pathogenic LRRK2. Nature 2012",23075850.0
+GSM841174,Homo sapiens,H3K4me3,iPSC,,"Liu GH, et al. Progressive degeneration of human neural stem cells caused by pathogenic LRRK2. Nature 2012",23075850.0
+GSM841175,Homo sapiens,H3K4me3,iPSC,,"Liu GH, et al. Progressive degeneration of human neural stem cells caused by pathogenic LRRK2. Nature 2012",23075850.0
+GSM841176,Homo sapiens,H3K4me3,iPSC,,"Liu GH, et al. Progressive degeneration of human neural stem cells caused by pathogenic LRRK2. Nature 2012",23075850.0
+GSM847242,Homo sapiens,H3K4me3,B cell lymphoma,Bone Marrow,,
+GSM847243,Homo sapiens,H3K4me3,B Lymphocyte,Bone Marrow,,
+GSM867109,Homo sapiens,H3K4me3,Erythroblast,Fetal Liver,"Chang KH, et al. Epigenetic modifications and chromosome conformations of the beta globin locus throughout development. Stem Cell Rev 2013",22374078.0
+GSM867110,Homo sapiens,H3K4me3,Erythroblast,Blood,"Chang KH, et al. Epigenetic modifications and chromosome conformations of the beta globin locus throughout development. Stem Cell Rev 2013",22374078.0
+GSM868997,Homo sapiens,H3K4me3,Epithelium,Liver,"Tian Y, et al. Telbivudine treatment corrects HBV-induced epigenetic alterations in liver cells of patients with chronic hepatitis B. Carcinogenesis 2013",24067902.0
+GSM868999,Homo sapiens,H3K4me3,Epithelium,Liver,"Tian Y, et al. Telbivudine treatment corrects HBV-induced epigenetic alterations in liver cells of patients with chronic hepatitis B. Carcinogenesis 2013",24067902.0
+GSM894068,Homo sapiens,H3K4me3,B cell lymphoma,,"Lin CY, et al. Transcriptional amplification in tumor cells with elevated c-Myc. Cell 2012",23021215.0
+GSM894069,Homo sapiens,H3K4me3,B cell lymphoma,,"Lin CY, et al. Transcriptional amplification in tumor cells with elevated c-Myc. Cell 2012",23021215.0
+GSM894070,Homo sapiens,H3K4me3,B cell lymphoma,,"Lin CY, et al. Transcriptional amplification in tumor cells with elevated c-Myc. Cell 2012",23021215.0
+GSM894072,Homo sapiens,H3K4me3,Epithelium,Lung,"Lin CY, et al. Transcriptional amplification in tumor cells with elevated c-Myc. Cell 2012",23021215.0
+GSM894073,Homo sapiens,H3K4me3,Epithelium,Lung,"Lin CY, et al. Transcriptional amplification in tumor cells with elevated c-Myc. Cell 2012",23021215.0
+GSM916063,Homo sapiens,H3K4me3,Embryonic Stem Cell,Embryo,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM916069,Homo sapiens,H3K4me3,Embryonic Stem Cell,Embryo,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM916071,Homo sapiens,H3K4me3,T Lymphocyte,Blood,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM922787,Homo sapiens,H3K4me3,Epithelium,Cervix,"Dellino GI, et al. Genome-wide mapping of human DNA-replication origins: levels of transcription at ORC1 sites regulate origin selection and replication timing. Genome Res. 2013",23187890.0
+GSM941718,Homo sapiens,H3K4me3,Fibroblast,Foreskin,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM941735,Homo sapiens,H3K4me3,Keratinocyte,Foreskin,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM947524,Homo sapiens,H3K4me3,Epithelium,Prostate,"Bert SA, et al. Regional activation of the cancer genome by long-range epigenetic remodeling. Cancer Cell 2013",23245995.0
+GSM955983,Homo sapiens,H3K4me3,Endothelial Cell,Umbilical Vein,"Mimura I, et al. Dynamic change of chromatin conformation in response to hypoxia enhances the expression of GLUT3 (SLC2A3) by cooperative interaction of hypoxia-inducible factor 1 and KDM3A. Mol. Cell. Biol. 2012",22645302.0
+GSM955984,Homo sapiens,H3K4me3,Endothelial Cell,Umbilical Vein,"Mimura I, et al. Dynamic change of chromatin conformation in response to hypoxia enhances the expression of GLUT3 (SLC2A3) by cooperative interaction of hypoxia-inducible factor 1 and KDM3A. Mol. Cell. Biol. 2012",22645302.0
+GSM958155,Homo sapiens,H3K4me3,Keratinocyte,Foreskin,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM969569,Homo sapiens,H3K4me3,Epithelium,Prostate,"Xu K, et al. EZH2 oncogenic activity in castration-resistant prostate cancer cells is Polycomb-independent. Science 2012",23239736.0
+GSM984397,Homo sapiens,H3K4me3,Epithelium,Prostate,"Decker KF, et al. Persistent androgen receptor-mediated transcription in castration-resistant prostate cancer under androgen-deprived conditions. Nucleic Acids Res. 2012",23019221.0
+GSM984398,Homo sapiens,H3K4me3,Epithelium,Prostate,"Decker KF, et al. Persistent androgen receptor-mediated transcription in castration-resistant prostate cancer under androgen-deprived conditions. Nucleic Acids Res. 2012",23019221.0
+GSM984400,Homo sapiens,H3K4me3,Epithelium,Prostate,"Decker KF, et al. Persistent androgen receptor-mediated transcription in castration-resistant prostate cancer under androgen-deprived conditions. Nucleic Acids Res. 2012",23019221.0
+GSM997221,Homo sapiens,H3K4me3,Embryonic Stem Cell,Embryo,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM997232,Homo sapiens,H3K4me3,T Lymphocyte,Blood,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
+GSM997256,Homo sapiens,H3K4me3,T Lymphocyte,Blood,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595.0
