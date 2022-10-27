@@ -677,13 +677,6 @@ input[type="checkbox"] {
 .hm-filter-box-input:focus {
   outline: none; }
 
-.hm-vertical-zoom-info {
-  display: inline-block;
-  position: relative;
-  padding: 6px;
-  background-color: rgba(255, 255, 255, 0.6);
-  font-size: 16px; }
-
 .col-tools-brush-bar {
   cursor: ew-resize;
   pointer-events: all;
@@ -705,6 +698,13 @@ input[type="checkbox"] {
     background: rgba(0, 0, 0, 0.15); }
   .col-tools-brush-bar .col-tools-chr-info {
     position: absolute; }
+
+.hm-vertical-zoom-info {
+  display: inline-block;
+  position: relative;
+  padding: 6px;
+  background-color: rgba(255, 255, 255, 0.6);
+  font-size: 16px; }
 
 .hm-range-slider-container {
   display: flex;
