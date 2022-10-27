@@ -1,153 +1,153 @@
-ID,Species,Factor,Cell Type,Tissue Type,Paper Reference,Paper PMID
-GSM1009626,Homo sapiens,H3K27ac,Endothelial Cell,Umbilical Vein,"Zhang B, et al. A dynamic H3K27ac signature identifies VEGFA-stimulated endothelial enhancers and requires EP300 activity. Genome Res. 2013",23547170
-GSM1013131,Homo sapiens,H3K27ac,Epithelium,Small Intestine,"Lister R, et al. Human DNA methylomes at base resolution show widespread epigenomic differences. Nature 2009",19829295
-GSM1033757,Homo sapiens,H3K27ac,Plasma Cell,,,
-GSM1057016,Homo sapiens,H3K27ac,Monocyte,Blood,"Qiao Y, et al. Synergistic activation of inflammatory cytokine genes by interferon-γ-induced chromatin remodeling and toll-like receptor signaling. Immunity 2013",24012417
-GSM1057017,Homo sapiens,H3K27ac,Monocyte,Blood,"Qiao Y, et al. Synergistic activation of inflammatory cytokine genes by interferon-γ-induced chromatin remodeling and toll-like receptor signaling. Immunity 2013",24012417
-GSM1057018,Homo sapiens,H3K27ac,Monocyte,Blood,"Qiao Y, et al. Synergistic activation of inflammatory cytokine genes by interferon-γ-induced chromatin remodeling and toll-like receptor signaling. Immunity 2013",24012417
-GSM1057020,Homo sapiens,H3K27ac,Monocyte,Blood,"Qiao Y, et al. Synergistic activation of inflammatory cytokine genes by interferon-γ-induced chromatin remodeling and toll-like receptor signaling. Immunity 2013",24012417
-GSM1057021,Homo sapiens,H3K27ac,Monocyte,Blood,"Qiao Y, et al. Synergistic activation of inflammatory cytokine genes by interferon-γ-induced chromatin remodeling and toll-like receptor signaling. Immunity 2013",24012417
-GSM1057022,Homo sapiens,H3K27ac,Monocyte,Blood,"Qiao Y, et al. Synergistic activation of inflammatory cytokine genes by interferon-γ-induced chromatin remodeling and toll-like receptor signaling. Immunity 2013",24012417
-GSM1057023,Homo sapiens,H3K27ac,Monocyte,Blood,"Qiao Y, et al. Synergistic activation of inflammatory cytokine genes by interferon-γ-induced chromatin remodeling and toll-like receptor signaling. Immunity 2013",24012417
-GSM1058765,Homo sapiens,H3K27ac,Epithelium,Fetal Large Intestine,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595
-GSM1058766,Homo sapiens,H3K27ac,Epithelium,Fetal Small Intestine,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595
-GSM1127060,Homo sapiens,H3K27ac,Fibroblast,Foreskin,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595
-GSM1127172,Homo sapiens,H3K27ac,Epithelium,Small Intestine,"Lister R, et al. Human DNA methylomes at base resolution show widespread epigenomic differences. Nature 2009",19829295
-GSM1154045,Homo sapiens,H3K27ac,Endothelial Cell,Umbilical Vein,"Jin F, et al. A high-resolution map of the three-dimensional chromatin interactome in human cells. Nature 2013",24141950
-GSM1154046,Homo sapiens,H3K27ac,Endothelial Cell,Umbilical Vein,"Jin F, et al. A high-resolution map of the three-dimensional chromatin interactome in human cells. Nature 2013",24141950
-GSM1154047,Homo sapiens,H3K27ac,Fibroblast,Lung,"Jin F, et al. A high-resolution map of the three-dimensional chromatin interactome in human cells. Nature 2013",24141950
-GSM1214674,Homo sapiens,H3K27ac,Endothelial Cell,Umbilical Vein,"Inoue T, et al. Cross-enhancement of ANGPTL4 transcription by HIF1 alpha and PPAR beta/delta is the result of the conformational proximity of two response elements. Genome Biol. 2014",24721177
-GSM1214675,Homo sapiens,H3K27ac,Endothelial Cell,Umbilical Vein,"Inoue T, et al. Cross-enhancement of ANGPTL4 transcription by HIF1 alpha and PPAR beta/delta is the result of the conformational proximity of two response elements. Genome Biol. 2014",24721177
-GSM1214676,Homo sapiens,H3K27ac,Endothelial Cell,Umbilical Vein,"Inoue T, et al. Cross-enhancement of ANGPTL4 transcription by HIF1 alpha and PPAR beta/delta is the result of the conformational proximity of two response elements. Genome Biol. 2014",24721177
-GSM1214677,Homo sapiens,H3K27ac,Endothelial Cell,Umbilical Vein,"Inoue T, et al. Cross-enhancement of ANGPTL4 transcription by HIF1 alpha and PPAR beta/delta is the result of the conformational proximity of two response elements. Genome Biol. 2014",24721177
-GSM1226370,Homo sapiens,H3K27ac,Endothelial Cell,Umbilical Vein,"Inoue T, et al. Cross-enhancement of ANGPTL4 transcription by HIF1 alpha and PPAR beta/delta is the result of the conformational proximity of two response elements. Genome Biol. 2014",24721177
-GSM1226371,Homo sapiens,H3K27ac,Endothelial Cell,Umbilical Vein,"Inoue T, et al. Cross-enhancement of ANGPTL4 transcription by HIF1 alpha and PPAR beta/delta is the result of the conformational proximity of two response elements. Genome Biol. 2014",24721177
-GSM1233891,Homo sapiens,H3K27ac,B Lymphocyte,Blood,"Kasowski M, et al. Extensive variation in chromatin states across humans. Science 2013",24136358
-GSM1233895,Homo sapiens,H3K27ac,B Lymphocyte,Blood,"Kasowski M, et al. Extensive variation in chromatin states across humans. Science 2013",24136358
-GSM1233917,Homo sapiens,H3K27ac,Lymphoblastoid,Blood,"Kasowski M, et al. Extensive variation in chromatin states across humans. Science 2013",24136358
-GSM1233937,Homo sapiens,H3K27ac,Lymphoblastoid,Blood,"Kasowski M, et al. Extensive variation in chromatin states across humans. Science 2013",24136358
-GSM1233995,Homo sapiens,H3K27ac,Lymphoblastoid,Blood,"Kasowski M, et al. Extensive variation in chromatin states across humans. Science 2013",24136358
-GSM1254210,Homo sapiens,H3K27ac,B Lymphocyte,Bone Marrow,"Chapuy B, et al. Discovery and characterization of super-enhancer-associated dependencies in diffuse large B cell lymphoma. Cancer Cell 2013",24332044
-GSM1305205,Homo sapiens,H3K27ac,Endothelial Cell,Umbilical Vein,"Brown JD, et al. NF-κB directs dynamic super enhancer formation in inflammation and atherogenesis. Mol. Cell 2014",25263595
-GSM1327357,Homo sapiens,H3K27ac,Macrophage,,"Reschen ME, et al. Lipid-induced epigenomic changes in human macrophages identify a coronary artery disease-associated variant that regulates PPAP2B Expression through Altered C/EBP-beta binding. PLoS Genet. 2015",25835000
-GSM1327358,Homo sapiens,H3K27ac,Macrophage,,"Reschen ME, et al. Lipid-induced epigenomic changes in human macrophages identify a coronary artery disease-associated variant that regulates PPAP2B Expression through Altered C/EBP-beta binding. PLoS Genet. 2015",25835000
-GSM1327360,Homo sapiens,H3K27ac,Macrophage,,"Reschen ME, et al. Lipid-induced epigenomic changes in human macrophages identify a coronary artery disease-associated variant that regulates PPAP2B Expression through Altered C/EBP-beta binding. PLoS Genet. 2015",25835000
-GSM1328982,Homo sapiens,H3K27ac,Epithelium,Prostate,"Asangani IA, et al. Therapeutic targeting of BET bromodomain proteins in castration-resistant prostate cancer. Nature 2014",24759320
-GSM1333980,Homo sapiens,H3K27ac,B Lymphocyte,Blood,"Gasper WC, et al. Fully automated high-throughput chromatin immunoprecipitation for ChIP-seq: identifying ChIP-quality p300 monoclonal antibodies. Sci Rep 2014",24919486
-GSM1386346,Homo sapiens,H3K27ac,B cell lymphoma,,"Sabò A, et al. Selective transcriptional regulation by Myc in cellular growth control and lymphomagenesis. Nature 2014",25043028
-GSM1418963,Homo sapiens,H3K27ac,Fibroblast,Lung,"Sammons MA, et al. TP53 engagement with the genome occurs in distinct local chromatin environments via pioneer factor activity. Genome Res. 2015",25391375
-GSM1420843,Homo sapiens,H3K27ac,Lymphoblastoid,Blood,"del Rosario RC, et al. Sensitive detection of chromatin-altering polymorphisms reveals autoimmune disease mechanisms. Nat. Methods 2015",25799442
-GSM1420868,Homo sapiens,H3K27ac,Lymphoblastoid,Blood,"del Rosario RC, et al. Sensitive detection of chromatin-altering polymorphisms reveals autoimmune disease mechanisms. Nat. Methods 2015",25799442
-GSM1446920,Homo sapiens,H3K27ac,Keratinocyte,,"Kouwenhoven EN, et al. Transcription factor p63 bookmarks and regulates dynamic enhancers during epidermal differentiation. EMBO Rep. 2015",26034101
-GSM1517089,Homo sapiens,H3K27ac,Epithelium,Cervix,"Kuznetsova T, et al. Glucocorticoid receptor and nuclear factor kappa-b affect three-dimensional chromatin organization. Genome Biol. 2015",26619937
-GSM1517090,Homo sapiens,H3K27ac,Epithelium,Cervix,"Kuznetsova T, et al. Glucocorticoid receptor and nuclear factor kappa-b affect three-dimensional chromatin organization. Genome Biol. 2015",26619937
-GSM1523586,Homo sapiens,H3K27ac,B Lymphocyte,Tonsil,"Koues OI, et al. Enhancer sequence variants and transcription-factor deregulation synergize to construct pathogenic regulatory circuits in B-cell lymphoma. Immunity 2015",25607463
-GSM1523602,Homo sapiens,H3K27ac,B Lymphocyte,Tonsil,"Koues OI, et al. Enhancer sequence variants and transcription-factor deregulation synergize to construct pathogenic regulatory circuits in B-cell lymphoma. Immunity 2015",25607463
-GSM1550809,Homo sapiens,H3K27ac,Lymphoblastoid,,"Grubert F, et al. Genetic Control of Chromatin States in Humans Involves Local and Distal Chromosomal Interactions. Cell 2015",26300125
-GSM1550864,Homo sapiens,H3K27ac,Lymphoblastoid,,"Grubert F, et al. Genetic Control of Chromatin States in Humans Involves Local and Distal Chromosomal Interactions. Cell 2015",26300125
-GSM1550883,Homo sapiens,H3K27ac,Lymphoblastoid,,"Grubert F, et al. Genetic Control of Chromatin States in Humans Involves Local and Distal Chromosomal Interactions. Cell 2015",26300125
-GSM1550925,Homo sapiens,H3K27ac,Lymphoblastoid,,"Grubert F, et al. Genetic Control of Chromatin States in Humans Involves Local and Distal Chromosomal Interactions. Cell 2015",26300125
-GSM1550984,Homo sapiens,H3K27ac,Lymphoblastoid,,"Grubert F, et al. Genetic Control of Chromatin States in Humans Involves Local and Distal Chromosomal Interactions. Cell 2015",26300125
-GSM1571907,Homo sapiens,H3K27ac,Embryonic Stem Cell,,"Gafni O, et al. Derivation of novel human ground state naive pluripotent stem cells. Nature 2013",24172903
-GSM1571913,Homo sapiens,H3K27ac,Embryonic Stem Cell,,"Gafni O, et al. Derivation of novel human ground state naive pluripotent stem cells. Nature 2013",24172903
-GSM1670865,Homo sapiens,H3K27ac,Epithelium,Cervix,"Lai F, et al. Integrator mediates the biogenesis of enhancer RNAs. Nature 2015",26308897
-GSM1670867,Homo sapiens,H3K27ac,Epithelium,Cervix,"Lai F, et al. Integrator mediates the biogenesis of enhancer RNAs. Nature 2015",26308897
-GSM1670868,Homo sapiens,H3K27ac,Epithelium,Cervix,"Lai F, et al. Integrator mediates the biogenesis of enhancer RNAs. Nature 2015",26308897
-GSM1670870,Homo sapiens,H3K27ac,Epithelium,Cervix,"Lai F, et al. Integrator mediates the biogenesis of enhancer RNAs. Nature 2015",26308897
-GSM1670871,Homo sapiens,H3K27ac,Epithelium,Cervix,"Lai F, et al. Integrator mediates the biogenesis of enhancer RNAs. Nature 2015",26308897
-GSM1681924,Homo sapiens,H3K27ac,Macrophage,,"Pacheco MP, et al. Integrated metabolic modelling reveals cell-type specific epigenetic control points of the macrophage metabolic network. BMC Genomics 2015",26480823
-GSM1693019,Homo sapiens,H3K27ac,Epithelium,Breast,"Su Y, et al. Somatic Cell Fusions Reveal Extensive Heterogeneity in Basal-like Breast Cancer. Cell Rep 2015",26051943
-GSM1705251,Homo sapiens,H3K27ac,Embryonic Stem Cell,Embryo,"Ji X, et al. 3D Chromosome Regulatory Landscape of Human Pluripotent Cells. Cell Stem Cell 2016",26686465
-GSM1705260,Homo sapiens,H3K27ac,Embryonic Stem Cell,Embryo,"Ji X, et al. 3D Chromosome Regulatory Landscape of Human Pluripotent Cells. Cell Stem Cell 2016",26686465
-GSM1847877,Homo sapiens,H3K27ac,T Lymphocyte,Blood,"Limbach M, et al. Epigenetic profiling in CD4+ and CD8+ T cells from Graves' disease patients reveals changes in genes associated with T cell receptor signaling. J. Autoimmun. 2015",26459776
-GSM1847884,Homo sapiens,H3K27ac,T Lymphocyte,Blood,"Limbach M, et al. Epigenetic profiling in CD4+ and CD8+ T cells from Graves' disease patients reveals changes in genes associated with T cell receptor signaling. J. Autoimmun. 2015",26459776
-GSM1847893,Homo sapiens,H3K27ac,T Lymphocyte,Blood,"Limbach M, et al. Epigenetic profiling in CD4+ and CD8+ T cells from Graves' disease patients reveals changes in genes associated with T cell receptor signaling. J. Autoimmun. 2015",26459776
-GSM1847905,Homo sapiens,H3K27ac,T Lymphocyte,Blood,"Limbach M, et al. Epigenetic profiling in CD4+ and CD8+ T cells from Graves' disease patients reveals changes in genes associated with T cell receptor signaling. J. Autoimmun. 2015",26459776
-GSM1847914,Homo sapiens,H3K27ac,T Lymphocyte,Blood,"Limbach M, et al. Epigenetic profiling in CD4+ and CD8+ T cells from Graves' disease patients reveals changes in genes associated with T cell receptor signaling. J. Autoimmun. 2015",26459776
-GSM1898290,Homo sapiens,H3K27ac,Fibroblast,Skin,"Torres CM, et al. The linker histone H1.0 generates epigenetic and functional intratumor heterogeneity. Science 2016",27708074
-GSM1898293,Homo sapiens,H3K27ac,Fibroblast,Skin,"Torres CM, et al. The linker histone H1.0 generates epigenetic and functional intratumor heterogeneity. Science 2016",27708074
-GSM1898299,Homo sapiens,H3K27ac,Fibroblast,Skin,"Torres CM, et al. The linker histone H1.0 generates epigenetic and functional intratumor heterogeneity. Science 2016",27708074
-GSM1970132,Homo sapiens,H3K27ac,Fibroblast,Lung,,
-GSM1970133,Homo sapiens,H3K27ac,Fibroblast,Lung,,
-GSM1970134,Homo sapiens,H3K27ac,Fibroblast,Fetal Lung,,
-GSM2035810,Homo sapiens,H3K27ac,Keratinocyte,Skin,"Klein RH, et al. GRHL3 binding and enhancers rearrange as epidermal keratinocytes transition between functional states. PLoS Genet. 2017",28445475
-GSM2035816,Homo sapiens,H3K27ac,Keratinocyte,Skin,"Klein RH, et al. GRHL3 binding and enhancers rearrange as epidermal keratinocytes transition between functional states. PLoS Genet. 2017",28445475
-GSM2060768,Homo sapiens,H3K27ac,Epithelium,Prostate,,
-GSM2100292,Homo sapiens,H3K27ac,B Lymphocyte,,"Jiang Y, et al. CREBBP Inactivation Promotes the Development of HDAC3-Dependent Lymphomas. Cancer Discov 2016",27733359
-GSM2151907,Homo sapiens,H3K27ac,Fibroblast,Skin,"Kim DE, et al. Convergent roles of ATF3 and CSL in chromatin control of cancer-associated fibroblast activation. J. Exp. Med. ",28684431
-GSM2151908,Homo sapiens,H3K27ac,Fibroblast,Skin,"Kim DE, et al. Convergent roles of ATF3 and CSL in chromatin control of cancer-associated fibroblast activation. J. Exp. Med. ",28684431
-GSM2151909,Homo sapiens,H3K27ac,Fibroblast,Skin,"Kim DE, et al. Convergent roles of ATF3 and CSL in chromatin control of cancer-associated fibroblast activation. J. Exp. Med. ",28684431
-GSM2151910,Homo sapiens,H3K27ac,Fibroblast,Skin,"Kim DE, et al. Convergent roles of ATF3 and CSL in chromatin control of cancer-associated fibroblast activation. J. Exp. Med. ",28684431
-GSM2171416,Homo sapiens,H3K27ac,,Kidney,"Savitsky P, et al. Multivalent Histone and DNA Engagement by a PHD/BRD/PWWP Triple Reader Cassette Recruits ZMYND8 to K14ac-Rich Chromatin. Cell Rep 2016",27926874
-GSM2247241,Homo sapiens,H3K27ac,Keratinocyte,,"Rubin AJ, et al. Lineage-specific dynamic and pre-established enhancer-promoter contacts cooperate in terminal differentiation. Nat. Genet. ",28805829
-GSM2247244,Homo sapiens,H3K27ac,Keratinocyte,,"Rubin AJ, et al. Lineage-specific dynamic and pre-established enhancer-promoter contacts cooperate in terminal differentiation. Nat. Genet. ",28805829
-GSM2247245,Homo sapiens,H3K27ac,Keratinocyte,,"Rubin AJ, et al. Lineage-specific dynamic and pre-established enhancer-promoter contacts cooperate in terminal differentiation. Nat. Genet. ",28805829
-GSM2247246,Homo sapiens,H3K27ac,Keratinocyte,,"Rubin AJ, et al. Lineage-specific dynamic and pre-established enhancer-promoter contacts cooperate in terminal differentiation. Nat. Genet. ",28805829
-GSM2279957,Homo sapiens,H3K27ac,Cardiomyocyte,,,
-GSM2279989,Homo sapiens,H3K27ac,Cardiomyocyte,,,
-GSM2280013,Homo sapiens,H3K27ac,Cardiomyocyte,,,
-GSM2280036,Homo sapiens,H3K27ac,Cardiomyocyte,,,
-GSM2293425,Homo sapiens,H3K27ac,,Kidney,"Yao X, et al. VHL Deficiency Drives Enhancer Activation of Oncogenes in Clear Cell Renal Cell Carcinoma. Cancer Discov ",28893800
-GSM2293442,Homo sapiens,H3K27ac,,Kidney,"Yao X, et al. VHL Deficiency Drives Enhancer Activation of Oncogenes in Clear Cell Renal Cell Carcinoma. Cancer Discov ",28893800
-GSM2293458,Homo sapiens,H3K27ac,,Kidney,"Yao X, et al. VHL Deficiency Drives Enhancer Activation of Oncogenes in Clear Cell Renal Cell Carcinoma. Cancer Discov ",28893800
-GSM2293474,Homo sapiens,H3K27ac,,Kidney,"Yao X, et al. VHL Deficiency Drives Enhancer Activation of Oncogenes in Clear Cell Renal Cell Carcinoma. Cancer Discov ",28893800
-GSM2310582,Homo sapiens,H3K27ac,Monocyte,Blood,"Arts RJ, et al. Glutaminolysis and Fumarate Accumulation Integrate Immunometabolic and Epigenetic Programs in Trained Immunity. Cell Metab. 2016",27866838
-GSM2310584,Homo sapiens,H3K27ac,Monocyte,Blood,"Arts RJ, et al. Glutaminolysis and Fumarate Accumulation Integrate Immunometabolic and Epigenetic Programs in Trained Immunity. Cell Metab. 2016",27866838
-GSM2359487,Homo sapiens,H3K27ac,melanoma,Skin,"Rusan M, et al. Suppression of Adaptive Responses to Targeted Cancer Therapy by Transcriptional Repression. Cancer Discov ",29054992
-GSM2359489,Homo sapiens,H3K27ac,,Lung,"Rusan M, et al. Suppression of Adaptive Responses to Targeted Cancer Therapy by Transcriptional Repression. Cancer Discov ",29054992
-GSM2359491,Homo sapiens,H3K27ac,Lung Cancer Cell,Lung,"Rusan M, et al. Suppression of Adaptive Responses to Targeted Cancer Therapy by Transcriptional Repression. Cancer Discov ",29054992
-GSM2359494,Homo sapiens,H3K27ac,Epithelium,Lung,"Rusan M, et al. Suppression of Adaptive Responses to Targeted Cancer Therapy by Transcriptional Repression. Cancer Discov ",29054992
-GSM2359495,Homo sapiens,H3K27ac,,Lung,"Rusan M, et al. Suppression of Adaptive Responses to Targeted Cancer Therapy by Transcriptional Repression. Cancer Discov ",29054992
-GSM2359497,Homo sapiens,H3K27ac,Lung Cancer Cell,Lung,"Rusan M, et al. Suppression of Adaptive Responses to Targeted Cancer Therapy by Transcriptional Repression. Cancer Discov ",29054992
-GSM2386720,Homo sapiens,H3K27ac,B Lymphocyte,Tonsil,"Zhang J, et al. The CREBBP Acetyltransferase Is a Haploinsufficient Tumor Suppressor in B-cell Lymphoma. Cancer Discov 2017",28069569
-GSM2386722,Homo sapiens,H3K27ac,B Lymphocyte,Tonsil,"Zhang J, et al. The CREBBP Acetyltransferase Is a Haploinsufficient Tumor Suppressor in B-cell Lymphoma. Cancer Discov 2017",28069569
-GSM2394402,Homo sapiens,H3K27ac,Endothelial Cell,,"Hogan NT, et al. Transcriptional networks specifying homeostatic and inflammatory programs of gene expression in human aortic endothelial cells. Elife ",28585919
-GSM2394405,Homo sapiens,H3K27ac,Endothelial Cell,,"Hogan NT, et al. Transcriptional networks specifying homeostatic and inflammatory programs of gene expression in human aortic endothelial cells. Elife ",28585919
-GSM2394406,Homo sapiens,H3K27ac,Endothelial Cell,,"Hogan NT, et al. Transcriptional networks specifying homeostatic and inflammatory programs of gene expression in human aortic endothelial cells. Elife ",28585919
-GSM2442790,Homo sapiens,H3K27ac,Endothelial Cell,Umbilical Vein,,
-GSM2473265,Homo sapiens,H3K27ac,B Lymphocyte,Blood,,
-GSM2476261,Homo sapiens,H3K27ac,Epithelium,Breast,"Liu Y, et al. Transcriptional landscape of the human cell cycle. Proc. Natl. Acad. Sci. U.S.A. 2017",28289232
-GSM2483417,Homo sapiens,H3K27ac,Epithelium,Breast,,
-GSM2483418,Homo sapiens,H3K27ac,Epithelium,Breast,,
-GSM2483422,Homo sapiens,H3K27ac,Epithelium,Breast,,
-GSM2483423,Homo sapiens,H3K27ac,Epithelium,Breast,,
-GSM2496161,Homo sapiens,H3K27ac,Keratinocyte,,"Rubin AJ, et al. Lineage-specific dynamic and pre-established enhancer-promoter contacts cooperate in terminal differentiation. Nat. Genet. ",28805829
-GSM2496164,Homo sapiens,H3K27ac,Keratinocyte,,"Rubin AJ, et al. Lineage-specific dynamic and pre-established enhancer-promoter contacts cooperate in terminal differentiation. Nat. Genet. ",28805829
-GSM2496165,Homo sapiens,H3K27ac,Keratinocyte,,"Rubin AJ, et al. Lineage-specific dynamic and pre-established enhancer-promoter contacts cooperate in terminal differentiation. Nat. Genet. ",28805829
-GSM2507475,Homo sapiens,H3K27ac,iPSC,,"HD iPSC Consortium , et al. Developmental alterations in Huntington's disease neural cells and pharmacological rescue in cells and mice. Nat. Neurosci. 2017",28319609
-GSM2516777,Homo sapiens,H3K27ac,melanoma,Skin,"Gelato KA, et al. Super-enhancers define a proliferative PGC-1α-expressing melanoma subgroup sensitive to BET inhibition. Oncogene ",28991225
-GSM2516780,Homo sapiens,H3K27ac,melanoma,Skin,"Gelato KA, et al. Super-enhancers define a proliferative PGC-1α-expressing melanoma subgroup sensitive to BET inhibition. Oncogene ",28991225
-GSM2516783,Homo sapiens,H3K27ac,melanoma,Skin,"Gelato KA, et al. Super-enhancers define a proliferative PGC-1α-expressing melanoma subgroup sensitive to BET inhibition. Oncogene ",28991225
-GSM2544238,Homo sapiens,H3K27ac,Macrophage,,"Phanstiel DH, et al. Static and Dynamic DNA Loops form AP-1-Bound Activation Hubs during Macrophage Development. Mol. Cell ",28890333
-GSM2544239,Homo sapiens,H3K27ac,Macrophage,,"Phanstiel DH, et al. Static and Dynamic DNA Loops form AP-1-Bound Activation Hubs during Macrophage Development. Mol. Cell ",28890333
-GSM2550184,Homo sapiens,H3K27ac,Stem cell,,"Zhao MT, et al. Cell Type-Specific Chromatin Signatures Underline Regulatory DNA Elements in Human Induced Pluripotent Stem Cells and Somatic Cells. Circ. Res. ",29030344
-GSM2550226,Homo sapiens,H3K27ac,Stem cell,,"Zhao MT, et al. Cell Type-Specific Chromatin Signatures Underline Regulatory DNA Elements in Human Induced Pluripotent Stem Cells and Somatic Cells. Circ. Res. ",29030344
-GSM2550247,Homo sapiens,H3K27ac,Stem cell,,"Zhao MT, et al. Cell Type-Specific Chromatin Signatures Underline Regulatory DNA Elements in Human Induced Pluripotent Stem Cells and Somatic Cells. Circ. Res. ",29030344
-GSM2572314,Homo sapiens,H3K27ac,Keratinocyte,Foreskin,"Shen Y, et al. Epigenetic and genetic dissections of UV-induced global gene dysregulation in skin cells through multi-omics analyses. Sci Rep 2017",28211524
-GSM2572315,Homo sapiens,H3K27ac,Keratinocyte,Foreskin,"Shen Y, et al. Epigenetic and genetic dissections of UV-induced global gene dysregulation in skin cells through multi-omics analyses. Sci Rep 2017",28211524
-GSM2648926,Homo sapiens,H3K27ac,Embryonic Stem Cell,Embryo,,
-GSM2671297,Homo sapiens,H3K27ac,Epithelium,Breast,"Hafner A, et al. p53 pulses lead to distinct patterns of gene expression albeit similar DNA-binding dynamics. Nat. Struct. Mol. Biol. ",28825732
-GSM2671298,Homo sapiens,H3K27ac,Epithelium,Breast,"Hafner A, et al. p53 pulses lead to distinct patterns of gene expression albeit similar DNA-binding dynamics. Nat. Struct. Mol. Biol. ",28825732
-GSM2671300,Homo sapiens,H3K27ac,Epithelium,Breast,"Hafner A, et al. p53 pulses lead to distinct patterns of gene expression albeit similar DNA-binding dynamics. Nat. Struct. Mol. Biol. ",28825732
-GSM2676312,Homo sapiens,H3K27ac,Epithelium,Breast,,
-GSM2695649,Homo sapiens,H3K27ac,Macrophage,Blood,"Czimmerer Z, et al. Extensive and functional overlap of the STAT6 and RXR cistromes in the active enhancer repertoire of human CD14+ monocyte derived differentiating macrophages. Mol. Cell. Endocrinol. ",28774779
-GSM2870647,Homo sapiens,H3K27ac,osteosarcoma,Lung,"Morrow JJ, et al. Positively selected enhancer elements endow osteosarcoma cells with metastatic competence. Nat. Med. ",29334376
-GSM733646,Homo sapiens,H3K27ac,Fibroblast,Lung,"ENCODE Project Consortium , et al. An integrated encyclopedia of DNA elements in the human genome. Nature 2012",22955616
-GSM733662,Homo sapiens,H3K27ac,Fibroblast,Skin,"ENCODE Project Consortium , et al. An integrated encyclopedia of DNA elements in the human genome. Nature 2012",22955616
-GSM733684,Homo sapiens,H3K27ac,Epithelium,Cervix,"ENCODE Project Consortium , et al. An integrated encyclopedia of DNA elements in the human genome. Nature 2012",22955616
-GSM752965,Homo sapiens,H3K27ac,iPSC,Foreskin,"Lister R, et al. Human DNA methylomes at base resolution show widespread epigenomic differences. Nature 2009",19829295
-GSM752966,Homo sapiens,H3K27ac,iPSC,Foreskin,"Lister R, et al. Human DNA methylomes at base resolution show widespread epigenomic differences. Nature 2009",19829295
-GSM767341,Homo sapiens,H3K27ac,Embryonic Stem Cell,Embryo,"Lister R, et al. Human DNA methylomes at base resolution show widespread epigenomic differences. Nature 2009",19829295
-GSM767342,Homo sapiens,H3K27ac,Embryonic Stem Cell,Embryo,"Lister R, et al. Human DNA methylomes at base resolution show widespread epigenomic differences. Nature 2009",19829295
-GSM785500,Homo sapiens,H3K27ac,Macrophage,,"Pham TH, et al. Dynamic epigenetic enhancer signatures reveal key transcription factors associated with monocytic differentiation states. Blood 2012",22550342
-GSM809015,Homo sapiens,H3K27ac,Endothelial Cell,Umbilical Vein,"Maejima T, et al. Direct evidence for pitavastatin induced chromatin structure change in the KLF4 gene in endothelial cells. PLoS ONE 2014",24797675
-GSM818031,Homo sapiens,H3K27ac,Embryonic Stem Cell,Embryo,"Lister R, et al. Human DNA methylomes at base resolution show widespread epigenomic differences. Nature 2009",19829295
-GSM864035,Homo sapiens,H3K27ac,Embryonic Stem Cell,Embryo,"Lister R, et al. Human DNA methylomes at base resolution show widespread epigenomic differences. Nature 2009",19829295
-GSM894063,Homo sapiens,H3K27ac,B cell lymphoma,,"Lin CY, et al. Transcriptional amplification in tumor cells with elevated c-Myc. Cell 2012",23021215
-GSM894067,Homo sapiens,H3K27ac,Epithelium,Lung,"Lin CY, et al. Transcriptional amplification in tumor cells with elevated c-Myc. Cell 2012",23021215
-GSM945521,Homo sapiens,H3K27ac,Endothelial Cell,Umbilical Vein,"Inoue T, et al. Cross-enhancement of ANGPTL4 transcription by HIF1 alpha and PPAR beta/delta is the result of the conformational proximity of two response elements. Genome Biol. 2014",24721177
-GSM958156,Homo sapiens,H3K27ac,Keratinocyte,Foreskin,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595
-GSM986078,Homo sapiens,H3K27ac,Epithelium,Breast,"Theodorou V, et al. GATA3 acts upstream of FOXA1 in mediating ESR1 binding by shaping enhancer accessibility. Genome Res. 2013",23172872
-GSM998996,Homo sapiens,H3K27ac,B Lymphocyte,Blood,"Andersson R, et al. An atlas of active enhancers across human cell types and tissues. Nature 2014",24670763
-GSM999000,Homo sapiens,H3K27ac,T Lymphocyte,Blood,"Andersson R, et al. An atlas of active enhancers across human cell types and tissues. Nature 2014",24670763
-GSM999001,Homo sapiens,H3K27ac,T Lymphocyte,Blood,"Andersson R, et al. An atlas of active enhancers across human cell types and tissues. Nature 2014",24670763
+ID,Species,Factor,Cell Type,Tissue Type,Paper Reference,PMID
+GSM1009626,Homo sapiens,H3K27ac,vein_endothelial_cell,Umbilical Vein,"Zhang B, et al. A dynamic H3K27ac signature identifies VEGFA-stimulated endothelial enhancers and requires EP300 activity. Genome Res. 2013",23547170
+GSM1013131,Homo sapiens,H3K27ac,intestinal_epithelial_cell,Small Intestine,"Lister R, et al. Human DNA methylomes at base resolution show widespread epigenomic differences. Nature 2009",19829295
+GSM1033757,Homo sapiens,H3K27ac,B_cell,,,0
+GSM1057016,Homo sapiens,H3K27ac,megakaryocyte,Blood,"Qiao Y, et al. Synergistic activation of inflammatory cytokine genes by interferon-γ-induced chromatin remodeling and toll-like receptor signaling. Immunity 2013",24012417
+GSM1057017,Homo sapiens,H3K27ac,megakaryocyte,Blood,"Qiao Y, et al. Synergistic activation of inflammatory cytokine genes by interferon-γ-induced chromatin remodeling and toll-like receptor signaling. Immunity 2013",24012417
+GSM1057018,Homo sapiens,H3K27ac,megakaryocyte,Blood,"Qiao Y, et al. Synergistic activation of inflammatory cytokine genes by interferon-γ-induced chromatin remodeling and toll-like receptor signaling. Immunity 2013",24012417
+GSM1057020,Homo sapiens,H3K27ac,megakaryocyte,Blood,"Qiao Y, et al. Synergistic activation of inflammatory cytokine genes by interferon-γ-induced chromatin remodeling and toll-like receptor signaling. Immunity 2013",24012417
+GSM1057021,Homo sapiens,H3K27ac,megakaryocyte,Blood,"Qiao Y, et al. Synergistic activation of inflammatory cytokine genes by interferon-γ-induced chromatin remodeling and toll-like receptor signaling. Immunity 2013",24012417
+GSM1057022,Homo sapiens,H3K27ac,megakaryocyte,Blood,"Qiao Y, et al. Synergistic activation of inflammatory cytokine genes by interferon-γ-induced chromatin remodeling and toll-like receptor signaling. Immunity 2013",24012417
+GSM1057023,Homo sapiens,H3K27ac,megakaryocyte,Blood,"Qiao Y, et al. Synergistic activation of inflammatory cytokine genes by interferon-γ-induced chromatin remodeling and toll-like receptor signaling. Immunity 2013",24012417
+GSM1058765,Homo sapiens,H3K27ac,intestinal_epithelial_cell,Fetal Large Intestine,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595
+GSM1058766,Homo sapiens,H3K27ac,intestinal_epithelial_cell,Fetal Small Intestine,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595
+GSM1127060,Homo sapiens,H3K27ac,skin_fibroblast,Foreskin,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595
+GSM1127172,Homo sapiens,H3K27ac,intestinal_epithelial_cell,Small Intestine,"Lister R, et al. Human DNA methylomes at base resolution show widespread epigenomic differences. Nature 2009",19829295
+GSM1154045,Homo sapiens,H3K27ac,vein_endothelial_cell,Umbilical Vein,"Jin F, et al. A high-resolution map of the three-dimensional chromatin interactome in human cells. Nature 2013",24141950
+GSM1154046,Homo sapiens,H3K27ac,vein_endothelial_cell,Umbilical Vein,"Jin F, et al. A high-resolution map of the three-dimensional chromatin interactome in human cells. Nature 2013",24141950
+GSM1154047,Homo sapiens,H3K27ac,lung_epithelium,Lung,"Jin F, et al. A high-resolution map of the three-dimensional chromatin interactome in human cells. Nature 2013",24141950
+GSM1214674,Homo sapiens,H3K27ac,vein_endothelial_cell,Umbilical Vein,"Inoue T, et al. Cross-enhancement of ANGPTL4 transcription by HIF1 alpha and PPAR beta/delta is the result of the conformational proximity of two response elements. Genome Biol. 2014",24721177
+GSM1214675,Homo sapiens,H3K27ac,vein_endothelial_cell,Umbilical Vein,"Inoue T, et al. Cross-enhancement of ANGPTL4 transcription by HIF1 alpha and PPAR beta/delta is the result of the conformational proximity of two response elements. Genome Biol. 2014",24721177
+GSM1214676,Homo sapiens,H3K27ac,vein_endothelial_cell,Umbilical Vein,"Inoue T, et al. Cross-enhancement of ANGPTL4 transcription by HIF1 alpha and PPAR beta/delta is the result of the conformational proximity of two response elements. Genome Biol. 2014",24721177
+GSM1214677,Homo sapiens,H3K27ac,vein_endothelial_cell,Umbilical Vein,"Inoue T, et al. Cross-enhancement of ANGPTL4 transcription by HIF1 alpha and PPAR beta/delta is the result of the conformational proximity of two response elements. Genome Biol. 2014",24721177
+GSM1226370,Homo sapiens,H3K27ac,vein_endothelial_cell,Umbilical Vein,"Inoue T, et al. Cross-enhancement of ANGPTL4 transcription by HIF1 alpha and PPAR beta/delta is the result of the conformational proximity of two response elements. Genome Biol. 2014",24721177
+GSM1226371,Homo sapiens,H3K27ac,vein_endothelial_cell,Umbilical Vein,"Inoue T, et al. Cross-enhancement of ANGPTL4 transcription by HIF1 alpha and PPAR beta/delta is the result of the conformational proximity of two response elements. Genome Biol. 2014",24721177
+GSM1233891,Homo sapiens,H3K27ac,lymphoblastoid_cell,Blood,"Kasowski M, et al. Extensive variation in chromatin states across humans. Science 2013",24136358
+GSM1233895,Homo sapiens,H3K27ac,lymphoblastoid_cell,Blood,"Kasowski M, et al. Extensive variation in chromatin states across humans. Science 2013",24136358
+GSM1233917,Homo sapiens,H3K27ac,lymphoblastoid_cell,Blood,"Kasowski M, et al. Extensive variation in chromatin states across humans. Science 2013",24136358
+GSM1233937,Homo sapiens,H3K27ac,lymphoblastoid_cell,Blood,"Kasowski M, et al. Extensive variation in chromatin states across humans. Science 2013",24136358
+GSM1233995,Homo sapiens,H3K27ac,lymphoblastoid_cell,Blood,"Kasowski M, et al. Extensive variation in chromatin states across humans. Science 2013",24136358
+GSM1254210,Homo sapiens,H3K27ac,B_cell,Bone Marrow,"Chapuy B, et al. Discovery and characterization of super-enhancer-associated dependencies in diffuse large B cell lymphoma. Cancer Cell 2013",24332044
+GSM1305205,Homo sapiens,H3K27ac,vein_endothelial_cell,Umbilical Vein,"Brown JD, et al. NF-κB directs dynamic super enhancer formation in inflammation and atherogenesis. Mol. Cell 2014",25263595
+GSM1327357,Homo sapiens,H3K27ac,macrophage,,"Reschen ME, et al. Lipid-induced epigenomic changes in human macrophages identify a coronary artery disease-associated variant that regulates PPAP2B Expression through Altered C/EBP-beta binding. PLoS Genet. 2015",25835000
+GSM1327358,Homo sapiens,H3K27ac,macrophage,,"Reschen ME, et al. Lipid-induced epigenomic changes in human macrophages identify a coronary artery disease-associated variant that regulates PPAP2B Expression through Altered C/EBP-beta binding. PLoS Genet. 2015",25835000
+GSM1327360,Homo sapiens,H3K27ac,macrophage,,"Reschen ME, et al. Lipid-induced epigenomic changes in human macrophages identify a coronary artery disease-associated variant that regulates PPAP2B Expression through Altered C/EBP-beta binding. PLoS Genet. 2015",25835000
+GSM1328982,Homo sapiens,H3K27ac,prostate_epithelium,Prostate,"Asangani IA, et al. Therapeutic targeting of BET bromodomain proteins in castration-resistant prostate cancer. Nature 2014",24759320
+GSM1333980,Homo sapiens,H3K27ac,lymphoblastoid_cell,Blood,"Gasper WC, et al. Fully automated high-throughput chromatin immunoprecipitation for ChIP-seq: identifying ChIP-quality p300 monoclonal antibodies. Sci Rep 2014",24919486
+GSM1386346,Homo sapiens,H3K27ac,B_cell,,"Sabò A, et al. Selective transcriptional regulation by Myc in cellular growth control and lymphomagenesis. Nature 2014",25043028
+GSM1418963,Homo sapiens,H3K27ac,lung_epithelium,Lung,"Sammons MA, et al. TP53 engagement with the genome occurs in distinct local chromatin environments via pioneer factor activity. Genome Res. 2015",25391375
+GSM1420843,Homo sapiens,H3K27ac,lymphoblastoid_cell,Blood,"del Rosario RC, et al. Sensitive detection of chromatin-altering polymorphisms reveals autoimmune disease mechanisms. Nat. Methods 2015",25799442
+GSM1420868,Homo sapiens,H3K27ac,lymphoblastoid_cell,Blood,"del Rosario RC, et al. Sensitive detection of chromatin-altering polymorphisms reveals autoimmune disease mechanisms. Nat. Methods 2015",25799442
+GSM1446920,Homo sapiens,H3K27ac,keratinocyte,,"Kouwenhoven EN, et al. Transcription factor p63 bookmarks and regulates dynamic enhancers during epidermal differentiation. EMBO Rep. 2015",26034101
+GSM1517089,Homo sapiens,H3K27ac,cervix_epithelium,Cervix,"Kuznetsova T, et al. Glucocorticoid receptor and nuclear factor kappa-b affect three-dimensional chromatin organization. Genome Biol. 2015",26619937
+GSM1517090,Homo sapiens,H3K27ac,cervix_epithelium,Cervix,"Kuznetsova T, et al. Glucocorticoid receptor and nuclear factor kappa-b affect three-dimensional chromatin organization. Genome Biol. 2015",26619937
+GSM1523586,Homo sapiens,H3K27ac,B_cell,Tonsil,"Koues OI, et al. Enhancer sequence variants and transcription-factor deregulation synergize to construct pathogenic regulatory circuits in B-cell lymphoma. Immunity 2015",25607463
+GSM1523602,Homo sapiens,H3K27ac,B_cell,Tonsil,"Koues OI, et al. Enhancer sequence variants and transcription-factor deregulation synergize to construct pathogenic regulatory circuits in B-cell lymphoma. Immunity 2015",25607463
+GSM1550809,Homo sapiens,H3K27ac,lymphoblastoid_cell,,"Grubert F, et al. Genetic Control of Chromatin States in Humans Involves Local and Distal Chromosomal Interactions. Cell 2015",26300125
+GSM1550864,Homo sapiens,H3K27ac,lymphoblastoid_cell,,"Grubert F, et al. Genetic Control of Chromatin States in Humans Involves Local and Distal Chromosomal Interactions. Cell 2015",26300125
+GSM1550883,Homo sapiens,H3K27ac,lymphoblastoid_cell,,"Grubert F, et al. Genetic Control of Chromatin States in Humans Involves Local and Distal Chromosomal Interactions. Cell 2015",26300125
+GSM1550925,Homo sapiens,H3K27ac,lymphoblastoid_cell,,"Grubert F, et al. Genetic Control of Chromatin States in Humans Involves Local and Distal Chromosomal Interactions. Cell 2015",26300125
+GSM1550984,Homo sapiens,H3K27ac,lymphoblastoid_cell,,"Grubert F, et al. Genetic Control of Chromatin States in Humans Involves Local and Distal Chromosomal Interactions. Cell 2015",26300125
+GSM1571907,Homo sapiens,H3K27ac,embryonic_stem_cell,,"Gafni O, et al. Derivation of novel human ground state naive pluripotent stem cells. Nature 2013",24172903
+GSM1571913,Homo sapiens,H3K27ac,embryonic_stem_cell,,"Gafni O, et al. Derivation of novel human ground state naive pluripotent stem cells. Nature 2013",24172903
+GSM1670865,Homo sapiens,H3K27ac,cervix_epithelium,Cervix,"Lai F, et al. Integrator mediates the biogenesis of enhancer RNAs. Nature 2015",26308897
+GSM1670867,Homo sapiens,H3K27ac,cervix_epithelium,Cervix,"Lai F, et al. Integrator mediates the biogenesis of enhancer RNAs. Nature 2015",26308897
+GSM1670868,Homo sapiens,H3K27ac,cervix_epithelium,Cervix,"Lai F, et al. Integrator mediates the biogenesis of enhancer RNAs. Nature 2015",26308897
+GSM1670870,Homo sapiens,H3K27ac,cervix_epithelium,Cervix,"Lai F, et al. Integrator mediates the biogenesis of enhancer RNAs. Nature 2015",26308897
+GSM1670871,Homo sapiens,H3K27ac,cervix_epithelium,Cervix,"Lai F, et al. Integrator mediates the biogenesis of enhancer RNAs. Nature 2015",26308897
+GSM1681924,Homo sapiens,H3K27ac,macrophage,,"Pacheco MP, et al. Integrated metabolic modelling reveals cell-type specific epigenetic control points of the macrophage metabolic network. BMC Genomics 2015",26480823
+GSM1693019,Homo sapiens,H3K27ac,breast_epithelium,Breast,"Su Y, et al. Somatic Cell Fusions Reveal Extensive Heterogeneity in Basal-like Breast Cancer. Cell Rep 2015",26051943
+GSM1705251,Homo sapiens,H3K27ac,embryonic_stem_cell,Embryo,"Ji X, et al. 3D Chromosome Regulatory Landscape of Human Pluripotent Cells. Cell Stem Cell 2016",26686465
+GSM1705260,Homo sapiens,H3K27ac,embryonic_stem_cell,Embryo,"Ji X, et al. 3D Chromosome Regulatory Landscape of Human Pluripotent Cells. Cell Stem Cell 2016",26686465
+GSM1847877,Homo sapiens,H3K27ac,"CD8-positive,_alpha-beta_T_cell",Blood,"Limbach M, et al. Epigenetic profiling in CD4+ and CD8+ T cells from Graves' disease patients reveals changes in genes associated with T cell receptor signaling. J. Autoimmun. 2015",26459776
+GSM1847884,Homo sapiens,H3K27ac,"CD8-positive,_alpha-beta_T_cell",Blood,"Limbach M, et al. Epigenetic profiling in CD4+ and CD8+ T cells from Graves' disease patients reveals changes in genes associated with T cell receptor signaling. J. Autoimmun. 2015",26459776
+GSM1847893,Homo sapiens,H3K27ac,"CD8-positive,_alpha-beta_T_cell",Blood,"Limbach M, et al. Epigenetic profiling in CD4+ and CD8+ T cells from Graves' disease patients reveals changes in genes associated with T cell receptor signaling. J. Autoimmun. 2015",26459776
+GSM1847905,Homo sapiens,H3K27ac,"CD8-positive,_alpha-beta_T_cell",Blood,"Limbach M, et al. Epigenetic profiling in CD4+ and CD8+ T cells from Graves' disease patients reveals changes in genes associated with T cell receptor signaling. J. Autoimmun. 2015",26459776
+GSM1847914,Homo sapiens,H3K27ac,"CD8-positive,_alpha-beta_T_cell",Blood,"Limbach M, et al. Epigenetic profiling in CD4+ and CD8+ T cells from Graves' disease patients reveals changes in genes associated with T cell receptor signaling. J. Autoimmun. 2015",26459776
+GSM1898290,Homo sapiens,H3K27ac,skin_fibroblast,Skin,"Torres CM, et al. The linker histone H1.0 generates epigenetic and functional intratumor heterogeneity. Science 2016",27708074
+GSM1898293,Homo sapiens,H3K27ac,skin_fibroblast,Skin,"Torres CM, et al. The linker histone H1.0 generates epigenetic and functional intratumor heterogeneity. Science 2016",27708074
+GSM1898299,Homo sapiens,H3K27ac,skin_fibroblast,Skin,"Torres CM, et al. The linker histone H1.0 generates epigenetic and functional intratumor heterogeneity. Science 2016",27708074
+GSM1970132,Homo sapiens,H3K27ac,lung_epithelium,Lung,,0
+GSM1970133,Homo sapiens,H3K27ac,lung_epithelium,Lung,,0
+GSM1970134,Homo sapiens,H3K27ac,lung_epithelium,Fetal Lung,,0
+GSM2035810,Homo sapiens,H3K27ac,keratinocyte,Skin,"Klein RH, et al. GRHL3 binding and enhancers rearrange as epidermal keratinocytes transition between functional states. PLoS Genet. 2017",28445475
+GSM2035816,Homo sapiens,H3K27ac,keratinocyte,Skin,"Klein RH, et al. GRHL3 binding and enhancers rearrange as epidermal keratinocytes transition between functional states. PLoS Genet. 2017",28445475
+GSM2060768,Homo sapiens,H3K27ac,prostate_epithelium,Prostate,,0
+GSM2100292,Homo sapiens,H3K27ac,B_cell,,"Jiang Y, et al. CREBBP Inactivation Promotes the Development of HDAC3-Dependent Lymphomas. Cancer Discov 2016",27733359
+GSM2151907,Homo sapiens,H3K27ac,skin_fibroblast,Skin,"Kim DE, et al. Convergent roles of ATF3 and CSL in chromatin control of cancer-associated fibroblast activation. J. Exp. Med. ",28684431
+GSM2151908,Homo sapiens,H3K27ac,skin_fibroblast,Skin,"Kim DE, et al. Convergent roles of ATF3 and CSL in chromatin control of cancer-associated fibroblast activation. J. Exp. Med. ",28684431
+GSM2151909,Homo sapiens,H3K27ac,skin_fibroblast,Skin,"Kim DE, et al. Convergent roles of ATF3 and CSL in chromatin control of cancer-associated fibroblast activation. J. Exp. Med. ",28684431
+GSM2151910,Homo sapiens,H3K27ac,skin_fibroblast,Skin,"Kim DE, et al. Convergent roles of ATF3 and CSL in chromatin control of cancer-associated fibroblast activation. J. Exp. Med. ",28684431
+GSM2171416,Homo sapiens,H3K27ac,kidney_epithelial_cell,Kidney,"Savitsky P, et al. Multivalent Histone and DNA Engagement by a PHD/BRD/PWWP Triple Reader Cassette Recruits ZMYND8 to K14ac-Rich Chromatin. Cell Rep 2016",27926874
+GSM2247241,Homo sapiens,H3K27ac,keratinocyte,,"Rubin AJ, et al. Lineage-specific dynamic and pre-established enhancer-promoter contacts cooperate in terminal differentiation. Nat. Genet. ",28805829
+GSM2247244,Homo sapiens,H3K27ac,keratinocyte,,"Rubin AJ, et al. Lineage-specific dynamic and pre-established enhancer-promoter contacts cooperate in terminal differentiation. Nat. Genet. ",28805829
+GSM2247245,Homo sapiens,H3K27ac,keratinocyte,,"Rubin AJ, et al. Lineage-specific dynamic and pre-established enhancer-promoter contacts cooperate in terminal differentiation. Nat. Genet. ",28805829
+GSM2247246,Homo sapiens,H3K27ac,keratinocyte,,"Rubin AJ, et al. Lineage-specific dynamic and pre-established enhancer-promoter contacts cooperate in terminal differentiation. Nat. Genet. ",28805829
+GSM2279957,Homo sapiens,H3K27ac,cardiac_muscle_cell,,,0
+GSM2279989,Homo sapiens,H3K27ac,cardiac_muscle_cell,,,0
+GSM2280013,Homo sapiens,H3K27ac,cardiac_muscle_cell,,,0
+GSM2280036,Homo sapiens,H3K27ac,cardiac_muscle_cell,,,0
+GSM2293425,Homo sapiens,H3K27ac,kidney_epithelial_cell,Kidney,"Yao X, et al. VHL Deficiency Drives Enhancer Activation of Oncogenes in Clear Cell Renal Cell Carcinoma. Cancer Discov ",28893800
+GSM2293442,Homo sapiens,H3K27ac,kidney_epithelial_cell,Kidney,"Yao X, et al. VHL Deficiency Drives Enhancer Activation of Oncogenes in Clear Cell Renal Cell Carcinoma. Cancer Discov ",28893800
+GSM2293458,Homo sapiens,H3K27ac,kidney_epithelial_cell,Kidney,"Yao X, et al. VHL Deficiency Drives Enhancer Activation of Oncogenes in Clear Cell Renal Cell Carcinoma. Cancer Discov ",28893800
+GSM2293474,Homo sapiens,H3K27ac,kidney_epithelial_cell,Kidney,"Yao X, et al. VHL Deficiency Drives Enhancer Activation of Oncogenes in Clear Cell Renal Cell Carcinoma. Cancer Discov ",28893800
+GSM2310582,Homo sapiens,H3K27ac,macrophage,Blood,"Arts RJ, et al. Glutaminolysis and Fumarate Accumulation Integrate Immunometabolic and Epigenetic Programs in Trained Immunity. Cell Metab. 2016",27866838
+GSM2310584,Homo sapiens,H3K27ac,macrophage,Blood,"Arts RJ, et al. Glutaminolysis and Fumarate Accumulation Integrate Immunometabolic and Epigenetic Programs in Trained Immunity. Cell Metab. 2016",27866838
+GSM2359487,Homo sapiens,H3K27ac,skin_fibroblast,Skin,"Rusan M, et al. Suppression of Adaptive Responses to Targeted Cancer Therapy by Transcriptional Repression. Cancer Discov ",29054992
+GSM2359489,Homo sapiens,H3K27ac,lung_epithelium,Lung,"Rusan M, et al. Suppression of Adaptive Responses to Targeted Cancer Therapy by Transcriptional Repression. Cancer Discov ",29054992
+GSM2359491,Homo sapiens,H3K27ac,lung_epithelium,Lung,"Rusan M, et al. Suppression of Adaptive Responses to Targeted Cancer Therapy by Transcriptional Repression. Cancer Discov ",29054992
+GSM2359494,Homo sapiens,H3K27ac,lung_epithelium,Lung,"Rusan M, et al. Suppression of Adaptive Responses to Targeted Cancer Therapy by Transcriptional Repression. Cancer Discov ",29054992
+GSM2359495,Homo sapiens,H3K27ac,lung_epithelium,Lung,"Rusan M, et al. Suppression of Adaptive Responses to Targeted Cancer Therapy by Transcriptional Repression. Cancer Discov ",29054992
+GSM2359497,Homo sapiens,H3K27ac,lung_epithelium,Lung,"Rusan M, et al. Suppression of Adaptive Responses to Targeted Cancer Therapy by Transcriptional Repression. Cancer Discov ",29054992
+GSM2386720,Homo sapiens,H3K27ac,B_cell,Tonsil,"Zhang J, et al. The CREBBP Acetyltransferase Is a Haploinsufficient Tumor Suppressor in B-cell Lymphoma. Cancer Discov 2017",28069569
+GSM2386722,Homo sapiens,H3K27ac,B_cell,Tonsil,"Zhang J, et al. The CREBBP Acetyltransferase Is a Haploinsufficient Tumor Suppressor in B-cell Lymphoma. Cancer Discov 2017",28069569
+GSM2394402,Homo sapiens,H3K27ac,aortic_endothelial_cell,,"Hogan NT, et al. Transcriptional networks specifying homeostatic and inflammatory programs of gene expression in human aortic endothelial cells. Elife ",28585919
+GSM2394405,Homo sapiens,H3K27ac,aortic_endothelial_cell,,"Hogan NT, et al. Transcriptional networks specifying homeostatic and inflammatory programs of gene expression in human aortic endothelial cells. Elife ",28585919
+GSM2394406,Homo sapiens,H3K27ac,aortic_endothelial_cell,,"Hogan NT, et al. Transcriptional networks specifying homeostatic and inflammatory programs of gene expression in human aortic endothelial cells. Elife ",28585919
+GSM2442790,Homo sapiens,H3K27ac,vein_endothelial_cell,Umbilical Vein,,0
+GSM2473265,Homo sapiens,H3K27ac,B_cell,Blood,,0
+GSM2476261,Homo sapiens,H3K27ac,breast_epithelium,Breast,"Liu Y, et al. Transcriptional landscape of the human cell cycle. Proc. Natl. Acad. Sci. U.S.A. 2017",28289232
+GSM2483417,Homo sapiens,H3K27ac,breast_epithelium,Breast,,0
+GSM2483418,Homo sapiens,H3K27ac,breast_epithelium,Breast,,0
+GSM2483422,Homo sapiens,H3K27ac,breast_epithelium,Breast,,0
+GSM2483423,Homo sapiens,H3K27ac,breast_epithelium,Breast,,0
+GSM2496161,Homo sapiens,H3K27ac,keratinocyte,,"Rubin AJ, et al. Lineage-specific dynamic and pre-established enhancer-promoter contacts cooperate in terminal differentiation. Nat. Genet. ",28805829
+GSM2496164,Homo sapiens,H3K27ac,keratinocyte,,"Rubin AJ, et al. Lineage-specific dynamic and pre-established enhancer-promoter contacts cooperate in terminal differentiation. Nat. Genet. ",28805829
+GSM2496165,Homo sapiens,H3K27ac,keratinocyte,,"Rubin AJ, et al. Lineage-specific dynamic and pre-established enhancer-promoter contacts cooperate in terminal differentiation. Nat. Genet. ",28805829
+GSM2507475,Homo sapiens,H3K27ac,pluripotent_stem_cell,,"HD iPSC Consortium , et al. Developmental alterations in Huntington's disease neural cells and pharmacological rescue in cells and mice. Nat. Neurosci. 2017",28319609
+GSM2516777,Homo sapiens,H3K27ac,skin_fibroblast,Skin,"Gelato KA, et al. Super-enhancers define a proliferative PGC-1α-expressing melanoma subgroup sensitive to BET inhibition. Oncogene ",28991225
+GSM2516780,Homo sapiens,H3K27ac,skin_fibroblast,Skin,"Gelato KA, et al. Super-enhancers define a proliferative PGC-1α-expressing melanoma subgroup sensitive to BET inhibition. Oncogene ",28991225
+GSM2516783,Homo sapiens,H3K27ac,skin_fibroblast,Skin,"Gelato KA, et al. Super-enhancers define a proliferative PGC-1α-expressing melanoma subgroup sensitive to BET inhibition. Oncogene ",28991225
+GSM2544238,Homo sapiens,H3K27ac,macrophage,,"Phanstiel DH, et al. Static and Dynamic DNA Loops form AP-1-Bound Activation Hubs during Macrophage Development. Mol. Cell ",28890333
+GSM2544239,Homo sapiens,H3K27ac,macrophage,,"Phanstiel DH, et al. Static and Dynamic DNA Loops form AP-1-Bound Activation Hubs during Macrophage Development. Mol. Cell ",28890333
+GSM2550184,Homo sapiens,H3K27ac,pluripotent_stem_cell,,"Zhao MT, et al. Cell Type-Specific Chromatin Signatures Underline Regulatory DNA Elements in Human Induced Pluripotent Stem Cells and Somatic Cells. Circ. Res. ",29030344
+GSM2550226,Homo sapiens,H3K27ac,pluripotent_stem_cell,,"Zhao MT, et al. Cell Type-Specific Chromatin Signatures Underline Regulatory DNA Elements in Human Induced Pluripotent Stem Cells and Somatic Cells. Circ. Res. ",29030344
+GSM2550247,Homo sapiens,H3K27ac,pluripotent_stem_cell,,"Zhao MT, et al. Cell Type-Specific Chromatin Signatures Underline Regulatory DNA Elements in Human Induced Pluripotent Stem Cells and Somatic Cells. Circ. Res. ",29030344
+GSM2572314,Homo sapiens,H3K27ac,keratinocyte,Foreskin,"Shen Y, et al. Epigenetic and genetic dissections of UV-induced global gene dysregulation in skin cells through multi-omics analyses. Sci Rep 2017",28211524
+GSM2572315,Homo sapiens,H3K27ac,keratinocyte,Foreskin,"Shen Y, et al. Epigenetic and genetic dissections of UV-induced global gene dysregulation in skin cells through multi-omics analyses. Sci Rep 2017",28211524
+GSM2648926,Homo sapiens,H3K27ac,embryonic_stem_cell,Embryo,,0
+GSM2671297,Homo sapiens,H3K27ac,breast_epithelium,Breast,"Hafner A, et al. p53 pulses lead to distinct patterns of gene expression albeit similar DNA-binding dynamics. Nat. Struct. Mol. Biol. ",28825732
+GSM2671298,Homo sapiens,H3K27ac,breast_epithelium,Breast,"Hafner A, et al. p53 pulses lead to distinct patterns of gene expression albeit similar DNA-binding dynamics. Nat. Struct. Mol. Biol. ",28825732
+GSM2671300,Homo sapiens,H3K27ac,breast_epithelium,Breast,"Hafner A, et al. p53 pulses lead to distinct patterns of gene expression albeit similar DNA-binding dynamics. Nat. Struct. Mol. Biol. ",28825732
+GSM2676312,Homo sapiens,H3K27ac,breast_epithelium,Breast,,0
+GSM2695649,Homo sapiens,H3K27ac,macrophage,Blood,"Czimmerer Z, et al. Extensive and functional overlap of the STAT6 and RXR cistromes in the active enhancer repertoire of human CD14+ monocyte derived differentiating macrophages. Mol. Cell. Endocrinol. ",28774779
+GSM2870647,Homo sapiens,H3K27ac,lung_epithelium,Lung,"Morrow JJ, et al. Positively selected enhancer elements endow osteosarcoma cells with metastatic competence. Nat. Med. ",29334376
+GSM733646,Homo sapiens,H3K27ac,lung_epithelium,Lung,"ENCODE Project Consortium , et al. An integrated encyclopedia of DNA elements in the human genome. Nature 2012",22955616
+GSM733662,Homo sapiens,H3K27ac,skin_fibroblast,Skin,"ENCODE Project Consortium , et al. An integrated encyclopedia of DNA elements in the human genome. Nature 2012",22955616
+GSM733684,Homo sapiens,H3K27ac,cervix_epithelium,Cervix,"ENCODE Project Consortium , et al. An integrated encyclopedia of DNA elements in the human genome. Nature 2012",22955616
+GSM752965,Homo sapiens,H3K27ac,pluripotent_stem_cell,Foreskin,"Lister R, et al. Human DNA methylomes at base resolution show widespread epigenomic differences. Nature 2009",19829295
+GSM752966,Homo sapiens,H3K27ac,pluripotent_stem_cell,Foreskin,"Lister R, et al. Human DNA methylomes at base resolution show widespread epigenomic differences. Nature 2009",19829295
+GSM767341,Homo sapiens,H3K27ac,embryonic_stem_cell,Embryo,"Lister R, et al. Human DNA methylomes at base resolution show widespread epigenomic differences. Nature 2009",19829295
+GSM767342,Homo sapiens,H3K27ac,embryonic_stem_cell,Embryo,"Lister R, et al. Human DNA methylomes at base resolution show widespread epigenomic differences. Nature 2009",19829295
+GSM785500,Homo sapiens,H3K27ac,macrophage,,"Pham TH, et al. Dynamic epigenetic enhancer signatures reveal key transcription factors associated with monocytic differentiation states. Blood 2012",22550342
+GSM809015,Homo sapiens,H3K27ac,vein_endothelial_cell,Umbilical Vein,"Maejima T, et al. Direct evidence for pitavastatin induced chromatin structure change in the KLF4 gene in endothelial cells. PLoS ONE 2014",24797675
+GSM818031,Homo sapiens,H3K27ac,embryonic_stem_cell,Embryo,"Lister R, et al. Human DNA methylomes at base resolution show widespread epigenomic differences. Nature 2009",19829295
+GSM864035,Homo sapiens,H3K27ac,embryonic_stem_cell,Embryo,"Lister R, et al. Human DNA methylomes at base resolution show widespread epigenomic differences. Nature 2009",19829295
+GSM894063,Homo sapiens,H3K27ac,B_cell,,"Lin CY, et al. Transcriptional amplification in tumor cells with elevated c-Myc. Cell 2012",23021215
+GSM894067,Homo sapiens,H3K27ac,lung_epithelium,Lung,"Lin CY, et al. Transcriptional amplification in tumor cells with elevated c-Myc. Cell 2012",23021215
+GSM945521,Homo sapiens,H3K27ac,vein_endothelial_cell,Umbilical Vein,"Inoue T, et al. Cross-enhancement of ANGPTL4 transcription by HIF1 alpha and PPAR beta/delta is the result of the conformational proximity of two response elements. Genome Biol. 2014",24721177
+GSM958156,Homo sapiens,H3K27ac,keratinocyte,Foreskin,"Bernstein BE, et al. The NIH Roadmap Epigenomics Mapping Consortium. Nat. Biotechnol. 2010",20944595
+GSM986078,Homo sapiens,H3K27ac,breast_epithelium,Breast,"Theodorou V, et al. GATA3 acts upstream of FOXA1 in mediating ESR1 binding by shaping enhancer accessibility. Genome Res. 2013",23172872
+GSM998996,Homo sapiens,H3K27ac,B_cell,Blood,"Andersson R, et al. An atlas of active enhancers across human cell types and tissues. Nature 2014",24670763
+GSM999000,Homo sapiens,H3K27ac,"CD8-positive,_alpha-beta_T_cell",Blood,"Andersson R, et al. An atlas of active enhancers across human cell types and tissues. Nature 2014",24670763
+GSM999001,Homo sapiens,H3K27ac,"CD8-positive,_alpha-beta_T_cell",Blood,"Andersson R, et al. An atlas of active enhancers across human cell types and tissues. Nature 2014",24670763

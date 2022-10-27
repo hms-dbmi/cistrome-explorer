@@ -8,15 +8,16 @@ import operator
 
 # %%
 data_folders = [
-    # ('table-H3K27ac-v1', 'cistrome-track-3k27', 'rowInfoRevision.json'),
-    # ('table-H3K4me3-v1', 'cistrome-track-3k4', 'rowInfoRevision.json'),
-    ('table-ATAC-v1', 'cistrome-track-atac', 'rowInfoRevision.json'),
-    ('table-ATAC-v0', 'cistrome-track-atac', 'rowInfo.json')
+    ('table-H3K27ac-v1', 'cistrome-track-3k27', 'rowInfoRevision.json'),
+    ('table-H3K4me3-v1', 'cistrome-track-3k4', 'rowInfoRevision.json'),
+    # ('table-ATAC-v1', 'cistrome-track-atac', 'rowInfoRevision.json'),
+    # ('table-ATAC-v0', 'cistrome-track-atac', 'rowInfo.json')
 ]
 for (name, data_folder, file_path) in data_folders:
     print(data_folder)
     row_info = pd.read_json('../../src/demo/fakedata/' + data_folder + '/' + file_path)
     external_ids = ','.join(row_info.GSM.tolist())
+    gsm_to_cell = dict(zip(row_info.GSM.tolist(), row_info['Cell Type'].tolist()))
     
     # get cids
     url = f'http://develop.cistrome.org/cistrome/samples?external_ids={external_ids}&format=json&limit=99999'
@@ -90,6 +91,8 @@ for (name, data_folder, file_path) in data_folders:
         metadata['Species'] = 'Homo sapiens'
 
         metadata = metadata[['ID', 'Species', 'Factor', 'Cell Type', 'Paper Reference', 'PMID']]
+        metadata['Cell Type'] = metadata['ID']
+        metadata['Cell Type'] = metadata['Cell Type'].apply(lambda x: gsm_to_cell[x])
         metadata.to_csv(f'./{name}.csv', index=False)
     else:
         for cid in cids:
@@ -140,9 +143,12 @@ for (name, data_folder, file_path) in data_folders:
             'paper__reference': 'Paper Reference',
             'paper__pmid': 'PMID'
         })
-        metadata['PMID'] = metadata['PMID'].astype(int)
+        # print(metadata.PMID)
+        metadata['PMID'] = metadata['PMID'].apply(lambda x: x if x == x else 0).astype(int)
 
         # metadata.to_excel(f'./{data_folder}.xlsx') # No module named 'openpyxl'
+        metadata['Cell Type'] = metadata['ID']
+        metadata['Cell Type'] = metadata['Cell Type'].apply(lambda x: gsm_to_cell[x])
         metadata.to_csv(f'./{name}.csv', index=False)
 # metadata
 # %%
