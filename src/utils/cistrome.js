@@ -457,7 +457,7 @@ export function getFactor(id) {
                 // if(factors.length === 0) {
                     // reject("No factor data found for given sample");
                 // }
-                resolve(factors.sort((a, b) => a.value - b.value)[0]?.name ?? 'Unknown')
+                resolve(factors.sort((a, b) => b.value - a.value)[0]?.name ?? 'Unknown')
             });
         }).catch(error => {
             return new Promise((resolve, reject) => {
@@ -481,7 +481,7 @@ export function getOntology(id) {
                 // if(ontologies.length === 0) {
                     // reject("No ontology data found for given sample");
                 // }
-                resolve(ontologies.sort((a, b) => a.value - b.value)[0]?.term ?? 'Unknown')
+                resolve(ontologies.sort((a, b) => b.value - a.value)[0]?.term ?? 'Unknown')
             });
         }).catch(error => {
             return new Promise((resolve, reject) => {
