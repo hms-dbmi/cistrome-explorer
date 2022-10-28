@@ -91,40 +91,40 @@ export const demos = {
             ]
         }]
     },
-    "H3K27ac (v0)": {
-        viewConfig: hgDemoViewConfig3k27,
-        options: [{
-            viewId: "cistrome-view-3k27",
-            trackId: "cistrome-track-3k27",
-            rowInfoAttributes: [
-                {field: "Cell Type", type: "nominal", position: "right", width: 200},
-                {field: "Clustering", type: "tree", position: "right", width: 200},
-                // { field: "FRACTION_PEAKS_IN_EXON", type: "quantitative", position: "right", width: 80 },
-                // { field: "FRACTION_PEAKS_IN_INTRON", type: "quantitative", position: "right", width: 80 },
-                // { field: "FRACTION_PEAKS_IN_PROMOTER", type: "quantitative", position: "right", width: 80 },
-                // { field: "FRACTION_PEAKS_IN_INTERGENIC", type: "quantitative", position: "right", width: 80 },
-                { field: "PEAKS_TOTAL", type: "quantitative", title: 'Total peaks', position: "right", width: 100 },
-                // { field: "PEAKS_10FOLD", type: "quantitative", position: "right", width: 80 },
-                // { field: "FRACTION_READS_IN_PEAKS", type: "quantitative", position: "right", width: 80 },
-                // { field: "FASTQC_MEDIAN", type: "quantitative", position: "right", width: 80 },
-                { field: "SEQUENCE_LENGTH", type: "quantitative", title: 'Sequence length', position: "right", width: 100 },
-                // { field: "FRACTION_PEAKS_IN_DHS", type: "quantitative", position: "right", width: 80 },
-                // { field: "PCR_BOTTLENECK_COEF", type: "quantitative", position: "right", width: 80 },
-                // { field: "READS_TOTAL", type: "quantitative", position: "right", width: 80 },
-                { field: "READS_MAPPED", type: "quantitative", title: 'Reads mapped', position: "right", width: 100 },
-                // { field: "PHYLOCONS_0_BP_OFFSET", type: "quantitative", position: "right", width: 80 },
-                // { field: "PHYLOCONS_500_BP_OFFSET", type: "quantitative", position: "right", width: 80 },
-                // { field: "PHYLOCONS_1000_BP_OFFSET", type: "quantitative", position: "right", width: 80 }
-            ],
-            rowAggregate: [
-            ],
-            rowSort: [
-                {field: "Clustering", type: "tree", order: "ascending"}
-            ],
-            rowFilter: [
-            ]
-        }]
-    },
+    // "H3K27ac (v0)": {
+    //     viewConfig: hgDemoViewConfig3k27,
+    //     options: [{
+    //         viewId: "cistrome-view-3k27",
+    //         trackId: "cistrome-track-3k27",
+    //         rowInfoAttributes: [
+    //             {field: "Cell Type", type: "nominal", position: "right", width: 200},
+    //             {field: "Clustering", type: "tree", position: "right", width: 200},
+    //             // { field: "FRACTION_PEAKS_IN_EXON", type: "quantitative", position: "right", width: 80 },
+    //             // { field: "FRACTION_PEAKS_IN_INTRON", type: "quantitative", position: "right", width: 80 },
+    //             // { field: "FRACTION_PEAKS_IN_PROMOTER", type: "quantitative", position: "right", width: 80 },
+    //             // { field: "FRACTION_PEAKS_IN_INTERGENIC", type: "quantitative", position: "right", width: 80 },
+    //             { field: "PEAKS_TOTAL", type: "quantitative", title: 'Total peaks', position: "right", width: 100 },
+    //             // { field: "PEAKS_10FOLD", type: "quantitative", position: "right", width: 80 },
+    //             // { field: "FRACTION_READS_IN_PEAKS", type: "quantitative", position: "right", width: 80 },
+    //             // { field: "FASTQC_MEDIAN", type: "quantitative", position: "right", width: 80 },
+    //             { field: "SEQUENCE_LENGTH", type: "quantitative", title: 'Sequence length', position: "right", width: 100 },
+    //             // { field: "FRACTION_PEAKS_IN_DHS", type: "quantitative", position: "right", width: 80 },
+    //             // { field: "PCR_BOTTLENECK_COEF", type: "quantitative", position: "right", width: 80 },
+    //             // { field: "READS_TOTAL", type: "quantitative", position: "right", width: 80 },
+    //             { field: "READS_MAPPED", type: "quantitative", title: 'Reads mapped', position: "right", width: 100 },
+    //             // { field: "PHYLOCONS_0_BP_OFFSET", type: "quantitative", position: "right", width: 80 },
+    //             // { field: "PHYLOCONS_500_BP_OFFSET", type: "quantitative", position: "right", width: 80 },
+    //             // { field: "PHYLOCONS_1000_BP_OFFSET", type: "quantitative", position: "right", width: 80 }
+    //         ],
+    //         rowAggregate: [
+    //         ],
+    //         rowSort: [
+    //             {field: "Clustering", type: "tree", order: "ascending"}
+    //         ],
+    //         rowFilter: [
+    //         ]
+    //     }]
+    // },
     "H3K27ac (v1)": {
         viewConfig: hgDemoViewConfig3k27Revision,
         options: [{
@@ -159,26 +159,26 @@ export const demos = {
             ]
         }]
     },
-    "H3K4me3 (v0)": {
-        viewConfig: hgDemoViewConfig3K4,
-        options: [{
-            viewId: "cistrome-view-3k4",
-            trackId: "cistrome-track-3k4",
-            rowInfoAttributes: [
-                {field: "Cell Type", type: "nominal", position: "right", width: 200},
-                {field: "Clustering", type: "tree", position: "right", width: 200},
-                { field: "PEAKS_TOTAL", type: "quantitative", title: 'Total peaks', position: "right", width: 100 },
-                { field: "SEQUENCE_LENGTH", type: "quantitative", title: 'Sequence length', position: "right", width: 100 },
-                { field: "READS_MAPPED", type: "quantitative", title: 'Reads mapped', position: "right", width: 100 },
-            ],
-            rowAggregate: [],
-            rowSort: [
-                {field: "Clustering", type: "tree", order: "ascending"}
-                // {field: "Cell Type", type: "nominal", order: "ascending"}
-            ],
-            rowFilter: []
-        }]
-    },
+    // "H3K4me3 (v0)": {
+    //     viewConfig: hgDemoViewConfig3K4,
+    //     options: [{
+    //         viewId: "cistrome-view-3k4",
+    //         trackId: "cistrome-track-3k4",
+    //         rowInfoAttributes: [
+    //             {field: "Cell Type", type: "nominal", position: "right", width: 200},
+    //             {field: "Clustering", type: "tree", position: "right", width: 200},
+    //             { field: "PEAKS_TOTAL", type: "quantitative", title: 'Total peaks', position: "right", width: 100 },
+    //             { field: "SEQUENCE_LENGTH", type: "quantitative", title: 'Sequence length', position: "right", width: 100 },
+    //             { field: "READS_MAPPED", type: "quantitative", title: 'Reads mapped', position: "right", width: 100 },
+    //         ],
+    //         rowAggregate: [],
+    //         rowSort: [
+    //             {field: "Clustering", type: "tree", order: "ascending"}
+    //             // {field: "Cell Type", type: "nominal", order: "ascending"}
+    //         ],
+    //         rowFilter: []
+    //     }]
+    // },
     "H3K4me3 (v1)": {
         viewConfig: hgDemoViewConfig3K4Revision,
         options: [{
