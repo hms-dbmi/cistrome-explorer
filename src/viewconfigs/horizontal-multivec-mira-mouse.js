@@ -12,12 +12,12 @@ export const hgDemoViewConfigMiraMouse = {
     "views": [
         {
             "initialXDomain": [
-                301066734.8420018,
-                301255001.78506374
+                298365125.61544895,
+                298750713.10875005
             ],
             "initialYDomain": [
-                301066734.8420018,
-                301255001.78506374
+                298365125.61544895,
+                298750713.10875005
             ],
             "genomePositionSearchBoxVisible": true,
             "chromInfoPath": "//s3.amazonaws.com/gosling-lang.org/data/mm10.chrom.sizes",

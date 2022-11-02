@@ -482,6 +482,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
 
     // Aggregating rows
     useEffect(() => {
+        console.log(aggregateRowBy)
         if(!multivecTrackIds || multivecTrackIds.length === 0) {
             // do not have enough information
             return;

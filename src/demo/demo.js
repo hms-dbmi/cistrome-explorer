@@ -202,13 +202,14 @@ export const demos = {
 };
 
 export const miraDemos = {
-    e18_mouse_brain_10x: {
+    e18_mouse_brain_10x_top_500: {
         viewConfig: hgDemoViewConfigMiraMouse,
         options: [{
             viewId: "mira-view-mouse",
             trackId: "mira-track-mouse",
             rowInfoAttributes: [
                 {field: ["topic_0", "topic_1", "topic_2", "topic_3", "topic_4", "topic_5", "topic_6", "topic_7", "topic_8", "topic_9", "topic_10", "topic_11", "topic_12"], type: "quantitative", position: "right", width: 60},
+                {field: "max_topic", type: "nominal", position: "right", width: 100},
                 {field: "topic_0", type: "quantitative", position: "right", width: 60},
                 {field: "topic_1", type: "quantitative", position: "right", width: 60},
                 {field: "topic_2", type: "quantitative", position: "right", width: 60},
@@ -225,7 +226,7 @@ export const miraDemos = {
             ],
             rowAggregate: [],
             rowSort: [
-                {field: "topic_9", type: "quantitative", order: "descending"}
+                {field: "max_topic", type: "nominal", order: "ascending"}
             ],
             rowFilter: [
                 

@@ -114,7 +114,7 @@ export default function CistromeExplorer() {
     // toggle
     const [helpActivated, setHelpActivated] = useState(false);
     const [aggActivated, setAggActivated] = useState(false);
-    const [aggregateRowBy, setSggregateRowBy] = useState("Cell Type");
+    const [aggregateRowBy, setSggregateRowBy] = useState(!isMiraData ? "Cell Type" : 'max_topic');
 
     // History of view updates
     const MAX_HISTORY_LENGTH = 50;  // How many previous views should be recorded?
@@ -476,9 +476,9 @@ export default function CistromeExplorer() {
                             <span>
                                 <select 
                                     onChange={e => { setSggregateRowBy(e.target.value); }}
-                                    defaultValue={"Cell Type"}
+                                    defaultValue={!isMiraData ? "Cell Type" : 'max_topic'}
                                 >
-                                    {["Tissue Type", "Cell Type"].map(f => (
+                                    {(!isMiraData ? ["Tissue Type", "Cell Type"] : ["max_topic"]).map(f => (
                                         <option key={f} value={f}>{f}</option>
                                     ))}
                                 </select>
