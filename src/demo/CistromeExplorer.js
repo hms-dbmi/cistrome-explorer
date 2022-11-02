@@ -478,7 +478,7 @@ export default function CistromeExplorer() {
                                     onChange={e => { setSggregateRowBy(e.target.value); }}
                                     defaultValue={!isMiraData ? "Cell Type" : 'max_topic'}
                                 >
-                                    {(!isMiraData ? ["Tissue Type", "Cell Type"] : ["max_topic"]).map(f => (
+                                    {(!isMiraData ? ["Tissue Type", "Cell Type"] : ["max_topic", 'cluster_by_topic_0', 'cluster_by_topic_9']).map(f => (
                                         <option key={f} value={f}>{f}</option>
                                     ))}
                                 </select>

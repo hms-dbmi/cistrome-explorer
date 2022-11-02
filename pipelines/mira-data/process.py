@@ -1,15 +1,19 @@
+# %%
 import numpy as np
 import math
 import h5py
 from torch import chunk
+import pandas as pd
+from random import sample
 import scanpy as sc
-
+import mira
+# %%
 NUM_ROWS = 500
 RESOLUTION = 1000
-
+# %%
 def basic_preprocess():
     # Download this data by running `mira.datasets.MouseBrainDataset()`
-    data = sc.read_h5ad('mira-datasets/e18_10X_brain_dataset/e18_mouse_brain_10x_dataset.ad')
+    data = sc.read_h5ad('./mira-datasets/e18_10X_brain_dataset/e18_mouse_brain_10x_dataset.ad')
     rna_data = data[:, data.var.feature_types == 'Gene Expression']
     atac_data = data[:, data.var.feature_types == 'Peaks']
 
@@ -43,11 +47,32 @@ def basic_preprocess():
     overlapping_barcodes = np.intersect1d(rna_data.obs_names, atac_data.obs_names) # make sure barcodes are matched between modes
     atac_data = atac_data[[i for i in overlapping_barcodes],:]
 
+    # row info
+    rna_model = mira.topic_model.ExpressionTopicModel.load('mira-datasets/e18_10X_brain_dataset/e18_mouse_brain_10x_rna_model.pth')
+    atac_model = mira.topic_model.AccessibilityTopicModel.load('mira-datasets/e18_10X_brain_dataset/e18_mouse_brain_10x_atac_model.pth')
+
+    rna_model.predict(rna_data)
+    atac_model.predict(atac_data, batch_size=128)
+
+    atac_model.get_umap_features(atac_data, box_cox = 0.5)
+    rna_model.get_umap_features(rna_data, box_cox = 0.5)
+    rna_data, atac_data = mira.utils.make_joint_representation(rna_data, atac_data)
+    rna_model.impute(rna_data)
+
+    main_barcodes = pd.read_csv("mira-datasets/e18_10X_brain_dataset/e18_mouse_brain_10x_main_barcodes.csv", index_col=0, header=0, names=["barcodes"])
+
+    # sample data randomly
+    atac_main = atac_data[sample(list(main_barcodes["barcodes"]), NUM_ROWS)]
+
+    to_save = atac_main.obs
+    to_save *= 1000
+    to_save.reset_index().to_json('output/obs.json', orient='records')
+
     rna_data = None
     data = None
 
-    return atac_data.to_df()
-
+    return atac_main.to_df().filter(regex='chr')
+# %%
 def anndata_to_multivec():
     # https://github.com/igvteam/igv/blob/master/genomes/sizes/mm10.chrom.sizes
     chromSizes = [
@@ -75,15 +100,16 @@ def anndata_to_multivec():
         ('chrM', 16299)
     ]
 
-    df = basic_preprocess()
+    dff = basic_preprocess()
 
     # filter data for initial example
-    dff = df.filter(regex='chr').head(NUM_ROWS)
+    # dff = df.filter(regex='chr').head(NUM_ROWS)
+
     # num_rows = len(dff.index)
     
     chromScaled =  { c: math.ceil(s / RESOLUTION) for (c, s) in chromSizes }
 
-    with h5py.File(f'./output/e18_mouse_brain_10x_dataset_{NUM_ROWS}_rows.hdf5', "w") as f:
+    with h5py.File(f'./output/e18_mouse_brain_10x_dataset_{NUM_ROWS}_random_rows.hdf5', "w") as f:
         prev_c = None
         for column in dff.columns:
             # e.g., "chr1:3060610-3061485"
@@ -114,5 +140,7 @@ def anndata_to_multivec():
             
             density[math.floor(start / RESOLUTION) : math.ceil(end / RESOLUTION)] = dff[column]
 
-if __name__ == "__main__":
-    anndata_to_multivec()
+# %%
+# if __name__ == "__main__":
+anndata_to_multivec()
+# %%

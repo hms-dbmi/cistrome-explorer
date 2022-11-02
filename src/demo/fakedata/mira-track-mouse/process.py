@@ -1,5 +1,6 @@
 # %%
 import json
+import math
 # %%
 with open('./rowInfo.json', 'r') as f:
     rowInfo = json.load(f)
@@ -13,6 +14,10 @@ with open('./rowInfo.json', 'r') as f:
                 maxIndex = i
                 maxValue = curValue
         row['max_topic'] = f'topic_{maxIndex}' if maxIndex >= 10 else f'topic_0{maxIndex}'
+
+        for c in ['topic_0', 'topic_9']:
+            clusterValue = row[c]
+            row[f'cluster_by_{c}'] = f'Cluster {math.floor(clusterValue * 2 / 100) + 1}'
 
 with open('./rowInfoWithCategory.json', 'w') as f:
     json.dump(rowInfo, f)

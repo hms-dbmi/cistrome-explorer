@@ -12,12 +12,12 @@ export const hgDemoViewConfigMiraMouse = {
     "views": [
         {
             "initialXDomain": [
-                298365125.61544895,
-                298750713.10875005
+                249250620.9999989,
+                492449994.0000011
             ],
             "initialYDomain": [
-                298365125.61544895,
-                298750713.10875005
+                249250620.9999989,
+                492449994.0000011
             ],
             "genomePositionSearchBoxVisible": true,
             "chromInfoPath": "//s3.amazonaws.com/gosling-lang.org/data/mm10.chrom.sizes",
@@ -227,7 +227,7 @@ export const hgDemoViewConfigMiraMouse = {
                     {
                         "type": "horizontal-multivec",
                         "uid": "mira-track-mouse",
-                        "tilesetUid": "e18_mouse_brain_10x_dataset_500_rows",
+                        "tilesetUid": "e18_mouse_brain_10x_dataset_500_random_rows",
                         "server": "https://server.gosling-lang.org/api/v1",
                         "options": {
                             "labelPosition": "topLeft",
