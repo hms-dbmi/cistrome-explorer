@@ -2,7 +2,9 @@
 import json
 import math
 # %%
-with open('./rowInfo.json', 'r') as f:
+path = './rowInfo4000.json'
+# %%
+with open(path, 'r') as f:
     rowInfo = json.load(f)
     
     for row in rowInfo:
@@ -19,6 +21,6 @@ with open('./rowInfo.json', 'r') as f:
             clusterValue = row[c]
             row[f'cluster_by_{c}'] = f'Cluster {math.floor(clusterValue * 2 / 100) + 1}'
 
-with open('./rowInfoWithCategory.json', 'w') as f:
+with open(path, 'w') as f:
     json.dump(rowInfo, f)
 # %%

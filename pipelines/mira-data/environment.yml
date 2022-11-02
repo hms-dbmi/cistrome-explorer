@@ -1,11 +1,11 @@
-name: mira
+name: mira-envi
 channels:
   - bioconda
   - conda-forge
   - defaults
 dependencies:
   - pip=21.2.4
-  - python=3.9
+  - python=3.7
   - snakemake-minimal=7.5.0
   - ipykernel
   - pip
@@ -15,5 +15,5 @@ dependencies:
     - rich==12.3.0
     - mira-multiome>=1.0.1
     - scanpy==1.8.2
-    - numpy==1.20.0
+    - numpy==1.20.1
     - scikit-learn
