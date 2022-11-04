@@ -1,4 +1,6 @@
 # %%
+from umap import UMAP
+# %%
 import numpy as np
 import math
 import h5py
