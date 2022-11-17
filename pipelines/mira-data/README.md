@@ -19,6 +19,12 @@ clodius aggregate multivec \
     ./output/e18_mouse_brain_10x_dataset_500_random_rows.hdf5
 ```
 
+### Copy File to Server
+
+```sh
+rsync -avz --progress filename server:filename
+```
+
 ### Add to HiGlass Server
 
 ```sh

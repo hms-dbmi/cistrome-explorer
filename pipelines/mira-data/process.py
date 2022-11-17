@@ -1,6 +1,4 @@
 # %%
-from umap import UMAP
-# %%
 import numpy as np
 import math
 import h5py
@@ -10,8 +8,9 @@ from random import sample
 import scanpy as sc
 import mira
 import umap
+import cliff_code
 # %%
-NUM_ROWS = 4000
+NUM_ROWS = 40
 RESOLUTION = 1000
 # %%
 # Reference:
@@ -50,6 +49,7 @@ def basic_preprocess():
     rna_data.var.highly_variable = (rna_data.var.dispersions_norm > 0.8) & rna_data.var.exog_feature # set column "highly_variable" to genes that met first criteria and dispersion > 0.8
 
     overlapping_barcodes = np.intersect1d(rna_data.obs_names, atac_data.obs_names) # make sure barcodes are matched between modes
+    rna_data = rna_data[[i for i in overlapping_barcodes],:]
     atac_data = atac_data[[i for i in overlapping_barcodes],:]
 
     # row info
@@ -67,8 +67,18 @@ def basic_preprocess():
     main_barcodes = pd.read_csv("mira-datasets/e18_10X_brain_dataset/e18_mouse_brain_10x_main_barcodes.csv", index_col=0, header=0, names=["barcodes"])
 
     # sample data randomly
-    atac_main = atac_data[sample(list(main_barcodes["barcodes"]), NUM_ROWS)]
+    sampled = sample(list(main_barcodes["barcodes"]), NUM_ROWS)
+    atac_main = atac_data[sampled]
+    rna_main = rna_data[sampled]
     
+    # nearest neighbors
+    sc.pp.neighbors(atac_main, use_rep='X_joint_umap_features', metric='manhattan')
+    # sc.tl.umap(atac_main, min_dist = 0.3, negative_sample_rate=5)
+
+    residuals = cliff_code.deviance_transform(atac_main.X)
+    smoothed = atac_main.obsp['connectivities'].dot(residuals)
+    atac_main.X = smoothed
+
     to_save = atac_main.obs
     to_save *= 1000
     to_save.reset_index().to_json('output/obs.json', orient='records')
@@ -146,68 +156,5 @@ def anndata_to_multivec():
             density[math.floor(start / RESOLUTION) : math.ceil(end / RESOLUTION)] = dff[column]
 
 # %%
-# if __name__ == "__main__":
 anndata_to_multivec()
-# %%
-# Download this data by running `mira.datasets.MouseBrainDataset()`
-data = sc.read_h5ad('./mira-datasets/e18_10X_brain_dataset/e18_mouse_brain_10x_dataset.ad')
-rna_data = data[:, data.var.feature_types == 'Gene Expression']
-atac_data = data[:, data.var.feature_types == 'Peaks']
-
-# Basic preprocessing steps
-rna_data.var.index = rna_data.var.index.str.upper()
-rna_data.var_names_make_unique()
-rna_data = rna_data[:, ~rna_data.var.index.str.startswith('GM')]
-
-sc.pp.filter_cells(rna_data, min_counts = 400)
-sc.pp.filter_genes(rna_data, min_cells=15)
-
-rna_data.var['mt'] = rna_data.var_names.str.startswith('MT-')
-sc.pp.calculate_qc_metrics(rna_data, qc_vars=['mt'], percent_top=None,
-                        log1p=False, inplace=True)
-
-rna_data = rna_data[rna_data.obs.pct_counts_mt < 15, :]
-rna_data = rna_data[rna_data.obs.n_genes_by_counts < 8000, :]
-sc.pp.filter_genes(rna_data, min_cells=15)
-
-rna_data.raw = rna_data # save raw counts
-sc.pp.normalize_total(rna_data, target_sum=1e4)
-sc.pp.log1p(rna_data)
-
-sc.pp.highly_variable_genes(rna_data, min_disp = -0.1)
-rna_data.layers['norm'] = rna_data.X # save normalized count data
-rna_data.X = rna_data.raw.X # and reload raw counts
-rna_data = rna_data[:, rna_data.var.highly_variable] 
-rna_data.var['exog_feature'] = rna_data.var.highly_variable # set column "exog_features" to all genes that met dispersion threshold
-rna_data.var.highly_variable = (rna_data.var.dispersions_norm > 0.8) & rna_data.var.exog_feature # set column "highly_variable" to genes that met first criteria and dispersion > 0.8
-
-overlapping_barcodes = np.intersect1d(rna_data.obs_names, atac_data.obs_names) # make sure barcodes are matched between modes
-atac_data = atac_data[[i for i in overlapping_barcodes],:]
-
-# row info
-rna_model = mira.topic_model.ExpressionTopicModel.load('mira-datasets/e18_10X_brain_dataset/e18_mouse_brain_10x_rna_model.pth')
-atac_model = mira.topic_model.AccessibilityTopicModel.load('mira-datasets/e18_10X_brain_dataset/e18_mouse_brain_10x_atac_model.pth')
-
-rna_model.predict(rna_data)
-atac_model.predict(atac_data, batch_size=128)
-
-atac_model.get_umap_features(atac_data, box_cox = 0.5)
-rna_model.get_umap_features(rna_data, box_cox = 0.5)
-rna_data, atac_data = mira.utils.make_joint_representation(rna_data, atac_data)
-rna_model.impute(rna_data)
-
-main_barcodes = pd.read_csv("mira-datasets/e18_10X_brain_dataset/e18_mouse_brain_10x_main_barcodes.csv", index_col=0, header=0, names=["barcodes"])
-
-# sample data randomly
-atac_main = atac_data[sample(list(main_barcodes["barcodes"]), NUM_ROWS)]
-rna_main = rna_data[sample(list(main_barcodes["barcodes"]), NUM_ROWS)]
-# %%
-sc.pp.neighbors(rna_main, use_rep='X_joint_umap_features', metric = 'manhattan') # calculate a KNN graph from the joint representation
-sc.tl.diffmap(rna_main) # denoise the KNN graph by calculating a diffusion map
-mira.time.normalize_diffmap(rna_main) # normalize the diffmap dimensions, choose number of dimensions to represent data
-# %%
-sc.tl.umap(rna_main, min_dist = 0.3, negative_sample_rate=5)
-# %%
-atac_main.obsm['X_umap'] = rna_main.obsm['X_umap']
-# %%
 # %%

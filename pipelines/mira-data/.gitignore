@@ -2,3 +2,4 @@
 /mira-datasets/*
 .ipynb_checkpoints
 /output/*
+__pycache__
