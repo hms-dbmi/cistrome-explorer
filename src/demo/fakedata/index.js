@@ -14,6 +14,7 @@ import rowInfo3k4 from './cistrome-track-3k4/rowInfo.json';
 import rowInfo3k4Revision from './cistrome-track-3k4/rowInfoRevision.json';
 import rowInfoMiraMouse from './mira-track-mouse/rowInfoWithCategory.json';
 import rowInfoMiraMouse4000 from './mira-track-mouse/rowInfo4000.json';
+import rowInfoMiraMouse500Smooth from './mira-track-mouse/rowInfo500Smooth.json';
 
 const _fakedata = {
     "default": {
@@ -64,6 +65,11 @@ const _fakedata = {
     "mira-track-mouse-4000": {
         tilesetInfo: {
             rowInfo: rowInfoMiraMouse4000
+        }
+    },
+    "mira-track-mouse-500-smooth": {
+        tilesetInfo: {
+            rowInfo: rowInfoMiraMouse500Smooth
         }
     },
     "cistrome-track-1b": {

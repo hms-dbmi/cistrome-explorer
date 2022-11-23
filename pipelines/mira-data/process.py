@@ -10,7 +10,7 @@ import mira
 import umap
 import cliff_code
 # %%
-NUM_ROWS = 40
+NUM_ROWS = 500
 RESOLUTION = 1000
 # %%
 # Reference:
@@ -70,14 +70,18 @@ def basic_preprocess():
     sampled = sample(list(main_barcodes["barcodes"]), NUM_ROWS)
     atac_main = atac_data[sampled]
     rna_main = rna_data[sampled]
-    
+
     # nearest neighbors
     sc.pp.neighbors(atac_main, use_rep='X_joint_umap_features', metric='manhattan')
     # sc.tl.umap(atac_main, min_dist = 0.3, negative_sample_rate=5)
 
     residuals = cliff_code.deviance_transform(atac_main.X)
     smoothed = atac_main.obsp['connectivities'].dot(residuals)
-    atac_main.X = smoothed
+
+    # TODO: make negative values to zero
+    smoothed[smoothed < 0] = 0
+
+    atac_main.X = smoothed  
 
     to_save = atac_main.obs
     to_save *= 1000
@@ -124,7 +128,7 @@ def anndata_to_multivec():
     
     chromScaled =  { c: math.ceil(s / RESOLUTION) for (c, s) in chromSizes }
 
-    with h5py.File(f'./output/e18_mouse_brain_10x_dataset_{NUM_ROWS}_random_rows.hdf5', "w") as f:
+    with h5py.File(f'./output/e18_mouse_brain_10x_dataset_{NUM_ROWS}_smoothed_random_rows.hdf5', "w") as f:
         prev_c = None
         for column in dff.columns:
             # e.g., "chr1:3060610-3061485"

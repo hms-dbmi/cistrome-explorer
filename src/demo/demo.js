@@ -3,7 +3,7 @@ import { hgDemoViewConfigAtacRevision } from "../viewconfigs/horizontal-multivec
 import { hgDemoViewConfig3k27 } from "../viewconfigs/horizontal-multivec-3k27";
 import { hgDemoViewConfig3k27Revision } from "../viewconfigs/horizontal-multivec-3k27-revision";
 import { hgDemoViewConfig3K4 } from "../viewconfigs/horizontal-multivec-3k4";
-import { hgDemoViewConfigMiraMouse, hgDemoViewConfigMiraMouse4000 } from '../viewconfigs/horizontal-multivec-mira-mouse';
+import { hgDemoViewConfigMiraMouse, hgDemoViewConfigMiraMouse4000, hgDemoViewConfigMiraMouse500Smooth } from '../viewconfigs/horizontal-multivec-mira-mouse';
 import { hgDemoViewConfig3K4Revision } from "../viewconfigs/horizontal-multivec-3k4-revision";
 
 export const demos = {
@@ -258,6 +258,42 @@ export const miraDemos = {
                 // {field: "topic_9", type: "quantitative", position: "right", width: 60},
                 // {field: "topic_10", type: "quantitative", position: "right", width: 60},
                 // {field: "topic_11", type: "quantitative", position: "right", width: 60},
+                {field: "topic_12", type: "quantitative", position: "right", width: 60},
+            ],
+            rowAggregate: [
+                //  {field: "cluster_by_topic_9", type: "nominal", notOneOf: []},
+            ],
+            rowSort: [
+                // {field: "max_topic", type: "nominal", order: "ascending"}
+                {field: "topic_9", type: "quantitative", order: "descending"}
+            ],
+            rowFilter: [
+                
+            ]
+        }]
+    },
+    e18_mouse_brain_10x_top_500_smooth: {
+        viewConfig: hgDemoViewConfigMiraMouse500Smooth,
+        options: [{
+            viewId: "mira-view-mouse-500-smooth",
+            trackId: "mira-track-mouse-500-smooth",
+            rowInfoAttributes: [
+                // {field: ["topic_0", "topic_1", "topic_2", "topic_3", "topic_4", "topic_5", "topic_6", "topic_7", "topic_8", "topic_9", "topic_10", "topic_11", "topic_12"], type: "quantitative", position: "right", width: 60},
+                // {field: "max_topic", type: "nominal", position: "right", width: 100},
+                // {field: "cluster_by_topic_0", type: "nominal", position: "right", width: 100},
+                // {field: "cluster_by_topic_9", type: "nominal", position: "right", width: 100},
+                {field: "topic_0", type: "quantitative", position: "right", width: 60},
+                {field: "topic_1", type: "quantitative", position: "right", width: 60},
+                {field: "topic_2", type: "quantitative", position: "right", width: 60},
+                {field: "topic_3", type: "quantitative", position: "right", width: 60},
+                {field: "topic_4", type: "quantitative", position: "right", width: 60},
+                {field: "topic_5", type: "quantitative", position: "right", width: 60},
+                {field: "topic_6", type: "quantitative", position: "right", width: 60},
+                {field: "topic_7", type: "quantitative", position: "right", width: 60},
+                {field: "topic_8", type: "quantitative", position: "right", width: 60},
+                {field: "topic_9", type: "quantitative", position: "right", width: 60},
+                {field: "topic_10", type: "quantitative", position: "right", width: 60},
+                {field: "topic_11", type: "quantitative", position: "right", width: 60},
                 {field: "topic_12", type: "quantitative", position: "right", width: 60},
             ],
             rowAggregate: [

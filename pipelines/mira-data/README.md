@@ -29,8 +29,8 @@ rsync -avz --progress filename server:filename
 
 ```sh
 sudo docker exec higlass-container python higlass-server/manage.py ingest_tileset \
-      --filename /tmp/e18_mouse_brain_10x_dataset_4000_random_rows.multires.mv5 \
+      --filename /tmp/e18_mouse_brain_10x_dataset_500_smoothed_random_rows.multires.mv5 \
       --filetype multivec \
       --datatype multivec \
-      --uid e18_mouse_brain_10x_dataset_4000_random_rows \
+      --uid e18_mouse_brain_10x_dataset_500_smoothed_random_rows \
 ```
