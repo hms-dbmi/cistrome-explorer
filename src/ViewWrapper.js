@@ -115,7 +115,7 @@ export default function ViewWrapper(props) {
     });
 
     useEffect(() => {
-        setAssembly(multivecTrack.tilesetInfo?.coordSystem || "hg38");
+        setAssembly(multivecTrack.tilesetInfo?.coordSystem || multivecTrack.options?.coordSystem || "hg38");
     });
 
     // Let's remove this functionality, which looks to be making the query slow

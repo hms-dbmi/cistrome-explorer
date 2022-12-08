@@ -34,7 +34,7 @@ export default function ViewColumnBrush(props) {
         on: false, x: undefined, y: undefined
     });
 
-    const assembly = multivecTrack.tilesetInfo?.coordSystem || "hg38";
+    const assembly = multivecTrack.tilesetInfo?.coordSystem || multivecTrack.options?.coordSystem || "hg38";
     const absDomain = viewportTrack.viewportXDomain;
     let startX = viewportTrack._xScale(absDomain[0]);
     let endX = viewportTrack._xScale(absDomain[1]);

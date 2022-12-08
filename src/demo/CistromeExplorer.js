@@ -569,6 +569,7 @@ export default function CistromeExplorer() {
                         intervalAPIParams={toolkitParams}
                         geneAPIParams={geneToolkitParams}
                         onAddTrack={onAddToolkitTrack}
+                        isMiraData={isMiraData}
                         hmRef={hmRef}
                     />
                 </div>

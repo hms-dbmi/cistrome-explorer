@@ -230,6 +230,7 @@ export const hgDemoViewConfigMiraMouse = {
                         "tilesetUid": "e18_mouse_brain_10x_dataset_500_random_rows",
                         "server": "https://server.gosling-lang.org/api/v1",
                         "options": {
+                            "coordSystem": "mm10",
                             "labelPosition": "topLeft",
                             "labelColor": "black",
                             "labelTextOpacity": 0.6,
@@ -519,6 +520,7 @@ export const hgDemoViewConfigMiraMouse4000 = {
                         "tilesetUid": "e18_mouse_brain_10x_dataset_4000_random_rows",
                         "server": "https://server.gosling-lang.org/api/v1",
                         "options": {
+                            "coordSystem": "mm10",
                             "labelPosition": "topLeft",
                             "labelColor": "black",
                             "labelTextOpacity": 0.6,
@@ -808,6 +810,7 @@ export const hgDemoViewConfigMiraMouse500Smooth = {
                         "tilesetUid": "e18_mouse_brain_10x_dataset_500_smoothed_random_rows",
                         "server": "https://server.gosling-lang.org/api/v1",
                         "options": {
+                            "coordSystem": "mm10",
                             "labelPosition": "topLeft",
                             "labelColor": "black",
                             "labelTextOpacity": 0.6,

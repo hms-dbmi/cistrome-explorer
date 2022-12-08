@@ -39,7 +39,8 @@ export default function CistromeToolkit(props) {
         onAddTrack,
         intervalAPIParams,
         geneAPIParams,
-        hmRef
+        hmRef,
+        isMiraData
     } = props;
 
     const [geneSuggestions, setGeneSuggestions] = useState([]);
@@ -65,14 +66,14 @@ export default function CistromeToolkit(props) {
 
     // API parameters
     const [latestIntervalParams, setLatestIntervalParams] = useState({
-        assembly: CISTROME_DBTOOLKIT_SPECIES[0],
+        assembly: CISTROME_DBTOOLKIT_SPECIES[isMiraData ? 1 : 0],
         chrStartName: CISTROME_DBTOOLKIT_CHROMOSOMES[0],
         chrEndName: CISTROME_DBTOOLKIT_CHROMOSOMES[0],
         chrStartPos: "",
         chrEndPos: ""
     });
     const [latestGeneParams, setLatestGeneParams] = useState({
-        assembly: CISTROME_DBTOOLKIT_SPECIES[0],
+        assembly: CISTROME_DBTOOLKIT_SPECIES[isMiraData ? 1 : 0],
         distance: CISTROME_DBTOOLKIT_GENE_DISTANCE[0],
         gene: ""
     });
