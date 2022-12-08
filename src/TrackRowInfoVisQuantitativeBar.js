@@ -43,7 +43,7 @@ export const margin = 5;
 export default function TrackRowInfoVisQuantitativeBar(props) {
     const {
         left, top, width, height, titleHeight,
-        field, type, alt, title, aggFunction, resolveYScale,
+        field, type, alt, title, color: constantColor, aggFunction, resolveYScale,
         isLeft,
         isShowControlButtons,
         rowInfo,
@@ -190,7 +190,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             // Render visual components for each row (i.e., bars and texts).
             const textAlign = isLeft ? "end" : "start";
             transformedRowInfo.forEach((d, i) => {
-                const value = numberFormatShort(aggValue(d, field));
+                const value = aggValue(d, field);
                 const barTop = yScale(i);
                 const barWidth = xScale(value);
                 const barLeft = (isLeft ? width - barWidth : 0);
@@ -199,7 +199,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                 const color = isHidden ? infoForMouseEvent.uniqueColor : d3.interpolateViridis(colorScale(value));
 
                 const rect = two.makeRect(barLeft, barTop, barWidth, rowHeight);
-                rect.fill = color;
+                rect.fill = constantColor || color;
 
                 // Render text labels when the space is enough.
                 if(rowHeight >= fontSize && isTextLabel) {

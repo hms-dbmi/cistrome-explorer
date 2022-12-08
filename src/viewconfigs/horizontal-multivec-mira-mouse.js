@@ -254,11 +254,17 @@ export const hgDemoViewConfigMiraMouse = {
                             "selectRowsAggregationMode": "mean",
                             "showMousePosition": true,
                             "mousePositionColor": "#000000",
+                            // "colorRange": [
+                            //     "rgba(255,255,255,1)",
+                            //     "rgba(0,0,0,1)"
+                            // ],
                             "colorRange": [
-                                "rgba(255,255,255,1)",
-                                "rgba(0,0,0,1)"
+                                "white",
+                                "rgba(245,166,35,1.0)",
+                                "rgba(208,2,27,1.0)",
+                                "black"
                             ],
-                            "scaleStartPercent": "0", 
+                            "scaleStartPercent": "0.05", 
                             "scaleEndPercent": "1"
                         },
                         "width": 1607,
@@ -834,11 +840,17 @@ export const hgDemoViewConfigMiraMouse500Smooth = {
                             "selectRowsAggregationMode": "mean",
                             "showMousePosition": true,
                             "mousePositionColor": "#000000",
+                            // "colorRange": [
+                            //     "rgba(255,255,255,1)",
+                            //     "rgba(0,0,0,1)"
+                            // ],
                             "colorRange": [
-                                "rgba(255,255,255,1)",
-                                "rgba(0,0,0,1)"
+                                "white",
+                                "rgba(245,166,35,1.0)",
+                                "rgba(208,2,27,1.0)",
+                                "black"
                             ],
-                            "scaleStartPercent": "0.005", 
+                            "scaleStartPercent": "0.1", 
                             "scaleEndPercent": "1"
                         },
                         "width": 1607,

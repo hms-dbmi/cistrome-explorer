@@ -202,34 +202,149 @@ export const demos = {
 };
 
 export const miraDemos = {
+    e18_mouse_brain_10x_top_500_smooth: {
+        viewConfig: hgDemoViewConfigMiraMouse500Smooth,
+        options: [{
+            viewId: "mira-view-mouse-500-smooth",
+            trackId: "mira-track-mouse-500-smooth",
+            rowInfoAttributes: [
+                // {field: [
+                //     'topic_0',
+                //     'topic_1',
+                //     'topic_2',
+                //     'topic_3',
+                //     'topic_4',
+                //     'topic_5',
+                //     'topic_6',
+                //     'topic_7',
+                //     'topic_8',
+                //     'topic_9',
+                //     'topic_10',
+                //     'topic_11',
+                //     'topic_12',
+                //     'topic_13',
+                //     'topic_14',
+                //     'topic_15',
+                //     'topic_16',
+                //     'topic_17',
+                //     'topic_18',
+                //     'topic_19',
+                //     'topic_20',
+                //     'topic_21',
+                // ], type: "quantitative", position: "right", width: 60},
+                {
+                    field: "max_topic", type: "nominal", position: "right", width: 100
+                },
+                // {field: "cluster_by_topic_0", type: "nominal", position: "right", width: 100},
+                // {field: "cluster_by_topic_9", type: "nominal", position: "right", width: 100},
+                {field: "mira_pseudotime", type: "quantitative", position: "right", width: 80, title: 'Pseudotime', color: 'grey'},
+                {field: "topic_0", type: "quantitative", position: "right", width: 60, color: '#FF9896'},
+                {field: "topic_1", type: "quantitative", position: "right", width: 60, color: '#2077B4'},
+                {field: "topic_2", type: "quantitative", position: "right", width: 60, color: '#7F7F7F'},
+                {field: "topic_3", type: "quantitative", position: "right", width: 60, color: '#AEC7E8'},
+                {field: "topic_4", type: "quantitative", position: "right", width: 60, color: '#BCBD22'},
+                {field: "topic_5", type: "quantitative", position: "right", width: 60, color: '#F7B6D2'},
+                {field: "topic_6", type: "quantitative", position: "right", width: 60, color: '#DBDB8E'},
+                {field: "topic_7", type: "quantitative", position: "right", width: 60, color: '#E377C2'},
+                {field: "topic_8", type: "quantitative", position: "right", width: 60, color: '#C5B0D5'},
+                {field: "topic_9", type: "quantitative", position: "right", width: 60, color: '#D62828'},
+                {field: "topic_10", type: "quantitative", position: "right", width: 60, color: '#2CA02C'},
+                // {field: "topic_11", type: "quantitative", position: "right", width: 60, color: 'grey'},
+                {field: "topic_12", type: "quantitative", position: "right", width: 60, color: '#9FDBE5'},
+
+                // {field: "atac_topic_11", type: 'quantitative', position: 'right', width: 60 },
+                // {field: "atac_topic_5", type: 'quantitative', position: 'right', width: 60 },
+                // {field: "atac_topic_6", type: 'quantitative', position: 'right', width: 60 },
+                // {field: "atac_topic_2", type: 'quantitative', position: 'right', width: 60 },
+                // {field: "atac_topic_8", type: 'quantitative', position: 'right', width: 60 },
+                // {field: "atac_topic_7", type: 'quantitative', position: 'right', width: 60 },
+                // {field: "atac_topic_0", type: 'quantitative', position: 'right', width: 60 },
+                // {field: "atac_topic_9", type: 'quantitative', position: 'right', width: 60 },
+                // {field: "atac_topic_10", type: 'quantitative', position: 'right', width: 60 },
+                // {field: "atac_topic_1", type: 'quantitative', position: 'right', width: 60 },
+                // {field: "atac_topic_12", type: 'quantitative', position: 'right', width: 60 },
+                // {field: "atac_topic_4", type: 'quantitative', position: 'right', width: 60 },
+                // {field: "atac_topic_3", type: 'quantitative', position: 'right', width: 60 },
+            ],
+            rowAggregate: [],
+            rowSort: [
+                {field: "max_topic", type: "nominal", order: "ascending"},
+                // {field: "topic_9", type: "quantitative", order: "descending"},
+                {field: "mira_pseudotime", type: "quantitative", order: "ascending"}
+            ],
+            rowFilter: [
+                
+            ]
+        }]
+    },
     e18_mouse_brain_10x_top_500: {
         viewConfig: hgDemoViewConfigMiraMouse,
         options: [{
             viewId: "mira-view-mouse",
             trackId: "mira-track-mouse",
             rowInfoAttributes: [
-                {field: ["topic_0", "topic_1", "topic_2", "topic_3", "topic_4", "topic_5", "topic_6", "topic_7", "topic_8", "topic_9", "topic_10", "topic_11", "topic_12"], type: "quantitative", position: "right", width: 60},
+                // {field: [
+                //     'topic_0',
+                //     'topic_1',
+                //     'topic_2',
+                //     'topic_3',
+                //     'topic_4',
+                //     'topic_5',
+                //     'topic_6',
+                //     'topic_7',
+                //     'topic_8',
+                //     'topic_9',
+                //     'topic_10',
+                //     'topic_11',
+                //     'topic_12',
+                //     'topic_13',
+                //     'topic_14',
+                //     'topic_15',
+                //     'topic_16',
+                //     'topic_17',
+                //     'topic_18',
+                //     'topic_19',
+                //     'topic_20',
+                //     'topic_21',
+                
+                // ], type: "quantitative", position: "right", width: 60},
                 {field: "max_topic", type: "nominal", position: "right", width: 100},
-                {field: "cluster_by_topic_0", type: "nominal", position: "right", width: 100},
-                {field: "cluster_by_topic_9", type: "nominal", position: "right", width: 100},
-                {field: "topic_0", type: "quantitative", position: "right", width: 60},
-                {field: "topic_1", type: "quantitative", position: "right", width: 60},
-                {field: "topic_2", type: "quantitative", position: "right", width: 60},
-                {field: "topic_3", type: "quantitative", position: "right", width: 60},
-                {field: "topic_4", type: "quantitative", position: "right", width: 60},
-                {field: "topic_5", type: "quantitative", position: "right", width: 60},
-                {field: "topic_6", type: "quantitative", position: "right", width: 60},
-                {field: "topic_7", type: "quantitative", position: "right", width: 60},
-                {field: "topic_8", type: "quantitative", position: "right", width: 60},
-                {field: "topic_9", type: "quantitative", position: "right", width: 60},
-                {field: "topic_10", type: "quantitative", position: "right", width: 60},
-                {field: "topic_11", type: "quantitative", position: "right", width: 60},
-                {field: "topic_12", type: "quantitative", position: "right", width: 60},
+                // {field: "cluster_by_topic_0", type: "nominal", position: "right", width: 100},
+                // {field: "cluster_by_topic_9", type: "nominal", position: "right", width: 100},
+                {field: "mira_pseudotime", type: "quantitative", position: "right", width: 80, title: 'Pseudotime', color: 'grey'},
+                {field: "topic_0", type: "quantitative", position: "right", width: 60, color: '#FF9896'},
+                {field: "topic_1", type: "quantitative", position: "right", width: 60, color: '#2077B4'},
+                {field: "topic_2", type: "quantitative", position: "right", width: 60, color: '#7F7F7F'},
+                {field: "topic_3", type: "quantitative", position: "right", width: 60, color: '#AEC7E8'},
+                {field: "topic_4", type: "quantitative", position: "right", width: 60, color: '#BCBD22'},
+                {field: "topic_5", type: "quantitative", position: "right", width: 60, color: '#F7B6D2'},
+                {field: "topic_6", type: "quantitative", position: "right", width: 60, color: '#DBDB8E'},
+                {field: "topic_7", type: "quantitative", position: "right", width: 60, color: '#E377C2'},
+                {field: "topic_8", type: "quantitative", position: "right", width: 60, color: '#C5B0D5'},
+                {field: "topic_9", type: "quantitative", position: "right", width: 60, color: '#D62828'},
+                {field: "topic_10", type: "quantitative", position: "right", width: 60, color: '#2CA02C'},
+                // {field: "topic_11", type: "quantitative", position: "right", width: 60, color: 'grey'},
+                {field: "topic_12", type: "quantitative", position: "right", width: 60, color: '#9FDBE5'},
+
+                // {field: "atac_topic_11", type: 'quantitative', position: 'right', width: 60 },
+                // {field: "atac_topic_5", type: 'quantitative', position: 'right', width: 60 },
+                // {field: "atac_topic_6", type: 'quantitative', position: 'right', width: 60 },
+                // {field: "atac_topic_2", type: 'quantitative', position: 'right', width: 60 },
+                // {field: "atac_topic_8", type: 'quantitative', position: 'right', width: 60 },
+                // {field: "atac_topic_7", type: 'quantitative', position: 'right', width: 60 },
+                // {field: "atac_topic_0", type: 'quantitative', position: 'right', width: 60 },
+                // {field: "atac_topic_9", type: 'quantitative', position: 'right', width: 60 },
+                // {field: "atac_topic_10", type: 'quantitative', position: 'right', width: 60 },
+                // {field: "atac_topic_1", type: 'quantitative', position: 'right', width: 60 },
+                // {field: "atac_topic_12", type: 'quantitative', position: 'right', width: 60 },
+                // {field: "atac_topic_4", type: 'quantitative', position: 'right', width: 60 },
+                // {field: "atac_topic_3", type: 'quantitative', position: 'right', width: 60 },
             ],
             rowAggregate: [],
             rowSort: [
-                // {field: "max_topic", type: "nominal", order: "ascending"}
-                {field: "topic_9", type: "quantitative", order: "descending"}
+                {field: "max_topic", type: "nominal", order: "ascending"},
+                // {field: "topic_9", type: "quantitative", order: "descending"},
+                {field: "mira_pseudotime", type: "quantitative", order: "ascending"}
             ],
             rowFilter: [
                 
@@ -242,10 +357,11 @@ export const miraDemos = {
             viewId: "mira-view-mouse-4000",
             trackId: "mira-track-mouse-4000",
             rowInfoAttributes: [
+                {field: "mira_pseudotime", type: "quantitative", position: "right", width: 80, title: 'Pseudotime', color: 'grey'},
                 // {field: ["topic_0", "topic_1", "topic_2", "topic_3", "topic_4", "topic_5", "topic_6", "topic_7", "topic_8", "topic_9", "topic_10", "topic_11", "topic_12"], type: "quantitative", position: "right", width: 60},
-                {field: "max_topic", type: "nominal", position: "right", width: 100},
-                {field: "cluster_by_topic_0", type: "nominal", position: "right", width: 100},
-                {field: "cluster_by_topic_9", type: "nominal", position: "right", width: 100},
+                // {field: "max_topic", type: "nominal", position: "right", width: 100},
+                // {field: "cluster_by_topic_0", type: "nominal", position: "right", width: 100},
+                // {field: "cluster_by_topic_9", type: "nominal", position: "right", width: 100},
                 // {field: "topic_0", type: "quantitative", position: "right", width: 60},
                 // {field: "topic_1", type: "quantitative", position: "right", width: 60},
                 // {field: "topic_2", type: "quantitative", position: "right", width: 60},
@@ -258,50 +374,15 @@ export const miraDemos = {
                 // {field: "topic_9", type: "quantitative", position: "right", width: 60},
                 // {field: "topic_10", type: "quantitative", position: "right", width: 60},
                 // {field: "topic_11", type: "quantitative", position: "right", width: 60},
-                {field: "topic_12", type: "quantitative", position: "right", width: 60},
+                // {field: "topic_12", type: "quantitative", position: "right", width: 60},
             ],
             rowAggregate: [
                 //  {field: "cluster_by_topic_9", type: "nominal", notOneOf: []},
             ],
             rowSort: [
                 // {field: "max_topic", type: "nominal", order: "ascending"}
-                {field: "topic_9", type: "quantitative", order: "descending"}
-            ],
-            rowFilter: [
-                
-            ]
-        }]
-    },
-    e18_mouse_brain_10x_top_500_smooth: {
-        viewConfig: hgDemoViewConfigMiraMouse500Smooth,
-        options: [{
-            viewId: "mira-view-mouse-500-smooth",
-            trackId: "mira-track-mouse-500-smooth",
-            rowInfoAttributes: [
-                // {field: ["topic_0", "topic_1", "topic_2", "topic_3", "topic_4", "topic_5", "topic_6", "topic_7", "topic_8", "topic_9", "topic_10", "topic_11", "topic_12"], type: "quantitative", position: "right", width: 60},
-                // {field: "max_topic", type: "nominal", position: "right", width: 100},
-                // {field: "cluster_by_topic_0", type: "nominal", position: "right", width: 100},
-                // {field: "cluster_by_topic_9", type: "nominal", position: "right", width: 100},
-                {field: "topic_0", type: "quantitative", position: "right", width: 60},
-                {field: "topic_1", type: "quantitative", position: "right", width: 60},
-                {field: "topic_2", type: "quantitative", position: "right", width: 60},
-                {field: "topic_3", type: "quantitative", position: "right", width: 60},
-                {field: "topic_4", type: "quantitative", position: "right", width: 60},
-                {field: "topic_5", type: "quantitative", position: "right", width: 60},
-                {field: "topic_6", type: "quantitative", position: "right", width: 60},
-                {field: "topic_7", type: "quantitative", position: "right", width: 60},
-                {field: "topic_8", type: "quantitative", position: "right", width: 60},
-                {field: "topic_9", type: "quantitative", position: "right", width: 60},
-                {field: "topic_10", type: "quantitative", position: "right", width: 60},
-                {field: "topic_11", type: "quantitative", position: "right", width: 60},
-                {field: "topic_12", type: "quantitative", position: "right", width: 60},
-            ],
-            rowAggregate: [
-                //  {field: "cluster_by_topic_9", type: "nominal", notOneOf: []},
-            ],
-            rowSort: [
-                // {field: "max_topic", type: "nominal", order: "ascending"}
-                {field: "topic_9", type: "quantitative", order: "descending"}
+                // {field: "topic_9", type: "quantitative", order: "descending"},
+                {field: "mira_pseudotime", type: "quantitative", order: "ascending"}
             ],
             rowFilter: [
                 
