@@ -577,6 +577,33 @@ code {
 input[type="checkbox"] {
   zoom: 1.1; }
 
+.col-tools-hg-overlay {
+  position: absolute;
+  pointer-events: none;
+  width: 100%;
+  height: 100%; }
+  .col-tools-hg-overlay .col-tools-hover-line {
+    border-left: 1px solid black;
+    height: 100%;
+    width: 1px;
+    position: absolute; }
+  .col-tools-hg-overlay .col-tools-hover-line-info {
+    position: absolute;
+    margin-left: 1px;
+    padding-left: 4px;
+    padding-right: 4px;
+    background: rgba(255, 255, 255, 0.7); }
+  .col-tools-hg-overlay .col-tools-brush-black {
+    height: 100%;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(0, 0, 0, 0.4); }
+  .col-tools-hg-overlay .col-tools-brush-gray {
+    height: 100%;
+    position: absolute;
+    background: rgba(119, 119, 119, 0.3);
+    border: 1px solid rgba(119, 119, 119, 0.7); }
+
 .hm-context-menu-container {
   position: fixed;
   min-width: 200px;
@@ -649,33 +676,6 @@ input[type="checkbox"] {
 
 .hm-filter-box-input:focus {
   outline: none; }
-
-.col-tools-hg-overlay {
-  position: absolute;
-  pointer-events: none;
-  width: 100%;
-  height: 100%; }
-  .col-tools-hg-overlay .col-tools-hover-line {
-    border-left: 1px solid black;
-    height: 100%;
-    width: 1px;
-    position: absolute; }
-  .col-tools-hg-overlay .col-tools-hover-line-info {
-    position: absolute;
-    margin-left: 1px;
-    padding-left: 4px;
-    padding-right: 4px;
-    background: rgba(255, 255, 255, 0.7); }
-  .col-tools-hg-overlay .col-tools-brush-black {
-    height: 100%;
-    position: absolute;
-    background: rgba(0, 0, 0, 0.15);
-    border: 1px solid rgba(0, 0, 0, 0.4); }
-  .col-tools-hg-overlay .col-tools-brush-gray {
-    height: 100%;
-    position: absolute;
-    background: rgba(119, 119, 119, 0.3);
-    border: 1px solid rgba(119, 119, 119, 0.7); }
 
 .hm-vertical-zoom-info {
   display: inline-block;
