@@ -193,8 +193,8 @@ export const hgDemoViewConfigMiraMouse = {
                     },
                     {
                         "type": "horizontal-gene-annotations",
-                        "server": "https://higlass.io/api/v1",
-                        "tilesetUid": "Lm2XCdYQSVyRDkPABIUKGA",
+                        "server": "https://server.gosling-lang.org/api/v1",
+                        "tilesetUid": "gene-annotation-mm10",
                         "uid": "gene-labels-track-mira",
                         "options": {
                             "plusStrandColor": "gray",
@@ -489,8 +489,8 @@ export const hgDemoViewConfigMiraMouse4000 = {
                     },
                     {
                         "type": "horizontal-gene-annotations",
-                        "server": "https://higlass.io/api/v1",
-                        "tilesetUid": "Lm2XCdYQSVyRDkPABIUKGA",
+                        "server": "https://server.gosling-lang.org/api/v1",
+                        "tilesetUid": "gene-annotation-mm10",
                         "uid": "gene-labels-track-mira",
                         "options": {
                             "plusStrandColor": "gray",
@@ -779,8 +779,8 @@ export const hgDemoViewConfigMiraMouse500Smooth = {
                     },
                     {
                         "type": "horizontal-gene-annotations",
-                        "server": "https://higlass.io/api/v1",
-                        "tilesetUid": "Lm2XCdYQSVyRDkPABIUKGA",
+                        "server": "https://server.gosling-lang.org/api/v1",
+                        "tilesetUid": "gene-annotation-mm10",
                         "uid": "gene-labels-track-mira",
                         "options": {
                             "plusStrandColor": "gray",
@@ -824,7 +824,7 @@ export const hgDemoViewConfigMiraMouse500Smooth = {
                             "trackBorderWidth": 2,
                             "trackBorderColor": "gray",
                             "heatmapValueScaling": "log",
-                            "name": "e18_mouse_brain_10x_dataset_100_smooth_rows",
+                            "name": "e18_mouse_brain_10x_dataset_500_smooth_rows",
                             "labelTopMargin": 2,
                             "labelLeftMargin": 4,
                             "labelBottomMargin": 0,
