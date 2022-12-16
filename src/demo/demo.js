@@ -233,10 +233,28 @@ export const miraDemos = {
                 //     'topic_21',
                 // ], type: "quantitative", position: "right", width: 60},
                 {
-                    field: "max_topic", type: "nominal", position: "right", width: 100
+                    field: "max_topic", type: "nominal", position: "right", width: 100, 
+                        categories: [
+                            "atac_topic_11",
+                            "atac_topic_5",
+                            "atac_topic_6",
+                            "atac_topic_2",
+                            "atac_topic_8",
+                            "atac_topic_7",
+                            "atac_topic_0",
+                            "atac_topic_9",
+                            "atac_topic_10",
+                            "atac_topic_1",
+                            "atac_topic_12",
+                            "atac_topic_4",
+                            "atac_topic_3",
+                        ],
+                        colors: [
+                            '#FF9896', '#2077B4', '#7F7F7F', '#AEC7E8', '#BCBD22', '#F7B6D2', '#DBDB8E', '#E377C2', '#C5B0D5', '#D62828', '#2CA02C', 'grey', '#9FDBE5'
+                        ]
                 },
                 {
-                    field: "tree_states", type: "nominal", position: "right", width: 100
+                    field: "tree_states", type: "nominal", position: "right", width: 200
                 },
                 // {field: "cluster_by_topic_0", type: "nominal", position: "right", width: 100},
                 // {field: "cluster_by_topic_9", type: "nominal", position: "right", width: 100},
@@ -274,7 +292,13 @@ export const miraDemos = {
                 // {field: "max_topic", type: "nominal", order: "ascending"},
                 // {field: "topic_9", type: "quantitative", order: "descending"},
                 {field: "mira_pseudotime", type: "quantitative", order: "ascending"},
-                {field: "tree_states", type: "nominal", order: "ascending"},
+                {field: "tree_states", type: "nominal", order: "ascending", sort: [
+                    "Astrocyte, Excitatory, Inhibitory",
+                    "Excitatory, Inhibitory",
+                    "Astrocyte",
+                    "Excitatory",
+                    "Inhibitory",
+                ]},
             ],
             rowFilter: [
                 

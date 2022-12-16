@@ -43,7 +43,7 @@ export const margin = 5;
 export default function TrackRowInfoVisNominalBar(props) {
     const {
         left, top, width, height, titleHeight,
-        field, type, alt, title, aggFunction, resolveYScale,
+        field, type, alt, title, categories, colors, aggFunction, resolveYScale,
         isLeft,
         isShowControlButtons,
         rowInfo,
@@ -75,10 +75,10 @@ export default function TrackRowInfoVisNominalBar(props) {
 
     const colorScale = useMemo(() => 
         d3.scaleOrdinal()
-            .domain(Array.from(new Set(
+            .domain(categories ?? Array.from(new Set(
                 rowInfo.map(d => aggValue(d)))
             ).sort())
-            .range([...d3.schemeTableau10]),
+            .range(colors ?? [...d3.schemeTableau10]),
     [rowInfo]);
     // '#2299DB', '#FC5D5C',
 

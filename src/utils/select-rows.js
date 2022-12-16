@@ -100,7 +100,7 @@ export function selectRows(rowInfo, options, altOptions = null) {
         if(rowSort && rowSort.length > 0) {
             let sortOptions = rowSort.slice().reverse();
             sortOptions.forEach((d) => {
-                const { field, type, order } = d;
+                const { field, type, order, sort } = d;
                 const isMultipleFields = Array.isArray(field);
                 const aggFunction = options.rowInfoAttributes?.find(d => d.field === field)?.aggFunction;
                 if(type === "tree") {
@@ -128,12 +128,23 @@ export function selectRows(rowInfo, options, altOptions = null) {
                 } else if(type === "nominal") {
                     transformedRowInfo.sort(function(a, b) {
                         let compared = 0;
+                        
                         const categoryA = getAggregatedValue(a[1], field, "nominal", aggFunction).toString().toUpperCase();
                         const categoryB = getAggregatedValue(b[1], field, "nominal", aggFunction).toString().toUpperCase();
-                        if(categoryA > categoryB) {
-                            compared = 1;
+
+                        if(sort) {
+                            // If specific order is specified by `sort`
+                            const uppercaseSort = sort.map(d => d.toUpperCase());
+                            const idxA = uppercaseSort.indexOf(categoryA) + 1;
+                            const idxB = uppercaseSort.indexOf(categoryB) + 1;
+                            compared = idxB - idxA;
+                            // console.log(compared, idxA, idxB);
                         } else {
-                            compared = -1;
+                            if(categoryA > categoryB) {
+                                compared = 1;
+                            } else {
+                                compared = -1;
+                            }
                         }
                         return compared * (order === "ascending" ? 1 : -1);
                     });
