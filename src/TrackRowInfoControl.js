@@ -1,12 +1,13 @@
 import React, { useRef, useState, useEffect } from "react";
 import PubSub from "pubsub-js";
 
-import { SORT_ASC, SORT_DESC, FILTER, RESET, TOGGLE_ON } from "./utils/icons.js";
+import { SORT_ASC, SORT_DESC, FILTER, RESET, TOGGLE_ON, PLUS, ARROW_MOVE } from "./utils/icons.js";
 import TrackRowFilter from "./TrackRowFilter.js";
 import { getAggregatedValue } from "./utils/aggregate.js";
 import { destroyTooltip, publishHelpTooltip } from "./Tooltip.js";
 
 const LOCAL_EVENT_FILTER_OPEN = "filter-open";
+const LOCAL_EVENT_ADD_TRACK_OPEN = 'adding-track-open';
 
 /**
  * Component with control buttons for each vertical track (for sorting, filtering, etc).
@@ -44,6 +45,7 @@ export default function TrackRowInfoControl(props){
 
     const divRef = useRef();
     const [isFiltering, setIsFiltering] = useState(false);
+    const [isAddingTrack, setIsAddingTrack] = useState(false);
     const [filterTop, setFilterTop] = useState(null);
     const [FilterLeft, setFilterLeft] = useState(null);
 
@@ -67,6 +69,18 @@ export default function TrackRowInfoControl(props){
     }
     function onSortDescClick() {
         onSortRows(controlField, controlType, "descending", resolveYScale);
+    }
+    function onAddTrackClick(event) {
+        const parentRect = divRef.current.getBoundingClientRect();
+        
+        setIsAddingTrack(true);
+        setFilterTop(event.clientY);
+        setFilterLeft(event.clientX - parentRect.x);
+
+        PubSub.publish(LOCAL_EVENT_ADD_TRACK_OPEN, divRef);
+    }
+    function onAddingTrackClose () {
+        setIsAddingTrack(false);
     }
     function onFilterClick(event) {
         const parentRect = divRef.current.getBoundingClientRect();
@@ -97,6 +111,23 @@ export default function TrackRowInfoControl(props){
     }
 
     const buttons = [];
+
+    buttons.push({
+        onClick: () => {}, // TODO:
+        icon: ARROW_MOVE,
+        title: "Move track",
+        helpTitle: "Move track",
+        helpSubtitle: "Move this track to another location."
+    });
+    
+    buttons.push({
+        onClick: onAddTrackClick,
+        icon: PLUS,
+        title: "Add new metadata track",
+        helpTitle: "Add new metadata track",
+        helpSubtitle: "Add a new track that visualize a new metadata."
+    });
+
     if(type !== "tree") {
         buttons.push({
             onClick: onSortAscClick,
@@ -184,6 +215,21 @@ export default function TrackRowInfoControl(props){
                     );
                 })}
             </div>
+            {isAddingTrack ? (
+                <TrackRowFilter // TODO: add new dialog
+                    isLeft={isLeft}
+                    top={filterTop}
+                    left={FilterLeft}
+                    field={controlField}
+                    type={controlType}
+                    aggFunction={aggFunction}
+                    onChange={onFilterChange}
+                    onFilterRows={onFilterRows}
+                    onClose={onAddingTrackClose}
+                    rowInfo={rowInfo}
+                    filterInfo={filterInfo}
+                />
+            ) : null}
             {isFiltering ? (
                 <TrackRowFilter
                     isLeft={isLeft}
