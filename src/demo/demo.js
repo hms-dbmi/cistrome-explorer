@@ -291,14 +291,14 @@ export const miraDemos = {
             rowSort: [
                 // {field: "max_topic", type: "nominal", order: "ascending"},
                 // {field: "topic_9", type: "quantitative", order: "descending"},
-                {field: "mira_pseudotime", type: "quantitative", order: "ascending"},
-                {field: "tree_states", type: "nominal", order: "ascending", sort: [
+                {field: "tree_states", type: "nominal", order: "descending", sort: [
                     "Astrocyte, Excitatory, Inhibitory",
                     "Excitatory, Inhibitory",
                     "Astrocyte",
                     "Excitatory",
                     "Inhibitory",
                 ]},
+                {field: "mira_pseudotime", type: "quantitative", order: "ascending"},
             ],
             rowFilter: [
                 
