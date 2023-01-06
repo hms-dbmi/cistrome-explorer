@@ -5,9 +5,10 @@ import { SORT_ASC, SORT_DESC, FILTER, RESET, TOGGLE_ON, PLUS, ARROW_MOVE } from 
 import TrackRowFilter from "./TrackRowFilter.js";
 import { getAggregatedValue } from "./utils/aggregate.js";
 import { destroyTooltip, publishHelpTooltip } from "./Tooltip.js";
+import TrackAddNewTrack from "./TrackAddNewTrack.js";
 
 const LOCAL_EVENT_FILTER_OPEN = "filter-open";
-const LOCAL_EVENT_ADD_TRACK_OPEN = 'adding-track-open';
+const LOCAL_EVENT_ADD_TRACK_OPEN = LOCAL_EVENT_FILTER_OPEN;
 
 /**
  * Component with control buttons for each vertical track (for sorting, filtering, etc).
@@ -58,6 +59,7 @@ export default function TrackRowInfoControl(props){
         const filterOpenToken = PubSub.subscribe(LOCAL_EVENT_FILTER_OPEN, (msg, otherDivRef) => {
             if(divRef !== otherDivRef) {
                 setIsFiltering(false);
+                setIsAddingTrack(false);
             }
         });
 
@@ -81,11 +83,13 @@ export default function TrackRowInfoControl(props){
     }
     function onAddingTrackClose () {
         setIsAddingTrack(false);
+        onFilterClose();
     }
     function onFilterClick(event) {
         const parentRect = divRef.current.getBoundingClientRect();
         
         setIsFiltering(true);
+        onAddingTrackClose();
         setFilterTop(event.clientY);
         setFilterLeft(event.clientX - parentRect.x);
 
@@ -216,18 +220,15 @@ export default function TrackRowInfoControl(props){
                 })}
             </div>
             {isAddingTrack ? (
-                <TrackRowFilter // TODO: add new dialog
-                    isLeft={isLeft}
+                <TrackAddNewTrack // TODO: add new dialog
                     top={filterTop}
                     left={FilterLeft}
                     field={controlField}
                     type={controlType}
-                    aggFunction={aggFunction}
                     onChange={onFilterChange}
                     onFilterRows={onFilterRows}
                     onClose={onAddingTrackClose}
                     rowInfo={rowInfo}
-                    filterInfo={filterInfo}
                 />
             ) : null}
             {isFiltering ? (
