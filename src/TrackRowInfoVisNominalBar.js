@@ -80,7 +80,6 @@ export default function TrackRowInfoVisNominalBar(props) {
             ).sort())
             .range(colors ?? [...d3.schemeTableau10]),
     [rowInfo]);
-    // '#2299DB', '#FC5D5C',
 
     const draw = useCallback((domElement) => {
         const two = new Two({

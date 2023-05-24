@@ -71,7 +71,7 @@ export default function TrackRowInfoVis(props) {
         onWidthChanged
     } = props;
 
-    const { type, field, alt, shortName, color, colors, categories, aggFunction, resolveYScale, domain, range, addTrackOnClick } = fieldInfo;
+    const { type, field, alt, shortName, color, colors, only, categories, aggFunction, resolveYScale, domain, range, addTrackOnClick } = fieldInfo;
 
     let title;
     if(aggFunction === "count") {
@@ -196,6 +196,7 @@ export default function TrackRowInfoVis(props) {
                     categories,
                     color,
                     colors,
+                    only,
                     shortName,
                     addTrackOnClick,
                     aggFunction,

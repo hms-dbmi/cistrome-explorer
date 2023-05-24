@@ -8,6 +8,34 @@ import { hgDemoViewConfig3K4Revision } from "../viewconfigs/horizontal-multivec-
 
 const STATES = ["Astrocyte, Excitatory, Inhibitory","Astrocyte","Excitatory, Inhibitory","Inhibitory","Excitatory", ''];
 const STATE_COLORS = ['#D6641E', '#E6A01B', '#3275B4', '#409F7A', '#CC7DAA', 'transparent'];
+const TOPIC_COLORS = ['#FF9896',
+'#2077B4',
+'#7F7F7F',
+'#AEC7E8',
+'#BCBD22',
+'#F7B6D2',
+'#DBDB8E',
+'#E377C2',
+'#C5B0D5',
+'#D62828',
+'#2CA02C',
+'grey',
+'#9FDBE5'];
+const streamBase = {field: [
+    "atac_topic_11",
+    "atac_topic_5",
+    "atac_topic_6",
+    "atac_topic_2",
+    "atac_topic_8",
+    "atac_topic_7",
+    "atac_topic_0",
+    "atac_topic_9",
+    "atac_topic_10",
+    "atac_topic_1",
+    "atac_topic_12",
+    "atac_topic_4",
+    "atac_topic_3",
+], type: "quantitative", position: "right", width: 30, colors: TOPIC_COLORS};
 
 export const demos = {
     "ATAC (v0)": {
@@ -211,32 +239,8 @@ export const miraDemos = {
             viewId: "mira-view-mouse-500-smooth",
             trackId: "mira-track-mouse-500-smooth",
             rowInfoAttributes: [
-                // {field: [
-                //     'topic_0',
-                //     'topic_1',
-                //     'topic_2',
-                //     'topic_3',
-                //     'topic_4',
-                //     'topic_5',
-                //     'topic_6',
-                //     'topic_7',
-                //     'topic_8',
-                //     'topic_9',
-                //     'topic_10',
-                //     'topic_11',
-                //     'topic_12',
-                //     'topic_13',
-                //     'topic_14',
-                //     'topic_15',
-                //     'topic_16',
-                //     'topic_17',
-                //     'topic_18',
-                //     'topic_19',
-                //     'topic_20',
-                //     'topic_21',
-                // ], type: "quantitative", position: "right", width: 60},
                 {
-                    field: "max_topic", type: "nominal", position: "right", width: 100, 
+                    field: "max_topic", type: "nominal", position: "right", width: 40, 
                         categories: [
                             "atac_topic_11",
                             "atac_topic_5",
@@ -252,13 +256,17 @@ export const miraDemos = {
                             "atac_topic_4",
                             "atac_topic_3",
                         ],
-                        colors: [
-                            '#FF9896', '#2077B4', '#7F7F7F', '#AEC7E8', '#BCBD22', '#F7B6D2', '#DBDB8E', '#E377C2', '#C5B0D5', '#D62828', '#2CA02C', 'grey', '#9FDBE5'
-                        ]
+                        colors: TOPIC_COLORS
                 },
-                {
-                    field: "tree_states", type: "nominal", position: "right", width: 200, categories: STATES, colors: STATE_COLORS
-                },
+                { ...streamBase, width: 100 },
+                { ...streamBase, only: { field: 'tree_states', value: 'Astrocyte' }, title: 'Astrocyte' },
+                { ...streamBase, only: { field: 'tree_states', value: 'Astrocyte, Excitatory, Inhibitory' }, title: 'Astrocyte, Excitatory, Inhibitory' },
+                { ...streamBase, only: { field: 'tree_states', value: 'Inhibitory' }, title: 'Inhibitory' },
+                { ...streamBase, only: { field: 'tree_states', value: 'Excitatory, Inhibitory' }, title: 'Excitatory, Inhibitory' },
+                { ...streamBase, only: { field: 'tree_states', value: 'Excitatory' }, title: 'Excitatory' },
+                // {
+                //     field: "tree_states", type: "nominal", position: "right", width: 200, categories: STATES, colors: STATE_COLORS
+                // },
                 { field: "Astrocyte", type: "nominal", position: "right", width: 30, categories: STATES, colors: STATE_COLORS, title: 'A'},
                 { field: "Astrocyte, Excitatory, Inhibitory", type: "nominal", position: "right", width: 30, categories: STATES, colors: STATE_COLORS, title: 'AEI'},
                 { field: "Inhibitory", type: "nominal", position: "right", width: 30, categories: STATES, colors: STATE_COLORS, title: 'I'},
@@ -281,19 +289,19 @@ export const miraDemos = {
                 // // {field: "topic_11", type: "quantitative", position: "right", width: 60, color: 'grey'},
                 // {field: "topic_12", type: "quantitative", position: "right", width: 60, color: '#9FDBE5'},
 
-                {field: "atac_topic_11", type: 'quantitative', position: 'right', width: 60, color: '#FF9896' },
-                {field: "atac_topic_5", type: 'quantitative', position: 'right', width: 60, color: '#2077B4' },
-                {field: "atac_topic_6", type: 'quantitative', position: 'right', width: 60, color: '#7F7F7F' },
-                {field: "atac_topic_2", type: 'quantitative', position: 'right', width: 60, color: '#AEC7E8' },
-                {field: "atac_topic_8", type: 'quantitative', position: 'right', width: 60, color: '#BCBD22' },
-                {field: "atac_topic_7", type: 'quantitative', position: 'right', width: 60, color: '#F7B6D2' },
-                {field: "atac_topic_0", type: 'quantitative', position: 'right', width: 60, color: '#DBDB8E' },
-                {field: "atac_topic_9", type: 'quantitative', position: 'right', width: 60, color: '#E377C2' },
-                {field: "atac_topic_10", type: 'quantitative', position: 'right', width: 60, color: '#C5B0D5' },
-                {field: "atac_topic_1", type: 'quantitative', position: 'right', width: 60, color: '#D62828' },
-                {field: "atac_topic_12", type: 'quantitative', position: 'right', width: 60, color: '#2CA02C' },
-                {field: "atac_topic_4", type: 'quantitative', position: 'right', width: 60, color: 'grey' },
-                {field: "atac_topic_3", type: 'quantitative', position: 'right', width: 60, color: '#9FDBE5' },
+                // {field: "atac_topic_11", type: 'quantitative', position: 'right', width: 60, color: '#FF9896' },
+                // {field: "atac_topic_5", type: 'quantitative', position: 'right', width: 60, color: '#2077B4' },
+                // {field: "atac_topic_6", type: 'quantitative', position: 'right', width: 60, color: '#7F7F7F' },
+                // {field: "atac_topic_2", type: 'quantitative', position: 'right', width: 60, color: '#AEC7E8' },
+                // {field: "atac_topic_8", type: 'quantitative', position: 'right', width: 60, color: '#BCBD22' },
+                // {field: "atac_topic_7", type: 'quantitative', position: 'right', width: 60, color: '#F7B6D2' },
+                // {field: "atac_topic_0", type: 'quantitative', position: 'right', width: 60, color: '#DBDB8E' },
+                // {field: "atac_topic_9", type: 'quantitative', position: 'right', width: 60, color: '#E377C2' },
+                // {field: "atac_topic_10", type: 'quantitative', position: 'right', width: 60, color: '#C5B0D5' },
+                // {field: "atac_topic_1", type: 'quantitative', position: 'right', width: 60, color: '#D62828' },
+                // {field: "atac_topic_12", type: 'quantitative', position: 'right', width: 60, color: '#2CA02C' },
+                // {field: "atac_topic_4", type: 'quantitative', position: 'right', width: 60, color: 'grey' },
+                // {field: "atac_topic_3", type: 'quantitative', position: 'right', width: 60, color: '#9FDBE5' },
             ],
             rowAggregate: [],
             rowSort: [

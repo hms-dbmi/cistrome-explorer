@@ -43,7 +43,7 @@ export const margin = 5;
 export default function TrackRowInfoVisQuantitativeBar(props) {
     const {
         left, top, width, height, titleHeight,
-        field, type, alt, title, color: constantColor, aggFunction, resolveYScale,
+        field, type, alt, title, color: constantColor, colors, only, aggFunction, resolveYScale,
         isLeft,
         isShowControlButtons,
         rowInfo,
@@ -69,7 +69,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
     // Data, layouts and styles
     const isStackedBar = Array.isArray(field);
     const axisHeight = 30;
-    const textAreaWidth = 20;
+    const textAreaWidth = width >= 60 ? 20 : 0;
     const barAreaWidth = width - textAreaWidth;
     const minTrackWidth = 40;
     const fontSize = 10;
@@ -133,12 +133,15 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
                 .range([0, barAreaWidth]);
 
             const colorScale = d3.scaleOrdinal()
-                .domain(Array.from(new Set(field)).sort())
-                .range(d3.schemeTableau10);
+                .domain(Array.from(new Set(field)))
+                .range(colors ?? d3.schemeTableau10);
 
             // Render visual components for each row (i.e., bars and texts).
             const textAlign = isLeft ? "end" : "start";
             transformedRowInfo.forEach((d, i) => {
+                const isSkip = only && only.value !== aggValue(d, only.field);
+                if(isSkip) return;
+
                 const barTop = yScale(i);
                 let currentBarLeft = (isLeft ? width : 0);
 
@@ -190,6 +193,9 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
             // Render visual components for each row (i.e., bars and texts).
             const textAlign = isLeft ? "end" : "start";
             transformedRowInfo.forEach((d, i) => {
+                const isSkip = only && only.value !== aggValue(d, only.field);
+                if(isSkip) return;
+                
                 const value = aggValue(d, field);
                 const barTop = yScale(i);
                 const barWidth = xScale(value);
@@ -230,6 +236,7 @@ export default function TrackRowInfoVisQuantitativeBar(props) {
     });
 
     const drawAxis = useCallback((domElement) => {
+        if(width <= 60) return () => {};
         d3.select(domElement).selectAll("*").remove();
 
         const axisScale = isLeft ? xScale.domain(xScale.domain().reverse()) : xScale;
