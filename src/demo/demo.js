@@ -6,6 +6,9 @@ import { hgDemoViewConfig3K4 } from "../viewconfigs/horizontal-multivec-3k4";
 import { hgDemoViewConfigMiraMouse, hgDemoViewConfigMiraMouse4000, hgDemoViewConfigMiraMouse500Smooth } from '../viewconfigs/horizontal-multivec-mira-mouse';
 import { hgDemoViewConfig3K4Revision } from "../viewconfigs/horizontal-multivec-3k4-revision";
 
+const STATES = ["Astrocyte, Excitatory, Inhibitory","Astrocyte","Excitatory, Inhibitory","Inhibitory","Excitatory", ''];
+const STATE_COLORS = ['#D6641E', '#E6A01B', '#3275B4', '#409F7A', '#CC7DAA', 'transparent'];
+
 export const demos = {
     "ATAC (v0)": {
         viewConfig: hgDemoViewConfigAtac,
@@ -254,8 +257,13 @@ export const miraDemos = {
                         ]
                 },
                 {
-                    field: "tree_states", type: "nominal", position: "right", width: 200
+                    field: "tree_states", type: "nominal", position: "right", width: 200, categories: STATES, colors: STATE_COLORS
                 },
+                { field: "Astrocyte", type: "nominal", position: "right", width: 30, categories: STATES, colors: STATE_COLORS, title: 'A'},
+                { field: "Astrocyte, Excitatory, Inhibitory", type: "nominal", position: "right", width: 30, categories: STATES, colors: STATE_COLORS, title: 'AEI'},
+                { field: "Inhibitory", type: "nominal", position: "right", width: 30, categories: STATES, colors: STATE_COLORS, title: 'I'},
+                { field: "Excitatory, Inhibitory", type: "nominal", position: "right", width: 30, categories: STATES, colors: STATE_COLORS, title: 'EI'},
+                { field: "Excitatory", type: "nominal", position: "right", width: 30, categories: STATES, colors: STATE_COLORS, title: 'E'},
                 // {field: "cluster_by_topic_0", type: "nominal", position: "right", width: 100},
                 // {field: "cluster_by_topic_9", type: "nominal", position: "right", width: 100},
                 {field: "mira_pseudotime", type: "quantitative", position: "right", width: 80, title: 'Pseudotime', color: 'grey'},
@@ -291,14 +299,19 @@ export const miraDemos = {
             rowSort: [
                 // {field: "max_topic", type: "nominal", order: "ascending"},
                 // {field: "topic_9", type: "quantitative", order: "descending"},
+                {field: "Astrocyte, Excitatory, Inhibitory", type: "nominal", order: "descending"},
+                {field: "Astrocyte", type: "nominal", order: "descending"},
+                {field: "Excitatory, Inhibitory", type: "nominal", order: "descending"},
+                {field: "Inhibitory", type: "nominal", order: "descending"},
+                {field: "Excitatory", type: "nominal", order: "descending"},
                 {field: "mira_pseudotime", type: "quantitative", order: "ascending"},
-                {field: "tree_states", type: "nominal", order: "ascending", sort: [
-                    "Astrocyte, Excitatory, Inhibitory",
-                    "Excitatory, Inhibitory",
-                    "Astrocyte",
-                    "Excitatory",
-                    "Inhibitory",
-                ]},
+                // {field: "tree_states", type: "nominal", order: "ascending", sort: [
+                //     "Astrocyte, Excitatory, Inhibitory",
+                //     "Excitatory, Inhibitory",
+                //     "Astrocyte",
+                //     "Excitatory",
+                //     "Inhibitory",
+                // ]},
             ],
             rowFilter: [
                 
