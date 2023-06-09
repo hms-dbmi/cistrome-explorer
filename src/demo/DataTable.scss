@@ -1,35 +1,36 @@
 .cisvis-table {
-    width: 100%;
-    border-collapse: collapse;
-    border-spacing: 0;
-    // border: 1px solid black;
-    border: none;
-    padding-bottom: 10px;
-    background: white;
-    table-layout: fixed; // using fixed column width
-    thead {
-        border-bottom: 1px solid black;
-    }
-    .data-table-row {
-        cursor: pointer;
-    }
-    .data-table-row:hover {
-        background: #e2f1ff;
-    }
-    .data-table-row-selected {
-        outline: 1px solid #00a3fe;
-        background: #e2f1ff;
-    }
-    th {
-        height: 30px;
-        padding: 10px 8px;
-        font-size: small;
-        overflow: auto;
-        // text-align: center;
-    }
-    tr, td {
-        padding: 10px 8px;
-        outline: none;
-        overflow: auto;
-    }
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0;
+	// border: 1px solid black;
+	border: none;
+	padding-bottom: 10px;
+	background: white;
+	table-layout: fixed; // using fixed column width
+	thead {
+		border-bottom: 1px solid black;
+	}
+	.data-table-row {
+		cursor: pointer;
+	}
+	.data-table-row:hover {
+		background: #e2f1ff;
+	}
+	.data-table-row-selected {
+		outline: 1px solid #00a3fe;
+		background: #e2f1ff;
+	}
+	th {
+		height: 30px;
+		padding: 10px 8px;
+		font-size: small;
+		overflow: auto;
+		// text-align: center;
+	}
+	tr,
+	td {
+		padding: 10px 8px;
+		outline: none;
+		overflow: auto;
+	}
 }

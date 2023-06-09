@@ -1,155 +1,147 @@
 {
-    "editable": true,
-    "zoomFixed": false,
-    "trackSourceServers": [
-      "https://higlass.io/api/v1"
-    ],
-    "exportViewUrl": "/api/v1/viewconfs",
-    "views": [
-      {
-        "initialXDomain": [
-            2813666009.6423965,
-            2889398792.172857
-        ],
-        "initialYDomain": [
-          1519062851.8000524,
-          1519113017.5327234
-        ],
-        "genomePositionSearchBoxVisible": true,
-        "genomePositionSearchBox": {
-          "autocompleteServer": "https://higlass.io/api/v1",
-          "chromInfoServer": "https://higlass.io/api/v1",
-          "visible": true,
-          "chromInfoId": "hg38"
-        },
-        "tracks": {
-          "top": [
-            {
-              "type": "horizontal-chromosome-labels",
-              "server": "https://higlass.io/api/v1",
-              "tilesetUid": "NyITQvZsS_mOFNlz5C2LJg",
-              "uid": "chromosome-labels-track-1",
-              "options": {
-                "showMousePosition": false,
-                "mousePositionColor": "#999999",
-                "color": "#808080",
-                "stroke": "#ffffff",
-                "fontSize": 12,
-                "fontIsLeftAligned": false
-              },
-              "width": 1027,
-              "height": 30
-            },
-            {
-              "type": "horizontal-gene-annotations",
-              "server": "https://higlass.io/api/v1",
-              "tilesetUid": "P0PLbQMwTYGy-5uPIQid7A",
-              "uid": "gene-labels-track-1",
-              "options": {
-                "labelColor": "black",
-                "labelPosition": "hidden",
-                "plusStrandColor": "blue",
-                "minusStrandColor": "red",
-                "trackBorderWidth": 0,
-                "trackBorderColor": "black",
-                "showMousePosition": false,
-                "name": "gene-annotations-hg38_3d2Hebg.db",
-                "mousePositionColor": "#999999",
-                "fontSize": 10,
-                "labelBackgroundColor": "#ffffff",
-                "labelLeftMargin": 0,
-                "labelRightMargin": 0,
-                "labelTopMargin": 0,
-                "labelBottomMargin": 0,
-                "minHeight": 24,
-                "geneAnnotationHeight": 12,
-                "geneLabelPosition": "outside",
-                "geneStrandSpacing": 4
-              },
-              "width": 568,
-              "height": 70
-            },
-            {
-              "type": "horizontal-bar",
-              "server": "https://higlass.io/api/v1",
-              "tilesetUid": "HnOFdNKyQiWEnLkn4Wb1Ug",
-              "uid": "conservation-track-1",
-              "options": {
-                "labelColor": "black",
-                "labelPosition": "topLeft",
-                "axisPositionHorizontal": "right",
-                "barFillColor": "darkgreen",
-                "valueScaling": "linear",
-                "trackBorderWidth": 0,
-                "trackBorderColor": "black",
-                "labelTextOpacity": 0.4,
-                "barOpacity": 1,
-                "name": "conservation (hg38.phastCons100way.bw)",
-                "align": "bottom",
-                "labelLeftMargin": 0,
-                "labelRightMargin": 0,
-                "labelTopMargin": 0,
-                "labelBottomMargin": 0,
-                "labelShowResolution": false,
-                "axisLabelFormatting": "scientific"
-              },
-              "width": 568,
-              "height": 42
-            }
-          ],
-          "left": [],
-          "center": [
-            {
-              "type": "horizontal-multivec",
-              "uid": "meeting-2020-04-29-track",
-              "tilesetUid": "ZyGgMtRGQcOtPYqGRQaHRA",
-              "server": "https://resgen.io/api/v1",
-              "options": {
-                "labelPosition": "hidden",
-                "labelColor": "black",
-                "labelTextOpacity": 0.4,
-                "valueScaling": "linear",
-                "trackBorderWidth": 0,
-                "trackBorderColor": "black",
-                "heatmapValueScaling": "log",
-                "name": "Cistrome_DNase_1kb_average.multires.mv5",
-                "labelLeftMargin": 0,
-                "labelRightMargin": 0,
-                "labelTopMargin": 0,
-                "labelBottomMargin": 0,
-                "labelShowResolution": true,
-                "minHeight": 100,
-                "colorbarPosition": "bottomLeft",
-                "zeroValueColor": "dimgray"
-              },
-              "width": 1607,
-              "height": 682
-            }
-          ],
-          "bottom": [],
-          "right": [],
-          "whole": [],
-          "gallery": []
-        },
-        "layout": {
-          "w": 12,
-          "h": 10,
-          "x": 0,
-          "y": 0
-        },
-        "uid": "meeting-2020-04-29-view"
-      }
-    ],
-    "zoomLocks": {
-      "locksByViewUid": {},
-      "locksDict": {}
-    },
-    "locationLocks": {
-      "locksByViewUid": {},
-      "locksDict": {}
-    },
-    "valueScaleLocks": {
-      "locksByViewUid": {},
-      "locksDict": {}
-    }
+	"editable": true,
+	"zoomFixed": false,
+	"trackSourceServers": ["https://higlass.io/api/v1"],
+	"exportViewUrl": "/api/v1/viewconfs",
+	"views": [
+		{
+			"initialXDomain": [2813666009.6423965, 2889398792.172857],
+			"initialYDomain": [1519062851.8000524, 1519113017.5327234],
+			"genomePositionSearchBoxVisible": true,
+			"genomePositionSearchBox": {
+				"autocompleteServer": "https://higlass.io/api/v1",
+				"chromInfoServer": "https://higlass.io/api/v1",
+				"visible": true,
+				"chromInfoId": "hg38"
+			},
+			"tracks": {
+				"top": [
+					{
+						"type": "horizontal-chromosome-labels",
+						"server": "https://higlass.io/api/v1",
+						"tilesetUid": "NyITQvZsS_mOFNlz5C2LJg",
+						"uid": "chromosome-labels-track-1",
+						"options": {
+							"showMousePosition": false,
+							"mousePositionColor": "#999999",
+							"color": "#808080",
+							"stroke": "#ffffff",
+							"fontSize": 12,
+							"fontIsLeftAligned": false
+						},
+						"width": 1027,
+						"height": 30
+					},
+					{
+						"type": "horizontal-gene-annotations",
+						"server": "https://higlass.io/api/v1",
+						"tilesetUid": "P0PLbQMwTYGy-5uPIQid7A",
+						"uid": "gene-labels-track-1",
+						"options": {
+							"labelColor": "black",
+							"labelPosition": "hidden",
+							"plusStrandColor": "blue",
+							"minusStrandColor": "red",
+							"trackBorderWidth": 0,
+							"trackBorderColor": "black",
+							"showMousePosition": false,
+							"name": "gene-annotations-hg38_3d2Hebg.db",
+							"mousePositionColor": "#999999",
+							"fontSize": 10,
+							"labelBackgroundColor": "#ffffff",
+							"labelLeftMargin": 0,
+							"labelRightMargin": 0,
+							"labelTopMargin": 0,
+							"labelBottomMargin": 0,
+							"minHeight": 24,
+							"geneAnnotationHeight": 12,
+							"geneLabelPosition": "outside",
+							"geneStrandSpacing": 4
+						},
+						"width": 568,
+						"height": 70
+					},
+					{
+						"type": "horizontal-bar",
+						"server": "https://higlass.io/api/v1",
+						"tilesetUid": "HnOFdNKyQiWEnLkn4Wb1Ug",
+						"uid": "conservation-track-1",
+						"options": {
+							"labelColor": "black",
+							"labelPosition": "topLeft",
+							"axisPositionHorizontal": "right",
+							"barFillColor": "darkgreen",
+							"valueScaling": "linear",
+							"trackBorderWidth": 0,
+							"trackBorderColor": "black",
+							"labelTextOpacity": 0.4,
+							"barOpacity": 1,
+							"name": "conservation (hg38.phastCons100way.bw)",
+							"align": "bottom",
+							"labelLeftMargin": 0,
+							"labelRightMargin": 0,
+							"labelTopMargin": 0,
+							"labelBottomMargin": 0,
+							"labelShowResolution": false,
+							"axisLabelFormatting": "scientific"
+						},
+						"width": 568,
+						"height": 42
+					}
+				],
+				"left": [],
+				"center": [
+					{
+						"type": "horizontal-multivec",
+						"uid": "meeting-2020-04-29-track",
+						"tilesetUid": "ZyGgMtRGQcOtPYqGRQaHRA",
+						"server": "https://resgen.io/api/v1",
+						"options": {
+							"labelPosition": "hidden",
+							"labelColor": "black",
+							"labelTextOpacity": 0.4,
+							"valueScaling": "linear",
+							"trackBorderWidth": 0,
+							"trackBorderColor": "black",
+							"heatmapValueScaling": "log",
+							"name": "Cistrome_DNase_1kb_average.multires.mv5",
+							"labelLeftMargin": 0,
+							"labelRightMargin": 0,
+							"labelTopMargin": 0,
+							"labelBottomMargin": 0,
+							"labelShowResolution": true,
+							"minHeight": 100,
+							"colorbarPosition": "bottomLeft",
+							"zeroValueColor": "dimgray"
+						},
+						"width": 1607,
+						"height": 682
+					}
+				],
+				"bottom": [],
+				"right": [],
+				"whole": [],
+				"gallery": []
+			},
+			"layout": {
+				"w": 12,
+				"h": 10,
+				"x": 0,
+				"y": 0
+			},
+			"uid": "meeting-2020-04-29-view"
+		}
+	],
+	"zoomLocks": {
+		"locksByViewUid": {},
+		"locksDict": {}
+	},
+	"locationLocks": {
+		"locksByViewUid": {},
+		"locksDict": {}
+	},
+	"valueScaleLocks": {
+		"locksByViewUid": {},
+		"locksDict": {}
+	}
 }

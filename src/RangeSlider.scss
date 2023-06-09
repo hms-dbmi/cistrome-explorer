@@ -1,42 +1,42 @@
 .hm-range-slider-container {
-    display: flex;
-    flex-direction: row;
-    .hm-range-slider {
-        position: relative;
-        margin-left: 10px;
-        margin-right: 10px;
-        margin-top: 10px;
-    }
-    .hm-range-slider-ruler-bg,
-    .hm-range-slider-ruler-fg {
-        background: lightgray;
-        height: 7px;
-        width: 100%;
-        margin: 4px;
-        border-radius: 3px;
-        position: absolute;
-    }
-    .hm-range-slider-ruler-bg {
-        background: lightgray;
-    }
-    .hm-range-slider-ruler-fg {
-        background: #337ab7;
-    }
-    .hm-range-slider-mover-left,
-    .hm-range-slider-mover-right {
-        background: gray;
-        border: 1px solid white;
-        border-radius: 16px;
-        position: absolute;
-        cursor: ew-resize;
-    }
-    .hm-range-input {
-        width: 60px;
-        margin-right: 6px;
-        border: none;
-        border-bottom: solid 1px lightgray;
-    }
-    .hm-range-input:focus{
-        outline: none;
-    }
+	display: flex;
+	flex-direction: row;
+	.hm-range-slider {
+		position: relative;
+		margin-left: 10px;
+		margin-right: 10px;
+		margin-top: 10px;
+	}
+	.hm-range-slider-ruler-bg,
+	.hm-range-slider-ruler-fg {
+		background: lightgray;
+		height: 7px;
+		width: 100%;
+		margin: 4px;
+		border-radius: 3px;
+		position: absolute;
+	}
+	.hm-range-slider-ruler-bg {
+		background: lightgray;
+	}
+	.hm-range-slider-ruler-fg {
+		background: #337ab7;
+	}
+	.hm-range-slider-mover-left,
+	.hm-range-slider-mover-right {
+		background: gray;
+		border: 1px solid white;
+		border-radius: 16px;
+		position: absolute;
+		cursor: ew-resize;
+	}
+	.hm-range-input {
+		width: 60px;
+		margin-right: 6px;
+		border: none;
+		border-bottom: solid 1px lightgray;
+	}
+	.hm-range-input:focus {
+		outline: none;
+	}
 }

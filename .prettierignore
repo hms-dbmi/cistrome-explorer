@@ -2,7 +2,8 @@ docs/
 build-demo/
 build/
 pipelines/
-nodebooks/
+**/nodebooks/*
+**/fakedata/*
 **/node_modules/*
 *.lock
 LICENSE

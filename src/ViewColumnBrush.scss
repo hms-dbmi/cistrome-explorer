@@ -1,26 +1,26 @@
 .col-tools-brush-bar {
-    cursor: ew-resize;
-    pointer-events: all;
-    // background: #c3c3c3;
-    background: white;
-    border-radius: 2px;
-    position: absolute;
-    box-sizing: border-box;
-    width: 100%;
-    overflow: hidden;
-    border: 1px solid #6F6F6F;
-    .col-tools-hover-line {
-        border-left: 1px solid rgb(77, 77, 77);
-        height: 100%;
-        width: 1px;
-        position: absolute;
-    }
-    .col-tools-brush {
-        height: 100%;
-        position: absolute;
-        background: rgba(0, 0, 0, 0.15);
-    }
-    .col-tools-chr-info {
-        position: absolute;
-    }
+	cursor: ew-resize;
+	pointer-events: all;
+	// background: #c3c3c3;
+	background: white;
+	border-radius: 2px;
+	position: absolute;
+	box-sizing: border-box;
+	width: 100%;
+	overflow: hidden;
+	border: 1px solid #6f6f6f;
+	.col-tools-hover-line {
+		border-left: 1px solid rgb(77, 77, 77);
+		height: 100%;
+		width: 1px;
+		position: absolute;
+	}
+	.col-tools-brush {
+		height: 100%;
+		position: absolute;
+		background: rgba(0, 0, 0, 0.15);
+	}
+	.col-tools-chr-info {
+		position: absolute;
+	}
 }

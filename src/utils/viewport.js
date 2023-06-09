@@ -7,41 +7,41 @@
  * @returns {object} Corrected positions of start and end.
  */
 export function getRange(pos1, pos2, left, right) {
-    let start = pos1;
-    let end = pos2;
+	let start = pos1;
+	let end = pos2;
 
-    if(end < start) {
-        // Handle the oposite direction of dragging along x-axis.
-        const temp = start;
-        start = end;
-        end = temp;
-    }
+	if (end < start) {
+		// Handle the oposite direction of dragging along x-axis.
+		const temp = start;
+		start = end;
+		end = temp;
+	}
 
-    if(end < left || start > right) {
-        // Suggested positions are both out of range.
-        return { start: null, end: null };
-    }
+	if (end < left || start > right) {
+		// Suggested positions are both out of range.
+		return { start: null, end: null };
+	}
 
-    // Handle when the viewport goes outside of the current view range.
-    start = Math.max(start, left);
-    end = Math.min(end, right);
-    
-    return { start, end };
+	// Handle when the viewport goes outside of the current view range.
+	start = Math.max(start, left);
+	end = Math.min(end, right);
+
+	return { start, end };
 }
 
 export const VIEWPORT_OPTIONS = {
-    "black": {
-        projectionFillColor: "black",
-        projectionStrokeColor: "black",
-        projectionFillOpacity: 0.15,
-        projectionStrokeOpacity: 0.4,
-        strokeWidth: 1
-    },
-    "gray": {
-        projectionFillColor: "#777",
-        projectionStrokeColor: "#777",
-        projectionFillOpacity: 0.3,
-        projectionStrokeOpacity: 0.7,
-        strokeWidth: 1
-    }
+	black: {
+		projectionFillColor: 'black',
+		projectionStrokeColor: 'black',
+		projectionFillOpacity: 0.15,
+		projectionStrokeOpacity: 0.4,
+		strokeWidth: 1
+	},
+	gray: {
+		projectionFillColor: '#777',
+		projectionStrokeColor: '#777',
+		projectionFillOpacity: 0.3,
+		projectionStrokeOpacity: 0.7,
+		strokeWidth: 1
+	}
 };

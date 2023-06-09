@@ -1,9 +1,9 @@
-import cloneDeep from "lodash/cloneDeep";
-import uuidv4 from "uuid/v4";
+import cloneDeep from 'lodash/cloneDeep';
+import uuidv4 from 'uuid/v4';
 
-import { TRACK_TYPE } from "./constants.js";
-import { insertItemToArray, removeItemFromArray } from "./array.js";
-import { VIEWPORT_OPTIONS } from "./viewport.js";
+import { TRACK_TYPE } from './constants.js';
+import { insertItemToArray, removeItemFromArray } from './array.js';
+import { VIEWPORT_OPTIONS } from './viewport.js';
 
 /**
  * Execute a callback function for every view, track, and innerTrack in a view config object.
@@ -13,81 +13,79 @@ import { VIEWPORT_OPTIONS } from "./viewport.js";
  *                            These object attributes will be undefined if the attribute does not apply to a particular item.
  */
 export function traverseViewConfig(viewConf, callback) {
-    if(viewConf && viewConf.views && Array.isArray(viewConf.views)) {
-        for(let [viewI, view] of viewConf.views.entries()) {
-            if(view && view.uid) {
-                callback({
-                    viewI,
-                    viewId: view.uid
-                });
-                for(let [tracksPos, tracks] of Object.entries(view.tracks)) {
-                    if(Array.isArray(tracks)) {
-                        for(let [trackI, track] of tracks.entries()) {
-                            callback({
-                                viewI,
-                                track,
-                                viewId: view.uid,
-                                trackPos: tracksPos,
-                                trackI,
-                                trackType: track.type,
-                                trackId: track.uid,
-                                trackTilesetId: track.tilesetUid,
-                                trackOptions: track.options
-                            });
-                            if(track.type === TRACK_TYPE.COMBINED && Array.isArray(track.contents)) {
-                                for(let [innerTrackI, innerTrack] of track.contents.entries()) {
-                                    callback({ 
-                                        viewI,
-                                        viewId: view.uid,
-                                        track,
-                                        trackPos: tracksPos,
-                                        trackI,
-                                        trackType: track.type, 
-                                        trackId: track.uid, 
-                                        innerTrack,
-                                        innerTrackI,
-                                        innerTrackType: innerTrack.type, 
-                                        innerTrackId: innerTrack.uid,
-                                        innerTrackTilesetId: innerTrack.tilesetUid,
-                                        innerTrackOptions: innerTrack.options
-                                    });
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+	if (viewConf && viewConf.views && Array.isArray(viewConf.views)) {
+		for (let [viewI, view] of viewConf.views.entries()) {
+			if (view && view.uid) {
+				callback({
+					viewI,
+					viewId: view.uid
+				});
+				for (let [tracksPos, tracks] of Object.entries(view.tracks)) {
+					if (Array.isArray(tracks)) {
+						for (let [trackI, track] of tracks.entries()) {
+							callback({
+								viewI,
+								track,
+								viewId: view.uid,
+								trackPos: tracksPos,
+								trackI,
+								trackType: track.type,
+								trackId: track.uid,
+								trackTilesetId: track.tilesetUid,
+								trackOptions: track.options
+							});
+							if (track.type === TRACK_TYPE.COMBINED && Array.isArray(track.contents)) {
+								for (let [innerTrackI, innerTrack] of track.contents.entries()) {
+									callback({
+										viewI,
+										viewId: view.uid,
+										track,
+										trackPos: tracksPos,
+										trackI,
+										trackType: track.type,
+										trackId: track.uid,
+										innerTrack,
+										innerTrackI,
+										innerTrackType: innerTrack.type,
+										innerTrackId: innerTrack.uid,
+										innerTrackTilesetId: innerTrack.tilesetUid,
+										innerTrackOptions: innerTrack.options
+									});
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 /**
  * Get a track definition from a higlass viewConfig object.
  * @param {object} viewConf A valid HiGlass viewConfig object.
  * @param {string} viewId The uid of view containing the `horizontal-multivec` track that was the target of the action.
- * @param {string} trackId The uid of the `horizontal-multivec` track that was the target of the action. 
+ * @param {string} trackId The uid of the `horizontal-multivec` track that was the target of the action.
  * @return {object} A part of HiGlass viewConfig object for a specific track.
  */
 export function getTrackDefFromViewConfig(viewConfig, viewId, trackId) {
-    let newViewConfig = {};
-    traverseViewConfig(cloneDeep(viewConfig), (d) => {
-        // The horizontal-multivec track could be standalone, or within a "combined" track.
-        if(d.trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC 
-            && d.viewId === viewId 
-            && d.trackId === trackId
-        ) {
-            newViewConfig = d.track;
-            return;
-        } else if(d.trackType === TRACK_TYPE.COMBINED 
-            && d.innerTrackType === TRACK_TYPE.HORIZONTAL_MULTIVEC 
-            && d.viewId === viewId 
-            && d.innerTrackId === trackId
-        ) {
-            newViewConfig = d.innerTrack;
-            return;
-        }
-    });
-    return newViewConfig;
+	let newViewConfig = {};
+	traverseViewConfig(cloneDeep(viewConfig), d => {
+		// The horizontal-multivec track could be standalone, or within a "combined" track.
+		if (d.trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC && d.viewId === viewId && d.trackId === trackId) {
+			newViewConfig = d.track;
+			return;
+		} else if (
+			d.trackType === TRACK_TYPE.COMBINED &&
+			d.innerTrackType === TRACK_TYPE.HORIZONTAL_MULTIVEC &&
+			d.viewId === viewId &&
+			d.innerTrackId === trackId
+		) {
+			newViewConfig = d.innerTrack;
+			return;
+		}
+	});
+	return newViewConfig;
 }
 
 /**
@@ -96,35 +94,39 @@ export function getTrackDefFromViewConfig(viewConfig, viewId, trackId) {
  * @param {object} trackDef A track definition object.
  * @param {string} targetViewId The view ID for the track of interest.
  * @param {string} position The target position of the track, such as "top" or "bottom".
- * @returns {object} The new view config. 
+ * @returns {object} The new view config.
  */
 export function addTrackDefToViewConfig(currViewConfig, trackDef, targetViewId, position) {
-    const newViewConfig = cloneDeep(currViewConfig);
-    let viewIndex = -1;
-    // Get view index.
-    traverseViewConfig(currViewConfig, (d) => {
-        // The horizontal-multivec track could be standalone, or within a "combined" track.
-        if((d.trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC 
-            && d.viewId === targetViewId) || 
-            (d.trackType === TRACK_TYPE.COMBINED 
-            && d.innerTrackType === TRACK_TYPE.HORIZONTAL_MULTIVEC 
-            && d.viewId === targetViewId)
-        ) {
-            viewIndex = d.viewI;
-        }
-    });
-    if(viewIndex !== -1) {
-        const length = newViewConfig.views[viewIndex].tracks[position].length;
-        if(length === 0) {
-            newViewConfig.views[viewIndex].tracks[position].push(trackDef);
-        } else {
-            // insert to the one index before the last one just to show the tracks upper the "Aggregated" track
-            newViewConfig.views[viewIndex].tracks[position] = insertItemToArray(newViewConfig.views[viewIndex].tracks[position], length - 1, trackDef);
-        }
-    } else {
-        console.warn(`The following view is not found (${targetViewId}) in addTrackDefToViewConfig().`);
-    }
-    return newViewConfig;
+	const newViewConfig = cloneDeep(currViewConfig);
+	let viewIndex = -1;
+	// Get view index.
+	traverseViewConfig(currViewConfig, d => {
+		// The horizontal-multivec track could be standalone, or within a "combined" track.
+		if (
+			(d.trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC && d.viewId === targetViewId) ||
+			(d.trackType === TRACK_TYPE.COMBINED &&
+				d.innerTrackType === TRACK_TYPE.HORIZONTAL_MULTIVEC &&
+				d.viewId === targetViewId)
+		) {
+			viewIndex = d.viewI;
+		}
+	});
+	if (viewIndex !== -1) {
+		const length = newViewConfig.views[viewIndex].tracks[position].length;
+		if (length === 0) {
+			newViewConfig.views[viewIndex].tracks[position].push(trackDef);
+		} else {
+			// insert to the one index before the last one just to show the tracks upper the "Aggregated" track
+			newViewConfig.views[viewIndex].tracks[position] = insertItemToArray(
+				newViewConfig.views[viewIndex].tracks[position],
+				length - 1,
+				trackDef
+			);
+		}
+	} else {
+		console.warn(`The following view is not found (${targetViewId}) in addTrackDefToViewConfig().`);
+	}
+	return newViewConfig;
 }
 
 /**
@@ -133,16 +135,24 @@ export function addTrackDefToViewConfig(currViewConfig, trackDef, targetViewId, 
  * @returns {array} Array containing `{ viewId, trackId, ... }` for each horizontal-multivec track.
  */
 export function getHMTrackIdsFromViewConfig(viewConf) {
-    const mvTracks = [];
-    traverseViewConfig(viewConf, ({ viewId, trackType, trackId, trackTilesetId, innerTrackType, innerTrackId, innerTrackTilesetId }) => {
-        // The horizontal-multivec track could be standalone, or within a "combined" track.
-        if(trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC) {
-            mvTracks.push({ viewId, trackId, trackTilesetId });
-        } else if(trackType === TRACK_TYPE.COMBINED && innerTrackType === TRACK_TYPE.HORIZONTAL_MULTIVEC) {
-            mvTracks.push({ viewId, trackId: innerTrackId, trackTilesetId: innerTrackTilesetId, combinedTrackId: trackId });
-        }
-    });
-    return mvTracks;
+	const mvTracks = [];
+	traverseViewConfig(
+		viewConf,
+		({ viewId, trackType, trackId, trackTilesetId, innerTrackType, innerTrackId, innerTrackTilesetId }) => {
+			// The horizontal-multivec track could be standalone, or within a "combined" track.
+			if (trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC) {
+				mvTracks.push({ viewId, trackId, trackTilesetId });
+			} else if (trackType === TRACK_TYPE.COMBINED && innerTrackType === TRACK_TYPE.HORIZONTAL_MULTIVEC) {
+				mvTracks.push({
+					viewId,
+					trackId: innerTrackId,
+					trackTilesetId: innerTrackTilesetId,
+					combinedTrackId: trackId
+				});
+			}
+		}
+	);
+	return mvTracks;
 }
 
 /**
@@ -152,16 +162,24 @@ export function getHMTrackIdsFromViewConfig(viewConf) {
  * @returns {array} Array containing `{ viewId, trackId, ... }` for each track.
  */
 export function getTrackIdsFromViewConfig(viewConf, tag) {
-    const mvTracks = [];
-    traverseViewConfig(viewConf, ({ viewId, trackType, trackId, trackTilesetId, innerTrackType, innerTrackId, innerTrackTilesetId }) => {
-        // The track could be standalone, or within a "combined" track.
-        if(trackId && trackId.includes(tag)) {
-            mvTracks.push({ viewId, trackId, trackTilesetId });
-        } else if(trackType === TRACK_TYPE.COMBINED && innerTrackId && innerTrackId.includes(tag)) {
-            mvTracks.push({ viewId, trackId: innerTrackId, trackTilesetId: innerTrackTilesetId, combinedTrackId: trackId });
-        }
-    });
-    return mvTracks;
+	const mvTracks = [];
+	traverseViewConfig(
+		viewConf,
+		({ viewId, trackType, trackId, trackTilesetId, innerTrackType, innerTrackId, innerTrackTilesetId }) => {
+			// The track could be standalone, or within a "combined" track.
+			if (trackId && trackId.includes(tag)) {
+				mvTracks.push({ viewId, trackId, trackTilesetId });
+			} else if (trackType === TRACK_TYPE.COMBINED && innerTrackId && innerTrackId.includes(tag)) {
+				mvTracks.push({
+					viewId,
+					trackId: innerTrackId,
+					trackTilesetId: innerTrackTilesetId,
+					combinedTrackId: trackId
+				});
+			}
+		}
+	);
+	return mvTracks;
 }
 
 /**
@@ -171,13 +189,17 @@ export function getTrackIdsFromViewConfig(viewConf, tag) {
  * @returns {object[]} Array containing `{ viewId, trackId }` for each sibling `viewport-projection-horizontal` track.
  */
 export function getSiblingVPHTrackIdsFromViewConfig(viewConf, targetViewId) {
-    const matches = [];
-    traverseViewConfig(viewConf, ({ viewId, trackPos, trackType, trackId }) => {
-        if(viewId === targetViewId && trackPos === "whole" && trackType === TRACK_TYPE.VIEWPORT_PROJECTION_HORIZONTAL) {
-            matches.push({ viewId, trackId });
-        }
-    });
-    return matches;
+	const matches = [];
+	traverseViewConfig(viewConf, ({ viewId, trackPos, trackType, trackId }) => {
+		if (
+			viewId === targetViewId &&
+			trackPos === 'whole' &&
+			trackType === TRACK_TYPE.VIEWPORT_PROJECTION_HORIZONTAL
+		) {
+			matches.push({ viewId, trackId });
+		}
+	});
+	return matches;
 }
 
 /**
@@ -188,23 +210,23 @@ export function getSiblingVPHTrackIdsFromViewConfig(viewConf, targetViewId) {
  * @returns {object} The updated HiGlass view config.
  */
 export function removeViewportFromViewConfig(viewConfig, viewId, trackId) {
-    const newViewConfig = cloneDeep(viewConfig);
+	const newViewConfig = cloneDeep(viewConfig);
 
-    // Find the view associated with this viewId.
-    const foundViewIndex = newViewConfig.views.findIndex(v => v.uid === viewId);
-    const foundView = newViewConfig.views[foundViewIndex];
+	// Find the view associated with this viewId.
+	const foundViewIndex = newViewConfig.views.findIndex(v => v.uid === viewId);
+	const foundView = newViewConfig.views[foundViewIndex];
 
-    if(!foundView.tracks["whole"]) {
-        // There is no viewport projection horizontal track in this view.
-        console.log(`There is no ${TRACK_TYPE.VIEWPORT_PROJECTION_HORIZONTAL} in a HiGlass view.`);
-        return newViewConfig;
-    }
-    if(foundView.tracks["whole"].find(d => d.uid === trackId)) {
-        const viewportIndex = foundView.tracks["whole"].findIndex(d => d.uid === trackId);
-        foundView.tracks["whole"] = removeItemFromArray(foundView.tracks["whole"], viewportIndex);
-        newViewConfig.views[foundViewIndex] = foundView;
-    }
-    return newViewConfig;
+	if (!foundView.tracks['whole']) {
+		// There is no viewport projection horizontal track in this view.
+		console.log(`There is no ${TRACK_TYPE.VIEWPORT_PROJECTION_HORIZONTAL} in a HiGlass view.`);
+		return newViewConfig;
+	}
+	if (foundView.tracks['whole'].find(d => d.uid === trackId)) {
+		const viewportIndex = foundView.tracks['whole'].findIndex(d => d.uid === trackId);
+		foundView.tracks['whole'] = removeItemFromArray(foundView.tracks['whole'], viewportIndex);
+		newViewConfig.views[foundViewIndex] = foundView;
+	}
+	return newViewConfig;
 }
 
 /**
@@ -215,19 +237,19 @@ export function removeViewportFromViewConfig(viewConfig, viewId, trackId) {
  * @returns {object} The updated HiGlass view config.
  */
 export function removeTopTrackFromViewConfig(viewConfig, viewId, trackId) {
-    const newViewConfig = cloneDeep(viewConfig);
+	const newViewConfig = cloneDeep(viewConfig);
 
-    // Find the view associated with this viewId.
-    const foundViewIndex = newViewConfig.views.findIndex(v => v.uid === viewId);
-    const foundView = newViewConfig.views[foundViewIndex];
+	// Find the view associated with this viewId.
+	const foundViewIndex = newViewConfig.views.findIndex(v => v.uid === viewId);
+	const foundView = newViewConfig.views[foundViewIndex];
 
-    if(foundView.tracks["top"] || foundView.tracks["top"].find(d => d.uid === trackId)) {
-        const trackIndex = foundView.tracks["top"].findIndex(d => d.uid === trackId);
-        foundView.tracks["top"] = removeItemFromArray(foundView.tracks["top"], trackIndex);
-        newViewConfig.views[foundViewIndex] = foundView;
-        return newViewConfig;
-    }
-    return newViewConfig;
+	if (foundView.tracks['top'] || foundView.tracks['top'].find(d => d.uid === trackId)) {
+		const trackIndex = foundView.tracks['top'].findIndex(d => d.uid === trackId);
+		foundView.tracks['top'] = removeItemFromArray(foundView.tracks['top'], trackIndex);
+		newViewConfig.views[foundViewIndex] = foundView;
+		return newViewConfig;
+	}
+	return newViewConfig;
 }
 
 /**
@@ -238,19 +260,19 @@ export function removeTopTrackFromViewConfig(viewConfig, viewId, trackId) {
  * @returns {object} The updated HiGlass view config.
  */
 export function setDataTransformOfTopTrackFromViewConfig(viewConfig, viewIds, trackId, spec) {
-    const newViewConfig = cloneDeep(viewConfig);
+	const newViewConfig = cloneDeep(viewConfig);
 
-    // Find the view associated with this viewId.
-    const foundViewIndex = newViewConfig.views.findIndex(v => viewIds.indexOf(v.uid) !== -1);
-    const foundView = newViewConfig.views[foundViewIndex];
+	// Find the view associated with this viewId.
+	const foundViewIndex = newViewConfig.views.findIndex(v => viewIds.indexOf(v.uid) !== -1);
+	const foundView = newViewConfig.views[foundViewIndex];
 
-    if(foundView.tracks["top"] && foundView.tracks["top"].find(d => d.uid === trackId)) {
-        const trackIndex = foundView.tracks["top"].findIndex(d => d.uid === trackId);
-        foundView.tracks["top"][trackIndex].options.spec["dataTransform"] = spec;
-        newViewConfig.views[foundViewIndex] = foundView;
-        return newViewConfig;
-    }
-    return newViewConfig;
+	if (foundView.tracks['top'] && foundView.tracks['top'].find(d => d.uid === trackId)) {
+		const trackIndex = foundView.tracks['top'].findIndex(d => d.uid === trackId);
+		foundView.tracks['top'][trackIndex].options.spec['dataTransform'] = spec;
+		newViewConfig.views[foundViewIndex] = foundView;
+		return newViewConfig;
+	}
+	return newViewConfig;
 }
 
 /**
@@ -263,42 +285,39 @@ export function setDataTransformOfTopTrackFromViewConfig(viewConfig, viewIds, tr
  * @returns {object} The updated HiGlass view config.
  */
 export function updateViewConfigOnSelectGenomicInterval(viewConfig, viewId, startProp, endProp, uid) {
-    const newViewConfig = cloneDeep(viewConfig);
+	const newViewConfig = cloneDeep(viewConfig);
 
-    // Find the view associated with this viewId.
-    const foundViewIndex = newViewConfig.views.findIndex(v => v.uid === viewId);
-    const foundView = newViewConfig.views[foundViewIndex];
+	// Find the view associated with this viewId.
+	const foundViewIndex = newViewConfig.views.findIndex(v => v.uid === viewId);
+	const foundView = newViewConfig.views[foundViewIndex];
 
-    const xRange = foundView.initialXDomain[1] - foundView.initialXDomain[0];
-    const xDomain = [
-        foundView.initialXDomain[0] + xRange * startProp,
-        foundView.initialXDomain[0] + xRange * endProp
-    ];
+	const xRange = foundView.initialXDomain[1] - foundView.initialXDomain[0];
+	const xDomain = [foundView.initialXDomain[0] + xRange * startProp, foundView.initialXDomain[0] + xRange * endProp];
 
-    const newUid = `${foundView.uid}-${uid}`;
-    
-    if(!foundView.tracks["whole"]) {
-        foundView.tracks["whole"] = [];
-    }
-    if(foundView.tracks["whole"].find(d => d.uid === newUid)) {
-        const projIndex = foundView.tracks["whole"].findIndex(d => d.uid === newUid);
-        foundView.tracks["whole"][projIndex] = {
-            ...foundView.tracks["whole"][projIndex],
-            projectionXDomain: xDomain
-        };
-    } else {
-        const newProjectionTrackDef = {
-            type: TRACK_TYPE.VIEWPORT_PROJECTION_HORIZONTAL,
-            uid: newUid,
-            fromViewUid: null,
-            projectionXDomain: xDomain,
-            options: VIEWPORT_OPTIONS["black"]
-        };
-        foundView.tracks["whole"].push(newProjectionTrackDef);
-        newViewConfig.views[foundViewIndex] = foundView;
-    }
+	const newUid = `${foundView.uid}-${uid}`;
 
-    return newViewConfig;
+	if (!foundView.tracks['whole']) {
+		foundView.tracks['whole'] = [];
+	}
+	if (foundView.tracks['whole'].find(d => d.uid === newUid)) {
+		const projIndex = foundView.tracks['whole'].findIndex(d => d.uid === newUid);
+		foundView.tracks['whole'][projIndex] = {
+			...foundView.tracks['whole'][projIndex],
+			projectionXDomain: xDomain
+		};
+	} else {
+		const newProjectionTrackDef = {
+			type: TRACK_TYPE.VIEWPORT_PROJECTION_HORIZONTAL,
+			uid: newUid,
+			fromViewUid: null,
+			projectionXDomain: xDomain,
+			options: VIEWPORT_OPTIONS['black']
+		};
+		foundView.tracks['whole'].push(newProjectionTrackDef);
+		newViewConfig.views[foundViewIndex] = foundView;
+	}
+
+	return newViewConfig;
 }
 
 /**
@@ -307,26 +326,29 @@ export function updateViewConfigOnSelectGenomicInterval(viewConfig, viewId, star
  * @param {number[]} selectedRows The array of row indices, which will become the value of the track option.
  * @param {string} targetViewId The view ID for the track of interest.
  * @param {string} targetTrackId The track ID for the track of interest.
- * @returns {object} The new view config. 
+ * @returns {object} The new view config.
  */
 export function updateViewConfigOnSelectRowsByTrack(currViewConfig, selectedRows, targetViewId, targetTrackId) {
-    const newViewConfig = cloneDeep(currViewConfig);
-    traverseViewConfig(currViewConfig, (d) => {
-        // The horizontal-multivec track could be standalone, or within a "combined" track.
-        if(d.trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC 
-            && d.viewId === targetViewId 
-            && d.trackId === targetTrackId
-        ) {
-            newViewConfig.views[d.viewI].tracks[d.trackPos][d.trackI].options.selectRows = selectedRows;
-        } else if(d.trackType === TRACK_TYPE.COMBINED 
-            && d.innerTrackType === TRACK_TYPE.HORIZONTAL_MULTIVEC 
-            && d.viewId === targetViewId 
-            && d.innerTrackId === targetTrackId
-        ) {
-            newViewConfig.views[d.viewI].tracks[d.trackPos][d.trackI].contents[d.innerTrackI].options.selectRows = selectedRows;
-        }
-    });
-    return newViewConfig;
+	const newViewConfig = cloneDeep(currViewConfig);
+	traverseViewConfig(currViewConfig, d => {
+		// The horizontal-multivec track could be standalone, or within a "combined" track.
+		if (
+			d.trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC &&
+			d.viewId === targetViewId &&
+			d.trackId === targetTrackId
+		) {
+			newViewConfig.views[d.viewI].tracks[d.trackPos][d.trackI].options.selectRows = selectedRows;
+		} else if (
+			d.trackType === TRACK_TYPE.COMBINED &&
+			d.innerTrackType === TRACK_TYPE.HORIZONTAL_MULTIVEC &&
+			d.viewId === targetViewId &&
+			d.innerTrackId === targetTrackId
+		) {
+			newViewConfig.views[d.viewI].tracks[d.trackPos][d.trackI].contents[d.innerTrackI].options.selectRows =
+				selectedRows;
+		}
+	});
+	return newViewConfig;
 }
 
 /**
@@ -337,23 +359,25 @@ export function updateViewConfigOnSelectRowsByTrack(currViewConfig, selectedRows
  * @returns {(number[]|null)} The value of the `selectRows` option for the track.
  */
 export function getHMSelectedRowsFromViewConfig(viewConfig, targetViewId, targetTrackId) {
-    let selectedRows = null;
-    traverseViewConfig(viewConfig, (d) => {
-        // The horizontal-multivec track could be standalone, or within a "combined" track.
-        if(d.trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC 
-            && d.viewId === targetViewId 
-            && d.trackId === targetTrackId
-        ) {
-            selectedRows = d.trackOptions.selectRows;
-        } else if(d.trackType === TRACK_TYPE.COMBINED 
-            && d.innerTrackType === TRACK_TYPE.HORIZONTAL_MULTIVEC 
-            && d.viewId === targetViewId 
-            && d.innerTrackId === targetTrackId
-        ) {
-            selectedRows = d.innerTrackOptions.selectRows;
-        }
-    });
-    return selectedRows;
+	let selectedRows = null;
+	traverseViewConfig(viewConfig, d => {
+		// The horizontal-multivec track could be standalone, or within a "combined" track.
+		if (
+			d.trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC &&
+			d.viewId === targetViewId &&
+			d.trackId === targetTrackId
+		) {
+			selectedRows = d.trackOptions.selectRows;
+		} else if (
+			d.trackType === TRACK_TYPE.COMBINED &&
+			d.innerTrackType === TRACK_TYPE.HORIZONTAL_MULTIVEC &&
+			d.viewId === targetViewId &&
+			d.innerTrackId === targetTrackId
+		) {
+			selectedRows = d.innerTrackOptions.selectRows;
+		}
+	});
+	return selectedRows;
 }
 
 /**
@@ -362,34 +386,35 @@ export function getHMSelectedRowsFromViewConfig(viewConfig, targetViewId, target
  * @param {(string|null)} baseId The base Id to make a new unique ID.
  * @param {(string|null)} idKey Either "viewId" or "trackId".
  * @param {(string|null)} interfix A prefered interfix to use for the new IDs.
- * @return {string} A new unique Id, formated as "{basedId}[-{interfix}]-{number}" or 
+ * @return {string} A new unique Id, formated as "{basedId}[-{interfix}]-{number}" or
  *                  just a random string when baseId is not provided.
  */
 export function getUniqueViewOrTrackId(viewConfig, { baseId, idKey, interfix }) {
-    let newId = baseId;
-    if(!baseId) {
-        // Generate UID with a random string.
-        newId = uuidv4();
-    } else {
-        if(interfix) {
-            // Append suffix.
-            newId = `${newId}-${interfix}`;
-        }
-        let isNotUnique = true, suffixNum = 1;
-        const MAX_ITER = 100;
-        while(isNotUnique || suffixNum > MAX_ITER) {
-            // Search until we find a unique id.
-            isNotUnique = false;
-            traverseViewConfig(viewConfig, (d) => {
-                if(d[idKey] === `${newId}-${suffixNum}`) {
-                    isNotUnique = true;
-                }
-            });
-            suffixNum++;
-        }
-        newId += `-${(suffixNum - 1)}`;
-    }
-    return newId;
+	let newId = baseId;
+	if (!baseId) {
+		// Generate UID with a random string.
+		newId = uuidv4();
+	} else {
+		if (interfix) {
+			// Append suffix.
+			newId = `${newId}-${interfix}`;
+		}
+		let isNotUnique = true,
+			suffixNum = 1;
+		const MAX_ITER = 100;
+		while (isNotUnique || suffixNum > MAX_ITER) {
+			// Search until we find a unique id.
+			isNotUnique = false;
+			traverseViewConfig(viewConfig, d => {
+				if (d[idKey] === `${newId}-${suffixNum}`) {
+					isNotUnique = true;
+				}
+			});
+			suffixNum++;
+		}
+		newId += `-${suffixNum - 1}`;
+	}
+	return newId;
 }
 
 /**
@@ -399,39 +424,36 @@ export function getUniqueViewOrTrackId(viewConfig, { baseId, idKey, interfix }) 
  * @param {boolean} notSide Exclude tracks on the left or right positions (default: false).
  * @returns {array} An array of objects of {traciId, viewId}.
  */
-export function getAllViewAndTrackPairs(viewConfig, options={}) {
-    const {
-        onlyHorizontalMultivec=true,
-        notSide=false
-    } = options;
+export function getAllViewAndTrackPairs(viewConfig, options = {}) {
+	const { onlyHorizontalMultivec = true, notSide = false } = options;
 
-    let pairs = [];
-    traverseViewConfig(viewConfig, (d) => {
-        // Screening tracks.
-        if(!d.trackId) {
-            return;
-        } else if(notSide && (d.trackPos === "left" || d.trackPos === "right")) {
-            return;
-        }
-        if(!onlyHorizontalMultivec) {
-            pairs.push({
-                viewId: d.viewId,
-                trackId: d.trackId
-            });
-        } else {
-            // The horizontal-multivec track could be standalone, or within a "combined" track.
-            if(d.trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC) {
-                pairs.push({
-                    viewId: d.viewId,
-                    trackId: d.trackId
-                });
-            } else if(d.trackType === TRACK_TYPE.COMBINED && d.innerTrackType === TRACK_TYPE.HORIZONTAL_MULTIVEC) {
-                pairs.push({
-                    viewId: d.viewId,
-                    trackId: d.innerTrackId
-                });
-            }
-        }
-    });
-    return pairs;
+	let pairs = [];
+	traverseViewConfig(viewConfig, d => {
+		// Screening tracks.
+		if (!d.trackId) {
+			return;
+		} else if (notSide && (d.trackPos === 'left' || d.trackPos === 'right')) {
+			return;
+		}
+		if (!onlyHorizontalMultivec) {
+			pairs.push({
+				viewId: d.viewId,
+				trackId: d.trackId
+			});
+		} else {
+			// The horizontal-multivec track could be standalone, or within a "combined" track.
+			if (d.trackType === TRACK_TYPE.HORIZONTAL_MULTIVEC) {
+				pairs.push({
+					viewId: d.viewId,
+					trackId: d.trackId
+				});
+			} else if (d.trackType === TRACK_TYPE.COMBINED && d.innerTrackType === TRACK_TYPE.HORIZONTAL_MULTIVEC) {
+				pairs.push({
+					viewId: d.viewId,
+					trackId: d.innerTrackId
+				});
+			}
+		}
+	});
+	return pairs;
 }

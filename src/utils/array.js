@@ -6,12 +6,8 @@
  * @returns Updated array.
  */
 export function insertItemToArray(array, index, item) {
-    if(!array) array = [];
-    return [
-        ...array.slice(0, index),
-        item,
-        ...array.slice(index)
-    ];
+	if (!array) array = [];
+	return [...array.slice(0, index), item, ...array.slice(index)];
 }
 
 /**
@@ -22,11 +18,7 @@ export function insertItemToArray(array, index, item) {
  * @returns Updated array.
  */
 export function modifyItemInArray(array, index, item) {
-    return [
-        ...array.slice(0, index),
-        item,
-        ...array.slice(index + 1)
-    ];
+	return [...array.slice(0, index), item, ...array.slice(index + 1)];
 }
 
 /**
@@ -36,8 +28,5 @@ export function modifyItemInArray(array, index, item) {
  * @returns Updated array.
  */
 export function removeItemFromArray(array, index) {
-    return [
-        ...array.slice(0, index),
-        ...array.slice(index + 1)
-    ];
+	return [...array.slice(0, index), ...array.slice(index + 1)];
 }

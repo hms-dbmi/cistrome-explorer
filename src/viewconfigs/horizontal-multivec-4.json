@@ -1,328 +1,299 @@
 {
-    "editable": true,
-    "zoomFixed": false,
-    "trackSourceServers": [
-      "https://higlass.io/api/v1"
-    ],
-    "exportViewUrl": "/api/v1/viewconfs",
-    "views": [
-      {
-        "initialXDomain": [
-          2803130185.875317,
-          2818358565.9840126
-        ],
-        "initialYDomain": [
-          2001105169.029666,
-          2013059447.4149919
-        ],
-        "genomePositionSearchBoxVisible": true,
-        "genomePositionSearchBox": {
-          "autocompleteServer": "https://higlass.io/api/v1",
-          "chromInfoServer": "https://higlass.io/api/v1",
-          "visible": true,
-          "chromInfoId": "hg38"
-        },
-        "tracks": {
-          "top": [
-            {
-              "type": "horizontal-chromosome-labels",
-              "server": "https://higlass.io/api/v1",
-              "tilesetUid": "NyITQvZsS_mOFNlz5C2LJg",
-              "uid": "chromosome-labels-track-1",
-              "options": {
-                "showMousePosition": false,
-                "mousePositionColor": "#999999",
-                "color": "#808080",
-                "stroke": "#ffffff",
-                "fontSize": 12,
-                "fontIsLeftAligned": false
-              },
-              "width": 1027,
-              "height": 30
-            },
-            {
-              "type": "horizontal-gene-annotations",
-              "server": "https://higlass.io/api/v1",
-              "tilesetUid": "P0PLbQMwTYGy-5uPIQid7A",
-              "uid": "gene-labels-track-1",
-              "options": {
-                "labelColor": "black",
-                "labelPosition": "hidden",
-                "plusStrandColor": "blue",
-                "minusStrandColor": "red",
-                "trackBorderWidth": 0,
-                "trackBorderColor": "black",
-                "showMousePosition": false,
-                "name": "gene-annotations-hg38_3d2Hebg.db",
-                "mousePositionColor": "#999999",
-                "fontSize": 10,
-                "labelBackgroundColor": "#ffffff",
-                "labelLeftMargin": 0,
-                "labelRightMargin": 0,
-                "labelTopMargin": 0,
-                "labelBottomMargin": 0,
-                "minHeight": 24,
-                "geneAnnotationHeight": 12,
-                "geneLabelPosition": "outside",
-                "geneStrandSpacing": 4
-              },
-              "width": 568,
-              "height": 70
-            },
-            {
-              "type": "horizontal-bar",
-              "server": "https://higlass.io/api/v1",
-              "tilesetUid": "HnOFdNKyQiWEnLkn4Wb1Ug",
-              "uid": "conservation-track-1",
-              "options": {
-                "labelColor": "black",
-                "labelPosition": "topLeft",
-                "axisPositionHorizontal": "right",
-                "barFillColor": "darkgreen",
-                "valueScaling": "linear",
-                "trackBorderWidth": 0,
-                "trackBorderColor": "black",
-                "labelTextOpacity": 0.4,
-                "barOpacity": 1,
-                "name": "conservation (hg38.phastCons100way.bw)",
-                "align": "bottom",
-                "labelLeftMargin": 0,
-                "labelRightMargin": 0,
-                "labelTopMargin": 0,
-                "labelBottomMargin": 0,
-                "labelShowResolution": false,
-                "axisLabelFormatting": "scientific",
-                "labelShowAssembly": true
-              },
-              "width": 568,
-              "height": 42
-            }
-          ],
-          "left": [],
-          "center": [
-            {
-              "type": "horizontal-multivec",
-              "uid": "cistrome-track-4-1",
-              "tilesetUid": "A62Qp9QtSdS4zhZxp6PHDw",
-              "server": "https://resgen.io/api/v1",
-              "options": {
-                "labelPosition": "hidden",
-                "labelColor": "black",
-                "labelTextOpacity": 0.4,
-                "valueScaling": "linear",
-                "trackBorderWidth": 0,
-                "trackBorderColor": "black",
-                "heatmapValueScaling": "log",
-                "name": "chr1_127epigenomes_15observedStates.12.multires.mv5",
-                "labelLeftMargin": 0,
-                "labelRightMargin": 0,
-                "labelTopMargin": 0,
-                "labelBottomMargin": 0,
-                "labelShowResolution": true,
-                "minHeight": 100,
-                "colorbarPosition": "topLeft",
-                "labelShowAssembly": true,
-                "colorbarBackgroundColor": "#ffffff",
-                "scaleStartPercent": "0.00000",
-                "scaleEndPercent": "1.00000"
-              },
-              "width": 1607,
-              "height": 482
-            }
-          ],
-          "bottom": [],
-          "right": [],
-          "whole": [],
-          "gallery": []
-        },
-        "layout": {
-          "w": 6,
-          "h": 71,
-          "x": 0,
-          "y": 0,
-          "moved": false,
-          "static": false
-        },
-        "uid": "cistrome-view-4-1"
-      },
-      {
-        "initialXDomain": [
-          2798816670.176793,
-          2798820426.0245523
-        ],
-        "initialYDomain": [
-          2004277709.5020556,
-          2004280657.842547
-        ],
-        "tracks": {
-          "top": [
-            {
-              "type": "horizontal-chromosome-labels",
-              "server": "https://higlass.io/api/v1",
-              "tilesetUid": "NyITQvZsS_mOFNlz5C2LJg",
-              "uid": "chromosome-labels-track-2",
-              "options": {
-                "showMousePosition": false,
-                "mousePositionColor": "#999999",
-                "color": "#808080",
-                "stroke": "#ffffff",
-                "fontSize": 12,
-                "fontIsLeftAligned": false
-              },
-              "width": 1027,
-              "height": 30
-            },
-            {
-              "type": "horizontal-gene-annotations",
-              "server": "https://higlass.io/api/v1",
-              "tilesetUid": "P0PLbQMwTYGy-5uPIQid7A",
-              "uid": "gene-labels-track-2",
-              "options": {
-                "labelColor": "black",
-                "labelPosition": "hidden",
-                "plusStrandColor": "blue",
-                "minusStrandColor": "red",
-                "trackBorderWidth": 0,
-                "trackBorderColor": "black",
-                "showMousePosition": false,
-                "name": "gene-annotations-hg38_3d2Hebg.db",
-                "mousePositionColor": "#999999",
-                "fontSize": 10,
-                "labelBackgroundColor": "#ffffff",
-                "labelLeftMargin": 0,
-                "labelRightMargin": 0,
-                "labelTopMargin": 0,
-                "labelBottomMargin": 0,
-                "minHeight": 24,
-                "geneAnnotationHeight": 12,
-                "geneLabelPosition": "outside",
-                "geneStrandSpacing": 4
-              },
-              "width": 568,
-              "height": 70
-            },
-            {
-              "type": "horizontal-bar",
-              "server": "https://higlass.io/api/v1",
-              "tilesetUid": "HnOFdNKyQiWEnLkn4Wb1Ug",
-              "uid": "conservation-track-2",
-              "options": {
-                "labelColor": "black",
-                "labelPosition": "topLeft",
-                "axisPositionHorizontal": "right",
-                "barFillColor": "darkgreen",
-                "valueScaling": "linear",
-                "trackBorderWidth": 0,
-                "trackBorderColor": "black",
-                "labelTextOpacity": 0.4,
-                "barOpacity": 1,
-                "name": "conservation (hg38.phastCons100way.bw)",
-                "align": "bottom",
-                "labelLeftMargin": 0,
-                "labelRightMargin": 0,
-                "labelTopMargin": 0,
-                "labelBottomMargin": 0,
-                "labelShowResolution": false,
-                "axisLabelFormatting": "scientific",
-                "labelShowAssembly": true
-              },
-              "width": 568,
-              "height": 42,
-              "aggregationModes": {
-                "mean": {
-                  "name": "Mean",
-                  "value": "mean"
-                },
-                "min": {
-                  "name": "Min",
-                  "value": "min"
-                },
-                "max": {
-                  "name": "Max",
-                  "value": "max"
-                },
-                "std": {
-                  "name": "Standard Deviation",
-                  "value": "std"
-                }
-              }
-            }
-          ],
-          "left": [],
-          "center": [
-            {
-              "type": "horizontal-multivec",
-              "uid": "cistrome-track-4-2",
-              "tilesetUid": "A62Qp9QtSdS4zhZxp6PHDw",
-              "server": "https://resgen.io/api/v1",
-              "options": {
-                "labelPosition": "hidden",
-                "labelColor": "black",
-                "labelTextOpacity": 0.4,
-                "valueScaling": "linear",
-                "trackBorderWidth": 0,
-                "trackBorderColor": "black",
-                "heatmapValueScaling": "log",
-                "name": "chr1_127epigenomes_15observedStates.12.multires.mv5",
-                "labelLeftMargin": 0,
-                "labelRightMargin": 0,
-                "labelTopMargin": 0,
-                "labelBottomMargin": 0,
-                "labelShowResolution": true,
-                "minHeight": 100,
-                "colorbarPosition": "topLeft",
-                "labelShowAssembly": true,
-                "colorbarBackgroundColor": "#ffffff",
-                "scaleStartPercent": "0.00000",
-                "scaleEndPercent": "1.00000"
-              },
-              "width": 1607,
-              "height": 482,
-              "resolutions": [
-                13107200,
-                6553600,
-                3276800,
-                1638400,
-                819200,
-                409600,
-                204800,
-                102400,
-                51200,
-                25600,
-                12800,
-                6400,
-                3200,
-                1600,
-                800,
-                400,
-                200
-              ]
-            }
-          ],
-          "bottom": [],
-          "right": [],
-          "whole": [],
-          "gallery": []
-        },
-        "layout": {
-          "w": 6,
-          "h": 71,
-          "x": 6,
-          "y": 0
-        },
-        "uid": "cistrome-view-4-2"
-      }
-    ],
-    "zoomLocks": {
-      "locksByViewUid": {},
-      "locksDict": {}
-    },
-    "locationLocks": {
-      "locksByViewUid": {},
-      "locksDict": {}
-    },
-    "valueScaleLocks": {
-      "locksByViewUid": {},
-      "locksDict": {}
-    }
+	"editable": true,
+	"zoomFixed": false,
+	"trackSourceServers": ["https://higlass.io/api/v1"],
+	"exportViewUrl": "/api/v1/viewconfs",
+	"views": [
+		{
+			"initialXDomain": [2803130185.875317, 2818358565.9840126],
+			"initialYDomain": [2001105169.029666, 2013059447.4149919],
+			"genomePositionSearchBoxVisible": true,
+			"genomePositionSearchBox": {
+				"autocompleteServer": "https://higlass.io/api/v1",
+				"chromInfoServer": "https://higlass.io/api/v1",
+				"visible": true,
+				"chromInfoId": "hg38"
+			},
+			"tracks": {
+				"top": [
+					{
+						"type": "horizontal-chromosome-labels",
+						"server": "https://higlass.io/api/v1",
+						"tilesetUid": "NyITQvZsS_mOFNlz5C2LJg",
+						"uid": "chromosome-labels-track-1",
+						"options": {
+							"showMousePosition": false,
+							"mousePositionColor": "#999999",
+							"color": "#808080",
+							"stroke": "#ffffff",
+							"fontSize": 12,
+							"fontIsLeftAligned": false
+						},
+						"width": 1027,
+						"height": 30
+					},
+					{
+						"type": "horizontal-gene-annotations",
+						"server": "https://higlass.io/api/v1",
+						"tilesetUid": "P0PLbQMwTYGy-5uPIQid7A",
+						"uid": "gene-labels-track-1",
+						"options": {
+							"labelColor": "black",
+							"labelPosition": "hidden",
+							"plusStrandColor": "blue",
+							"minusStrandColor": "red",
+							"trackBorderWidth": 0,
+							"trackBorderColor": "black",
+							"showMousePosition": false,
+							"name": "gene-annotations-hg38_3d2Hebg.db",
+							"mousePositionColor": "#999999",
+							"fontSize": 10,
+							"labelBackgroundColor": "#ffffff",
+							"labelLeftMargin": 0,
+							"labelRightMargin": 0,
+							"labelTopMargin": 0,
+							"labelBottomMargin": 0,
+							"minHeight": 24,
+							"geneAnnotationHeight": 12,
+							"geneLabelPosition": "outside",
+							"geneStrandSpacing": 4
+						},
+						"width": 568,
+						"height": 70
+					},
+					{
+						"type": "horizontal-bar",
+						"server": "https://higlass.io/api/v1",
+						"tilesetUid": "HnOFdNKyQiWEnLkn4Wb1Ug",
+						"uid": "conservation-track-1",
+						"options": {
+							"labelColor": "black",
+							"labelPosition": "topLeft",
+							"axisPositionHorizontal": "right",
+							"barFillColor": "darkgreen",
+							"valueScaling": "linear",
+							"trackBorderWidth": 0,
+							"trackBorderColor": "black",
+							"labelTextOpacity": 0.4,
+							"barOpacity": 1,
+							"name": "conservation (hg38.phastCons100way.bw)",
+							"align": "bottom",
+							"labelLeftMargin": 0,
+							"labelRightMargin": 0,
+							"labelTopMargin": 0,
+							"labelBottomMargin": 0,
+							"labelShowResolution": false,
+							"axisLabelFormatting": "scientific",
+							"labelShowAssembly": true
+						},
+						"width": 568,
+						"height": 42
+					}
+				],
+				"left": [],
+				"center": [
+					{
+						"type": "horizontal-multivec",
+						"uid": "cistrome-track-4-1",
+						"tilesetUid": "A62Qp9QtSdS4zhZxp6PHDw",
+						"server": "https://resgen.io/api/v1",
+						"options": {
+							"labelPosition": "hidden",
+							"labelColor": "black",
+							"labelTextOpacity": 0.4,
+							"valueScaling": "linear",
+							"trackBorderWidth": 0,
+							"trackBorderColor": "black",
+							"heatmapValueScaling": "log",
+							"name": "chr1_127epigenomes_15observedStates.12.multires.mv5",
+							"labelLeftMargin": 0,
+							"labelRightMargin": 0,
+							"labelTopMargin": 0,
+							"labelBottomMargin": 0,
+							"labelShowResolution": true,
+							"minHeight": 100,
+							"colorbarPosition": "topLeft",
+							"labelShowAssembly": true,
+							"colorbarBackgroundColor": "#ffffff",
+							"scaleStartPercent": "0.00000",
+							"scaleEndPercent": "1.00000"
+						},
+						"width": 1607,
+						"height": 482
+					}
+				],
+				"bottom": [],
+				"right": [],
+				"whole": [],
+				"gallery": []
+			},
+			"layout": {
+				"w": 6,
+				"h": 71,
+				"x": 0,
+				"y": 0,
+				"moved": false,
+				"static": false
+			},
+			"uid": "cistrome-view-4-1"
+		},
+		{
+			"initialXDomain": [2798816670.176793, 2798820426.0245523],
+			"initialYDomain": [2004277709.5020556, 2004280657.842547],
+			"tracks": {
+				"top": [
+					{
+						"type": "horizontal-chromosome-labels",
+						"server": "https://higlass.io/api/v1",
+						"tilesetUid": "NyITQvZsS_mOFNlz5C2LJg",
+						"uid": "chromosome-labels-track-2",
+						"options": {
+							"showMousePosition": false,
+							"mousePositionColor": "#999999",
+							"color": "#808080",
+							"stroke": "#ffffff",
+							"fontSize": 12,
+							"fontIsLeftAligned": false
+						},
+						"width": 1027,
+						"height": 30
+					},
+					{
+						"type": "horizontal-gene-annotations",
+						"server": "https://higlass.io/api/v1",
+						"tilesetUid": "P0PLbQMwTYGy-5uPIQid7A",
+						"uid": "gene-labels-track-2",
+						"options": {
+							"labelColor": "black",
+							"labelPosition": "hidden",
+							"plusStrandColor": "blue",
+							"minusStrandColor": "red",
+							"trackBorderWidth": 0,
+							"trackBorderColor": "black",
+							"showMousePosition": false,
+							"name": "gene-annotations-hg38_3d2Hebg.db",
+							"mousePositionColor": "#999999",
+							"fontSize": 10,
+							"labelBackgroundColor": "#ffffff",
+							"labelLeftMargin": 0,
+							"labelRightMargin": 0,
+							"labelTopMargin": 0,
+							"labelBottomMargin": 0,
+							"minHeight": 24,
+							"geneAnnotationHeight": 12,
+							"geneLabelPosition": "outside",
+							"geneStrandSpacing": 4
+						},
+						"width": 568,
+						"height": 70
+					},
+					{
+						"type": "horizontal-bar",
+						"server": "https://higlass.io/api/v1",
+						"tilesetUid": "HnOFdNKyQiWEnLkn4Wb1Ug",
+						"uid": "conservation-track-2",
+						"options": {
+							"labelColor": "black",
+							"labelPosition": "topLeft",
+							"axisPositionHorizontal": "right",
+							"barFillColor": "darkgreen",
+							"valueScaling": "linear",
+							"trackBorderWidth": 0,
+							"trackBorderColor": "black",
+							"labelTextOpacity": 0.4,
+							"barOpacity": 1,
+							"name": "conservation (hg38.phastCons100way.bw)",
+							"align": "bottom",
+							"labelLeftMargin": 0,
+							"labelRightMargin": 0,
+							"labelTopMargin": 0,
+							"labelBottomMargin": 0,
+							"labelShowResolution": false,
+							"axisLabelFormatting": "scientific",
+							"labelShowAssembly": true
+						},
+						"width": 568,
+						"height": 42,
+						"aggregationModes": {
+							"mean": {
+								"name": "Mean",
+								"value": "mean"
+							},
+							"min": {
+								"name": "Min",
+								"value": "min"
+							},
+							"max": {
+								"name": "Max",
+								"value": "max"
+							},
+							"std": {
+								"name": "Standard Deviation",
+								"value": "std"
+							}
+						}
+					}
+				],
+				"left": [],
+				"center": [
+					{
+						"type": "horizontal-multivec",
+						"uid": "cistrome-track-4-2",
+						"tilesetUid": "A62Qp9QtSdS4zhZxp6PHDw",
+						"server": "https://resgen.io/api/v1",
+						"options": {
+							"labelPosition": "hidden",
+							"labelColor": "black",
+							"labelTextOpacity": 0.4,
+							"valueScaling": "linear",
+							"trackBorderWidth": 0,
+							"trackBorderColor": "black",
+							"heatmapValueScaling": "log",
+							"name": "chr1_127epigenomes_15observedStates.12.multires.mv5",
+							"labelLeftMargin": 0,
+							"labelRightMargin": 0,
+							"labelTopMargin": 0,
+							"labelBottomMargin": 0,
+							"labelShowResolution": true,
+							"minHeight": 100,
+							"colorbarPosition": "topLeft",
+							"labelShowAssembly": true,
+							"colorbarBackgroundColor": "#ffffff",
+							"scaleStartPercent": "0.00000",
+							"scaleEndPercent": "1.00000"
+						},
+						"width": 1607,
+						"height": 482,
+						"resolutions": [
+							13107200, 6553600, 3276800, 1638400, 819200, 409600, 204800, 102400, 51200, 25600, 12800,
+							6400, 3200, 1600, 800, 400, 200
+						]
+					}
+				],
+				"bottom": [],
+				"right": [],
+				"whole": [],
+				"gallery": []
+			},
+			"layout": {
+				"w": 6,
+				"h": 71,
+				"x": 6,
+				"y": 0
+			},
+			"uid": "cistrome-view-4-2"
+		}
+	],
+	"zoomLocks": {
+		"locksByViewUid": {},
+		"locksDict": {}
+	},
+	"locationLocks": {
+		"locksByViewUid": {},
+		"locksDict": {}
+	},
+	"valueScaleLocks": {
+		"locksByViewUid": {},
+		"locksDict": {}
+	}
 }

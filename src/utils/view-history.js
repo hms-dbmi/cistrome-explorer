@@ -1,5 +1,5 @@
-import isEqual from "lodash/isEqual";
-import { processWrapperOptions } from "./options";
+import isEqual from 'lodash/isEqual';
+import { processWrapperOptions } from './options';
 
 /**
  * Find the difference between two view options.
@@ -10,8 +10,5 @@ import { processWrapperOptions } from "./options";
  * For example, this function can return "filter" when a filter is newly applied.
  */
 export function diffViewOptions(o1, o2) {
-    return !isEqual(
-        processWrapperOptions(o1),
-        processWrapperOptions(o2)
-    );
+	return !isEqual(processWrapperOptions(o1), processWrapperOptions(o2));
 }

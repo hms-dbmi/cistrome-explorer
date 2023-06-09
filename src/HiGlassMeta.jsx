@@ -1,10 +1,10 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef } from 'react';
 
-import { InfoProvider } from "./utils/contexts.jsx";
-import HiGlassMetaConsumer from "./HiGlassMetaConsumer.jsx";
+import { InfoProvider } from './utils/contexts.jsx';
+import HiGlassMetaConsumer from './HiGlassMetaConsumer.jsx';
 
 /**
- * HiGlassMeta, a React component that wraps around HiGlass 
+ * HiGlassMeta, a React component that wraps around HiGlass
  * to provide interactive metadata visualizations.
  * @prop {object} viewConfig A HiGlass viewConfig object.
  * @prop {(object|object[])} options Options for the wrapper component.
@@ -16,13 +16,13 @@ import HiGlassMetaConsumer from "./HiGlassMetaConsumer.jsx";
  *  options={wrapperOptions}
  * />
  */
-const HiGlassMeta = forwardRef((props, ref) => { 
-    // console.log("HiGlassMeta.render");
-    return (
-        <InfoProvider>
-            <HiGlassMetaConsumer ref={ref} {...props} />
-        </InfoProvider>
-    );
+const HiGlassMeta = forwardRef((props, ref) => {
+	// console.log("HiGlassMeta.render");
+	return (
+		<InfoProvider>
+			<HiGlassMetaConsumer ref={ref} {...props} />
+		</InfoProvider>
+	);
 });
 
 export default HiGlassMeta;

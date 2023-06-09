@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
-import PubSub from "pubsub-js";
+import React, { useEffect, useState } from 'react';
+import PubSub from 'pubsub-js';
 
-import { EVENT } from "./utils/constants.js";
+import { EVENT } from './utils/constants.js';
 
-import "./Tooltip.scss";
+import './Tooltip.scss';
 
 export function destroyTooltip() {
-    PubSub.publish(EVENT.TOOLTIP, {
-        x: null,
-        y: null,
-        content: null
-    });
+	PubSub.publish(EVENT.TOOLTIP, {
+		x: null,
+		y: null,
+		content: null
+	});
 }
 
 /**
@@ -21,17 +21,14 @@ export function destroyTooltip() {
  * @param {boolean} helpActivated Whether to show tooltip instruction or not.
  */
 export function publishHelpTooltip(e, title, subtitle, helpActivated) {
-    if(helpActivated && title && subtitle) {
-        PubSub.publish(EVENT.TOOLTIP, {
-            x: e.clientX,
-            y: e.clientY,
-            content: <TooltipContent 
-                title={"💡 " + title}
-                value={subtitle}
-            />,
-            help: true
-        });
-    }
+	if (helpActivated && title && subtitle) {
+		PubSub.publish(EVENT.TOOLTIP, {
+			x: e.clientX,
+			y: e.clientY,
+			content: <TooltipContent title={'💡 ' + title} value={subtitle} />,
+			help: true
+		});
+	}
 }
 
 /**
@@ -41,24 +38,20 @@ export function publishHelpTooltip(e, title, subtitle, helpActivated) {
  * @prop {string} color A color related to the value/title.
  */
 export function TooltipContent(props) {
-    const { title, value, color: background, warning, help } = props;
-    return (
-        <div className="hm-tooltip-content">
-            <div className="hm-tooltip-title">{title}</div>
-            <div className="hm-tooltip-content-group">
-                {background ? 
-                    <div className="hm-tooltip-color-container">
-                        <div className="hm-tooltip-color" style={{ background }}/>
-                    </div>
-                    : null
-                }
-                {value ? 
-                    <div className={warning ? "hm-tooltip-warning" : ""}>{value}</div>
-                    : null
-                }
-            </div>
-        </div>
-    );
+	const { title, value, color: background, warning, help } = props;
+	return (
+		<div className="hm-tooltip-content">
+			<div className="hm-tooltip-title">{title}</div>
+			<div className="hm-tooltip-content-group">
+				{background ? (
+					<div className="hm-tooltip-color-container">
+						<div className="hm-tooltip-color" style={{ background }} />
+					</div>
+				) : null}
+				{value ? <div className={warning ? 'hm-tooltip-warning' : ''}>{value}</div> : null}
+			</div>
+		</div>
+	);
 }
 
 /**
@@ -67,35 +60,34 @@ export function TooltipContent(props) {
  * <Tooltip />
  */
 export default function Tooltip() {
+	const [left, setLeft] = useState(null);
+	const [top, setTop] = useState(null);
+	const [content, setContent] = useState('');
+	const [help, setHelp] = useState(false);
 
-    const [left, setLeft] = useState(null);
-    const [top, setTop] = useState(null);
-    const [content, setContent] = useState("");
-    const [help, setHelp] = useState(false);
+	useEffect(() => {
+		const tooltipToken = PubSub.subscribe(EVENT.TOOLTIP, (msg, data) => {
+			setLeft(data.x);
+			setTop(data.y);
+			setContent(data.content);
+			setHelp(data.help);
+		});
 
-    useEffect(() => {
-        const tooltipToken = PubSub.subscribe(EVENT.TOOLTIP, (msg, data) => {
-            setLeft(data.x);
-            setTop(data.y);
-            setContent(data.content);
-            setHelp(data.help);
-        });
+		return () => {
+			PubSub.unsubscribe(tooltipToken);
+		};
+	});
 
-        return () => {
-            PubSub.unsubscribe(tooltipToken);
-        };
-    });
-
-    return (
-        <div
-            className={"hm-tooltip " + (help ? "hm-tooltip-help" : "")}
-            style={{
-                display: ((left !== null && top !== null) ? "inline-block" : "none"),
-                top: `${Math.min(document.body.scrollHeight - 100, top)}px`,
-                left: `${Math.min(document.body.scrollWidth - 200, left)}px`,
-            }}
-        >
-            {content}
-        </div>
-    );
+	return (
+		<div
+			className={'hm-tooltip ' + (help ? 'hm-tooltip-help' : '')}
+			style={{
+				display: left !== null && top !== null ? 'inline-block' : 'none',
+				top: `${Math.min(document.body.scrollHeight - 100, top)}px`,
+				left: `${Math.min(document.body.scrollWidth - 200, left)}px`
+			}}
+		>
+			{content}
+		</div>
+	);
 }

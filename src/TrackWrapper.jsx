@@ -1,19 +1,19 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from 'react';
 
-import { InfoContext, ACTION } from "./utils/contexts.jsx";
-import TrackRowInfo from "./TrackRowInfo.jsx";
-import TrackRowHighlight from "./TrackRowHighlight.jsx";
-import TrackRowZoomOverlay from "./TrackRowZoomOverlay.jsx";
+import { InfoContext, ACTION } from './utils/contexts.jsx';
+import TrackRowInfo from './TrackRowInfo.jsx';
+import TrackRowHighlight from './TrackRowHighlight.jsx';
+import TrackRowZoomOverlay from './TrackRowZoomOverlay.jsx';
 
 // TODO: remove the below fakedata import.
 //       see https://github.com/hms-dbmi/cistrome-explorer/issues/26
-import fakedata from "./demo/fakedata/index.js";
-import { getAggregatedRowInfo } from "./utils/select-rows.js";
+import fakedata from './demo/fakedata/index.js';
+import { getAggregatedRowInfo } from './utils/select-rows.js';
 
 /**
  * Wrapper component associated with a particular HiGlass track.
  * @prop {object} options Options associated with the track. Contains values for all possible options.
- * @prop {array} baseRowInfo 
+ * @prop {array} baseRowInfo
  * @prop {object} multivecTrack A `horizontal-multivec` track object returned by `hgc.api.getTrackObject()`.
  * @prop {string} multivecTrackViewId The viewId for the multivecTrack.
  * @prop {string} multivecTrackTrackId The trackId for the multivecTrack.
@@ -29,228 +29,236 @@ import { getAggregatedRowInfo } from "./utils/select-rows.js";
  * @prop {function} drawRegister The function for child components to call to register their draw functions.
  */
 export default function TrackWrapper(props) {
-    const {
-        options,
-        baseRowInfo,
-        multivecTrack,
-        multivecTrackViewId,
-        multivecTrackTrackId,
-        onAddTrack,
-        onSortRows,
-        onHighlightRows,
-        onZoomRows,
-        onFilterRows,
-        onMetadataInit,
-        isWheelListening,
-        helpActivated,
-        rowAggregated,
-        drawRegister
-    } = props;
+	const {
+		options,
+		baseRowInfo,
+		multivecTrack,
+		multivecTrackViewId,
+		multivecTrackTrackId,
+		onAddTrack,
+		onSortRows,
+		onHighlightRows,
+		onZoomRows,
+		onFilterRows,
+		onMetadataInit,
+		isWheelListening,
+		helpActivated,
+		rowAggregated,
+		drawRegister
+	} = props;
 
-    const context = useContext(InfoContext);
+	const context = useContext(InfoContext);
 
-    const [shouldCallOnMetadataLoad, setShouldCallOnMetadataLoad] = useState(false);
+	const [shouldCallOnMetadataLoad, setShouldCallOnMetadataLoad] = useState(false);
 
-    useEffect(() => {
-        if(shouldCallOnMetadataLoad) {
-            onMetadataInit();
-        }
-    }, [shouldCallOnMetadataLoad, multivecTrackViewId, multivecTrackTrackId]);
+	useEffect(() => {
+		if (shouldCallOnMetadataLoad) {
+			onMetadataInit();
+		}
+	}, [shouldCallOnMetadataLoad, multivecTrackViewId, multivecTrackTrackId]);
 
-    // All hooks must be above this return statement, since they need to be executed in the same order.
-    if(!multivecTrack || !multivecTrack.tilesetInfo || !multivecTrack.tilesetInfo.shape) {
-        // The track or track tileset info has not yet loaded.
-        return null;
-    }
-    
-    // Attributes to visualize based on the position    
-    const leftAttrs = options.rowInfoAttributes.filter(d => d.position === "left");
-    const rightAttrs = options.rowInfoAttributes.filter(d => d.position === "right");
+	// All hooks must be above this return statement, since they need to be executed in the same order.
+	if (!multivecTrack || !multivecTrack.tilesetInfo || !multivecTrack.tilesetInfo.shape) {
+		// The track or track tileset info has not yet loaded.
+		return null;
+	}
 
-    const trackX = multivecTrack.position[0];
-    const trackY = multivecTrack.position[1];
-    const trackWidth = multivecTrack.dimensions[0];
-    const trackHeight = multivecTrack.dimensions[1];
-    const totalNumRows = multivecTrack.tilesetInfo.shape[1];
+	// Attributes to visualize based on the position
+	const leftAttrs = options.rowInfoAttributes.filter(d => d.position === 'left');
+	const rightAttrs = options.rowInfoAttributes.filter(d => d.position === 'right');
 
-    // Attempt to obtain metadata values from the `tilesetInfo` field of the track.
-    let rowInfo = [];
-    try {
-        // Obtain the row_infos (array of JSON objects, one object per row) from the track's tileset info.
-        if(baseRowInfo) {
-            rowInfo = baseRowInfo.slice(0, totalNumRows);
-        } else if(["meeting-2020-04-29-track"].includes(multivecTrackTrackId)) {
-            // TODO: use the below line to use the real metadata coming from the HiGlass Server tileset_info.
-            //       see https://github.com/hms-dbmi/cistrome-explorer/issues/26
-            rowInfo = multivecTrack.tilesetInfo.row_infos.map(d => (typeof d === "string" ? JSON.parse(d) : d));
-        } else if(Object.keys(fakedata).includes(multivecTrack.id)) {
-            // TODO: remove this else clause.
-            //       see https://github.com/hms-dbmi/cistrome-explorer/issues/26
-            rowInfo = fakedata[multivecTrack.id].tilesetInfo.rowInfo.slice(0, totalNumRows);
-        } else {
-            rowInfo = multivecTrack.tilesetInfo.row_infos;
-        }
-        
-        const updateRowInfo = () => {
-            if(!context.state[multivecTrackViewId] || !context.state[multivecTrackViewId][multivecTrackTrackId]) {
-                context.dispatch({
-                    type: ACTION.SET_ROW_INFO,
-                    viewId: multivecTrackViewId,
-                    trackId: multivecTrackTrackId,
-                    rowInfo: rowInfo
-                });
-                setShouldCallOnMetadataLoad(true);
-            }
-        }
+	const trackX = multivecTrack.position[0];
+	const trackY = multivecTrack.position[1];
+	const trackWidth = multivecTrack.dimensions[0];
+	const trackHeight = multivecTrack.dimensions[1];
+	const totalNumRows = multivecTrack.tilesetInfo.shape[1];
 
-        // Using the GSM ids, extract quality scores using Cistrome APIs
-        if(rowInfo && rowInfo[0] && Object.keys(rowInfo[0]).includes("GSM")) {
-            const metaApiUrl = `http://develop.cistrome.org/cistrome/samples?external_ids=${rowInfo.map(d => d.GSM).join(',')}&fields=qcs&limit=${300}&format=json`;
-            fetch(metaApiUrl)
-                .then((response) => {
-                    if (!response.ok) {
-                        return new Promise((resolve, reject) => {
-                            reject(`Error: ${response.statusText}`);
-                        });
-                    }
-                    return response.json();
-                })
-                .then((data) => {
-                    const { samples } = data;
+	// Attempt to obtain metadata values from the `tilesetInfo` field of the track.
+	let rowInfo = [];
+	try {
+		// Obtain the row_infos (array of JSON objects, one object per row) from the track's tileset info.
+		if (baseRowInfo) {
+			rowInfo = baseRowInfo.slice(0, totalNumRows);
+		} else if (['meeting-2020-04-29-track'].includes(multivecTrackTrackId)) {
+			// TODO: use the below line to use the real metadata coming from the HiGlass Server tileset_info.
+			//       see https://github.com/hms-dbmi/cistrome-explorer/issues/26
+			rowInfo = multivecTrack.tilesetInfo.row_infos.map(d => (typeof d === 'string' ? JSON.parse(d) : d));
+		} else if (Object.keys(fakedata).includes(multivecTrack.id)) {
+			// TODO: remove this else clause.
+			//       see https://github.com/hms-dbmi/cistrome-explorer/issues/26
+			rowInfo = fakedata[multivecTrack.id].tilesetInfo.rowInfo.slice(0, totalNumRows);
+		} else {
+			rowInfo = multivecTrack.tilesetInfo.row_infos;
+		}
 
-                    // Get Unique Metadata
-                    const uniqueQcNames = [];
-                    samples.forEach(sample => {
-                        sample.qcs.map(qc => qc.metric_name).forEach(qcName => {                                
-                            if(uniqueQcNames.indexOf(qcName) === -1) {
-                                uniqueQcNames.push(qcName);
-                            }
-                        });
-                    });
-                    
-                    // Add QCs
-                    rowInfo.forEach(r => {
-                        const sampleIdx = samples.findIndex(d => d.external_id === r.GSM);
-                        if(sampleIdx !== -1) {
-                            uniqueQcNames.forEach(qcName => {
-                                const qcIdx = samples[sampleIdx].qcs.findIndex(d => d.metric_name === qcName);
-                                if(qcIdx !== -1) {
-                                    r[qcName] = samples[sampleIdx].qcs[qcIdx].value;
-                                } else {
-                                    r[qcName] = null;
-                                }
-                            });                    
-                        }   
-                    });
-                    
-                    updateRowInfo();
-                })
-                .catch(error => {
-                    console.warn(error);
+		const updateRowInfo = () => {
+			if (!context.state[multivecTrackViewId] || !context.state[multivecTrackViewId][multivecTrackTrackId]) {
+				context.dispatch({
+					type: ACTION.SET_ROW_INFO,
+					viewId: multivecTrackViewId,
+					trackId: multivecTrackTrackId,
+					rowInfo: rowInfo
+				});
+				setShouldCallOnMetadataLoad(true);
+			}
+		};
 
-                    updateRowInfo();
-                });
-        } else {
-            updateRowInfo();
-        }
-    } catch(e) {
-        console.log(e);
-    }
+		// Using the GSM ids, extract quality scores using Cistrome APIs
+		if (rowInfo && rowInfo[0] && Object.keys(rowInfo[0]).includes('GSM')) {
+			const metaApiUrl = `http://develop.cistrome.org/cistrome/samples?external_ids=${rowInfo
+				.map(d => d.GSM)
+				.join(',')}&fields=qcs&limit=${300}&format=json`;
+			fetch(metaApiUrl)
+				.then(response => {
+					if (!response.ok) {
+						return new Promise((resolve, reject) => {
+							reject(`Error: ${response.statusText}`);
+						});
+					}
+					return response.json();
+				})
+				.then(data => {
+					const { samples } = data;
 
-    const selectedRows = context.state[multivecTrackViewId]?.[multivecTrackTrackId]?.selectedRows;
-    const highlitRows = context.state[multivecTrackViewId]?.[multivecTrackTrackId]?.highlitRows;
+					// Get Unique Metadata
+					const uniqueQcNames = [];
+					samples.forEach(sample => {
+						sample.qcs
+							.map(qc => qc.metric_name)
+							.forEach(qcName => {
+								if (uniqueQcNames.indexOf(qcName) === -1) {
+									uniqueQcNames.push(qcName);
+								}
+							});
+					});
 
-    // Transformed `rowInfo` after aggregating, filtering, and sorting rows.
-    // Each element of `transformedRowInfo` is either a JSON Object or an array of JSON Object
-    // containing information about a single row or multiple rows that are aggregated together, respectively.
-    const transformedRowInfo = (!selectedRows ? rowInfo : selectedRows.map(
-        indexOrIndices => Array.isArray(indexOrIndices)
-            ? rowInfo.filter((d, i) => indexOrIndices.includes(i))
-            : rowInfo[indexOrIndices]
-    ));
-    
-    // Aggregated, but not filtered, `rowInfo`.
-    // This is being used for filtering interfaces since we want to allow users to filter data
-    // based on the aggregated rows, not on the original and individual rows.
-    const aggregatedRowInfo = getAggregatedRowInfo(rowInfo, options.rowAggregate).map(d => d[1]);
+					// Add QCs
+					rowInfo.forEach(r => {
+						const sampleIdx = samples.findIndex(d => d.external_id === r.GSM);
+						if (sampleIdx !== -1) {
+							uniqueQcNames.forEach(qcName => {
+								const qcIdx = samples[sampleIdx].qcs.findIndex(d => d.metric_name === qcName);
+								if (qcIdx !== -1) {
+									r[qcName] = samples[sampleIdx].qcs[qcIdx].value;
+								} else {
+									r[qcName] = null;
+								}
+							});
+						}
+					});
 
-    // console.log("TrackWrapper.render");
-    return (
-        <div className="hm-track-wrapper">
-            {leftAttrs.length !== 0 ? 
-                (<TrackRowInfo
-                    originalRowInfo={rowInfo}
-                    rowInfo={aggregatedRowInfo}
-                    transformedRowInfo={transformedRowInfo}
-                    selectedRows={selectedRows}
-                    highlitRows={highlitRows}
-                    viewId={multivecTrackViewId}
-                    trackId={multivecTrackTrackId}
-                    trackX={trackX - 12}
-                    trackY={trackY}
-                    trackHeight={trackHeight}
-                    trackWidth={trackWidth}
-                    rowInfoAttributes={leftAttrs}
-                    rowSort={options.rowSort}
-                    rowFilter={options.rowFilter}
-                    rowHighlight={options.rowHighlight}
-                    rowInfoPosition="left"
-                    onAddTrack={onAddTrack}
-                    onSortRows={onSortRows}
-                    onHighlightRows={onHighlightRows}
-                    onFilterRows={onFilterRows}
-                    helpActivated={helpActivated}
-                    rowAggregated={rowAggregated}
-                    drawRegister={(key, draw, options) => {
-                        drawRegister(`${key}-left`, draw, options);
-                    }}
-                />) : null}
-            {rightAttrs.length !== 0 ? 
-                (<TrackRowInfo
-                    originalRowInfo={rowInfo}
-                    rowInfo={aggregatedRowInfo}
-                    transformedRowInfo={transformedRowInfo}
-                    selectedRows={selectedRows}
-                    highlitRows={highlitRows}
-                    viewId={multivecTrackViewId}
-                    trackId={multivecTrackTrackId}
-                    trackX={trackX + 12}
-                    trackY={trackY}
-                    trackHeight={trackHeight}
-                    trackWidth={trackWidth}
-                    rowInfoAttributes={rightAttrs}
-                    rowSort={options.rowSort}
-                    rowFilter={options.rowFilter}
-                    rowHighlight={options.rowHighlight}
-                    rowInfoPosition="right"
-                    onAddTrack={onAddTrack}
-                    onSortRows={onSortRows}
-                    onHighlightRows={onHighlightRows}
-                    onFilterRows={onFilterRows}
-                    helpActivated={helpActivated}
-                    rowAggregated={rowAggregated}
-                    drawRegister={(key, draw, options) => {
-                        drawRegister(`${key}-right`, draw, options);
-                    }}
-                />) : null}
-            <TrackRowHighlight 
-                trackX={trackX}
-                trackY={trackY}
-                trackHeight={trackHeight}
-                trackWidth={trackWidth}
-                totalNumRows={totalNumRows}
-                selectedRows={selectedRows}
-                highlitRows={highlitRows}
-                drawRegister={drawRegister}
-            />
-            <TrackRowZoomOverlay
-                trackX={trackX}
-                trackY={trackY}
-                trackHeight={trackHeight}
-                trackWidth={trackWidth}
-                isWheelListening={isWheelListening}
-                onZoomRows={onZoomRows}
-            />
-        </div>
-    );
+					updateRowInfo();
+				})
+				.catch(error => {
+					console.warn(error);
+
+					updateRowInfo();
+				});
+		} else {
+			updateRowInfo();
+		}
+	} catch (e) {
+		console.log(e);
+	}
+
+	const selectedRows = context.state[multivecTrackViewId]?.[multivecTrackTrackId]?.selectedRows;
+	const highlitRows = context.state[multivecTrackViewId]?.[multivecTrackTrackId]?.highlitRows;
+
+	// Transformed `rowInfo` after aggregating, filtering, and sorting rows.
+	// Each element of `transformedRowInfo` is either a JSON Object or an array of JSON Object
+	// containing information about a single row or multiple rows that are aggregated together, respectively.
+	const transformedRowInfo = !selectedRows
+		? rowInfo
+		: selectedRows.map(indexOrIndices =>
+				Array.isArray(indexOrIndices)
+					? rowInfo.filter((d, i) => indexOrIndices.includes(i))
+					: rowInfo[indexOrIndices]
+		  );
+
+	// Aggregated, but not filtered, `rowInfo`.
+	// This is being used for filtering interfaces since we want to allow users to filter data
+	// based on the aggregated rows, not on the original and individual rows.
+	const aggregatedRowInfo = getAggregatedRowInfo(rowInfo, options.rowAggregate).map(d => d[1]);
+
+	// console.log("TrackWrapper.render");
+	return (
+		<div className="hm-track-wrapper">
+			{leftAttrs.length !== 0 ? (
+				<TrackRowInfo
+					originalRowInfo={rowInfo}
+					rowInfo={aggregatedRowInfo}
+					transformedRowInfo={transformedRowInfo}
+					selectedRows={selectedRows}
+					highlitRows={highlitRows}
+					viewId={multivecTrackViewId}
+					trackId={multivecTrackTrackId}
+					trackX={trackX - 12}
+					trackY={trackY}
+					trackHeight={trackHeight}
+					trackWidth={trackWidth}
+					rowInfoAttributes={leftAttrs}
+					rowSort={options.rowSort}
+					rowFilter={options.rowFilter}
+					rowHighlight={options.rowHighlight}
+					rowInfoPosition="left"
+					onAddTrack={onAddTrack}
+					onSortRows={onSortRows}
+					onHighlightRows={onHighlightRows}
+					onFilterRows={onFilterRows}
+					helpActivated={helpActivated}
+					rowAggregated={rowAggregated}
+					drawRegister={(key, draw, options) => {
+						drawRegister(`${key}-left`, draw, options);
+					}}
+				/>
+			) : null}
+			{rightAttrs.length !== 0 ? (
+				<TrackRowInfo
+					originalRowInfo={rowInfo}
+					rowInfo={aggregatedRowInfo}
+					transformedRowInfo={transformedRowInfo}
+					selectedRows={selectedRows}
+					highlitRows={highlitRows}
+					viewId={multivecTrackViewId}
+					trackId={multivecTrackTrackId}
+					trackX={trackX + 12}
+					trackY={trackY}
+					trackHeight={trackHeight}
+					trackWidth={trackWidth}
+					rowInfoAttributes={rightAttrs}
+					rowSort={options.rowSort}
+					rowFilter={options.rowFilter}
+					rowHighlight={options.rowHighlight}
+					rowInfoPosition="right"
+					onAddTrack={onAddTrack}
+					onSortRows={onSortRows}
+					onHighlightRows={onHighlightRows}
+					onFilterRows={onFilterRows}
+					helpActivated={helpActivated}
+					rowAggregated={rowAggregated}
+					drawRegister={(key, draw, options) => {
+						drawRegister(`${key}-right`, draw, options);
+					}}
+				/>
+			) : null}
+			<TrackRowHighlight
+				trackX={trackX}
+				trackY={trackY}
+				trackHeight={trackHeight}
+				trackWidth={trackWidth}
+				totalNumRows={totalNumRows}
+				selectedRows={selectedRows}
+				highlitRows={highlitRows}
+				drawRegister={drawRegister}
+			/>
+			<TrackRowZoomOverlay
+				trackX={trackX}
+				trackY={trackY}
+				trackHeight={trackHeight}
+				trackWidth={trackWidth}
+				isWheelListening={isWheelListening}
+				onZoomRows={onZoomRows}
+			/>
+		</div>
+	);
 }
