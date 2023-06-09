@@ -9,10 +9,10 @@
   },
   "homepage": "http://cisvis.gehlenborglab.org",
   "dependencies": {
+    "@vitessce/zarr": "^3.0.0",
     "ajv": "^6.11.0",
     "d3": "^5.15.0",
     "d3-delaunay": "^5.2.1",
-    "eslint-plugin-react": "^7.26.1",
     "gosling-theme": "^0.0.10",
     "higlass-multivec": "0.2.8",
     "higlass-register": "^0.3.0",
@@ -24,55 +24,40 @@
     "vega-scale": "^6.0.0"
   },
   "peerDependencies": {
-    "gosling.js": "^0.9.8",
-    "higlass": "1.11.5",
+    "gosling.js": "^0.9.31",
+    "higlass": "^1.12.4",
     "pixi.js": "^5.0.3",
     "react": "^16.12.0",
     "react-bootstrap": "0.32.1",
     "react-dom": "^16.12.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.8.4",
-    "@babel/preset-env": "^7.8.4",
-    "@babel/preset-react": "^7.8.4",
-    "@rollup/plugin-commonjs": "^11.0.1",
-    "@rollup/plugin-html": "^0.1.1",
-    "@rollup/plugin-json": "^4.0.1",
-    "@rollup/plugin-node-resolve": "^7.0.0",
-    "babel-jest": "^25.1.0",
+    "@vitejs/plugin-react": "^4.0.0",
     "deep-diff": "^1.0.2",
     "documentation": "^12.1.4",
     "eslint": "^8.1.0",
+    "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-jest": "^25.2.2",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.32.2",
     "gh-pages": "^3.2.3",
-    "husky": "^7.0.4",
-    "jest": "^25.1.0",
+    "gosling.js": "^0.9.31",
+    "higlass": "^1.12.4",
     "levenary": "^1.1.1",
-    "rollup": "^1.29.1",
-    "rollup-plugin-babel": "^4.3.3",
-    "rollup-plugin-livereload": "^1.0.4",
-    "rollup-plugin-scss": "^2.1.0",
-    "rollup-plugin-serve": "^1.0.1",
-    "rollup-plugin-terser": "^5.2.0",
-    "rollup-plugin-visualizer": "^3.3.1",
-    "sass": "^1.25.0"
+    "pixi.js": "^5.0.3",
+    "prettier": "^2.8.8",
+    "sass": "^1.25.0",
+    "vite": "^4.3.9",
+    "vitest": "^0.32.0"
   },
   "scripts": {
-    "start": "rollup -c rollup.demo.config.js --environment NODE_ENV:development --watch",
-    "build": "rollup -c rollup.demo.config.js --environment NODE_ENV:production",
-    "build-pkg": "rollup -c rollup.pkg.config.js --environment NODE_ENV:production",
+    "start": "vite --port 8000",
+    "build": "vite build",
+    "preview": "vite preview --port 8000",
     "test": "jest -c jest.config.js",
-    "format": "eslint src --fix",
+    "format": "eslint src --fix && prettier --write *",
     "docs": "documentation build src/** -f html -o build-docs --config .documentation.yml",
     "predeploy": "yarn build; echo \"cisvis.gehlenborglab.org\" >> build-demo/CNAME",
     "deploy": "gh-pages -d build-demo"
-  },
-  "main": "build-pkg/index.umd.js",
-  "unpkg": "build-pkg/index.min.js",
-  "module": "build-pkg/index.esm.js",
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn format && git add ."
-    }
   }
 }

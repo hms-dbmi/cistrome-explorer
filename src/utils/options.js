@@ -89,6 +89,10 @@ const baseSchema = {
                     "type": "string",
                     "description": "A key for an alternative name to display in axis label elements."
                 },
+                "url": {
+                    "type": "string",
+                    "description": "The URL to the gene expression data"
+                },
                 "shortName": {
                     "type": "string",
                     "description": "A short version of an alternative name to display in axis label elements when they are assigned to narrow space."
@@ -103,7 +107,7 @@ const baseSchema = {
                 },
                 "type": {
                     "type": "string",
-                    "enum": ["nominal", "quantitative", "url", "tree", "nominal-dynamic"],
+                    "enum": ["nominal", "quantitative", "url", "tree", "nominal-dynamic", "expression"],
                     "description": "The data type of a field"
                 },
                 "aggFunction": {
@@ -151,7 +155,7 @@ const baseSchema = {
                 },
                 "type": {
                     "type": "string",
-                    "enum": ["nominal", "quantitative", "url", "tree"],
+                    "enum": ["nominal", "quantitative", "url", "tree", "expression"],
                     "description": "The data type of a field"
                 },
                 "order": {

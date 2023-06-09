@@ -1,0 +1,12 @@
+docs/
+build-demo/
+build/
+pipelines/
+nodebooks/
+**/node_modules/*
+*.lock
+LICENSE
+*.log
+*.yaml
+*.yml
+**/dist/*
