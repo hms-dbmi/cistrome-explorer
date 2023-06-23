@@ -76,6 +76,10 @@ export default function TrackRowInfoVisDendrogram(props) {
 	const ancestor = useRef();
 	const minSimilarity = useRef();
 
+	const initialMinSimBarLeft = useMemo(() => {
+		return isLeft ? 20 : width - 20;
+	}, [isLeft, width]);
+	
 	const [maxDistance, setMaxDistance] = useState(transformedRowInfo?.[0]?.[field]?.[0]?.dist);
 	const [highlightNodeX, setHighlightNodeX] = useState(null);
 	const [highlightNodeY, setHighlightNodeY] = useState(null);
@@ -86,10 +90,6 @@ export default function TrackRowInfoVisDendrogram(props) {
 	const axisHeight = 30;
 	const titleAreaWidth = 20;
 	const visWidth = width - titleAreaWidth;
-
-	const initialMinSimBarLeft = useMemo(() => {
-		return isLeft ? 20 : width - 20;
-	}, [isLeft, width]);
 
 	useEffect(() => {
 		if (!filterInfo || filterInfo.length === 0) {
