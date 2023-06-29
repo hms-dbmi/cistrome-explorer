@@ -1,0 +1,21 @@
+#ges-available-genes ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#ges-available-genes li:not(:first-of-type) {
+    border-bottom: 1px solid lightgrey;
+}
+
+#ges-available-genes li:hover {
+    background-color: lightgrey;
+    cursor: pointer;
+}
+
+#ges-selected-genes {
+    position: absolute;
+    right: 0;
+    top: 0;
+    resize: none;
+}

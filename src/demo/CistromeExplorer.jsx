@@ -23,7 +23,7 @@ import {
 } from '../utils/icons.js';
 import { DEFAULT_COLOR_RANGE } from '../utils/color.js';
 import { diffViewOptions } from '../utils/view-history';
-import { demos as mainDemos, miraDemos } from './demo';
+import { demos as mainDemos, miraDemos as scDemos } from './demo';
 import { CISTROME_DBTOOLKIT_GENE_DISTANCE, CISTROME_DBTOOLKIT_SPECIES } from '../utils/cistrome';
 
 import { publishHelpTooltip, destroyTooltip } from '../Tooltip.jsx';
@@ -60,8 +60,8 @@ const initHeatmapWidth = (window.innerWidth || document.documentElement.clientWi
 export default function CistromeExplorer() {
 	const urlParams = new URLSearchParams(window.location.search);
 
-	const isMiraData = urlParams.get('version') === '2';
-	const demos = isMiraData ? miraDemos : mainDemos;
+	const isScData = urlParams.get('version') === '2';
+	const demos = isScData ? scDemos : mainDemos;
 
 	const hmRef = useRef();
 
@@ -126,7 +126,7 @@ export default function CistromeExplorer() {
 	// toggle
 	const [helpActivated, setHelpActivated] = useState(false);
 	const [aggActivated, setAggActivated] = useState(false);
-	const [aggregateRowBy, setSggregateRowBy] = useState(!isMiraData ? 'Cell Type' : 'max_topic');
+	const [aggregateRowBy, setSggregateRowBy] = useState(!isScData ? 'Cell Type' : 'max_topic');
 
 	// History of view updates
 	const MAX_HISTORY_LENGTH = 50; // How many previous views should be recorded?
@@ -512,9 +512,9 @@ export default function CistromeExplorer() {
 									onChange={e => {
 										setSggregateRowBy(e.target.value);
 									}}
-									defaultValue={!isMiraData ? 'Cell Type' : 'max_topic'}
+									defaultValue={!isScData ? 'Cell Type' : 'max_topic'}
 								>
-									{(!isMiraData
+									{(!isScData
 										? ['Tissue Type', 'Cell Type']
 										: ['max_topic', 'cluster_by_topic_0', 'cluster_by_topic_9']
 									).map(f => (
@@ -609,6 +609,7 @@ export default function CistromeExplorer() {
 						rowInfo={localMetadata}
 						localBEDFile={localBed}
 						aggregateRowBy={aggActivated ? aggregateRowBy : undefined}
+						isScData={isScData}
 						helpActivated={helpActivated}
 						onViewChanged={onViewChanged}
 						onGenomicIntervalSearch={setToolkitParams}
@@ -619,7 +620,7 @@ export default function CistromeExplorer() {
 						intervalAPIParams={toolkitParams}
 						geneAPIParams={geneToolkitParams}
 						onAddTrack={onAddToolkitTrack}
-						isMiraData={isMiraData}
+						isMiraData={isScData}
 						hmRef={hmRef}
 					/>
 				</div>

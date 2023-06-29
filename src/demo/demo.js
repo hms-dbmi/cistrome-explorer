@@ -326,7 +326,7 @@ export const miraDemos = {
 					//         ],
 					//         colors: TOPIC_COLORS
 					// },
-					{ ...streamBase, width: 100 },
+					// { ...streamBase, width: 100 },
 					// { ...streamBase, only: { field: 'tree_states', value: 'Astrocyte' }, title: 'Astrocyte' },
 					// { ...streamBase, only: { field: 'tree_states', value: 'Astrocyte, Excitatory, Inhibitory' }, title: 'Astrocyte, Excitatory, Inhibitory' },
 					// { ...streamBase, only: { field: 'tree_states', value: 'Inhibitory' }, title: 'Inhibitory' },

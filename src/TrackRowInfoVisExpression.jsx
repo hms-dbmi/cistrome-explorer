@@ -102,7 +102,6 @@ export default function TrackRowInfoVisExpression(props) {
 		fields = [field];
 
 	async function getExpressionData() {
-		console.log('loading');
 		const source = new AnnDataSource({ url });
 		const config = {
 			url,
@@ -119,9 +118,8 @@ export default function TrackRowInfoVisExpression(props) {
 		} = await loader.loadAttrs();
 
 		// We can load the data for a subset of genes by selecting an array of gene IDs.
-		const { data } = await loader.loadGeneSelection({ selection: ['XKR4'] });
+		const { data } = await loader.loadGeneSelection({ selection: [title] });
 		const expression = obsIndex.map((cellId, i) => ({ cellId, normalizedExpression: data[0][i] / 256 }));
-		console.log(expression);
 		setExpressionData(expression);
 	}
 

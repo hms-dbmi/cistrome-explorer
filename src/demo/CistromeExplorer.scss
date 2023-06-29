@@ -1,5 +1,6 @@
 .cistrome-explorer {
 	height: 100vh;
+	overflow-y: hidden;
 
 	.ce-generic-button,
 	.ce-generic-button-lg,
@@ -101,6 +102,7 @@
 		height: calc(100% - 50px);
 		background: #f6f6f6;
 		overflow-x: auto;
+		overflow-y: hidden;
 		.h-resizer {
 			width: 6px;
 			margin-top: 11px;

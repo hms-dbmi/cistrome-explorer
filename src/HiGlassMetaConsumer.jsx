@@ -47,6 +47,7 @@ import { CLOSE, THIN_CLOSE, FILTER } from './utils/icons.js';
 import { HG38_START_POSITIONS } from './utils/chromsizes.js';
 import { TRAITS } from './utils/gwas.js';
 import { theme } from './viewconfigs/horizontal-multivec-1.js';
+import GeneExpressionSelection from './GeneExpressionSelection.jsx';
 
 const hgOptionsBase = {
 	sizeMode: 'bounded', // Stretch the height of HiGlass to its container <div/>
@@ -82,6 +83,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
 		localBEDFile,
 		helpActivated,
 		aggregateRowBy,
+		isScData,
 		onViewChanged: onViewChangedCallback,
 		onGenomicIntervalSearch: onGenomicIntervalSearchCallback,
 		onGeneSearch: onGeneSearchCallBack
@@ -520,6 +522,27 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
 		[options]
 	);
 
+	// Callback function for updating gene expression tracks.
+	const onGeneSelection = useCallback(
+		(viewId, trackId, genes) => {
+			const { rowInfoAttributes } = getTrackWrapperOptions(options, viewId, trackId);
+			const noneExpressionSpec = rowInfoAttributes.filter(d => d.type !== 'expression');
+			const newExpressionSpec = genes.map(gene => ({
+				title: gene,
+				field: 'index',
+				url: 'https://s3.amazonaws.com/gosling-lang.org/data/cistrome/e18_mouse_brain_10x_rna_main.zarr/', // TODO: set this in the rowinfo
+				type: 'expression',
+				position: 'right',
+				width: 80,
+			}));
+			const newOptions = updateWrapperOptions(options, [...noneExpressionSpec, ...newExpressionSpec], 'rowInfoAttributes', viewId, trackId, {
+				isReplace: true
+			});
+			setOptions(newOptions);
+		},
+		[options]
+	);
+
 	// Aggregating rows
 	useEffect(() => {
 		if (!multivecTrackIds || multivecTrackIds.length === 0) {
@@ -871,6 +894,30 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
 					}}
 				/>
 			)}
+			{(() => {
+				if(!isScData) return;
+				const firstMultivecTrack = multivecTrackIds[0];
+				if(!firstMultivecTrack) return;
+				const { viewId, trackId } = firstMultivecTrack;
+				const multivecObject = getTrackObject(viewId, trackId);
+				const left = multivecObject.position[0];
+				const top = multivecObject.position[1];
+				const width = multivecObject.dimensions[0];
+				return (
+					<GeneExpressionSelection
+						top={-38}
+						left={left + width + 10}
+						width={600}
+						height={top + 10}
+						genes={
+							getTrackWrapperOptions(options, viewId, trackId).rowInfoAttributes.filter(d => d.type === 'expression').map(d => d.title)
+						}
+						onGeneSelection={genes => {
+							onGeneSelection(viewId, trackId, genes);
+						}}
+					/>
+				)
+			})()}
 			{Array.from(new Set(multivecTrackIds.map(d => d.viewId))).map((viewId, i) => (
 				<ViewWrapper
 					key={i}
