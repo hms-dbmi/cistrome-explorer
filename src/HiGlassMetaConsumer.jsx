@@ -563,7 +563,7 @@ const HiGlassMetaConsumer = forwardRef((props, ref) => {
 			let newSubOptions = getWrapperSubOptions(options, 'rowFilter', viewId, trackId);
 			if (!newSubOptions) newSubOptions = [];
 			let fieldOption = newSubOptions.find(d => d.field === field);
-
+			
 			if (isRemove) {
 				// Remove filters in a certain row track.
 				if (!fieldOption) {

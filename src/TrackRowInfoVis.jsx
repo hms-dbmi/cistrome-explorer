@@ -8,6 +8,7 @@ import TrackRowInfoVisDendrogram from './TrackRowInfoVisDendrogram.jsx';
 import TrackRowInfoVisNominalDynamic from './TrackRowInfoVisNominalDynamic.jsx';
 import TrackRowInfoVisBand from './TrackRowInfoVisBand.jsx';
 import TrackRowInfoVisExpression from './TrackRowInfoVisExpression.jsx';
+import TrackRowInfoVisTree from './TrackRowInfoVisTree.jsx';
 import { HIGLASSMETA_DEFAULT } from './utils/visualization-properties.js';
 
 const fieldTypeToVisComponent = {
@@ -17,7 +18,8 @@ const fieldTypeToVisComponent = {
 	tree: TrackRowInfoVisDendrogram,
 	'nominal-dynamic': TrackRowInfoVisNominalDynamic,
 	band: TrackRowInfoVisBand,
-	expression: TrackRowInfoVisExpression
+	expression: TrackRowInfoVisExpression,
+	lineage: TrackRowInfoVisTree
 };
 
 // Height of a track title

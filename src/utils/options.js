@@ -109,7 +109,7 @@ const baseSchema = {
 				},
 				type: {
 					type: 'string',
-					enum: ['nominal', 'quantitative', 'url', 'tree', 'nominal-dynamic', 'expression'],
+					enum: ['nominal', 'quantitative', 'url', 'tree', 'nominal-dynamic', 'expression', 'lineage'],
 					description: 'The data type of a field'
 				},
 				aggFunction: {
