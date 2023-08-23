@@ -136,6 +136,7 @@ export default function TrackRowInfoVisTree(props) {
             },
         }).clicked(opt => {
 			const { x, y, spec, node } = opt;
+			const { fold, remove, attributes: currAttr } = spec.data;
 			if(node?.name) {
 				// Find the node name
 				const mapping = {
@@ -150,17 +151,18 @@ export default function TrackRowInfoVisTree(props) {
 				// collapse the node
 				const collapseNode = () => {
 					if(clickedNode === 'a') {
+						const newFold = [...fold, 'a'];
 						onFilterRows(
 							field,
 							'nominal',
-							[mapping[clickedNode]],
+							[...newFold.map(node => mapping[node])],
 							false
 						);
 						treeglRef.current.update({
 							data: {
-								fold: ['a'],
-								remove: [],
-								attributes
+								fold: newFold,
+								// remove: [...remove],
+								// attributes: structuredClone(currAttr)
 							},
 							transition: {
 								duration: 0
@@ -168,7 +170,7 @@ export default function TrackRowInfoVisTree(props) {
 						});
 						return;
 					}
-					const editedAttr = structuredClone(attributes);
+					const editedAttr = structuredClone(currAttr);
 					const editMap = {
 						b: 'c',
 						c: 'b',
@@ -178,19 +180,20 @@ export default function TrackRowInfoVisTree(props) {
 					const editNode = editMap[clickedNode];
 					editedAttr[editNode].customDistance = [0, editedAttr[editNode].customDistance[1] - editedAttr[editNode].customDistance[0]];
 					if(clickedNode === 'c') {
-						editedAttr.d.customDistance = [editedAttr.d.customDistance[0] + 1, editedAttr.d.customDistance[1] + 1];
-						editedAttr.e.customDistance = [editedAttr.e.customDistance[0] + 1, editedAttr.e.customDistance[1] + 1];
+						editedAttr.d.customDistance = [editedAttr.d.customDistance[0] + 5, editedAttr.d.customDistance[1] + 5];
+						editedAttr.e.customDistance = [editedAttr.e.customDistance[0] + 5, editedAttr.e.customDistance[1] + 5];
 					}
+					const newFold = [...fold, clickedNode];
 					onFilterRows(
 						field,
 						'nominal',
-						[mapping[clickedNode]],
+						[...newFold.map(d => mapping[d])],
 						false
 					);
 					treeglRef.current.update({
 						data: {
-							fold: [clickedNode],
-							remove: [],
+							fold: newFold,
+							remove: [...remove],
 							attributes: editedAttr
 						},
 						transition: {
@@ -207,7 +210,7 @@ export default function TrackRowInfoVisTree(props) {
 						e: ['Excitatory']
 					}
 
-					const editedAttr = structuredClone(attributes);
+					const editedAttr = structuredClone(currAttr);
 					const editMap = {
 						b: 'c',
 						d: 'e',
@@ -216,16 +219,18 @@ export default function TrackRowInfoVisTree(props) {
 					if(editNode) {
 						editedAttr[editNode].customDistance = [0, editedAttr[editNode].customDistance[1] - editedAttr[editNode].customDistance[0]];
 					}
+					const newRemove = [...remove, clickedNode];
+					console.log([...fold.map(d => mapping[d]), ...newRemove.flatMap(d => removeMapping[d])]);
 					onFilterRows(
 						field,
 						'nominal',
-						[...removeMapping[node.name]],
+						[...fold.map(d => mapping[d]), ...newRemove.flatMap(d => removeMapping[d])],
 						false
 					);
 					treeglRef.current.update({
 						data: {
-							fold: [],
-							remove: [clickedNode],
+							fold: [...fold],
+							remove: newRemove,
 							attributes: editedAttr
 						},
 						transition: {
