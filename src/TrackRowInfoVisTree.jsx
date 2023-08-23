@@ -134,7 +134,8 @@ export default function TrackRowInfoVisTree(props) {
                 edgeToBaseline: false,
 				background: "#F6F6F6"
             },
-        }).clicked((spec, node, a) => {
+        }).clicked(opt => {
+			const { x, y, spec, node } = opt;
 			if(node?.name) {
 				// Find the node name
 				const mapping = {
@@ -160,6 +161,9 @@ export default function TrackRowInfoVisTree(props) {
 								fold: ['a'],
 								remove: [],
 								attributes
+							},
+							transition: {
+								duration: 0
 							}
 						});
 						return;
@@ -188,6 +192,9 @@ export default function TrackRowInfoVisTree(props) {
 							fold: [clickedNode],
 							remove: [],
 							attributes: editedAttr
+						},
+						transition: {
+							duration: 0
 						}
 					});
 				};
@@ -220,6 +227,9 @@ export default function TrackRowInfoVisTree(props) {
 							fold: [],
 							remove: [clickedNode],
 							attributes: editedAttr
+						},
+						transition: {
+							duration: 0
 						}
 					});
 				}

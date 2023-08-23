@@ -20,7 +20,7 @@
 		"lodash": "^4.17.19",
 		"node-sass": "^6.0.1",
 		"pubsub-js": "^1.8.0",
-		"tree.gl": "^0.0.0",
+		"tree.gl": "^0.0.1",
 		"uuid": "^3.4.0",
 		"vega-scale": "^6.0.0"
 	},
