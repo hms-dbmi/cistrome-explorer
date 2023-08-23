@@ -82,7 +82,7 @@ export default function GeneExpressionSelection(props) {
                 }}
             >
                 <ul>
-                    {metadata.varIndex?.filter(gene => gene.toUpperCase().includes(keyword.toUpperCase())).sort().slice(0, 30).map(gene => {
+                    {keyword === '' ? [] : metadata.varIndex?.filter(gene => gene.toUpperCase().includes(keyword.toUpperCase())).sort().slice(0, 30).map(gene => {
                         return (
                             <li 
                                 key={gene}
